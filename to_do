@@ -3,7 +3,8 @@
 1. Update estates/base.html.
 2. Update estates/header.html.
 3. Update estates/footer.html.
-4. Update accounts/sign-up.html & create form.
+4. Update accounts/sign-up.html & create form without refresh.
+5. Update accounts/log-in.html & create form without refresh.
 
 @hubertrykala93
 
