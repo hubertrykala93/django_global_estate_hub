@@ -7,4 +7,5 @@
 
 @hubertrykala93
 
-None
+Untrack and hide .gitignore file.
+Untrack and hide __pycache__ file.
