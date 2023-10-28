@@ -17,13 +17,19 @@
 </head>
 <body>
 
-<section class="app-container">
+<section>
     <div class="row">
         {% block header %}
         {% include 'estates/header.html' %}
         {% endblock %}
         <main>
-            {% block content %}{% endblock %}
+            <form action="">
+                <input type="text">
+                <button type="submit">Send</button>
+                <div class="error"></div>
+            </form>
+            {% block content %}
+            {% endblock %}
         </main>
         {% block footer %}
         {% include 'estates/footer.html' %}

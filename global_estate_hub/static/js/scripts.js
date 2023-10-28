@@ -1,10 +1,17 @@
-const xhr = new XMLHttpRequest()
-const url = '/data.json'
-xhr.open("GET", url)
-xhr.send()
+const form = document.querySelector('form')
 
-xhr.onreadystatechange = function () {
-  if ( this.readyState == 4 && this.status == 200) {
-    console.log(xhr.responseText)
+form.addEventListener('submit', e => {
+  e.preventDefault()
+  const inputValue = form.querySelector('input').value
+
+  const xhr = new XMLHttpRequest()
+  const url = ''
+  xhr.open("POST", url)
+  xhr.send(inputValue)
+
+  xhr.onreadystatechange = function () {
+    if ( this.readyState == 4 && this.status == 200) {
+      console.log(xhr.responseText)
+    }
   }
-}
+})
