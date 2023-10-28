@@ -3,5 +3,9 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-Global Estate Hub.
+<form action="{% url 'index' %}" method="post">
+    <input type="text" name="category">
+    <button type="submit">Send</button>
+    <div class="error"></div>
+</form>
 {% endblock %}
