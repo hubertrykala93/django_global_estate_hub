@@ -56,11 +56,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.username
-
-
-class Profile(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = 'User Profile'
-        verbose_name_plural = 'User Profiles'
