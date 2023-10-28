@@ -10,18 +10,22 @@ def index(request):
     })
 
 
-def category(request):
+@csrf_exempt
+def add_category(request):
     if request.method == 'POST':
-        name = request.POST.get('name', None)
-        print(name)
+        category = request.POST.get('category', None)
+        print('POST')
+        print(category)
 
         return JsonResponse(data={
-            "category": name,
+            "category": category,
         })
 
     else:
-        name = request.POST.get('name', None)
+        category = request.GET.get('category', None)
+        print('GET')
+        print(category)
 
         return JsonResponse(data={
-            "category": name,
+            "category": category,
         })

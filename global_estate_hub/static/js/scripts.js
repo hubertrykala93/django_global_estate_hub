@@ -5,7 +5,7 @@ form.addEventListener('submit', e => {
   const inputValue = form.querySelector('input').value
 
   const xhr = new XMLHttpRequest()
-  const url = "{% url 'index' %}"
+  const url = "/add-category"
   xhr.open("POST", url)
   xhr.send(inputValue)
 
