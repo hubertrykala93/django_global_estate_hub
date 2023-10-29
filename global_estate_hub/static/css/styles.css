@@ -1,3 +1,109 @@
-body {
-    background: rgb(232, 232, 232);
+/*----------------------------------*\
+  #GOOGLE FONTS
+\*----------------------------------*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/*----------------------------------*\
+  #VARIABLES
+\*----------------------------------*/
+
+:root {
+
+    /**
+     * COLORS
+      */
+  
+    --clr-primary: #375844;
+    --clr-secondary: #C66735;
+    --clr-black: #000;
+    --clr-dark: #18201B;
+    --clr-body-text: #777E7A;
+  
+    /**
+     * TYPOGRAPHY
+      */
+  
+    /* font family */
+    --ff-body: 'Inter', sans-serif;
+  
+    /* font size */
+    /* --fs-base: 62.5%;
+    --fs-body: 1.3rem;
+    --fs-headline: 1.4rem;
+    --fs-title-300: 1.8rem;
+    --fs-title-400: 3rem;
+    --fs-title-500: 4rem;
+    --fs-text-btn: 1.5rem;
+    --fs-filled-btn: 1.4rem; */
+  
+    /* line height */
+    /* --lh-body: 1.6em;
+    --lh-title-400: 1.275em;
+    --lh-title-500: 1.3em; */
+  
+    /* letter spacing */
+    /* --ls-body: 0.05em; */
+  
+    /**
+     * TRANSITIONS
+      */
+  
+    /* --transition-time-300: .3s;
+    --transition-time-400: .4s; */
+    
+    /**
+     * CONTAINER
+      */
+  
+    /* --container-400: 1420px;
+    --side-space: 15px; */
+  }
+
+
+  /*----------------------------------*\
+  #RESET
+\*----------------------------------*/
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul{
+  list-style: none;
+}
+
+a{
+  text-decoration: none;
+  color: inherit;
+}
+
+img{
+  max-width: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+button{
+  font-family: inherit;
+  border: none;
+  cursor: pointer;
+}
+
+html {
+  /* font-size: var(--fs-base); */
+  scroll-behavior: smooth;
+}
+
+body{
+  background-color: #fff;
+  /* color: var(--color-body-text);
+  font-size: var(--fs-body);
+  line-height: var(--lh-body); */
+  font-family: var(--ff-body);
+  /* letter-spacing: var(--ls-body); */
 }
