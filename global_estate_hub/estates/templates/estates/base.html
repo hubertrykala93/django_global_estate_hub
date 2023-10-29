@@ -16,12 +16,16 @@
 
 </head>
 <body>
+{% block offcanvas %}
+{% include 'estates/offcanvas.html' %}
+{% endblock %}
 
+{% block header %}
+{% include 'estates/header.html' %}
+{% endblock %}
 <section>
     <div class="row">
-        {% block header %}
-        {% include 'estates/header.html' %}
-        {% endblock %}
+
         <main>
             {% block content %}
             {% endblock %}
