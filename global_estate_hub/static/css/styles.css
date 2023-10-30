@@ -15,6 +15,7 @@
       */
   
     --clr-primary: #375844;
+    --clr-primary-alt: #22402e;
     --clr-secondary: #C66735;
     --clr-black: #000;
     --clr-dark: #18201B;
@@ -28,9 +29,9 @@
     --ff-body: 'Inter', sans-serif;
   
     /* font size */
-    /* --fs-base: 62.5%;
-    --fs-body: 1.3rem;
-    --fs-headline: 1.4rem;
+    --fs-base: 62.5%;
+    --fs-body: 1.4rem;
+    /* --fs-headline: 1.4rem;
     --fs-title-300: 1.8rem;
     --fs-title-400: 3rem;
     --fs-title-500: 4rem;
@@ -44,6 +45,12 @@
   
     /* letter spacing */
     /* --ls-body: 0.05em; */
+
+    /**
+     * Radius
+      */
+
+    --br-400: 1rem;
   
     /**
      * TRANSITIONS
@@ -56,12 +63,12 @@
      * CONTAINER
       */
   
-    /* --container-400: 1420px;
-    --side-space: 15px; */
+    --container-400: 1140px;
+    --side-space: 15px;
   }
 
 
-  /*----------------------------------*\
+/*----------------------------------*\
   #RESET
 \*----------------------------------*/
 
@@ -92,18 +99,304 @@ button{
   font-family: inherit;
   border: none;
   cursor: pointer;
+  background-color: transparent;
 }
 
 html {
-  /* font-size: var(--fs-base); */
+  font-size: var(--fs-base);
   scroll-behavior: smooth;
 }
 
 body{
   background-color: #fff;
-  /* color: var(--color-body-text);
+  /* color: var(--color-body-text); */
   font-size: var(--fs-body);
-  line-height: var(--lh-body); */
+  /* line-height: var(--lh-body); */
   font-family: var(--ff-body);
-  /* letter-spacing: var(--ls-body); */
 }
+
+
+/*----------------------------------*\
+  #REUSED STYLES
+\*----------------------------------*/
+
+.container {
+  width: 100%;
+  max-width: calc(var(--container-400) + (var(--side-space)) * 2);
+  margin: 0 auto;
+  padding: 0 var(--side-space);
+}
+
+
+/*----------------------------------*\
+  #COMPONENTS
+\*----------------------------------*/
+
+/**
+  * BUTTONS
+   */
+
+.btn{
+  line-height: 45px;
+  border-radius: var(--br-400);
+  padding: 0 2rem;
+  font-size: 1.6rem;
+  transition: background-color .4s, color .4s;
+}
+
+.btn.primary-btn{
+  background-color: var(--clr-primary);
+  color: white;
+}
+
+.btn.primary-btn:hover,
+.btn.primary-btn:focus-visible{
+  background-color: var(--clr-primary-alt);
+}
+
+
+/*----------------------------------*\
+  #OFFCANVAS
+\*----------------------------------*/
+
+#page-offcanvas{
+  background-color: var(--clr-primary);
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translateX(100%);
+  transition: .4s ease;
+}
+
+#page-offcanvas.active{
+  transform: translateX(0);
+}
+
+#page-offcanvas .offcanvas-logo{
+  margin-bottom: 4rem;
+}
+
+#page-offcanvas .offcanvas-logo img{
+  width: 150px;
+}
+
+#page-offcanvas .offcanvas-menu .nav {
+  display: flex;
+  flex-direction: column;
+}
+
+#page-offcanvas .offcanvas-menu .nav .nav__item{
+  margin-bottom: 1.5rem;
+}
+
+#page-offcanvas .offcanvas-menu .nav .nav__link {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 500;
+}
+
+#page-offcanvas .offcanvas-menu .nav .nav__link.active,
+#page-offcanvas .offcanvas-menu .nav .nav__link:hover,
+#page-offcanvas .offcanvas-menu .nav .nav__link:focus-visible{
+  color: var(--clr-secondary);
+}
+
+#page-offcanvas #offcanvas-close {
+  position: absolute;
+  top: 4rem;
+  right: 4rem;
+  color: white;
+}
+
+
+/*----------------------------------*\
+  #HEADER
+\*----------------------------------*/
+
+#header {
+  height: 70px;
+  box-shadow: 0 30px 55px rgba(148, 148, 170, 0.15);
+}
+
+#header .row{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#header .header-logo img{
+  max-width: 100px;
+}
+
+#header #nav {
+  display: none;
+}
+
+#header #nav .nav{
+  display: flex;
+  align-items: center;
+}
+
+#header #nav .nav .nav__item {
+  margin-right: 3rem;
+}
+
+#header #nav .nav .nav__item:last-child {
+  margin-right: 0;
+}
+
+#header #nav .nav .nav__link{
+  color: black;
+  font-size: 1.6rem;
+  font-weight: 500;
+}
+
+#header #nav .nav .nav__link:hover,
+#header #nav .nav .nav__link.active{
+  color: var(--clr-primary);
+}
+
+#header .header-right {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 2.5rem;
+}
+
+#header .header-right .login{
+  margin-right: 2rem;
+}
+
+#header .header-right .login a {
+  font-size: 1.4rem;
+  transition: color .4s;
+}
+
+#header .header-right .login a:hover,
+#header .header-right .login a:focus-visible{
+  color: var(--clr-primary)
+}
+
+#header .header-right .btn{
+  font-size: 1.2rem;
+  line-height: 35px;
+  padding: 0 1.5rem;
+}
+
+#header #offcanvas-toggler{
+  color: var(--clr-dark);
+  transition: color .3s;
+}
+
+#header #offcanvas-toggler:hover,
+#header #offcanvas-toggler:focus-visible{
+  color: var(--clr-secondary);
+}
+
+
+
+/*----------------------------------*\
+  #BREAKPOINTS
+\*----------------------------------*/
+
+/**
+  * MIN 768px
+   */
+
+@media screen and (min-width: 768px){
+  /*----------------------------------*\
+    #HEADER
+  \*----------------------------------*/
+
+  #header .header-logo img {
+    max-width: 150px;
+  }
+
+  #header .header-right .login a {
+    font-size: 1.6rem;
+  }
+
+  #header .header-right .btn {
+    font-size: 1.6rem;
+    line-height: 45px;
+    padding: 0 2rem;
+  }
+}
+
+
+/**
+  * MIN 992px
+   */
+
+   @media screen and (min-width: 992px){
+
+    /*----------------------------------*\
+      #VARIABLES
+    \*----------------------------------*/
+
+    :root {
+      
+      /**
+      * CONTAINER
+        */
+
+      --side-space: 30px;
+    }
+
+
+    /*----------------------------------*\
+      #HEADER
+    \*----------------------------------*/
+
+    #header {
+      height: 105px;
+    }
+  
+    #header #offcanvas-toggler {
+      display: none;
+    }
+
+    #header .header-right {
+      margin-right: 0;
+      margin-left: unset;
+    }
+
+    #header #nav {
+      display: block;
+      margin: auto;
+    }
+  }
+
+
+/**
+  * MIN 1200px
+   */
+
+   @media screen and (min-width: 1200px){
+
+    /*----------------------------------*\
+      #VARIABLES
+    \*----------------------------------*/
+
+    :root {
+      
+      /**
+      * CONTAINER
+        */
+
+      --side-space: 50px;
+    }
+
+
+    /*----------------------------------*\
+      #HEADER
+    \*----------------------------------*/
+
+    #header #nav .nav .nav__item {
+      margin-right: 4rem;
+    }
+  }

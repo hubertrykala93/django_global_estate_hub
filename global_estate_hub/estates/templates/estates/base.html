@@ -6,6 +6,18 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--
+      - favicon
+    -->
+
+    <!--
+      - material icons
+    -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <!--
+      - custom css
+    -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
 
     {% if title %}
@@ -15,29 +27,44 @@
     {% endif %}
 
 </head>
+
 <body>
-{% block offcanvas %}
-{% include 'estates/offcanvas.html' %}
-{% endblock %}
 
-{% block header %}
-{% include 'estates/header.html' %}
-{% endblock %}
-<section>
-    <div class="row">
+    <!--
+      - #OFFCANVAS
+    -->
+    {% block offcanvas %}
+    {% include 'estates/offcanvas.html' %}
+    {% endblock %}
 
-        <main>
-            {% block content %}
+    <!--
+      - #HEADER
+    -->
+    {% block header %}
+    {% include 'estates/header.html' %}
+    {% endblock %}
+
+    <!--
+      - #PAGE CONTENT
+    -->
+
+    <section>
+        <div class="row">
+            <main>
+                {% block content %}
+                {% endblock %}
+            </main>
+            {% block footer %}
+            {% include 'estates/footer.html' %}
             {% endblock %}
-        </main>
-        {% block footer %}
-        {% include 'estates/footer.html' %}
-        {% endblock %}
-    </div>
-</section>
+        </div>
+    </section>
 
-<script src="{% static 'js/scripts.js' %}"></script>
-{% block page_scripts %}{% endblock %}
+    <!--
+      - #CUSTOM JAVASCRIPT
+    -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+    {% block page_scripts %}{% endblock %}
 </body>
 
 </html>

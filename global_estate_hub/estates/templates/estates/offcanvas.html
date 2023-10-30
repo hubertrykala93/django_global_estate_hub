@@ -1,11 +1,17 @@
-<div class="page-offcanvas">
+<div id="page-offcanvas" data-offcanvas>
     <div class="offcanvas-logo">
         <a href="#">
-            <img src="/media/logo/logo-color.svg" alt="Realesto logo">
+            <img src="/media/logo/logo-white.svg" alt="Realesto logo">
         </a>
     </div>
 
     <div class="offcanvas-menu">
         {% include 'estates/main-menu.html' %}
     </div>
+
+    <button id="offcanvas-close" data-close-offcanvas>
+        <span class="material-symbols-outlined">
+            close
+        </span>
+    </button>
 </div>
