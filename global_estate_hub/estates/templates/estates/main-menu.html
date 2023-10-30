@@ -1,20 +1,23 @@
+{% with request.resolver_match.url_name as url_name %}
 <ul class="main-menu nav">
-  <li class="nav__item">
-      <a href="#" class="nav__link active">Home</a>
-  </li>
-  <li class="nav__item">
-      <a href="#" class="nav__link">About</a>
-  </li>
-  <li class="nav__item">
-      <a href="#" class="nav__link">Properties</a>
-  </li>
-  <li class="nav__item">
-      <a href="#" class="nav__link">Pages</a>
-  </li>
-  <li class="nav__item">
-      <a href="#" class="nav__link">Blogs</a>
-  </li>
-  <li class="nav__item">
-      <a href="#" class="nav__link">Contact</a>
-  </li>
+    <li class="nav__item">
+        <a href="{% url 'index' %}" class="nav__link {% if url_name == 'index' %}active{% endif %}">Home</a>
+    </li>
+    <li class="nav__item">
+        <a href="{% url 'about' %}" class="nav__link {% if url_name == 'about' %}active{% endif %}">About</a>
+    </li>
+    <li class="nav__item">
+        <a href="{% url 'properties' %}"
+           class="nav__link {% if url_name == 'properties' %}active{% endif %}">Properties</a>
+    </li>
+    <li class="nav__item">
+        <a href="{% url 'pages' %}" class="nav__link {% if url_name == 'pages' %}active{% endif %}">Pages</a>
+    </li>
+    <li class="nav__item">
+        <a href="{% url 'blogs' %}" class="nav__link {% if url_name == 'blogs' %}active{% endif %}">Blogs</a>
+    </li>
+    <li class="nav__item">
+        <a href="{% url 'contact' %}" class="nav__link {% if url_name == 'contact' %}active{% endif %}">Contact</a>
+    </li>
 </ul>
+{% endwith %}

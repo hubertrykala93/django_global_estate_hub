@@ -1,10 +1,11 @@
 @Szymon-Levy
 
-1. Update estates/base.html.
-2. Update estates/header.html.
-3. Update estates/footer.html.
-4. Update accounts/sign-up.html & create form without refresh.
-5. Update accounts/log-in.html & create form without refresh.
+1. Offcanvas Close Focus State.
+2. Update estates/base.html.
+3. Update estates/header.html.
+4. Update estates/footer.html.
+5. Update accounts/sign-up.html & create form without refresh.
+6. Update accounts/log-in.html & create form without refresh.
 
 @hubertrykala93
 

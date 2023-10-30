@@ -7,5 +7,35 @@ def index(request):
     })
 
 
+def about(request):
+    return render(request=request, template_name='estates/about.html', context={
+        'title': 'About',
+    })
+
+
+def properties(request):
+    return render(request=request, template_name='estates/properties.html', context={
+        'title': 'Properties',
+    })
+
+
+def pages(request):
+    return render(request=request, template_name='estates/pages.html', context={
+        'title': 'Pages',
+    })
+
+
+def blogs(request):
+    return render(request=request, template_name='estates/blogs.html', context={
+        'title': 'Blogs',
+    })
+
+
+def contact(request):
+    return render(request=request, template_name='estates/contact.html', context={
+        'title': 'Contact',
+    })
+
+
 def add_category(request):
     pass
