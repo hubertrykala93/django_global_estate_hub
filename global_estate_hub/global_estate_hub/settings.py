@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "estates",
     "accounts",
-    "view_breadcrumbs",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

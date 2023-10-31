@@ -1,4 +1,4 @@
-{% load view_breadcrumbs %}
+{% load replace_filter %}
 
 <section class="page-title">
     <div class="container">
@@ -11,9 +11,9 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
-                    {% for slug in breadcrumb_urls %}
+                    {% for url in breadcrumb_urls %}
                     <li>
-                        <a href="{{ url }}">{{ slug }}</a>
+                        <a href="{% url url %}">{{ url|title|replace_filter }}</a>
                     </li>
                     {% endfor %}
                     <li>
