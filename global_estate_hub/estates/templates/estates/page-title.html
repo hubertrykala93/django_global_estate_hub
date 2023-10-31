@@ -1,4 +1,4 @@
-
+{% load view_breadcrumbs %}
 
 <section class="page-title">
     <div class="container">
@@ -11,9 +11,11 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
+                    {% block breadcrumbs %}
                     <li>
-                        <a href="#">Coś tam</a>
+                        <a href="{% render breadcrumbs 'estates/blog.html' %}">Coś tam</a>
                     </li>
+                    {% endblock %}
                     <li>
                         <span>{{ title }}</span>
                     </li>

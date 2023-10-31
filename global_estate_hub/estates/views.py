@@ -19,6 +19,12 @@ def properties(request):
     })
 
 
+def blog(request):
+    return render(request=request, template_name='estates/blog.html', context={
+        'title': 'Blog',
+    })
+
+
 def pages(request):
     return render(request=request, template_name='estates/pages.html', context={
         'title': 'Pages',
