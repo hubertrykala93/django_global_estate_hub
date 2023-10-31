@@ -13,7 +13,8 @@
     <!--
       - material icons
     -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
 
     <!--
       - custom css
@@ -30,41 +31,41 @@
 
 <body>
 
-    <!--
-      - #OFFCANVAS
-    -->
-    {% block offcanvas %}
-    {% include 'estates/offcanvas.html' %}
-    {% endblock %}
+<!--
+  - #OFFCANVAS
+-->
+{% block offcanvas %}
+{% include 'estates/offcanvas.html' %}
+{% endblock %}
 
-    <!--
-      - #HEADER
-    -->
-    {% block header %}
-    {% include 'estates/header.html' %}
-    {% endblock %}
+<!--
+  - #HEADER
+-->
+{% block header %}
+{% include 'estates/header.html' %}
+{% endblock %}
 
-    <!--
-      - #PAGE CONTENT
-    -->
+<!--
+  - #PAGE CONTENT
+-->
 
-    <section>
-        <div class="row">
-            <main>
-                {% block content %}
-                {% endblock %}
-            </main>
-            {% block footer %}
-            {% include 'estates/footer.html' %}
+<section>
+    <div class="row">
+        <main>
+            {% block content %}
             {% endblock %}
-        </div>
-    </section>
+        </main>
+        {% block footer %}
+        {% include 'estates/footer.html' %}
+        {% endblock %}
+    </div>
+</section>
 
-    <!--
-      - #CUSTOM JAVASCRIPT
-    -->
-    <script src="{% static 'js/scripts.js' %}"></script>
-    {% block page_scripts %}{% endblock %}
+<!--
+  - #CUSTOM JAVASCRIPT
+-->
+<script src="{% static 'js/scripts.js' %}"></script>
+{% block page_scripts %}{% endblock %}
 </body>
 
 </html>
