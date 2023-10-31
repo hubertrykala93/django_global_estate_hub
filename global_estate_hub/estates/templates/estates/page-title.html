@@ -11,11 +11,11 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
-                    {% block breadcrumbs %}
+                    {% for slug in breadcrumb_urls %}
                     <li>
-                        <a href="{% render breadcrumbs 'estates/blog.html' %}">Coś tam</a>
+                        <a href="{{ url }}">{{ slug }}</a>
                     </li>
-                    {% endblock %}
+                    {% endfor %}
                     <li>
                         <span>{{ title }}</span>
                     </li>

@@ -35,3 +35,15 @@ def contact(request):
     return render(request=request, template_name='estates/contact.html', context={
         'title': 'Contact',
     })
+
+
+def estate(request):
+    return render(request=request, template_name='estates/estate-details.html', context={
+        'title': 'Estate Details',
+    })
+
+
+def detail(request):
+    return render(request=request, template_name='estates/detail.html', context={
+        'title': 'Detail',
+    })
