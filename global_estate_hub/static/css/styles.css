@@ -19,6 +19,7 @@
     --clr-primary-light-bg: #EFF5F2;
     --clr-secondary: #C66735;
     --clr-black: #000;
+    --clr-footer: #0C131A;
     --clr-dark: #18201B;
     --clr-body-text: #777E7A;
   
@@ -408,6 +409,16 @@ h4{
 .page-title .breadcrumbs li a:focus-visible::before {
   color: var(--clr-secondary);
 }
+
+
+/*----------------------------------*\
+  #FOOTER
+\*----------------------------------*/
+
+#footer{
+  background-color: var(--clr-footer);
+}
+
 
 /*----------------------------------*\
   #BREAKPOINTS
