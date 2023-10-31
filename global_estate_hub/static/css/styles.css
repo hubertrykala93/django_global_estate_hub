@@ -16,6 +16,7 @@
   
     --clr-primary: #375844;
     --clr-primary-alt: #22402e;
+    --clr-primary-light-bg: #EFF5F2;
     --clr-secondary: #C66735;
     --clr-black: #000;
     --clr-dark: #18201B;
@@ -30,34 +31,24 @@
   
     /* font size */
     --fs-base: 62.5%;
-    --fs-body: 1.4rem;
-    /* --fs-headline: 1.4rem;
-    --fs-title-300: 1.8rem;
-    --fs-title-400: 3rem;
-    --fs-title-500: 4rem;
-    --fs-text-btn: 1.5rem;
-    --fs-filled-btn: 1.4rem; */
+    --fs-body-300: 1.4rem;
+    --fs-body-400: 1.6rem;
+    --fs-h1: 3.5rem;
+    --fs-h2: 2.6rem;
+    --fs-h3: 2rem;
+    --fs-h4: 1.8rem;
   
     /* line height */
-    /* --lh-body: 1.6em;
-    --lh-title-400: 1.275em;
-    --lh-title-500: 1.3em; */
-  
-    /* letter spacing */
-    /* --ls-body: 0.05em; */
+    --lh-body-300: 1.85em;
+    --lh-body-400: 1.625em;
 
     /**
      * Radius
       */
 
+    --br-300: .5rem;
     --br-400: 1rem;
-  
-    /**
-     * TRANSITIONS
-      */
-  
-    /* --transition-time-300: .3s;
-    --transition-time-400: .4s; */
+    --br-500: 1.5rem;
     
     /**
      * CONTAINER
@@ -109,9 +100,9 @@ html {
 
 body{
   background-color: #fff;
-  /* color: var(--color-body-text); */
-  font-size: var(--fs-body);
-  /* line-height: var(--lh-body); */
+  color: var(--color-body-text);
+  font-size: var(--fs-body-400);
+  line-height: var(--lh-body-400);
   font-family: var(--ff-body);
 }
 
@@ -125,6 +116,33 @@ body{
   max-width: calc(var(--container-400) + (var(--side-space)) * 2);
   margin: 0 auto;
   padding: 0 var(--side-space);
+}
+
+h1{
+  font-size: var(--fs-h1);
+  line-height: 1.25em;
+  font-weight: 800;
+  color: var(--clr-dark);
+}
+
+h2{
+  font-size: var(--fs-h2);
+  line-height: 1.38em;
+  font-weight: 700;
+  color: var(--clr-dark);
+}
+
+h3{
+  font-size: var(--fs-h3);
+  line-height: normal;
+  font-weight: 500;
+}
+
+h4{
+  font-size: var(--fs-h4);
+  line-height: normal;
+  font-weight: 500;
+  color: var(--clr-dark);
 }
 
 
@@ -219,6 +237,8 @@ body{
 #header {
   height: 70px;
   box-shadow: 0 30px 55px rgba(148, 148, 170, 0.15);
+  position: relative;
+  z-index: 5;
 }
 
 #header .row{
@@ -298,6 +318,96 @@ body{
 }
 
 
+/*----------------------------------*\
+  #PAGE TITLE
+\*----------------------------------*/
+
+.page-title{
+  padding: 3rem 0;
+  background-color: var(--clr-primary-light-bg);
+  background-image: url("/media/shapes/page-title-left.svg"),
+                    url("/media/shapes/page-title-right.svg");
+  background-repeat: no-repeat;
+  background-position: 0% 50%, 100% 50%;
+  background-size: auto 100%, auto 85%;
+}
+
+.page-title .row{
+  display: flex;
+  justify-content: center;
+}
+
+.page-title .page-title__border-wrapper{
+  padding: 2rem 8%;
+  border: 2px solid white;
+  border-radius: var(--br-500);
+  text-align: center;
+  box-shadow: 0 4px 6px #DBEFE5;
+}
+
+.page-title .breadcrumbs{
+  display: flex;
+  justify-content: center;
+  margin-top: 1.8rem;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.page-title .breadcrumbs li{
+  display: flex;
+}
+
+.page-title .breadcrumbs li a {
+  color: var(--clr-dark);
+  transition: .4s color;
+}
+
+.page-title .breadcrumbs li a:hover,
+.page-title .breadcrumbs li a:focus-visible {
+  color: var(--clr-secondary);
+}
+
+.page-title .breadcrumbs li span{
+  color: var(--clr-secondary);
+}
+
+.page-title .breadcrumbs li a,
+.page-title .breadcrumbs li span{
+  display: inline-flex;
+  align-items: center;
+  margin-left: .6rem;
+}
+
+.page-title .breadcrumbs li a::before,
+.page-title .breadcrumbs li span::before{
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-right: .6rem;
+}
+
+.page-title .breadcrumbs li a::before{
+  background-color: var(--clr-dark);
+}
+
+.page-title .breadcrumbs li span::before{
+  background-color: var(--clr-secondary);
+}
+
+.page-title .breadcrumbs li:first-child > *{
+  margin: 0;
+}
+
+.page-title .breadcrumbs li:first-child > *:before{
+  display: none;
+}
+
+.page-title .breadcrumbs li a:hover::before,
+.page-title .breadcrumbs li a:focus-visible::before {
+  color: var(--clr-secondary);
+}
 
 /*----------------------------------*\
   #BREAKPOINTS
@@ -339,6 +449,16 @@ body{
     \*----------------------------------*/
 
     :root {
+
+      /**
+     * TYPOGRAPHY
+      */
+    
+      /* font size */
+      --fs-h1: 4.8rem;
+      --fs-h2: 3.6rem;
+      --fs-h3: 2rem;
+      --fs-h4: 1.8rem;
       
       /**
       * CONTAINER
@@ -368,6 +488,18 @@ body{
     #header #nav {
       display: block;
       margin: auto;
+    }
+
+    /*----------------------------------*\
+      #PAGE TITLE
+    \*----------------------------------*/
+
+    .page-title {
+      padding: 3.8rem 0;
+    }
+
+    .page-title .page-title__border-wrapper {
+      padding: 2.8rem 8%;
     }
   }
 
