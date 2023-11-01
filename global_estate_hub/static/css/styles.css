@@ -432,7 +432,7 @@ h4{
   position: relative;
 }
 
-.footer-shape {
+#footer .footer-shape {
   position: absolute;
   top: 0;
   right: 0;
@@ -441,6 +441,12 @@ h4{
 
 #footer .row {
   position: relative;
+}
+
+#footer .row.top-footer{
+  display: grid;
+  row-gap: 4rem;
+  padding-bottom: 5.5rem;
 }
 
 #footer .footer__logo{
@@ -519,6 +525,153 @@ h4{
   fill: var(--clr-secondary);
 }
 
+#footer .footer__heading{
+  position: relative;
+  display: inline-block;
+  padding-bottom: 1.85rem;
+  margin-bottom: 3rem;
+}
+
+#footer .footer__heading h3{
+  color: white;
+}
+
+#footer .footer__heading::before,
+#footer .footer__heading::after{
+  content: "";
+  height: 1px;
+  position: absolute;
+  bottom: 0;
+}
+
+#footer .footer__heading::before{
+  left: 0;
+  background-color: var(--clr-secondary);
+  width: 43%;
+}
+
+#footer .footer__heading::after{
+  left: 43%;
+  background-color: white;
+  width: 57%;
+}
+
+#footer .footer__properties .footer__property{
+  margin-bottom: 2.8rem;
+  display: flex;
+  align-items: center;
+}
+
+#footer .footer__properties .footer__property:last-child{
+  margin-bottom: 0;
+}
+
+#footer .footer__properties .footer__property .property__image{
+  flex: 0 0 69px;
+  height: 66px;
+  margin-right: 1.8rem;
+  border-radius: var(--br-500);
+  overflow: hidden;
+}
+
+#footer .footer__properties .footer__property .property__image img{
+  width: 100%;
+  height: 100%;
+}
+
+#footer .footer__properties .footer__property .property__data .property__title {
+  display: block;
+  margin-bottom: 1rem;
+  color: white;
+  transition: color .4s;
+}
+
+#footer .footer__properties .footer__property .property__data .property__title:hover,
+#footer .footer__properties .footer__property .property__data .property__title:focus-visible{
+  color: var(--clr-secondary);
+}
+
+#footer .footer__properties .footer__property .property__data .property__price {
+  line-height: normal;
+  font-size: var(--fs-body-300);
+}
+
+#footer .footer-links .footer-links__item{
+  line-height: normal;
+  margin-bottom: 1.8rem;
+}
+
+#footer .footer-links .footer-links__item:last-child{
+  margin-bottom: 0;
+}
+
+#footer .footer-links .footer-links__link{
+  color: white;
+  transition: color .4s;
+}
+
+#footer .footer-links .footer-links__link:hover,
+#footer .footer-links .footer-links__link:focus-visible{
+  color: var(--clr-secondary);
+}
+
+#footer .row.bottom-footer{
+  border-top: 1px solid #15212D;
+  padding: 3.1rem 0;
+  font-size: var(--fs-body-300);
+}
+
+#footer .credits{
+  color: white;
+}
+
+#footer .credits a {
+  color: var(--clr-secondary);
+}
+
+#footer .credits a:hover,
+#footer .credits a:focus-visible{
+  color: var(--clr-primary);
+}
+
+#footer .legals-links {
+  display: flex;
+}
+
+#footer .legals-links .legals-links__item{
+  position: relative;
+  padding-left: 2rem;
+  margin-left: 2rem;
+}
+
+#footer .legals-links .legals-links__item::before{
+  content: "";
+  width: 1px;
+  height: 1.1rem;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+#footer .legals-links .legals-links__item:first-child:before{
+  display: none;
+}
+
+#footer .legals-links .legals-links__item:first-child{
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#footer .legals-links .legals-links__link{
+  color: white;
+}
+
+#footer .legals-links .legals-links__link:hover,
+#footer .legals-links .legals-links__link:focus-visible{
+  color: var(--clr-secondary);
+}
 
 
 /*----------------------------------*\
@@ -546,6 +699,20 @@ h4{
     font-size: 1.6rem;
     line-height: 45px;
     padding: 0 2rem;
+  }
+
+  /*----------------------------------*\
+    #FOOTER
+  \*----------------------------------*/
+
+  #footer .row.top-footer {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: 4.5rem;
+  }
+
+  #footer .row.bottom-footer{
+    display: flex;
+    justify-content: space-between;
   }
 }
 
@@ -613,6 +780,19 @@ h4{
     .page-title .page-title__border-wrapper {
       padding: 2.8rem 8%;
     }
+
+    /*----------------------------------*\
+      #FOOTER
+    \*----------------------------------*/
+
+    #footer {
+      padding-top: 7.5rem;
+    }
+
+    #footer .row.top-footer {
+      grid-template-columns: 4fr 4fr 2fr 2fr;
+      padding-bottom: 7.5rem;
+    }
   }
 
 
@@ -642,5 +822,18 @@ h4{
 
     #header #nav .nav .nav__item {
       margin-right: 4rem;
+    }
+
+    /*----------------------------------*\
+      #FOOTER
+    \*----------------------------------*/
+
+    #footer .row.top-footer {
+      grid-template-columns: 5fr 4fr 1.5fr 1.5fr;
+      column-gap: 7rem;
+    }
+
+    #footer .footer-shape {
+      right: 10%;
     }
   }
