@@ -188,6 +188,7 @@ h4{
   top: 0;
   transform: translateX(100%);
   transition: .4s ease;
+  z-index: 10;
 }
 
 #page-offcanvas.active{
@@ -228,6 +229,12 @@ h4{
   top: 4rem;
   right: 4rem;
   color: white;
+  transition: color .4s;
+}
+
+#page-offcanvas #offcanvas-close:hover,
+#page-offcanvas #offcanvas-close:focus-visible{
+  color: var(--clr-secondary);
 }
 
 
