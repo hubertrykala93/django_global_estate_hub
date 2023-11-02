@@ -1,8 +1,7 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from .models import Newsletter
 from django.views.decorators.csrf import csrf_exempt
-from django.middleware.csrf import get_token
 
 
 def index(request):
@@ -14,21 +13,29 @@ def index(request):
 @csrf_exempt
 def newsletter(request):
     if request.method == 'POST':
-        email = request.POST.get('email')
+        email = request.POST.get('email', None)
         print(email)
 
-        new_subscriber = Newsletter(email=email)
-        new_subscriber.save()
+        if Newsletter.objects.filter(email=email).exists():
+            return JsonResponse(data={
+                "valid": False,
+                "message": "E-mail address already exists.",
+            })
+        elif email is None:
+            return JsonResponse(data={
+                "valid": False,
+                "message": "E-mail address is None.",
+            })
+        else:
+            new_subscriber = Newsletter(email=email)
+            new_subscriber.save()
 
-        return JsonResponse(data={
-            "valid": True,
-            "message": "Your e-mail address was added.",
-        })
+            return JsonResponse(data={
+                "valid": True,
+                "message": "Your e-mail address was added.",
+            })
 
-    elif request.method == 'GET':
-        email = request.GET.get('email')
-        print(email)
-
+    else:
         return JsonResponse(data={
             "valid": False,
             "message": "Your e-mail address wasn't added.",
