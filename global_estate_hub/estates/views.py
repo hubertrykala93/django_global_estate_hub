@@ -9,6 +9,7 @@ def index(request):
 
 
 def get_request(request):
+    print(request.GET)
     return HttpResponse(content="GET request received successfully.")
 
 
