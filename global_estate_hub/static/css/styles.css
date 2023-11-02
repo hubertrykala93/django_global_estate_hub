@@ -56,7 +56,9 @@
       */
   
     --container-400: 1140px;
+    --container-500: 1212px;
     --side-space: 15px;
+    --section-block-space: 7rem;
   }
 
 
@@ -109,6 +111,10 @@ body{
   font-size: var(--fs-body-400);
   line-height: var(--lh-body-400);
   font-family: var(--ff-body);
+}
+
+.swiper-wrapper{
+  height: unset;
 }
 
 
@@ -239,6 +245,14 @@ h4{
 #page-offcanvas #offcanvas-close:hover,
 #page-offcanvas #offcanvas-close:focus-visible{
   color: var(--clr-secondary);
+}
+
+/**
+  * -SECTION TITLE
+   */
+
+.section-title{
+  margin-bottom: 1.8rem;
 }
 
 
@@ -420,6 +434,41 @@ h4{
 .page-title .breadcrumbs li a:focus-visible::before {
   color: var(--clr-secondary);
 }
+
+
+/*----------------------------------*\
+  #HOME PAGE
+\*----------------------------------*/
+
+/**
+  * Our partners carousel
+   */
+
+.our-partners {
+  padding: var(--section-block-space) 0;
+  text-align: center;
+}
+
+.our-partners .container {
+  max-width: calc(var(--container-500) + (var(--side-space)) * 2);
+}
+
+.our-partners .logo-carousel{
+  margin-top: 3rem;
+}
+
+.our-partners .logo-carousel .logo-carousel__partner img {
+  margin: 0 auto;
+  filter: grayscale(1);
+  transition: filter .4s;
+}
+
+.our-partners .logo-carousel .logo-carousel__partner:hover img {
+  filter: grayscale(0);
+}
+
+
+
 
 
 /*----------------------------------*\
@@ -744,6 +793,7 @@ h4{
         */
 
       --side-space: 30px;
+      --section-block-space: 11rem;
     }
 
 
@@ -780,6 +830,20 @@ h4{
     .page-title .page-title__border-wrapper {
       padding: 2.8rem 8%;
     }
+
+    /*----------------------------------*\
+      #HOME PAGE
+    \*----------------------------------*/
+
+    /**
+      * Our partners carousel
+      */
+
+    .our-partners .logo-carousel{
+      margin-top: 6rem;
+    }
+
+
 
     /*----------------------------------*\
       #FOOTER

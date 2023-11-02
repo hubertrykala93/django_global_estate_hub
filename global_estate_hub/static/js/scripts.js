@@ -17,12 +17,63 @@ if ( $offcanvasToggler &&  $offcanvasWrapper && $offcanvasClose ){
 }
 
 
+/**
+   * OUR PARTNERS CAROUSEL
+    */
+
+const $partnersCarousel = document.querySelector('[data-partners-carousel]')
+
+if($partnersCarousel){
+  const swiper = new Swiper($partnersCarousel, {
+    loop: true,
+    draggable: true,
+    speed: 400,
+    spaceBetween: 30,
+    autoplay: {
+    delay: 1500,
+    },
+    slidesPerView: 2,
+    breakpoints: {
+      768: {
+        slidesPerView: 3,
+      },
+      992: {
+        slidesPerView: 4,
+      },
+      1200: {
+        slidesPerView: 5,
+      },
+    },
+  })
+}
 
 
+/**
+   * NEWSLETTER FOOTER SUBSCRIBTION
+    */
 
+const $newsletterForm = document.querySelector('[data-newsletter-form]')
+//  let csrftoken = '{{ csrf_token }}'
+//  console.log(csrftoken)
 
+if ($newsletterForm){
+  $newsletterForm.addEventListener('submit', e =>{
+    e.preventDefault()
+    const dataEmail = $newsletterForm.querySelector('[data-email]').value
+    console.log(dataEmail)
 
+    const xhr = new XMLHttpRequest()
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText)
+        }
+    }
 
+    xhr.open('POST', '/newsletter')
+    // requestObj.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.send(dataEmail)
+  })
+}
 
 
 

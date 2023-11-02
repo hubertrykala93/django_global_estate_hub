@@ -2,14 +2,57 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block page-title %}{% endblock %}
+{% block page-title %}
+
+<section class="our-partners">
+    <div class="container">
+        <div class="row">
+            <div class="section-title">
+                <h2 class="main-title h2">Our partners</h2>
+            </div>
+
+            <p>We only work with the best companies around the globe</p>
+
+            <div class="logo-carousel swiper" data-partners-carousel>
+                <div class="swiper-wrapper">
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                  <div class="logo-carousel__partner swiper-slide">
+                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                  </div>
+                </div>
+              </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
 
 {% block content %}
-<button id="get">Send GET Request</button><br>
+
+
+<!-- <button id="get">Send GET Request</button><br>
 <button id="post">Send POST Request</button>
 
 <script>
     var csrftoken = '{{ csrf_token }}'
+    console.log(csrftoken)
 
     document.getElementById('get').onclick = () => {
         const requestObj = new XMLHttpRequest()
@@ -29,6 +72,7 @@
         requestObj.onreadystatechange = function() {
             if (requestObj.readyState == 4 && requestObj.status == 200) {
                 console.log(requestObj.responseText)
+                console.log(JSON.parse(requestObj.responseText))
             }
         }
 
@@ -40,13 +84,8 @@
         formdata.append('age', '17')
 
         requestObj.send(formdata)
-    }
+        }
 
+</script> -->
 
-
-
-
-
-
-</script>
 {% endblock %}
