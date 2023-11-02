@@ -4,4 +4,49 @@
 
 {% block page-title %}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<button id="get">Send GET Request</button><br>
+<button id="post">Send POST Request</button>
+
+<script>
+    var csrftoken = '{{ csrf_token }}'
+
+    document.getElementById('get').onclick = () => {
+        const requestObj = new XMLHttpRequest()
+        requestObj.onreadystatechange = function() {
+            if (requestObj.readyState == 4 && requestObj.status == 200) {
+                console.log(requestObj.responseText)
+            }
+        }
+
+        requestObj.open('GET', '/get')
+        requestObj.send()
+    }
+
+
+        document.getElementById('post').onclick = () => {
+        const requestObj = new XMLHttpRequest()
+        requestObj.onreadystatechange = function() {
+            if (requestObj.readyState == 4 && requestObj.status == 200) {
+                console.log(requestObj.responseText)
+            }
+        }
+
+        requestObj.open('POST', '/post')
+        requestObj.setRequestHeader('X-CSRFToken', csrftoken)
+
+        const formdata = new FormData()
+        formdata.append('name', 'John')
+        formdata.append('age', '17')
+
+        requestObj.send(formdata)
+    }
+
+
+
+
+
+
+
+</script>
+{% endblock %}

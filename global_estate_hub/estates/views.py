@@ -1,10 +1,22 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 
 def index(request):
     return render(request=request, template_name='estates/index.html', context={
         'title': 'Home',
     })
+
+
+def get_request(request):
+    return HttpResponse(content="GET request received successfully.")
+
+
+def post_request(request):
+    print(request.POST)
+    print(request.POST.get('name'))
+    print(request.POST.get('age'))
+    return HttpResponse(content="POST request received successfully.")
 
 
 def about(request):
@@ -34,16 +46,4 @@ def pages(request):
 def contact(request):
     return render(request=request, template_name='estates/contact.html', context={
         'title': 'Contact',
-    })
-
-
-def estate(request):
-    return render(request=request, template_name='estates/estate-details.html', context={
-        'title': 'Estate Details',
-    })
-
-
-def detail(request):
-    return render(request=request, template_name='estates/detail.html', context={
-        'title': 'Detail',
     })
