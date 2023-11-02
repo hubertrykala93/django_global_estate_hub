@@ -15,77 +15,31 @@
 
             <div class="logo-carousel swiper" data-partners-carousel>
                 <div class="swiper-wrapper">
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
-                  <div class="logo-carousel__partner swiper-slide">
-                    <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
-                  </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/our_partners/airbnb.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/our_partners/amazon.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/our_partners/google.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/our_partners/logitech.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/our_partners/paypal.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                    </div>
+                    <div class="logo-carousel__partner swiper-slide">
+                        <a href="#"><img src="/media/logo/logo-color.svg" alt=""></a>
+                    </div>
                 </div>
-              </div>
+            </div>
         </div>
     </div>
 </section>
-
-{% endblock %}
-
-{% block content %}
-
-
-<!-- <button id="get">Send GET Request</button><br>
-<button id="post">Send POST Request</button>
-
-<script>
-    var csrftoken = '{{ csrf_token }}'
-    console.log(csrftoken)
-
-    document.getElementById('get').onclick = () => {
-        const requestObj = new XMLHttpRequest()
-        requestObj.onreadystatechange = function() {
-            if (requestObj.readyState == 4 && requestObj.status == 200) {
-                console.log(requestObj.responseText)
-            }
-        }
-
-        requestObj.open('GET', '/get')
-        requestObj.send()
-    }
-
-
-        document.getElementById('post').onclick = () => {
-        const requestObj = new XMLHttpRequest()
-        requestObj.onreadystatechange = function() {
-            if (requestObj.readyState == 4 && requestObj.status == 200) {
-                console.log(requestObj.responseText)
-                console.log(JSON.parse(requestObj.responseText))
-            }
-        }
-
-        requestObj.open('POST', '/post')
-        requestObj.setRequestHeader('X-CSRFToken', csrftoken)
-
-        const formdata = new FormData()
-        formdata.append('name', 'John')
-        formdata.append('age', '17')
-
-        requestObj.send(formdata)
-        }
-
-</script> -->
 
 {% endblock %}

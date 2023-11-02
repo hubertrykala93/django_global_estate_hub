@@ -17,7 +17,7 @@
                 </div>
 
                 <div class="footer__newsletter">
-                    <form action="" data-newsletter-form>
+                    <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
                         <div class="form__row">
                             <div class="form__field">
                                 <input data-email type="text" name="email" id="email" placeholder="Your Email">
