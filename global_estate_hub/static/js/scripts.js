@@ -72,6 +72,7 @@ if ($newsletterForm){
 //    xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.send(dataEmail)
   })
+}
 
 
 
