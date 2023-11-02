@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 
 def index(request):
@@ -17,7 +17,13 @@ def post_request(request):
     print(request.POST)
     print(request.POST.get('name'))
     print(request.POST.get('age'))
-    return HttpResponse(content="POST request received successfully.")
+
+    return JsonResponse(data={
+        'name': request.POST.get('name'),
+        'age': request.POST.get('age'),
+    })
+
+    # return HttpResponse(content="POST request received successfully.")
 
 
 def about(request):
