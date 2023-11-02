@@ -1,14 +1,14 @@
 from django.shortcuts import render
 
 
-def sign_up(request):
-    return render(request=request, template_name='accounts/sign-up.html', context={
+def register(request):
+    return render(request=request, template_name='accounts/register.html', context={
         'title': 'Sign Up',
     })
 
 
-def log_in(request):
-    return render(request=request, template_name='accounts/log-in.html', context={
+def login(request):
+    return render(request=request, template_name='accounts/login.html', context={
         'title': 'Login'
     })
 

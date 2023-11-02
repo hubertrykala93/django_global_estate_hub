@@ -1,3 +1,5 @@
+{% load string_filters %}
+
 <section class="page-title">
     <div class="container">
         <div class="row">
@@ -10,7 +12,7 @@
                     </li>
                     {% for url in breadcrumb_urls %}
                     <li>
-                        <a href="{% url url %}">{{ url|title }}</a>
+                        <a href="{% url url %}">{{ url|title|replace }}</a>
                     </li>
                     {% endfor %}
                     <li>
