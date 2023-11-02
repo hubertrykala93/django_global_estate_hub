@@ -42,24 +42,6 @@ def newsletter(request):
         })
 
 
-# def get_request(request):
-#     print(request.GET)
-#     return HttpResponse(content="GET request received successfully.")
-#
-#
-# def post_request(request):
-#     print(request.POST)
-#     print(request.POST.get('name'))
-#     print(request.POST.get('age'))
-#
-#     return JsonResponse(data={
-#         'name': request.POST.get('name'),
-#         'age': request.POST.get('age'),
-#     })
-
-# return HttpResponse(content="POST request received successfully.")
-
-
 def about(request):
     return render(request=request, template_name='estates/about.html', context={
         'title': 'About',
