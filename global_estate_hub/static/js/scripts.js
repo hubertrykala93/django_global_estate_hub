@@ -59,7 +59,9 @@ const $newsletterForm = document.querySelector('[data-newsletter-form]')
 if ($newsletterForm){
   $newsletterForm.addEventListener('submit', e =>{
     e.preventDefault()
-    const dataEmail = $newsletterForm.querySelector('[data-email]').value
+    const data = {
+      "email": $newsletterForm.querySelector('[data-email]').value
+    }
     let csrftoken = $newsletterForm.querySelector('[name]').value
     console.log(csrftoken)
 
@@ -73,8 +75,9 @@ if ($newsletterForm){
     xhr.open('POST', 'newsletter')
     
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    xhr.setRequestHeader("Content-type", "application/json")
-    xhr.send(dataEmail)
+    // xhr.setRequestHeader("Content-type", "application/json")
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.send(JSON.stringify(data))
   })
 }
 
