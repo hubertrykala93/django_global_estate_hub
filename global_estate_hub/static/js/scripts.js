@@ -53,31 +53,50 @@ if($partnersCarousel){
     */
 
 const $newsletterForm = document.querySelector('[data-newsletter-form]')
-// let csrftoken = '{{ csrf_token }}'
-// console.log(csrftoken)
 
 if ($newsletterForm){
   $newsletterForm.addEventListener('submit', e =>{
     e.preventDefault()
+    let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
+    const $emailInput = $newsletterForm.querySelector('[data-email]')
     const data = {
-      "email": $newsletterForm.querySelector('[data-email]').value
+      "email": $emailInput.value
     }
-    let csrftoken = $newsletterForm.querySelector('[name]').value
-    console.log(csrftoken)
 
     const xhr = new XMLHttpRequest()
-    xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            console.log(JSON.parse(this.responseText))
-        }
-    }
-
-    xhr.open('POST', 'newsletter')
     
+
+    xhr.open('POST', 'newsletter', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     // xhr.setRequestHeader("Content-type", "application/json")
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          const info = document.createElement('span')
+          info.classList.add('info')
+
+          let $messageNode = $newsletterForm.querySelector('.info')
+          if ( !$messageNode ){ 
+            $newsletterForm.append(info) 
+          }
+          $messageNode = $newsletterForm.querySelector('.info')
+          if (response.valid){
+            $messageNode.classList.add('succes')
+            $messageNode.classList.remove('error')
+            $emailInput.value = ""
+            setTimeout(() => {
+              $messageNode.remove()
+            }, "3000");
+          } else{
+            $messageNode.classList.add('error')
+            $messageNode.classList.remove('succes')
+          }
+          $messageNode.textContent = response.message
+      }
+    }
   })
 }
 

@@ -22,6 +22,8 @@
     --clr-footer: #0C131A;
     --clr-dark: #18201B;
     --clr-body-text: #777E7A;
+    --clr-error: rgb(176, 28, 28);
+    --clr-succes: rgb(12, 134, 12);
   
     /**
      * TYPOGRAPHY
@@ -555,6 +557,20 @@ h4{
 #footer .footer__newsletter form button#send-newsletter:hover,
 #footer .footer__newsletter form button#send-newsletter:focus-visible{
   background-color: var(--clr-secondary);
+}
+
+#footer .footer__newsletter form .info{
+  display: block;
+  margin-top: 1rem;
+  font-size: var(--fs-body-300);
+}
+
+#footer .footer__newsletter form .info.error{
+  color: var(--clr-error);
+}
+
+#footer .footer__newsletter form .info.succes{
+  color: var(--clr-succes);
 }
 
 #footer .footer__socials .socials-list{

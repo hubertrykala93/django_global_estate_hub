@@ -20,10 +20,10 @@
                     <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
                         <div class="form__row">
                             <div class="form__field">
-                                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                                <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
                             </div>
                             <div class="form__field">
-                                <input data-email type="text" name="email" id="email" placeholder="Your Email">
+                                <input data-email type="text" id="email" placeholder="Your Email">
                             </div>
 
                             <div class="form__submit">
