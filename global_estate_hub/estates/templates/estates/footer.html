@@ -18,6 +18,7 @@
 
                 <div class="footer__newsletter">
                     <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
+                        {% csrf_token %}
                         <div class="form__row">
                             <div class="form__field">
                                 <input data-email type="text" name="email" id="email" placeholder="Your Email">

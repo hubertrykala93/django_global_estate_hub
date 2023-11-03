@@ -53,13 +53,15 @@ if($partnersCarousel){
     */
 
 const $newsletterForm = document.querySelector('[data-newsletter-form]')
-let csrftoken = '{{ csrf_token }}'
-console.log(csrftoken)
+// let csrftoken = '{{ csrf_token }}'
+// console.log(csrftoken)
 
 if ($newsletterForm){
   $newsletterForm.addEventListener('submit', e =>{
     e.preventDefault()
     const dataEmail = $newsletterForm.querySelector('[data-email]').value
+    let csrftoken = $newsletterForm.querySelector('[name]').value
+    console.log(csrftoken)
 
     const xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function () {
@@ -68,9 +70,10 @@ if ($newsletterForm){
         }
     }
 
-    xhr.open('POST', '/newsletter')
-    console.log(dataEmail)
-//    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.open('POST', 'newsletter')
+    
+    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.setRequestHeader("Content-type", "application/json")
     xhr.send(dataEmail)
   })
 }
