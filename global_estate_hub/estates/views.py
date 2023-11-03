@@ -14,17 +14,22 @@ def index(request):
 def newsletter(request):
     if request.method == 'POST':
         email = request.POST.get('email')
-        print(email)
 
-        if Newsletter.objects.filter(email=email).exists():
+        if email is not None and len(email) == 0:
             return JsonResponse(data={
                 "valid": False,
-                "message": "E-mail address already exists.",
+                "message": "The email address cannot be empty.",
             })
-        if email is None:
+
+        elif Newsletter.objects.filter(email=email).exists():
             return JsonResponse(data={
                 "valid": False,
-                "message": "E-mail address is None.",
+                "message": "The email address already exists.",
+            })
+        elif email is None:
+            return JsonResponse(data={
+                "valid": False,
+                "message": "The email address is None.",
             })
         else:
             new_subscriber = Newsletter(email=email)
@@ -32,13 +37,13 @@ def newsletter(request):
 
             return JsonResponse(data={
                 "valid": True,
-                "message": "Your e-mail address was added.",
+                "message": "Congratulations! You have subscribed to our newsletter.",
             })
 
     else:
         return JsonResponse(data={
             "valid": False,
-            "message": "Your e-mail address wasn't added.",
+            "message": "The email address was not added.",
         })
 
 
