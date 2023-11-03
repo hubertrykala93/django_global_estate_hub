@@ -13,7 +13,7 @@ def index(request):
 @csrf_exempt
 def newsletter(request):
     if request.method == 'POST':
-        email = request.POST.get('email', None)
+        email = request.POST.get('email')
         print(email)
 
         if Newsletter.objects.filter(email=email).exists():
@@ -21,7 +21,7 @@ def newsletter(request):
                 "valid": False,
                 "message": "E-mail address already exists.",
             })
-        elif email is None:
+        if email is None:
             return JsonResponse(data={
                 "valid": False,
                 "message": "E-mail address is None.",

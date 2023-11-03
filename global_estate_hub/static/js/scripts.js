@@ -53,8 +53,8 @@ if($partnersCarousel){
     */
 
 const $newsletterForm = document.querySelector('[data-newsletter-form]')
-//let csrftoken = '{{ csrf_token }}'
-//console.log(csrftoken)
+let csrftoken = '{{ csrf_token }}'
+console.log(csrftoken)
 
 if ($newsletterForm){
   $newsletterForm.addEventListener('submit', e =>{
@@ -69,11 +69,11 @@ if ($newsletterForm){
     }
 
     xhr.open('POST', '/newsletter')
+    console.log(dataEmail)
 //    xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.send(dataEmail)
   })
 }
-
 
 
 

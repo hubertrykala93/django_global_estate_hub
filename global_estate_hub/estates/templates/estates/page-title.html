@@ -1,4 +1,4 @@
-{% load string_filters %}
+{% load template_filters %}
 
 <section class="page-title">
     <div class="container">
@@ -10,7 +10,7 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
-                    {% for url in breadcrumb_urls %}
+                    {% for url in breadcrumbs_urls|slice:":-1" %}
                     <li>
                         <a href="{% url url %}">{{ url|title|replace }}</a>
                     </li>
