@@ -69,6 +69,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "estates.context_processors.breadcrumbs_urls",
+                "estates.context_processors.generate_token",
             ],
         },
     },
