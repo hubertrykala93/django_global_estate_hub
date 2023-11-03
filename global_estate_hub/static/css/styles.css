@@ -60,7 +60,8 @@
     --container-400: 1140px;
     --container-500: 1212px;
     --side-space: 15px;
-    --section-block-space: 7rem;
+    --section-block-space-400: 4rem;
+    --section-block-space-500: 7rem;
   }
 
 
@@ -447,7 +448,7 @@ h4{
    */
 
 .our-partners {
-  padding: var(--section-block-space) 0;
+  padding: var(--section-block-space-500) 0;
   text-align: center;
 }
 
@@ -468,6 +469,12 @@ h4{
 .our-partners .logo-carousel .logo-carousel__partner:hover img {
   filter: grayscale(0);
 }
+
+
+/*----------------------------------*\
+  #LOGIN / SIGN UP PAGES
+\*----------------------------------*/
+
 
 
 
@@ -809,7 +816,8 @@ h4{
         */
 
       --side-space: 30px;
-      --section-block-space: 11rem;
+      --section-block-space-400: 6rem;
+      --section-block-space-500: 11rem;
     }
 
 

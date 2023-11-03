@@ -2,4 +2,100 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<section class="user-access-page signup-page">
+  <div class="container">
+    <div class="row">
+      <div class="testimony-column">
+        <div class="login-testimony">
+          <div class="testimony__wrapper">
+            <div class="testimony__content">
+              We’ve been using United to kick start every new project and can’t imagine working without it.
+            </div>
+
+            <div class="testimony__info">
+              <div class="testimony__avatar">
+                <img src="https://picsum.photos/90" alt="Prophet's Rolex picture">
+              </div>
+
+              <div class="testimony__name">Prophet Rolex</div>
+
+              <div class="testimony__signature">Head of Design, Envato</div>
+
+              <div class="testimony__stars">
+                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-column">
+        <div class="section-title">
+          <h2 class="main-title h2">Register</h2>
+
+          <div class="signup-form">
+            <form action="" method="post" data-signup-form>
+              <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+              <div class="form__row">
+                <div class="form__field">
+                  <label for="username">User name</label>
+                  <div class="form__input-wrap">
+                    <img class="form__hint-icon" src="/media/icons/form-user.svg" alt="user icon">
+                    <input data-username type="text" id="username" placeholder="User name">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="form__field">
+                  <label for="email">Email</label>
+                  <div class="form__input-wrap">
+                    <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
+                    <input data-email type="text" id="email" placeholder="Email">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="form__field">
+                  <label for="password1">Password</label>
+                  <div class="form__input-wrap">
+                    <img class="form__hint-icon" src="/media/icons/form-password.svg" alt="password icon">
+                    <input data-password1 type="password" id="password1" placeholder="Your Password">
+                    <img class="form__eye-icon" src="/media/icons/form-see-password.svg" alt="see password icon">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="form__field">
+                  <label for="password2">Confirm password</label>
+                  <div class="form__input-wrap">
+                    <img class="form__hint-icon" src="/media/icons/form-password.svg" alt="password icon">
+                    <input data-password2 type="password" id="password2" placeholder="Confirm Password">
+                    <img class="form__eye-icon" src="/media/icons/form-see-password.svg" alt="see password icon">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form__row">
+                <div class="form__submit">
+                    <button class="btn" type="submit" id="sign-up">Sign Up</button>
+                </div>
+              </div>
+            </form>
+
+            <div class="form-question">Already have an account? <a href="#">LogIn</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
