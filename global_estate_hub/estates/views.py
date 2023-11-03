@@ -14,6 +14,8 @@ def index(request):
 def newsletter(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+        print(request.POST)
+        print(request.POST.get('email'))
 
         if email is not None and len(email) == 0:
             return JsonResponse(data={
