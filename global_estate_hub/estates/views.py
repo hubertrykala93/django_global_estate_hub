@@ -28,11 +28,13 @@ def newsletter(request):
                 "valid": False,
                 "message": "The email address already exists.",
             })
+
         elif email is None:
             return JsonResponse(data={
                 "valid": False,
                 "message": "The email address is None.",
             })
+
         else:
             new_subscriber = Newsletter(email=email)
             new_subscriber.save()
