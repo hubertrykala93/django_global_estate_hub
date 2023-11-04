@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from .models import User
@@ -19,6 +19,29 @@ def create_user(request):
         username = data['userName'][0]
         username_field = data['userName'][1]
 
+        email = data['email'][0]
+        email_field = data['email'][1]
+
+        password1 = data['password1'][0]
+        # password1 = make_password(password=data['password1'][0])
+        password1_field = data['password1'][1]
+
+        password2 = data['password2'][0]
+        # password2 = make_password(password=data['password2'][0])
+        password2_field = data['password2'][1]
+
+        # if not username and email and password1 and password2:
+        #     return JsonResponse(data={
+        #         "userName": [
+        #             {
+        #                 "valid": False,
+        #                 "username": username,
+        #                 "username_field": username_field,
+        #                 "message": "The username field cannot be empty."
+        #             }
+        #         ]
+        #     })
+
         if not username:
             return JsonResponse(data={
                 "userName": [
@@ -31,10 +54,7 @@ def create_user(request):
                 ]
             })
 
-        email = data['email'][0]
-        email_field = data['email'][1]
-
-        if not email:
+        elif not email:
             return JsonResponse(data={
                 "email": [
                     {
@@ -46,11 +66,7 @@ def create_user(request):
                 ]
             })
 
-        password1 = data['password1'][0]
-        # password1 = make_password(password=data['password1'][0])
-        password1_field = data['password1'][1]
-
-        if not password1:
+        elif not password1:
             return JsonResponse(data={
                 "password1": [
                     {
@@ -62,11 +78,7 @@ def create_user(request):
                 ]
             })
 
-        password2 = data['password2'][0]
-        # password2 = make_password(password=data['password2'][0])
-        password2_field = data['password2'][1]
-
-        if not password2:
+        elif not password2:
             return JsonResponse(data={
                 "password2": [
                     {
