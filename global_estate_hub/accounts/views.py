@@ -28,6 +28,30 @@ def create_user(request):
         raw_password2 = data['password2'][0]
         password2_field = data['password2'][1]
 
+        if not username and not email and not raw_password1 and not raw_password2:
+            return JsonResponse(data={
+                "data": [
+                    {
+                        "username_valid": False,
+                        "username": username,
+                        "username_field": username_field,
+                        "username_message": "The username field cannot be empty.",
+                        "email_valid": False,
+                        "email": email,
+                        "email_field": email_field,
+                        "email_message": "The email field cannot be empty.",
+                        "password1_valid": False,
+                        "password1": raw_password1,
+                        "password1_field": password1_field,
+                        "password1_message": "The password field cannot be empty.",
+                        "password2_valid": False,
+                        "password2": raw_password2,
+                        "password2_field": password2_field,
+                        "password2_message": "The confirm password field cannot be empty.",
+                    }
+                ]
+            })
+
         if username:
             if re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username):
                 if not User.objects.filter(username=username).exists():
@@ -64,7 +88,7 @@ def create_user(request):
                                                 })
                                             else:
                                                 return JsonResponse(data={
-                                                    "password2": [
+                                                    "data": [
                                                         {
                                                             "valid": False,
                                                             "password2": make_password(password=raw_password2),
@@ -76,7 +100,7 @@ def create_user(request):
                                                 })
                                         else:
                                             return JsonResponse(data={
-                                                "password2": [
+                                                "data": [
                                                     {
                                                         "valid": False,
                                                         "password2": make_password(password=raw_password2),
@@ -88,7 +112,7 @@ def create_user(request):
 
                                     else:
                                         return JsonResponse(data={
-                                            "password1": [
+                                            "data": [
                                                 {
                                                     "valid": False,
                                                     "password1": make_password(password=raw_password1),
@@ -102,7 +126,7 @@ def create_user(request):
                                         })
                                 else:
                                     return JsonResponse(data={
-                                        "password1": [
+                                        "data": [
                                             {
                                                 "valid": False,
                                                 "password1": make_password(password=raw_password1),
@@ -113,7 +137,7 @@ def create_user(request):
                                     })
                             else:
                                 return JsonResponse(data={
-                                    "email": [
+                                    "data": [
                                         {
                                             "valid": False,
                                             "email": email,
@@ -124,7 +148,7 @@ def create_user(request):
                                 })
                         else:
                             return JsonResponse(data={
-                                "email": [
+                                "data": [
                                     {
                                         "valid": False,
                                         "email": email,
@@ -135,7 +159,7 @@ def create_user(request):
                             })
                     else:
                         return JsonResponse(data={
-                            "email": [
+                            "data": [
                                 {
                                     "valid": False,
                                     "email": email,
@@ -146,7 +170,7 @@ def create_user(request):
                         })
                 else:
                     return JsonResponse(data={
-                        "userName": [
+                        "data": [
                             {
                                 "valid": False,
                                 "username": username,
@@ -157,7 +181,7 @@ def create_user(request):
                     })
             else:
                 return JsonResponse(data={
-                    "userName": [
+                    "data": [
                         {
                             "valid": False,
                             "username": username,
@@ -169,7 +193,7 @@ def create_user(request):
                 })
         else:
             return JsonResponse(data={
-                "userName": [
+                "data": [
                     {
                         "valid": False,
                         "username": username,
@@ -181,8 +205,12 @@ def create_user(request):
 
     else:
         return JsonResponse(data={
-            "valid": False,
-            "message": "It is not possible to register a new user.",
+            "data": [
+                {
+                    "valid": False,
+                    "message": "It is not possible to register a new user.",
+                }
+            ]
         })
 
 
