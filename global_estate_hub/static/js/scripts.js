@@ -124,7 +124,7 @@ if ($signUpForm){
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'signup', true)
+    xhr.open('POST', 'create-user', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))
