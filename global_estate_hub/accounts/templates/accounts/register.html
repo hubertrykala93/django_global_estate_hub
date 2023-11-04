@@ -37,9 +37,10 @@
       <div class="form-column">
         <div class="section-title">
           <h2 class="main-title h2">Register</h2>
+        </div>
 
           <div class="signup-form">
-            <form action="" method="post" data-signup-form>
+            <form action="" method="post" data-signup-form class="theme-form">
               <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
               <div class="form__row">
@@ -84,9 +85,9 @@
                 </div>
               </div>
 
-              <div class="form__row">
-                <div class="form__submit">
-                    <button class="btn" type="submit" id="sign-up">Sign Up</button>
+              <div class="form__row submit-row">
+                <div class="form__field form__submit">
+                    <button class="btn secondary-btn" type="submit" id="sign-up">Sign Up</button>
                 </div>
               </div>
             </form>

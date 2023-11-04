@@ -18,10 +18,12 @@
     --clr-primary-alt: #22402e;
     --clr-primary-light-bg: #EFF5F2;
     --clr-secondary: #C66735;
+    --clr-secondary-alt: #954012;
     --clr-black: #000;
     --clr-footer: #0C131A;
     --clr-dark: #18201B;
     --clr-body-text: #777E7A;
+    --clr-input-bg: #F6F6F6;
     --clr-error: rgb(176, 28, 28);
     --clr-succes: rgb(12, 134, 12);
   
@@ -84,6 +86,7 @@ ul{
 a{
   text-decoration: none;
   color: inherit;
+  transition: color .4s;
 }
 
 img{
@@ -101,6 +104,7 @@ input,
 button{
   font-family: inherit;
   border: none;
+  outline: none;
 }
 
 html {
@@ -186,6 +190,16 @@ h4{
   background-color: var(--clr-primary-alt);
 }
 
+.btn.secondary-btn{
+  background-color: var(--clr-secondary);
+  color: white;
+}
+
+.btn.secondary-btn:hover,
+.btn.secondary-btn:focus-visible{
+  background-color: var(--clr-secondary-alt);
+}
+
 
 /*----------------------------------*\
   #OFFCANVAS
@@ -256,6 +270,80 @@ h4{
 
 .section-title{
   margin-bottom: 1.8rem;
+}
+
+
+/**
+  * FORMS
+   */
+
+.theme-form .form__row {
+  display: flex;
+  margin-bottom: 3rem;
+  margin-left: -2.1rem;
+  margin-right: -2.1rem;
+}
+
+.theme-form .form__row .form__field{
+  flex: 1;
+  padding: 0 2.1rem;
+}
+
+.theme-form .form__row:last-child{
+  margin-bottom: 0;
+}
+
+.theme-form label {
+  display: inline-block;
+  margin-bottom: 1rem;
+  font-size: var(--fs-body-400);
+  font-weight: 500;
+  color: var(--clr-dark);
+  line-height: normal;
+}
+
+.theme-form .form__input-wrap {
+  position: relative;
+}
+
+.theme-form input {
+  width: 100%;
+  background-color: var(--clr-input-bg);
+  border-radius: var(--br-500);
+  height: 55px;
+  padding: 0 4.2rem;
+  font-size: var(--fs-body-400);
+  color: var(--clr-black);
+  transition: box-shadow .2s;
+}
+
+.theme-form input:focus-visible{
+  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.theme-form input::placeholder{
+  color: var(--clr-body-text);
+}
+
+.theme-form .form__input-wrap .form__hint-icon{
+  position: absolute;
+  top: 50%;
+  left: 1.8rem;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.theme-form .form__input-wrap .form__eye-icon{
+  position: absolute;
+  top: 50%;
+  right: 1.8rem;
+  transform: translateY(-50%);
+  cursor: pointer;
+}
+
+.theme-form .form__submit button {
+  width: 100%;
+  line-height: 55px;
 }
 
 
@@ -475,9 +563,19 @@ h4{
   #LOGIN / SIGN UP PAGES
 \*----------------------------------*/
 
+.form-column .form-question {
+  margin-top: 3rem;
+  text-align: center;
+}
 
+.form-column .form-question a {
+  color: var(--clr-secondary);
+}
 
-
+.form-column .form-question a:hover,
+.form-column .form-question a:focus-visible{
+  color: var(--clr-primary);
+}
 
 
 /*----------------------------------*\
