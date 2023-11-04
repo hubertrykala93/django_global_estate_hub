@@ -117,10 +117,10 @@ if ($signUpForm){
     const $password2Input = this.querySelector('[data-password2]')
 
     const data = {
-      "userName": $userNameInput.value,
-      "email": $emailInput.value,
-      "password1": $password1Input.value,
-      "password2": $password2Input.value
+      "userName": [$userNameInput.value, "userName"],
+      "email": [$emailInput.value, "email"],
+      "password1": [$password1Input.value, "password1"],
+      "password2": [$password2Input.value, "password2"]
     }
 
     const xhr = new XMLHttpRequest()

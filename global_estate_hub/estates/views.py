@@ -15,7 +15,7 @@ def newsletter(request):
     if request.method == 'POST':
         email = json.loads(s=request.body.decode('utf-8'))['email']
 
-        if email is not None and len(email) == 0:
+        if not email:
             return JsonResponse(data={
                 "valid": False,
                 "message": "The email address cannot be empty.",
