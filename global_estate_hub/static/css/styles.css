@@ -563,19 +563,109 @@ h4{
   #LOGIN / SIGN UP PAGES
 \*----------------------------------*/
 
-.form-column .form-question {
+.user-access-page {
+  padding: var(--section-block-space-400) 0;
+}
+
+.user-access-page .row{
+  display: grid;
+  row-gap: 4rem;
+}
+
+.user-access-page .testimony-column {
+  order: 2;
+}
+
+.user-access-page .testimony-column .login-testimony {
+  display: flex;
+  justify-content: center;
+}
+
+.user-access-page .testimony__wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  padding: 4rem 4rem 20rem;
+  width: 100%;
+  max-width: 630px;
+  background-color: var(--clr-primary-light-bg);
+  background-image: url("/media/shapes/login-buildings.svg");
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  background-size: 100%;
+  border-radius: var(--br-500);
+  text-align: center;
+}
+
+.user-access-page .testimony__wrapper .testimony__content {
+  margin-bottom: 1.8rem;
+  max-width: 380px;
+  font-size: 1.8rem;
+  line-height: 1.6;
+  font-weight: 600;
+  color: var(--clr-primary);
+}
+
+.user-access-page .testimony__wrapper .testimony__info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__avatar{
+  margin-bottom: 1rem;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__avatar img{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__name {
+  margin-bottom: .5rem;
+  font-size: var(--fs-body-400);
+  color: var(--clr-primary);
+  font-weight: 500;
+  line-height: normal;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__signature{
+  margin-bottom: 1.8rem;
+  font-size: var(--fs-body-300);
+  line-height: normal;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__stars{
+  display: flex;
+}
+
+.user-access-page .testimony__wrapper .testimony__info .testimony__stars img{
+  margin: 0 .25rem;
+}
+
+
+
+
+
+.user-access-page .form-column .form-question {
   margin-top: 3rem;
   text-align: center;
 }
 
-.form-column .form-question a {
+.user-access-page .form-column .form-question a {
   color: var(--clr-secondary);
 }
 
-.form-column .form-question a:hover,
-.form-column .form-question a:focus-visible{
+.user-access-page .form-column .form-question a:hover,
+.user-access-page .form-column .form-question a:focus-visible{
   color: var(--clr-primary);
 }
+
+
+
+
 
 
 /*----------------------------------*\
@@ -849,6 +939,22 @@ h4{
 \*----------------------------------*/
 
 /**
+  * MIN 500px
+   */
+
+  @media screen and (min-width: 500px){
+
+  /*----------------------------------*\
+    #LOGIN / SIGN UP PAGES
+  \*----------------------------------*/
+
+  .user-access-page .testimony__wrapper {
+    padding: 4rem 4rem 40rem;
+  }
+   }
+
+
+/**
   * MIN 768px
    */
 
@@ -965,6 +1071,30 @@ h4{
       margin-top: 6rem;
     }
 
+
+    /*----------------------------------*\
+      #LOGIN / SIGN UP PAGES
+    \*----------------------------------*/
+
+    .user-access-page .row {
+      grid-template-columns: 7fr 5fr;
+      column-gap: 3rem;
+      align-items: center;
+    }
+
+    .user-access-page .testimony-column {
+      order: 0;
+      padding-right: 4rem;
+    }
+
+    .user-access-page .testimony__wrapper {
+      padding: 6.3rem 0 0;
+      min-height: 700px;
+    }
+
+    .user-access-page .testimony__wrapper .testimony__content {
+      font-size: 2.4rem;
+    }
 
 
     /*----------------------------------*\
