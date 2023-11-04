@@ -22,12 +22,10 @@ def create_user(request):
         email = data['email'][0]
         email_field = data['email'][1]
 
-        password1 = data['password1'][0]
-        # password1 = make_password(password=data['password1'][0])
+        raw_password1 = data['password1'][0]
         password1_field = data['password1'][1]
 
-        password2 = data['password2'][0]
-        # password2 = make_password(password=data['password2'][0])
+        raw_password2 = data['password2'][0]
         password2_field = data['password2'][1]
 
         if username:
@@ -36,13 +34,16 @@ def create_user(request):
                     if email:
                         if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email):
                             if not User.objects.filter(email=email).exists():
-                                if password1:
+                                if raw_password1:
                                     if re.match(
                                             pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-                                            string=password1):
-                                        if password2:
-                                            if password1 == password2:
-                                                new_user = User(username=username, email=email, password=password1)
+                                            string=raw_password1):
+                                        if raw_password2:
+                                            if raw_password1 == raw_password2:
+                                                password = make_password(password=raw_password1)
+
+                                                new_user = User(username=username, email=email,
+                                                                password=make_password(password=password))
                                                 new_user.save()
 
                                                 return JsonResponse(data={
@@ -53,9 +54,9 @@ def create_user(request):
                                                             "username_field": username_field,
                                                             "email": email,
                                                             "email_field": email_field,
-                                                            "password1": password1,
+                                                            "password1": password,
                                                             "password1_field": password1_field,
-                                                            "password2": password2,
+                                                            "password2": password,
                                                             "password2_field": password2_field,
                                                             "message": "The account has been successfully created",
                                                         }
@@ -66,7 +67,7 @@ def create_user(request):
                                                     "password2": [
                                                         {
                                                             "valid": False,
-                                                            "password2": password2,
+                                                            "password2": make_password(password=raw_password2),
                                                             "password2_field": password2_field,
                                                             "message": "The confirm password field does not match "
                                                                        "the previously entered password."
@@ -78,7 +79,7 @@ def create_user(request):
                                                 "password2": [
                                                     {
                                                         "valid": False,
-                                                        "password2": password2,
+                                                        "password2": make_password(password=raw_password2),
                                                         "password2_field": password2_field,
                                                         "message": "The confirm password field cannot be empty.",
                                                     }
@@ -90,7 +91,7 @@ def create_user(request):
                                             "password1": [
                                                 {
                                                     "valid": False,
-                                                    "password1": password1,
+                                                    "password1": make_password(password=raw_password1),
                                                     "password1_field": password1_field,
                                                     "message": "The password should be at least 8 characters long, "
                                                                "including at least one uppercase letter, "
@@ -104,7 +105,7 @@ def create_user(request):
                                         "password1": [
                                             {
                                                 "valid": False,
-                                                "password1": password1,
+                                                "password1": make_password(password=raw_password1),
                                                 "password1_field": password1_field,
                                                 "message": "The password field cannot be empty.",
                                             }
