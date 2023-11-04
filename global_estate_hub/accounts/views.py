@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import JsonResponse
 import json
 
@@ -27,26 +27,25 @@ def create_user(request):
 
         if username:
             return JsonResponse(data={
-                "valid": True,
-                "message": "Correct username",
+                "userName": [
+                    {
+                        "valid": True,
+                        "username": username,
+                        "username_field": username_field,
+                    }
+                ]
             })
 
-        if email:
+        else:
             return JsonResponse(data={
-                "valid": True,
-                "message": "Correct e-mail address."
-            })
-
-        if password1:
-            return JsonResponse(data={
-                "valid": True,
-                "message": "Correct password.",
-            })
-
-        if password2:
-            return JsonResponse(data={
-                "valid": True,
-                "message": "Password correctly repeated.",
+                "userName": [
+                    {
+                        "valid": False,
+                        "username": username,
+                        "username_field": username_field,
+                        "message": "The 'username' field cannot be empty.",
+                    }
+                ]
             })
 
     else:
