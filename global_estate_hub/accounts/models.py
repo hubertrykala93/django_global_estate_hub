@@ -45,7 +45,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
+    if is_superuser:
+        USERNAME_FIELD = 'username'
+    else:
+        USERNAME_FIELD = 'email'
+
     EMAIL_FIELD = 'email'
     REQUIRED_FIELDS = []
 
