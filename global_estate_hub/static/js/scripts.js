@@ -101,28 +101,39 @@ if ($newsletterForm){
 }
 
 
+/**
+   * SIGNUP FORM AJAX VALIDATION
+    */
 
+const $signUpForm = document.querySelector('[data-signup-form]')
 
+if ($signUpForm){
+  $signUpForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let csrftoken = this.querySelector('[name="csrftoken"]').value
+    const $userNameInput = this.querySelector('[data-username]')
+    const $emailInput = this.querySelector('[data-email]')
+    const $password1Input = this.querySelector('[data-password1]')
+    const $password2Input = this.querySelector('[data-password2]')
 
+    const data = {
+      "userName": $userNameInput.value,
+      "email": $emailInput.value,
+      "password1": $password1Input.value,
+      "password2": $password2Input.value
+    }
 
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'signup', true)
+    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.send(JSON.stringify(data))
 
-
-
-
-// const form = document.querySelector('form')
-
-// form.addEventListener('submit', e => {
-//   e.preventDefault()
-//   const inputValue = form.querySelector('input').value
-
-//   const xhr = new XMLHttpRequest()
-//   const url = "/add-category"
-//   xhr.open("POST", url)
-//   xhr.send(inputValue)
-
-//   xhr.onreadystatechange = function () {
-//     if (this.readyState == 4 && this.status == 200) {
-//         console.log(xhr.responseText)
-//     }
-//   }
-// })
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
+      }
+    }
+  })
+}
