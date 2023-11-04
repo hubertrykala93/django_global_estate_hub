@@ -102,11 +102,40 @@ def create_user(request):
                                                             }
                                                         ]
                                                     })
+                                                else:
+                                                    return JsonResponse(data={
+                                                        "password2": [
+                                                            {
+                                                                "valid": False,
+                                                                "password2": password2,
+                                                                "password2_field": password2_field,
+                                                                "message": "The confirm password field does not match "
+                                                                           "the previously entered password."
+                                                            }
+                                                        ]
+                                                    })
+
+                                        else:
+                                            return JsonResponse(data={
+                                                "password1": [
+                                                    {
+                                                        "valid": False,
+                                                        "password1": password1,
+                                                        "password1_field": password1_field,
+                                                        "message": "The password should be at least 8 characters long, "
+                                                                   "including at least one uppercase letter, "
+                                                                   "one lowercase letter, one digit, "
+                                                                   "and one special character.",
+                                                    }
+                                                ]
+                                            })
                                 else:
                                     return JsonResponse(data={
                                         "email": [
                                             {
                                                 "valid": False,
+                                                "email": email,
+                                                "email_field": email_field,
                                                 "message": "The e-mail address already exists.",
                                             }
                                         ]
@@ -116,6 +145,8 @@ def create_user(request):
                                     "email": [
                                         {
                                             "valid": False,
+                                            "email": email,
+                                            "email_field": email_field,
                                             "message": "The e-mail address is invalid.",
                                         }
                                     ]
@@ -125,6 +156,8 @@ def create_user(request):
                             "userName": [
                                 {
                                     "valid": False,
+                                    "username": username,
+                                    "username_field": username_field,
                                     "message": "The username already exists.",
                                 }
                             ]
