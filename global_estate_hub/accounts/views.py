@@ -21,7 +21,7 @@ def create_user(request):
         raw_password1 = data['password1'][0]
         raw_password2 = data['password2'][0]
 
-        return JsonResponse(data=[
+        response = [
             {
                 "valid":
                     False if not username else
@@ -84,7 +84,16 @@ def create_user(request):
                     "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
                     "Correct password confirmation.",
             }
-        ], safe=False)
+        ]
+
+        if list(set([data['valid'] for data in response]))[0]:
+            user = User(username=username, email=email, password=make_password(password=raw_password1))
+            user.save()
+
+            return JsonResponse(data=response, safe=False)
+
+        else:
+            return JsonResponse(data=response, safe=False)
 
     else:
         return JsonResponse(data={
