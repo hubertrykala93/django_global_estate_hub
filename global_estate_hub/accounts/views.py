@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 from .models import User
 import json
 import re
@@ -94,16 +94,6 @@ def create_user(request):
 
         else:
             return JsonResponse(data=response, safe=False)
-
-    else:
-        return JsonResponse(data={
-            "data": [
-                {
-                    "valid": False,
-                    "message": "It is not possible to register a new user.",
-                }
-            ]
-        })
 
 
 def login(request):
