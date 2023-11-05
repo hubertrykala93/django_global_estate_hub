@@ -20,6 +20,7 @@
     --clr-secondary: #C66735;
     --clr-secondary-alt: #954012;
     --clr-black: #000;
+    --clr-white: #ffffff;
     --clr-footer: #0C131A;
     --clr-dark: #18201B;
     --clr-body-text: #777E7A;
@@ -136,27 +137,27 @@ body{
   padding: 0 var(--side-space);
 }
 
-h1{
+.h1{
   font-size: var(--fs-h1);
   line-height: 1.25em;
   font-weight: 800;
   color: var(--clr-dark);
 }
 
-h2{
+.h2{
   font-size: var(--fs-h2);
   line-height: 1.38em;
   font-weight: 700;
   color: var(--clr-dark);
 }
 
-h3{
+.h3{
   font-size: var(--fs-h3);
   line-height: normal;
   font-weight: 500;
 }
 
-h4{
+.h4{
   font-size: var(--fs-h4);
   line-height: normal;
   font-weight: 500;
@@ -175,6 +176,8 @@ h4{
 .btn{
   line-height: 45px;
   border-radius: var(--br-400);
+  display: inline-flex;
+  align-items: center;
   padding: 0 2rem;
   font-size: 1.6rem;
   transition: background-color .4s, color .4s;
@@ -198,6 +201,10 @@ h4{
 .btn.secondary-btn:hover,
 .btn.secondary-btn:focus-visible{
   background-color: var(--clr-secondary-alt);
+}
+
+.btn .btn-icon.right{
+  margin-left: 1rem;
 }
 
 
@@ -268,8 +275,33 @@ h4{
   * -SECTION TITLE
    */
 
+
 .section-title{
+  display: flex;
+  flex-direction: column;
   margin-bottom: 1.8rem;
+}
+
+.section-title .upper-title{
+  position: relative;
+  margin-bottom: 1.8rem;
+  padding-left: 1.1rem;
+  color: var(--clr-secondary);
+  font-weight: 500;
+  line-height: normal;
+  text-transform: capitalize;
+}
+
+.section-title .upper-title::before{
+  content: "";
+  width: 2.4rem;
+  height: 1.9rem;
+  background-image: url("/media/shapes/section-title-icon.png");
+  background-size: contain;
+  background-position: center;
+  position: absolute;
+  left: 0;
+  top: -.6rem;
 }
 
 
@@ -532,6 +564,168 @@ h4{
 \*----------------------------------*/
 
 /**
+  * About us section
+   */
+
+.about{
+  padding: var(--section-block-space-500) 0 0;
+}
+
+.about .container{
+  display: grid;
+  row-gap: 4rem;
+}
+
+.about .about__text{
+  font-size: var(--fs-body-300);
+}
+
+.about .about__call {
+  display: flex;
+  align-items: center;
+  margin-top: 1.8rem;
+}
+
+.about .about__call p{
+  color: var(--clr-black);
+}
+
+.about .about__call .number{
+  flex: 0 0 150px;
+  height: 61px;
+  margin-left: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-image: url("/media/about_us/number-stroke.svg");
+  background-size: contain;
+  background-position: center;
+  color: var(--clr-dark);
+}
+
+.about .about__list {
+  display: flex;
+  flex-direction: column;
+  margin: 2.7rem 0 4rem;
+  list-style: none;
+}
+
+.about .about__list .about__list-item{
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-weight: 500;
+  color: var(--clr-black);
+}
+
+.about .about__list .about__list-item:last-child{
+  margin-bottom: 0;
+}
+
+.about .about__list .about__list-item::before{
+  content: "";
+  flex: 0 0 30px;
+  height: 30px;
+  background-image: url("/media/icons/check-listicon.svg");
+  background-position: center;
+  background-size: contain;
+  margin-right: 1.8rem;
+}
+
+.about .btn{
+  line-height: 50px;
+}
+
+.about .image-column{
+  position: relative;
+}
+
+.about .about__collage{
+  margin: 0 -1rem;
+}
+
+.about .about__collage > div{
+  padding: 0 1rem;
+}
+
+.about .about__collage .image{
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: var(--br-500);
+}
+
+.about .about__collage .column-single .image.single{
+  background-image: url("/media/about_us/single1.jpg");
+  height: 400px;
+}
+
+.about .about__collage .column-double {
+  display: none;
+}
+
+.about .about__collage .column-double .image.top{
+  background-image: url("/media/about_us/double1.jpg");
+}
+
+.about .about__collage .column-double .image.bottom{
+  background-image: url("/media/about_us/double2.jpg");
+}
+
+.about .about__quote{
+  position: absolute;
+  left: 50%;
+  bottom: 3rem;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 235px;
+  padding: 2rem 3rem;
+  background-color: var(--clr-secondary);
+  border-radius: var(--br-500);
+  color: var(--clr-white);
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+.about .about__quote .quote-decoration{
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -50%);  
+}
+
+.about .about__quote .quote-decoration .quote-icon{
+  width: 40px;
+  height: 40px;
+  background-color: var(--clr-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgb(36, 56, 44, .2);
+}
+
+.about .about__quote .quote-decoration .quote-lines{
+  position: absolute;
+  left: -30px;
+  top: -67px;
+}
+
+.about .about__arrow {
+  display: none;
+  animation: aboutArror 1s infinite alternate linear;
+}
+
+@keyframes aboutArror {
+  100%{
+    transform: rotate(15deg);
+  }
+}
+
+
+/**
   * Our partners carousel
    */
 
@@ -544,8 +738,16 @@ h4{
   max-width: calc(var(--container-500) + (var(--side-space)) * 2);
 }
 
+.our-partners .section-title{
+  align-items: center;
+}
+
 .our-partners .logo-carousel{
   margin-top: 3rem;
+}
+
+.our-partners .logo-carousel .swiper-wrapper{
+  align-items: center;
 }
 
 .our-partners .logo-carousel .logo-carousel__partner img {
@@ -945,6 +1147,18 @@ h4{
   @media screen and (min-width: 500px){
 
   /*----------------------------------*\
+    #HOME PAGE
+  \*----------------------------------*/
+
+  /**
+    * About us section
+    */
+
+  .about .about__collage .column-single .image.single {
+    height: 600px;
+  }
+
+  /*----------------------------------*\
     #LOGIN / SIGN UP PAGES
   \*----------------------------------*/
 
@@ -976,6 +1190,67 @@ h4{
     line-height: 45px;
     padding: 0 2rem;
   }
+
+
+  /*----------------------------------*\
+    #HOME PAGE
+  \*----------------------------------*/
+
+  /**
+    * About us section
+    */
+    
+  .about .image-column {
+    display: flex;
+    height: 540px;
+  }
+  
+  .about .about__collage{
+    display: flex;
+    width: 100%;
+  }
+
+  .about .about__collage .column-single .image.single {
+    height: 70%;
+    width: 100%;
+    align-self: flex-end;
+  }
+
+  .about .about__collage .column-single {
+    width: 45%;
+  }
+
+  .about .about__collage .column-double {
+    width: 55%;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .about .about__collage .column-single,
+  .about .about__collage .column-double{
+    display: flex;
+  }
+
+  .about .about__collage .column-double .image{
+    width: 100%;
+  }
+
+  .about .about__collage .column-double .image.top{
+    height: 66%;
+  }
+
+  .about .about__collage .column-double .image.bottom{
+    height: 34%;
+  }
+
+  .about .about__quote {
+    left: 25%;
+    bottom: unset;
+    top: 20%;
+    transform: unset;
+  }
+  
+
 
   /*----------------------------------*\
     #FOOTER
@@ -1072,6 +1347,28 @@ h4{
     }
 
 
+    /**
+      * About us section
+      */
+
+    .about .container{
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .about .image-column {
+      height: unset;
+      padding-left: 5rem;
+    }
+
+    .about .about__arrow {
+      display: block;
+      position: absolute;
+      left: 30px;
+      top: 5%;
+    }
+
+
+
     /*----------------------------------*\
       #LOGIN / SIGN UP PAGES
     \*----------------------------------*/
@@ -1139,6 +1436,38 @@ h4{
     #header #nav .nav .nav__item {
       margin-right: 4rem;
     }
+
+
+    /*----------------------------------*\
+      #HOME PAGE
+    \*----------------------------------*/
+
+    /**
+      * About us section
+      */
+
+    .about .container {
+      grid-template-columns: 5fr 7fr;
+    }
+
+    .about .about__collage .column-single {
+      width: 48%;
+    }
+
+    .about .about__collage .column-double {
+      width: 52%;
+    }
+
+    .about .about__quote {
+      left: 175px;
+      top: 70px;
+    }
+
+    .about .about__arrow {
+      left: 0px;
+      top: 10%;
+    }
+
 
     /*----------------------------------*\
       #FOOTER
