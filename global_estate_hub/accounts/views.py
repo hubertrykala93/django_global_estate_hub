@@ -32,45 +32,35 @@ def create_user(request):
             return JsonResponse(data={
                 "data": [
                     {
-                        "username_valid": False,
-                        "username_field": username_field,
-                        "username_message": "The username field cannot be empty.",
-                        "email_valid": False,
-                        "email_field": email_field,
-                        "email_message": "The email field cannot be empty.",
-                        "password1_valid": False,
-                        "password1_field": password1_field,
-                        "password1_message": "The password field cannot be empty.",
-                        "password2_valid": False,
-                        "password2_field": password2_field,
-                        "password2_message": "The confirm password field cannot be empty.",
+                        "userName": {
+                            "valid": False,
+                            "field": username_field,
+                            "message": "The username cannot be empty.",
+                        }
+                    },
+                    {
+                        "email": {
+                            "valid": False,
+                            "field": email_field,
+                            "message": "The e-mail field cannot be empty.",
+                        }
+                    },
+                    {
+                        "password1": {
+                            "valid": False,
+                            "field": password1_field,
+                            "message": "The password field cannot be empty.",
+                        }
+                    },
+                    {
+                        "password2": {
+                            "valid": False,
+                            "field": password2_field,
+                            "message": "The confirm password field cannot be empty.",
+                        }
                     }
                 ]
             })
-
-        # if not re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username) or User.objects.filter(username=username).exists() \
-        #         and not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-        #                          string=email) or User.objects.filter(email=email).exists() and not re.match(
-        #     pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
-        #     string=raw_password1) or raw_password1 != raw_password2:
-        #     return JsonResponse(data={
-        #         "data": [
-        #             {
-        #                 "username_valid": False,
-        #                 "username_field": username_field,
-        #                 "message": "The username invalid format or exists.",
-        #                 "email_valid": False,
-        #                 "email_field": email_field,
-        #                 "email_message": "The email invalid format or exists.",
-        #                 "password1_valid": False,
-        #                 "password1_field": password1_field,
-        #                 "password1_message": "The password invalid format.",
-        #                 "password2_valid": False,
-        #                 "password2_field": password2_field,
-        #                 "password2_message": "The confirm password do not match.",
-        #             }
-        #         ]
-        #     })
 
         if username:
             if re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username):
