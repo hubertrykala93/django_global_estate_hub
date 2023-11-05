@@ -29,38 +29,28 @@ def create_user(request):
         password2_field = data['password2'][1]
 
         if not username and not email and not raw_password1 and not raw_password2:
-            return JsonResponse(data={
-                "data": [
-                    {
-                        "userName": {
-                            "valid": False,
-                            "field": username_field,
-                            "message": "The username cannot be empty.",
-                        }
-                    },
-                    {
-                        "email": {
-                            "valid": False,
-                            "field": email_field,
-                            "message": "The e-mail field cannot be empty.",
-                        }
-                    },
-                    {
-                        "password1": {
-                            "valid": False,
-                            "field": password1_field,
-                            "message": "The password field cannot be empty.",
-                        }
-                    },
-                    {
-                        "password2": {
-                            "valid": False,
-                            "field": password2_field,
-                            "message": "The confirm password field cannot be empty.",
-                        }
-                    }
-                ]
-            })
+            return JsonResponse(data=[
+                {
+                    "valid": False,
+                    "field": username_field,
+                    "message": "The username cannot be empty.",
+                },
+                {
+                    "valid": False,
+                    "field": email_field,
+                    "message": "The e-mail field cannot be empty.",
+                },
+                {
+                    "valid": False,
+                    "field": password1_field,
+                    "message": "The password field cannot be empty.",
+                },
+                {
+                    "valid": False,
+                    "field": password2_field,
+                    "message": "The confirm password field cannot be empty.",
+                }
+            ], safe=False)
 
         if username:
             if re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username):
