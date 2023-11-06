@@ -9,6 +9,10 @@
         {% include 'estates/main-menu.html' %}
     </div>
 
+    {% if user.is_authenticated %}
+    <a href="{% url 'register' %}" class="btn secondary-btn">Add property</a>
+    {% endif %}
+
     <button id="offcanvas-close" data-close-offcanvas>
         <span class="material-symbols-outlined">
             close

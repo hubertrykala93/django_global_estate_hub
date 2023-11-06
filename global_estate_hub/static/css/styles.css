@@ -238,6 +238,10 @@ body{
   width: 150px;
 }
 
+#page-offcanvas .offcanvas-menu{
+  margin-bottom: 2rem;
+}
+
 #page-offcanvas .offcanvas-menu .nav {
   display: flex;
   flex-direction: column;
@@ -367,7 +371,7 @@ body{
   transition: box-shadow .2s;
 }
 
-.theme-form input:focus-visible{
+.theme-form input:focus-visible {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -477,7 +481,10 @@ body{
   display: flex;
   align-items: center;
   margin-left: auto;
-  margin-right: 2.5rem;
+}
+
+#header .header-right .add-property{
+  display: none;
 }
 
 #header .header-right .login{
@@ -501,6 +508,7 @@ body{
 }
 
 #header #offcanvas-toggler{
+  margin-left: 2.5rem;
   color: var(--clr-dark);
   transition: color .3s;
 }
@@ -1355,6 +1363,10 @@ body{
     #header .header-right {
       margin-right: 0;
       margin-left: unset;
+    }
+
+    #header .header-right .add-property{
+      display: block;
     }
 
     #header #nav {
