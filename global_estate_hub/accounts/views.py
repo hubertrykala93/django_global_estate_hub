@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from .models import User
 import json
@@ -117,21 +117,30 @@ def log_in(request):
         response = [
             {
                 "valid":
+                    False if not email else
                     False if not User.objects.filter(email=email).exists() else
                     True,
                 "field": email_field,
                 "message":
-                    f"The e-mail {email} does not exists." if User.objects.filter(email=email).exists() else
-                    "",
+                    "The e-mail field cannot be empty." if not email else
+                    f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
+                    "Correct e-mail address.",
             },
             {
                 "valid":
                     False if not password else
+                    False if User.objects.filter(email=email).exists() and not check_password(password=password,
+                                                                                              encoded=User.objects.get(
+                                                                                                  email=email).password) else
                     True,
                 "field": password_field,
                 "message":
                     "The password field cannot be empty." if not password else
-                    "",
+                    f"Incorrect password for the e-mail address {email}." if User.objects.filter(
+                        email=email).exists() and not check_password(password=password,
+                                                                     encoded=User.objects.get(
+                                                                         email=email).password) else
+                    True,
             },
             {
                 "valid":
@@ -145,8 +154,8 @@ def log_in(request):
         ]
 
         if list(set([data['valid'] for data in response]))[0]:
-            print(list(set([data['valid'] for data in response])))
             login(request=request, user=authenticate(request=request, email=email, password=password))
+            print(login(request=request, user=authenticate(request=request, email=email, password=password)))
 
             return JsonResponse(data=response, safe=False)
         else:
