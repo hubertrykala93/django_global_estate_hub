@@ -4,6 +4,7 @@ from django.http import JsonResponse, HttpResponseRedirect, Http404
 from .models import User
 import json
 import re
+from django.contrib.auth import login
 
 
 def register(request):
@@ -101,7 +102,20 @@ def create_user(request):
             return JsonResponse(data=response, safe=False)
 
 
-def login(request):
+def log_in(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+
+        username = data['email'][0]
+        password = data['password'][0]
+        terms = data['terms'][0]
+
+        username_field = data['email'][1]
+        password_field = data['password'][1]
+        terms_field = data['terms'][1]
+
+        if
+
     return render(request=request, template_name='accounts/login.html', context={
         'title': 'Login'
     })
