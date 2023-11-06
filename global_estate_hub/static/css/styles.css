@@ -26,7 +26,7 @@
     --clr-body-text: #777E7A;
     --clr-input-bg: #F6F6F6;
     --clr-error: rgb(176, 28, 28);
-    --clr-succes: rgb(12, 134, 12);
+    --clr-success: rgb(12, 134, 12);
   
     /**
      * TYPOGRAPHY
@@ -332,13 +332,28 @@ body{
   font-weight: 500;
   color: var(--clr-dark);
   line-height: normal;
+  text-transform: capitalize;
 }
 
 .theme-form .form__input-wrap {
   position: relative;
 }
 
-.theme-form input {
+.theme-form .form__input-wrap.checkbox-wrap{
+  display: flex;
+}
+
+.theme-form .form__input-wrap.checkbox-wrap label{
+  margin: 0 0 0 .8rem;
+  font-weight: 400;
+}
+
+.theme-form .form__input-wrap.checkbox-wrap label a{
+  text-decoration: underline;
+}
+
+.theme-form input[type="text"],
+.theme-form input[type="password"] {
   width: 100%;
   background-color: var(--clr-input-bg);
   border-radius: var(--br-500);
@@ -387,6 +402,20 @@ body{
 
 .theme-form .info.error {
   color: var(--clr-error);
+}
+
+.theme-form .forgot-password{
+  display: block;
+  margin-top: 1rem;
+  font-weight: 500;
+  line-height: normal;
+  text-align: right;
+  color: var(--clr-secondary);
+}
+
+.theme-form .forgot-password:hover,
+.theme-form .forgot-password:focus-visible{
+  color: var(--clr-primary);
 }
 
 
@@ -858,9 +887,9 @@ body{
   margin: 0 .25rem;
 }
 
-
-
-
+.user-access-page .form-column .form-description{
+  margin-bottom: 2rem;
+}
 
 .user-access-page .form-column .form-question {
   margin-top: 3rem;
@@ -875,10 +904,6 @@ body{
 .user-access-page .form-column .form-question a:focus-visible{
   color: var(--clr-primary);
 }
-
-
-
-
 
 
 /*----------------------------------*\
@@ -977,8 +1002,8 @@ body{
   color: var(--clr-error);
 }
 
-#footer .footer__newsletter form .info.succes{
-  color: var(--clr-succes);
+#footer .footer__newsletter form .info.success{
+  color: var(--clr-success);
 }
 
 #footer .footer__socials .socials-list{

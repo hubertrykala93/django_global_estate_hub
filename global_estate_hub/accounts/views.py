@@ -26,8 +26,6 @@ def create_user(request):
         raw_password1_field = data['password1'][1]
         raw_password2_field = data['password2'][1]
 
-        print(username_field)
-
         response = [
             {
                 "valid":

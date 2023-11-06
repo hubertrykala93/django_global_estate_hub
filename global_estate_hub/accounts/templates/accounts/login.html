@@ -2,4 +2,97 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<section class="user-access-page signup-page">
+    <div class="container">
+        <div class="row">
+            <div class="testimony-column">
+                <div class="login-testimony">
+                    <div class="testimony__wrapper">
+                        <div class="testimony__content">
+                            We’ve been using United to kick start every new project and can’t imagine working without
+                            it.
+                        </div>
+
+                        <div class="testimony__info">
+                            <div class="testimony__avatar">
+                                <img src="https://picsum.photos/90" alt="Prophet's Rolex picture">
+                            </div>
+
+                            <div class="testimony__name">Prophet Rolex</div>
+
+                            <div class="testimony__signature">Head of Design, Envato</div>
+
+                            <div class="testimony__stars">
+                                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                                <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-column">
+                <div class="section-title">
+                    <h2 class="main-title h2">Welcome back</h2>
+                </div>
+
+                <p class="form-description">Please enter your details</p>
+
+                <div class="login-form">
+                    <form data-login-form class="theme-form">
+                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="login-email">Email</label>
+                                <div class="form__input-wrap">
+                                    <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
+                                    <input data-email type="text" id="login-email" placeholder="Your Email">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="password">Password</label>
+                                <div class="form__input-wrap">
+                                    <img class="form__hint-icon" src="/media/icons/form-password.svg"
+                                         alt="password icon">
+                                    <input data-password type="password" id="password" placeholder="Your Password">
+                                    <img data-password-eye class="form__eye-icon" src="/media/icons/form-see-password.svg"
+                                         alt="see password icon">
+                                </div>
+                                <a class="forgot-password" href="">Forgot Password?</a>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <div class="form__input-wrap checkbox-wrap">
+                                  <input data-terms type="checkbox" id="terms">
+                                  <label for="terms">
+                                    I agree to the <a href="#">terms & Privacy</a>
+                                  </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row submit-row">
+                            <div class="form__field form__submit">
+                                <button class="btn primary-btn" type="submit" id="sign-up">Log in</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="form-question">Don’t Have an account? <a href="{% url 'register' %}">Register</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</section>
+{% endblock %}

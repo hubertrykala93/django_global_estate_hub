@@ -41,12 +41,12 @@
                 </div>
 
                 <div class="signup-form">
-                    <form action="{% url 'create-user' %}" method="post" data-signup-form class="theme-form">
+                    <form data-signup-form class="theme-form">
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="username">User name</label>
+                                <label for="username">Username</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-user.svg" alt="user icon">
                                     <input data-username type="text" id="username" placeholder="User name">
@@ -97,7 +97,7 @@
                         </div>
                     </form>
 
-                    <div class="form-question">Already have an account? <a href="{% url 'login' %}">LogIn</a></div>
+                    <div class="form-question">Already have an account? <a href="{% url 'login' %}">Log In</a></div>
                 </div>
             </div>
         </div>

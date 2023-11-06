@@ -84,7 +84,7 @@ if ($newsletterForm){
           }
           $messageNode = $newsletterForm.querySelector('.info')
           if (response.valid){
-            $messageNode.classList.add('succes')
+            $messageNode.classList.add('success')
             $messageNode.classList.remove('error')
             $emailInput.value = ""
             setTimeout(() => {
@@ -92,7 +92,7 @@ if ($newsletterForm){
             }, "3000");
           } else{
             $messageNode.classList.add('error')
-            $messageNode.classList.remove('succes')
+            $messageNode.classList.remove('success')
           }
           $messageNode.textContent = response.message
       }
@@ -153,6 +153,44 @@ const userFormsValidation = ($form, response) => {
     }
   });
 
+}
+
+
+/**
+   * LOGIN FORM AJAX VALIDATION
+    */
+
+const $loginForm = document.querySelector('[data-login-form]')
+
+if ($loginForm){
+  $loginForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let csrftoken = this.querySelector('[name="csrftoken"]').value
+    const $emailInput = this.querySelector('[data-email]')
+    const $passwordInput = this.querySelector('[data-password]')
+    const $termsInput = this.querySelector('[data-terms]')
+
+    const data = {
+      "email": [$emailInput.value, "data-email"],
+      "password": [$passwordInput.value, "data-password"],
+      "terms": [$termsInput.checked, "data-terms"]
+    }
+
+    console.log(data)
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'login', true)
+    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          userFormsValidation($loginForm, response)
+      }
+    }
+  })
 }
 
 
