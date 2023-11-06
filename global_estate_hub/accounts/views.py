@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from .models import User
 import json
 import re
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
 
 
 def register(request):
@@ -167,5 +168,8 @@ def log_in(request):
     })
 
 
-def logout(request):
-    pass
+@login_required
+def log_out(request):
+    logout(request=request)
+
+    return redirect(to='login')

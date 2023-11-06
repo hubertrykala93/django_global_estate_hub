@@ -11,20 +11,25 @@
                 {% include 'estates/main-menu.html' %}
             </nav>
 
+
+            {% if not user.is_authenticated %}
             <div class="header-right">
                 <div class="login">
                     <a href="{% url 'login' %}">Login</a>
                 </div>
 
                 <a href="{% url 'register' %}" class="btn primary-btn">Sign Up</a>
-                
+
+                {% else %}
+
                 <div class="user-dropdown">
-                    avatar<br>settings<br>logout<br>
+                    avatar<br>settings<br><a href="{% url 'logout' %}">logout</a><br>
                 </div>
-                
+
                 <a href="{% url 'register' %}" class="btn primary-btn">Add property</a>
 
             </div>
+            {% endif %}
 
             <button id="offcanvas-toggler" data-open-offcanvas>
                 <span class="material-symbols-outlined">
