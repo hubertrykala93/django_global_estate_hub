@@ -149,7 +149,7 @@ const userFormsValidation = ($form, response) => {
     }
 
     if ( validFields === fieldsNumber ) {
-      window.location.href = "http://www.penisy.org"
+      window.location.href = "login"
     }
   });
 
