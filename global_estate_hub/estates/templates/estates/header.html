@@ -11,9 +11,8 @@
                 {% include 'estates/main-menu.html' %}
             </nav>
 
-
-            {% if not user.is_authenticated %}
             <div class="header-right">
+                {% if not user.is_authenticated %}
                 <div class="login">
                     <a href="{% url 'login' %}">Login</a>
                 </div>
@@ -23,13 +22,42 @@
                 {% else %}
 
                 <div class="user-dropdown">
-                    avatar<br>settings<br><a href="{% url 'logout' %}">logout</a><br>
+                    <div class="user-greeting">
+                        Hello
+                        <span>User Name</span>
+                    </div>
+
+                    <button class="show-user-nav" data-show-user-nav>
+                        <div class="user-avatar">
+                            <img src="https://picsum.photos/30" alt="user picture">
+                        </div>
+
+                        <span class="material-symbols-outlined">expand_more</span>
+                    </button>
+
+                    <div class="user-dropdown-nav">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <span class="material-symbols-outlined">manage_accounts</span>
+                                    Settings
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'logout' %}">
+                                    <span class="material-symbols-outlined">logout</span>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
-                <a href="{% url 'register' %}" class="btn primary-btn">Add property</a>
-
+                <div class="add-property">
+                    <a href="{% url 'register' %}" class="btn primary-btn">Add property</a>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
 
             <button id="offcanvas-toggler" data-open-offcanvas>
                 <span class="material-symbols-outlined">
