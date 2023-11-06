@@ -9,4 +9,5 @@ urlpatterns = [
     path(route='blog', view=estates_views.blog, name='blog'),
     path(route='contact', view=estates_views.contact, name='contact'),
     path(route='newsletter', view=estates_views.newsletter, name='newsletter'),
+    path(route='error', view=estates_views.error, name='error'),
 ]

@@ -79,3 +79,9 @@ def contact(request):
     return render(request=request, template_name='estates/contact.html', context={
         'title': 'Contact',
     })
+
+
+def error(request):
+    return render(request=request, template_name='estates/error.html', context={
+        'title': 'Error',
+    })

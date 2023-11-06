@@ -175,6 +175,13 @@ def log_out(request):
     return redirect(to='login')
 
 
+@login_required
+def account_settings(request):
+    return render(request=request, template_name='accounts/account-settings.html', context={
+        'title': 'Account Settings',
+    })
+
+
 def forget_password(request):
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',

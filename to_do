@@ -1,6 +1,7 @@
 @Szymon-Levy
 
 python3 manage.py createsuperuser
+zdublowałeś Add property, jest w offcanvas i header, wyrzuć niepotrzebne.
 1. Slajd 17.
 2. Slajd 16.
 3. Slajd 18.
