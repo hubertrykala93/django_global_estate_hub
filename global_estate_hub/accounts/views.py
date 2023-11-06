@@ -154,8 +154,11 @@ def log_in(request):
         ]
 
         if list(set([data['valid'] for data in response]))[0]:
-            login(request=request, user=authenticate(request=request, email=email, password=password))
-            print(login(request=request, user=authenticate(request=request, email=email, password=password)))
+            user = authenticate(request=request, email=email, password=password,
+                                backend='django.contrib.auth.backends.ModelBackend')
+            login(request=request, user=user)
+            print(user)
+            print(login(request=request, user=user))
 
             return JsonResponse(data=response, safe=False)
         else:
