@@ -106,22 +106,22 @@ def log_in(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        username = data['email'][0]
+        email = data['email'][0]
         password = data['password'][0]
         terms = data['terms'][0]
 
-        username_field = data['email'][1]
+        email_field = data['email'][1]
         password_field = data['password'][1]
         terms_field = data['terms'][1]
 
         response = [
             {
                 "valid":
-                    False if User.objects.filter(username=username).exists() else
+                    False if not User.objects.filter(email=email).exists() else
                     True,
-                "field": username_field,
+                "field": email_field,
                 "message":
-                    f"The user {username} already exists." if User.objects.filter(username=username).exists() else
+                    f"The e-mail {email} does not exists." if User.objects.filter(email=email).exists() else
                     "",
             },
             {
@@ -131,7 +131,7 @@ def log_in(request):
                 "field": password_field,
                 "message":
                     "The password field cannot be empty." if not password else
-                    True,
+                    "",
             },
             {
                 "valid":
@@ -140,13 +140,13 @@ def log_in(request):
                 "field": terms_field,
                 "message":
                     "The Terms & Privacy policy must be accepted." if not terms else
-                    True,
+                    "",
             }
         ]
 
         if list(set([data['valid'] for data in response]))[0]:
             print(list(set([data['valid'] for data in response])))
-            login(request=request, user=authenticate(request=request, username=username, password=password))
+            login(request=request, user=authenticate(request=request, email=email, password=password))
 
             return JsonResponse(data=response, safe=False)
         else:
