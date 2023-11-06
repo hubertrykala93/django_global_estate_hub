@@ -6,4 +6,8 @@ urlpatterns = [
     path(route='create-user', view=accounts_views.create_user, name='create-user'),
     path(route='login', view=accounts_views.log_in, name='login'),
     path(route='logout', view=accounts_views.log_out, name='logout'),
+    path(route='forget-password', view=accounts_views.forget_password, name='forget-password'),
+    path(route='password-reset', view=accounts_views.password_reset, name='password-reset'),
+    path(route='password-reset/new-password', view=accounts_views.new_password, name='new-password'),
+    path(route='password-reset/new-password/done', view=accounts_views.done, name='done'),
 ]

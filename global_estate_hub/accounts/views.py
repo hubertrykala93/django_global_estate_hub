@@ -173,3 +173,27 @@ def log_out(request):
     logout(request=request)
 
     return redirect(to='login')
+
+
+def forget_password(request):
+    return render(request=request, template_name='accounts/forget-password.html', context={
+        'title': 'Forget Password',
+    })
+
+
+def password_reset(request):
+    return render(request=request, template_name='accounts/password-reset.html', context={
+        'title': 'Password Reset',
+    })
+
+
+def new_password(request):
+    return render(request=request, template_name='accounts/new-password.html', context={
+        'title': 'New Password',
+    })
+
+
+def done(request):
+    return render(request=request, template_name='accounts/done.html', context={
+        'title': 'Done',
+    })
