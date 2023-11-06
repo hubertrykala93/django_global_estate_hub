@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.contrib.auth.hashers import make_password
-from django.http import JsonResponse, HttpResponseRedirect, Http404
+from django.http import JsonResponse
 from .models import User
 import json
 import re
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 
 
 def register(request):
@@ -114,7 +114,43 @@ def log_in(request):
         password_field = data['password'][1]
         terms_field = data['terms'][1]
 
-        if
+        response = [
+            {
+                "valid":
+                    False if User.objects.filter(username=username).exists() else
+                    True,
+                "field": username_field,
+                "message":
+                    f"The user {username} already exists." if User.objects.filter(username=username).exists() else
+                    "",
+            },
+            {
+                "valid":
+                    False if not password else
+                    True,
+                "field": password_field,
+                "message":
+                    "The password field cannot be empty." if not password else
+                    True,
+            },
+            {
+                "valid":
+                    False if not terms else
+                    True,
+                "field": terms_field,
+                "message":
+                    "The Terms & Privacy policy must be accepted." if not terms else
+                    True,
+            }
+        ]
+
+        if list(set([data['valid'] for data in response]))[0]:
+            print(list(set([data['valid'] for data in response])))
+            login(request=request, user=authenticate(request=request, username=username, password=password))
+
+            return JsonResponse(data=response, safe=False)
+        else:
+            return JsonResponse(data=response, safe=False)
 
     return render(request=request, template_name='accounts/login.html', context={
         'title': 'Login'
