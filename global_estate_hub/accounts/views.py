@@ -21,6 +21,11 @@ def create_user(request):
         raw_password1 = data['password1'][0]
         raw_password2 = data['password2'][0]
 
+        username_field = data['userName'][1]
+        email_field = data['email'][1]
+        raw_password1_field = data['password1'][1]
+        raw_password2_field = data['password2'][1]
+
         response = [
             {
                 "valid":
@@ -29,7 +34,7 @@ def create_user(request):
                     False if re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username) and User.objects.filter(
                         username=username).exists() else
                     True,
-                "field": "userName",
+                "field": username_field,
                 "message":
                     "The username field cannot be empty." if not username else
                     "The username must consist only of lowercase/uppercase letters, digits or '.', '_', '-'." if not re.match(
@@ -46,7 +51,7 @@ def create_user(request):
                     False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
                                       string=email) and User.objects.filter(email=email).exists() else
                     True,
-                "field": "email",
+                "field": email_field,
                 "message":
                     "The e-mail field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
@@ -62,7 +67,7 @@ def create_user(request):
                     False if not re.match(pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                                           string=raw_password1) else
                     True,
-                "field": "password1",
+                "field": raw_password1_field,
                 "message":
                     "The password cannot be empty." if not raw_password1 else
                     "The password should be at least 8 characters long, including at least one uppercase letter, "
@@ -77,7 +82,7 @@ def create_user(request):
                     False if not raw_password1 else
                     False if raw_password2 != raw_password1 else
                     True,
-                "field": "password2",
+                "field": raw_password2_field,
                 "message":
                     "The confirm password field cannot be empty." if not raw_password2 else
                     "The password field must be filled in." if not raw_password1 else

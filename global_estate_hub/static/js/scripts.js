@@ -102,6 +102,61 @@ if ($newsletterForm){
 
 
 /**
+   * FORMS
+    */
+
+const $eyeIcons = document.querySelectorAll('[data-password-eye]')
+
+if($eyeIcons.length){
+  $eyeIcons.forEach(eye => {
+    const $input = eye.parentElement.querySelector('input')
+    eye.addEventListener('click', ()=>{
+      if ( $input.type === 'password' ){
+        $input.type = 'text'
+      } else{
+        $input.type = 'password'
+      }
+    })
+  });
+}
+
+
+const userFormsValidation = ($form, response) => {
+  const fieldsNumber = response.length
+  let validFields = 0
+
+  response.forEach(field => {
+    const $currentformField = $form.querySelector(`[${field.field}]`).closest('.form__field')
+    const $message = $currentformField.querySelector('.info')
+    if (field.valid == false) {
+      const $message = $currentformField.querySelector('.info')
+      validFields = 0
+
+      if($message){ 
+        $message.textContent = field.message 
+      }else {
+        const info = document.createElement('span')
+        info.classList.add('info')
+        info.classList.add('error')
+        info.textContent = field.message
+        $currentformField.append(info)
+      }
+    } else{
+      validFields++
+      if($message){ 
+        $message.remove()
+      }
+    }
+
+    if ( validFields === fieldsNumber ) {
+      window.location.href = "http://www.penisy.org"
+    }
+  });
+
+}
+
+
+/**
    * SIGNUP FORM AJAX VALIDATION
     */
 
@@ -117,10 +172,10 @@ if ($signUpForm){
     const $password2Input = this.querySelector('[data-password2]')
 
     const data = {
-      "userName": [$userNameInput.value, "userName"],
-      "email": [$emailInput.value, "email"],
-      "password1": [$password1Input.value, "password1"],
-      "password2": [$password2Input.value, "password2"]
+      "userName": [$userNameInput.value, "data-username"],
+      "email": [$emailInput.value, "data-email"],
+      "password1": [$password1Input.value, "data-password1"],
+      "password2": [$password2Input.value, "data-password2"]
     }
 
     const xhr = new XMLHttpRequest()
@@ -132,7 +187,7 @@ if ($signUpForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
+          userFormsValidation($signUpForm, response)
       }
     }
   })

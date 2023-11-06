@@ -108,8 +108,6 @@ if ($sectionTitles.length){
   $sectionTitles.forEach(item => {
     const upperTitle = item.querySelector('.upper-title')
     const mainTitle = item.querySelector('.main-title')
-    console.log(upperTitle)
-    console.log(mainTitle)
 
     if(upperTitle){
       ScrollReveal().reveal(upperTitle, upperTitleAnimation)

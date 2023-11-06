@@ -376,6 +376,17 @@ body{
 .theme-form .form__submit button {
   width: 100%;
   line-height: 55px;
+  justify-content: center;
+}
+
+.theme-form .info {
+  display: block;
+  margin-top: .5rem;
+  font-size: var(--fs-body-300);
+}
+
+.theme-form .info.error {
+  color: var(--clr-error);
 }
 
 
