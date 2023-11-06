@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import User
+from .models import User, Profile
 
 admin.site.unregister(Group)
 
@@ -12,3 +12,8 @@ class AdminUser(admin.ModelAdmin):
     list_editable = ['is_staff', 'is_active', 'is_superuser']
     list_filter = ['username', 'email', 'date_joined']
     list_display_links = None
+
+
+@admin.register(Profile)
+class AdminProfile(admin.ModelAdmin):
+    list_display = ['user', 'first_name', 'last_name']
