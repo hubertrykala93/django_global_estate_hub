@@ -121,7 +121,7 @@ if($eyeIcons.length){
 }
 
 
-const userFormsValidation = ($form, response) => {
+const userFormsValidation = ($form, response, redirectionPath) => {
   const fieldsNumber = response.length
   let validFields = 0
 
@@ -149,7 +149,7 @@ const userFormsValidation = ($form, response) => {
     }
 
     if ( validFields === fieldsNumber ) {
-      window.location.href = "login"
+      window.location.href = redirectionPath
     }
   });
 
@@ -176,8 +176,6 @@ if ($loginForm){
       "terms": [$termsInput.checked, "data-terms"]
     }
 
-    console.log(data)
-
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'login', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
@@ -187,7 +185,7 @@ if ($loginForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          userFormsValidation($loginForm, response)
+          userFormsValidation($loginForm, response, '/')
       }
     }
   })
@@ -225,7 +223,7 @@ if ($signUpForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          userFormsValidation($signUpForm, response)
+          userFormsValidation($signUpForm, response, '/login')
       }
     }
   })

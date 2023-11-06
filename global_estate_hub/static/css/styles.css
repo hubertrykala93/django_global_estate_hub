@@ -176,6 +176,7 @@ body{
 .btn{
   line-height: 45px;
   border-radius: var(--br-400);
+  text-transform: capitalize;
   display: inline-flex;
   align-items: center;
   padding: 0 2rem;
@@ -317,6 +318,8 @@ body{
 }
 
 .theme-form .form__row .form__field{
+  display: flex;
+  flex-direction: column;
   flex: 1;
   padding: 0 2.1rem;
 }
@@ -406,6 +409,7 @@ body{
 
 .theme-form .forgot-password{
   display: block;
+  order: 2;
   margin-top: 1rem;
   font-weight: 500;
   line-height: normal;
