@@ -191,38 +191,71 @@ def account_settings(request):
 
 
 def forget_password(request):
+    if request.method == 'POST':
+        code = ''.join([str(randint(a=0, b=9)) for _ in range(4)])
+        data = json.loads(s=request.body.decode('utf-8'))
+        email = data['email']
+        email_field = list(data.keys())[0]
+
+        if email:
+            print('Is email.')
+            if User.objects.filter(email=email).exists():
+                print('User exists.')
+                try:
+                    send_mail(
+                        subject="Password reset request for hubert.rykala@gmail.com.",
+                        message=render_to_string(template_name='accounts/password_reset_email.html', context={
+                            "code": code,
+                        }),
+                        from_email=os.environ.get("EMAIL_HOST_USER"),
+                        recipient_list=[email],
+                        fail_silently=False,
+                    )
+                    print('Email sent.')
+
+                    return JsonResponse(data=[
+                        {
+                            "valid": True,
+                            "field": email_field,
+                            "message": "The message has been sent successfully.",
+                        }
+                    ], safe=False)
+
+                except:
+                    print('Email not sent.')
+                    return JsonResponse(data=[
+                        {
+                            "valid": False,
+                            "field": email_field,
+                            "message": "The message could not be sent.",
+                        }
+                    ], safe=False)
+
+            else:
+                return JsonResponse(data=[
+                    {
+                        "valid": "False",
+                        "email_field": email_field,
+                        "message": "The user with the provided email address does not exist.",
+                    }
+                ], safe=False)
+
+        else:
+            return JsonResponse(data=[
+                {
+                    "valid": False,
+                    "field": email_field,
+                    "message": "The e-mail field cannot be empty.",
+                }
+            ], safe=False)
+
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
     })
 
 
 def send_otp(request):
-    code = ''.join([str(randint(a=0, b=9)) for _ in range(4)])
-    data = json.loads(s=request.body.decode('utf-8'))
-    email = data['email'][0]
-    email_field = data['email'][1]
-
-    if User.objects.filter(email=email).exists():
-        try:
-            send_mail(
-                subject=f'Password reset request for {email}.',
-                message=render_to_string(template_name='accounts/password_reset_email', context={
-                    'code': code,
-                }),
-                from_email=os.environ.get("EMAIL_HOST_USER"),
-                recipient_list=[email],
-            )
-        except BadHeaderError:
-            return HttpResponse(content='Invalid header found.')
-
-    else:
-        return JsonResponse(data=[
-            {
-                "valid": False,
-                "field": email_field,
-                "message": "The e-mail address does not exists."
-            }
-        ])
+    pass
 
 
 def password_reset(request):

@@ -28,7 +28,7 @@
                 <div class="user-dropdown" data-user-dropdown>
                     <div class="user-greeting">
                         Hello
-                        <a href="">User Name</a>
+                        <a href="{% url 'account-settings' %}">{{ user.username }}</a>
                     </div>
 
                     <button class="show-user-nav" data-show-user-nav>

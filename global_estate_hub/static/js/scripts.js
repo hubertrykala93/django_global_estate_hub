@@ -272,7 +272,7 @@ if ($forgotPasswordForm){
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'forgot-password', true)
+    xhr.open('POST', 'forget-password', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))
@@ -280,6 +280,7 @@ if ($forgotPasswordForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
+          console.log(response)
 
           if( response.valid == true ) {
             window.location.href = '/password-reset.html'
