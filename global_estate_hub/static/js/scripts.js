@@ -1,4 +1,29 @@
 /**
+   * HEADER USER DROPDOWN
+    */
+
+const $userDropdown = document.querySelector('[data-user-dropdown]')
+
+if($userDropdown){
+  const $dropDownToggler = $userDropdown.querySelector('[data-show-user-nav]')
+  const $userNav = $userDropdown.querySelector('[data-user-dropdown-nav]')
+  $dropDownToggler.addEventListener('click', ()=> {
+    if ( !$userNav.classList.contains('active') ) {
+      $userNav.classList.add('active')
+
+      window.addEventListener('click', (e)=>{
+        if( e.target !== $dropDownToggler && !$dropDownToggler.contains(e.target) ){
+          $userNav.classList.remove('active')
+        }
+      })
+    } else{
+      $userNav.classList.remove('active')
+    }
+  })
+}
+
+
+/**
    * OFFCANVAS TOGGLE
     */
 
@@ -224,6 +249,43 @@ if ($signUpForm){
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           userFormsValidation($signUpForm, response, '/login')
+      }
+    }
+  })
+}
+
+
+/**
+   * FORGOT PASSWORD AJAX VALIDATION
+    */
+
+const $forgotPasswordForm = document.querySelector('[data-forgot-password-form]')
+
+if ($forgotPasswordForm){
+  $forgotPasswordForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    let csrftoken = this.querySelector('[name="csrftoken"]').value
+    const $emailInput = this.querySelector('[data-email]')
+
+    const data = {
+      "email": $emailInput.value
+    }
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'forgot-password', true)
+    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+
+          if( response.valid == true ) {
+            window.location.href = '/password-reset.html'
+          } else{
+            alert(response.message)
+          }
       }
     }
   })

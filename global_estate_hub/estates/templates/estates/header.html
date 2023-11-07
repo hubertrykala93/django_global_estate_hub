@@ -21,21 +21,25 @@
 
                 {% else %}
 
-                <div class="user-dropdown">
+                <div class="add-property">
+                    <a href="#" class="btn primary-btn">Add property</a>
+                </div>
+
+                <div class="user-dropdown" data-user-dropdown>
                     <div class="user-greeting">
                         Hello
-                        <span>User Name</span>
+                        <a href="">User Name</a>
                     </div>
 
                     <button class="show-user-nav" data-show-user-nav>
                         <div class="user-avatar">
-                            <img src="https://picsum.photos/30" alt="user picture">
+                            <img src="https://picsum.photos/50" alt="user picture">
                         </div>
 
                         <span class="material-symbols-outlined">expand_more</span>
                     </button>
 
-                    <div class="user-dropdown-nav">
+                    <div class="user-dropdown-nav" data-user-dropdown-nav>
                         <ul class="nav-list">
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'account-settings' %}">
@@ -51,10 +55,6 @@
                             </li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="add-property">
-                    <a href="#" class="btn primary-btn">Add property</a>
                 </div>
                 {% endif %}
             </div>
