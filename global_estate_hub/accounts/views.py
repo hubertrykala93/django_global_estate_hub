@@ -1,18 +1,16 @@
 import os
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import JsonResponse, HttpResponse
-from .models import User
+from django.http import JsonResponse
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from random import randint
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
-import smtplib, ssl
 
 load_dotenv()
 
@@ -193,7 +191,6 @@ def account_settings(request):
 
 def forget_password(request):
     if request.method == 'POST':
-        code = ''.join([str(randint(a=0, b=9)) for _ in range(4)])
         data = json.loads(s=request.body.decode('utf-8'))
         email = data['email']
         email_field = list(data.keys())[0]
@@ -203,30 +200,23 @@ def forget_password(request):
         if email:
             print('Is email.')
             if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+                otp = ''.join([str(i) for i in OneTimePassword(user=user).code])
+                print(otp)
+                otp.save()
                 print('User exists.')
                 try:
-                    print('Email present.')
+                    print('Email pre-sent.')
 
                     send_mail(
                         subject=f"Password reset request for {email}.",
                         message=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'code': code,
+                            'otp': otp,
                         }),
                         from_email=os.environ.get("EMAIL_FROM"),
                         recipient_list=[email],
-                        fail_silently=True
+                        fail_silently=True,
                     )
-
-                    message = EmailMessage(
-                        subject=f"Password reset request for {email}.",
-                        body=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'code': code
-                        }),
-                        from_email=os.environ.get("EMAIL_HOST_USER"),
-                        to=[email],
-                    )
-
-                    message.send(fail_silently=True)
 
                     print('Email sent.')
 

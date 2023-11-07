@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from PIL import Image
+from random import randint
 
 
 class CustomUserManager(UserManager):
@@ -90,3 +91,12 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile.'
+
+
+class OneTimePassword(models.Model):
+    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    code = models.CharField(max_length=4, default=[str(randint(a=0, b=9)) for _ in range(4)])
+
+    class Meta:
+        verbose_name = 'One-Time Password'
+        verbose_name_plural = 'One-Time Passwords'

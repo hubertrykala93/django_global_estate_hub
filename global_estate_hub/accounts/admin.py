@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import User, Profile
+from .models import User, Profile, OneTimePassword
 
 admin.site.unregister(Group)
 
@@ -19,3 +19,9 @@ class AdminProfile(admin.ModelAdmin):
     list_display = ['user', 'first_name', 'last_name', 'gender', 'country', 'province', 'city']
     list_editable = ['first_name', 'last_name', 'gender', 'country', 'province', 'city']
     list_filter = ['last_name', 'country', 'province', 'city']
+
+
+@admin.register(OneTimePassword)
+class AdminOneTimePassword(admin.ModelAdmin):
+    list_display = ['user', 'code']
+    list_filter = ['user']
