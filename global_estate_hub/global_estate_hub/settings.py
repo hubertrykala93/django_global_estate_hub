@@ -130,14 +130,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Cyberfolks
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
 EMAIL_FROM = os.environ.get("EMAIL_FROM")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
-EMAIL_PORT = os.environ.get("EMAIL_PORT")
+EMAIL_PORT = os.environ.get("EMAIL_TLS_PORT")
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+# EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
 
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
+
+# Gmail
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# SERVER_EMAIL = os.environ.get("SERVER_EMAIL")
+# EMAIL_HOST = os.environ.get("EMAIL_HOST")
+# EMAIL_FROM = os.environ.get("EMAIL_FROM")
+# EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+# EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+# EMAIL_PORT = os.environ.get("EMAIL_SSL_PORT")
+# EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS")
+# EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL")
+
+# DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 
 # PASSWORD_RESET_TIMEOUT_DAYS = os.environ.get("PASSWORD_RESET_TIMEOUT_DAYS")

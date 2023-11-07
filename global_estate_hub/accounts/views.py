@@ -9,9 +9,10 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from random import randint
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
+import smtplib, ssl
 
 load_dotenv()
 
@@ -197,57 +198,76 @@ def forget_password(request):
         email = data['email']
         email_field = list(data.keys())[0]
 
+        print(email)
+
         if email:
             print('Is email.')
             if User.objects.filter(email=email).exists():
                 print('User exists.')
                 try:
+                    print('Email present.')
+
                     send_mail(
-                        subject="Password reset request for hubert.rykala@gmail.com.",
+                        subject=f"Password reset request for {email}.",
                         message=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            "code": code,
+                            'code': code,
+                        }),
+                        from_email=os.environ.get("EMAIL_FROM"),
+                        recipient_list=[email],
+                        fail_silently=True
+                    )
+
+                    message = EmailMessage(
+                        subject=f"Password reset request for {email}.",
+                        body=render_to_string(template_name='accounts/password_reset_email.html', context={
+                            'code': code
                         }),
                         from_email=os.environ.get("EMAIL_HOST_USER"),
-                        recipient_list=[email],
-                        fail_silently=False,
+                        to=[email],
                     )
+
+                    message.send(fail_silently=True)
+
                     print('Email sent.')
 
-                    return JsonResponse(data=[
-                        {
-                            "valid": True,
-                            "field": email_field,
-                            "message": "The message has been sent successfully.",
-                        }
-                    ], safe=False)
+                    return JsonResponse(data=
+                    {
+                        "valid": True,
+                        "field": email_field,
+                        "email": email,
+                        "message": "The message has been sent successfully.",
+                    }
+                        , safe=False)
 
                 except:
                     print('Email not sent.')
-                    return JsonResponse(data=[
-                        {
-                            "valid": False,
-                            "field": email_field,
-                            "message": "The message could not be sent.",
-                        }
-                    ], safe=False)
+                    return JsonResponse(data=
+                    {
+                        "valid": False,
+                        "field": email_field,
+                        "message": "The message could not be sent.",
+                    }
+                        , safe=False)
 
             else:
-                return JsonResponse(data=[
-                    {
-                        "valid": "False",
-                        "email_field": email_field,
-                        "message": "The user with the provided email address does not exist.",
-                    }
-                ], safe=False)
-
-        else:
-            return JsonResponse(data=[
+                print('User does not exists.')
+                return JsonResponse(data=
                 {
                     "valid": False,
-                    "field": email_field,
-                    "message": "The e-mail field cannot be empty.",
+                    "email_field": email_field,
+                    "message": "The user with the provided email address does not exist.",
                 }
-            ], safe=False)
+                    , safe=False)
+
+        else:
+            print('Is not email.')
+            return JsonResponse(data=
+            {
+                "valid": False,
+                "field": email_field,
+                "message": "The e-mail field cannot be empty.",
+            }
+                , safe=False)
 
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
