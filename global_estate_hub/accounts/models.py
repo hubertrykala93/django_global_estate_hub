@@ -40,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=100, unique=True, null=False, blank=False)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
+    one_time_password = models.CharField(max_length=4, default='0000')
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -91,12 +92,3 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} Profile.'
-
-
-class OneTimePassword(models.Model):
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    code = models.CharField(max_length=4, default=[str(randint(a=0, b=9)) for _ in range(4)])
-
-    class Meta:
-        verbose_name = 'One-Time Password'
-        verbose_name_plural = 'One-Time Passwords'
