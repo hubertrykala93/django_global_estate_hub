@@ -8,7 +8,7 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from random import randint
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
 
@@ -190,74 +190,74 @@ def account_settings(request):
 
 
 def forget_password(request):
-    if request.method == 'POST':
-        data = json.loads(s=request.body.decode('utf-8'))
-        email = data['email']
-        email_field = list(data.keys())[0]
-
-        print(email)
-
-        if email:
-            print('Is email.')
-            if User.objects.filter(email=email).exists():
-                user = User.objects.get(email=email)
-                otp = ''.join([str(i) for i in OneTimePassword(user=user).code])
-                print(otp)
-                otp.save()
-                print('User exists.')
-                try:
-                    print('Email pre-sent.')
-
-                    send_mail(
-                        subject=f"Password reset request for {email}.",
-                        message=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'otp': otp,
-                        }),
-                        from_email=os.environ.get("EMAIL_FROM"),
-                        recipient_list=[email],
-                        fail_silently=True,
-                    )
-
-                    print('Email sent.')
-
-                    return JsonResponse(data=
-                    {
-                        "valid": True,
-                        "field": email_field,
-                        "email": email,
-                        "message": "The message has been sent successfully.",
-                    }
-                        , safe=False)
-
-                except:
-                    print('Email not sent.')
-                    return JsonResponse(data=
-                    {
-                        "valid": False,
-                        "field": email_field,
-                        "message": "The message could not be sent.",
-                    }
-                        , safe=False)
-
-            else:
-                print('User does not exists.')
-                return JsonResponse(data=
-                {
-                    "valid": False,
-                    "email_field": email_field,
-                    "message": "The user with the provided email address does not exist.",
-                }
-                    , safe=False)
-
-        else:
-            print('Is not email.')
-            return JsonResponse(data=
-            {
-                "valid": False,
-                "field": email_field,
-                "message": "The e-mail field cannot be empty.",
-            }
-                , safe=False)
+    # if request.method == 'POST':
+    #     data = json.loads(s=request.body.decode('utf-8'))
+    #     email = data['email']
+    #     email_field = list(data.keys())[0]
+    #
+    #     print(email)
+    #
+    #     if email:
+    #         print('Is email.')
+    #         if User.objects.filter(email=email).exists():
+    #             user = User.objects.get(email=email)
+    #             otp = ''.join([str(i) for i in OneTimePassword(user=user).code])
+    #             print(otp)
+    #             otp.save()
+    #             print('User exists.')
+    #             try:
+    #                 print('Email pre-sent.')
+    #
+    #                 send_mail(
+    #                     subject=f"Password reset request for {email}.",
+    #                     message=render_to_string(template_name='accounts/password_reset_email.html', context={
+    #                         'otp': otp,
+    #                     }),
+    #                     from_email=os.environ.get("EMAIL_FROM"),
+    #                     recipient_list=[email],
+    #                     fail_silently=True,
+    #                 )
+    #
+    #                 print('Email sent.')
+    #
+    #                 return JsonResponse(data=
+    #                 {
+    #                     "valid": True,
+    #                     "field": email_field,
+    #                     "email": email,
+    #                     "message": "The message has been sent successfully.",
+    #                 }
+    #                     , safe=False)
+    #
+    #             except:
+    #                 print('Email not sent.')
+    #                 return JsonResponse(data=
+    #                 {
+    #                     "valid": False,
+    #                     "field": email_field,
+    #                     "message": "The message could not be sent.",
+    #                 }
+    #                     , safe=False)
+    #
+    #         else:
+    #             print('User does not exists.')
+    #             return JsonResponse(data=
+    #             {
+    #                 "valid": False,
+    #                 "email_field": email_field,
+    #                 "message": "The user with the provided email address does not exist.",
+    #             }
+    #                 , safe=False)
+    #
+    #     else:
+    #         print('Is not email.')
+    #         return JsonResponse(data=
+    #         {
+    #             "valid": False,
+    #             "field": email_field,
+    #             "message": "The e-mail field cannot be empty.",
+    #         }
+    #             , safe=False)
 
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
@@ -265,7 +265,63 @@ def forget_password(request):
 
 
 def send_otp(request):
-    pass
+    if request.method == 'POST':
+        otp = randint(a=1000, b=9999)
+        data = json.loads(s=request.body.decode('utf-8'))
+        email = list(data.keys())[0]
+        email_field = data['email']
+
+        print(email)
+        print(email_field)
+
+        if email:
+            print('Email field filled.')
+            if User.objects.filter(email=email).exists():
+                user = User.objects.get(email=email)
+                print('User exists.')
+
+                try:
+                    print('Email pre-sent.')
+                    send_mail(
+                        subject=f"Password reset request for {user.username}.",
+                        message=render_to_string(template_name='accounts/password_reset_email.html', context={
+                            'otp': otp,
+                        }),
+                        from_email=os.environ.get("EMAIL_FROM"),
+                        recipient_list=[email],
+                        fail_silently=True,
+                    )
+                    print('Email sent.')
+
+                    return JsonResponse(data={
+                        "valid": True,
+                        "field": email_field,
+                        "message": "The message has been sent successfully.",
+                    })
+
+                except BadHeaderError:
+                    print('Email not sent.')
+                    return JsonResponse(data={
+                        "valid": False,
+                        "field": email_field,
+                        "message": "The message could not be sent.",
+                    })
+
+            else:
+                print('User does not exists.')
+                return JsonResponse(data={
+                    "valid": False,
+                    "field": email_field,
+                    "message": "The user with the provided email address does not exist.",
+                })
+
+        else:
+            print('Email field is empty.')
+            return JsonResponse(data={
+                "valid": False,
+                "field": email_field,
+                "message": "The e-mail field cannot be empty.",
+            })
 
 
 def password_reset(request):

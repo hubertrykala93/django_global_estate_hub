@@ -272,7 +272,7 @@ if ($forgotPasswordForm){
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'forget-password', true)
+    xhr.open('POST', 'send-otp', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))
