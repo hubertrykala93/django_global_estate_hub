@@ -283,7 +283,7 @@ if ($forgotPasswordForm){
           console.log(response)
 
           if( response.valid == true ) {
-            window.location.href = '/password-reset'
+//            window.location.href = '/password-reset'
           } else{
 //            alert(response.message)
               null
