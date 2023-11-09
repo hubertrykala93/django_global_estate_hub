@@ -69,9 +69,9 @@ def blog(request):
     })
 
 
-def pages(request):
-    return render(request=request, template_name='estates/pages.html', context={
-        'title': 'Pages',
+def faq(request):
+    return render(request=request, template_name='estates/faq.html', context={
+        'title': 'Faq',
     })
 
 

@@ -118,3 +118,34 @@ if ($sectionTitles.length){
   });
 
 }
+
+
+/**
+   * FAQ
+    */
+
+const $faqSection = document.querySelector('[data-faq-animation]')
+
+if ($faqSection) {
+  const accordionItemsAnimation = {
+    delay: 100,
+    distance: '50px',
+    duration: 900,
+    opacity: 0,
+    origin: 'bottom',
+    easing: 'ease',
+    interval: 150,
+  }
+
+  const ImageAnimation = {
+    delay: 300,
+    distance: '200px',
+    duration: 900,
+    opacity: 0,
+    origin: 'right',
+    easing: 'ease-out'
+  }
+
+  ScrollReveal().reveal($faqSection.querySelectorAll('.theme-accordion .accordion__item'), accordionItemsAnimation)
+  ScrollReveal().reveal($faqSection.querySelector('.faq__image'), ImageAnimation)
+}

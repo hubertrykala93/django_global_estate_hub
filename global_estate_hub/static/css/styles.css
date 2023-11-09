@@ -27,6 +27,7 @@
     --clr-input-bg: #F6F6F6;
     --clr-error: rgb(176, 28, 28);
     --clr-success: rgb(12, 134, 12);
+    --clr-carousel-border: #f1f1f1;
   
     /**
      * TYPOGRAPHY
@@ -119,9 +120,11 @@ body{
   font-size: var(--fs-body-400);
   line-height: var(--lh-body-400);
   font-family: var(--ff-body);
+  overflow-x: hidden;
 }
 
-.swiper-wrapper{
+.swiper-wrapper,
+.swiper-slide{
   height: unset;
 }
 
@@ -162,6 +165,33 @@ body{
   line-height: normal;
   font-weight: 500;
   color: var(--clr-dark);
+}
+
+.theme-arrow{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: var(--clr-white);
+  border-radius: var(--br-500);
+  box-shadow: 0 4px 40px rgb(148, 153, 168, .15);
+  cursor: pointer;
+}
+
+.theme-arrow span{
+  font-size: 25px;
+  color: var(--clr-dark);
+  transition: color .4s;
+}
+
+.theme-arrow[aria-disabled="false"] span{
+  color: var(--clr-secondary);
+}
+
+.theme-arrow:hover span,
+.theme-arrow:focus-visible span {
+  color: var(--clr-secondary-alt);
 }
 
 
@@ -209,9 +239,9 @@ body{
 }
 
 
-/*----------------------------------*\
-  #OFFCANVAS
-\*----------------------------------*/
+/**
+  * OFFCANVAS
+   */
 
 #page-offcanvas{
   background-color: var(--clr-primary);
@@ -425,6 +455,55 @@ body{
 .theme-form .forgot-password:hover,
 .theme-form .forgot-password:focus-visible{
   color: var(--clr-primary);
+}
+
+
+/**
+  * ACCORDION
+   */
+
+.theme-accordion .accordion__item {
+  border-bottom: 1px solid #F1F1F1;
+}
+
+.theme-accordion .accordion__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2.6rem 0;
+  cursor: pointer;
+}
+
+.theme-accordion .accordion__title {
+  line-height: 1.4;
+  font-weight: 600;
+  transition: color .4s;
+}
+
+.theme-accordion .accordion__heading:hover .accordion__title {
+  color: var(--clr-secondary);
+}
+
+.theme-accordion .accordion__item .accordion__arrow {
+  margin-left: 1.8rem;
+}
+
+.theme-accordion .accordion__item .accordion__arrow  img{
+  transition: transform .4s;
+}
+
+.theme-accordion .accordion__heading.active .accordion__arrow img{
+  transform: rotate(-90deg);
+}
+
+.theme-accordion .accordion__content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s;
+}
+
+.theme-accordion .accordion__body {
+  padding-bottom: 3rem;
 }
 
 
@@ -714,7 +793,7 @@ body{
   padding: var(--section-block-space-500) 0 0;
 }
 
-.about .container{
+.about .row{
   display: grid;
   row-gap: 4rem;
 }
@@ -785,6 +864,7 @@ body{
 
 .about .about__collage{
   margin: 0 -1rem;
+  flex-grow: 1;
 }
 
 .about .about__collage > div{
@@ -858,13 +938,103 @@ body{
 
 .about .about__arrow {
   display: none;
-  animation: aboutArror 1s infinite alternate linear;
+  animation: aboutArrow 1s infinite alternate linear;
 }
 
-@keyframes aboutArror {
+@keyframes aboutArrow {
   100%{
     transform: rotate(15deg);
   }
+}
+
+
+/**
+  * Testimonials section
+   */
+
+.testimonials{
+  padding-top: var(--section-block-space-500);
+}
+
+.testimonials .section-title {
+  align-items: center;
+}
+
+.testimonials .testimonials__text{
+  text-align: center;
+}
+
+.testimonials .testimonials__carousel {
+  padding: 4rem 0;
+}
+
+.testimonials .testimony__card {
+  padding: 2.4rem 1.5rem;
+  border-radius: var(--br-500);
+  border: 1px solid var(--clr-carousel-border);
+  position: relative;
+}
+
+.testimonials .testimony__info {
+  display: flex;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #EEEEEE;
+}
+
+.testimonials .testimony__avatar {
+  margin-right: 1.5rem;
+}
+
+.testimonials .testimony__avatar img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.testimonials .testimony__name {
+  margin-bottom: .5rem;
+  font-weight: 600;
+  color: var(--clr-dark);
+}
+
+.testimonials .testimony__rating {
+  display: flex;
+  margin-top: 1rem;
+}
+
+.testimonials .testimony__rating img {
+  margin-right: .5rem;
+}
+
+.testimonials .testimony__location {
+  display: flex;
+  align-items: center;
+  margin-top: 2.1rem;
+}
+
+.testimonials .testimony__location-icon {
+  margin-right: .8rem;
+}
+
+.testimonials .testimony__location-city {
+  line-height: normal;
+  color: var(--clr-dark);
+}
+
+.testimonials .testimony__quote-icon {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 2.4rem;
+}
+
+.testimonials__arrows {
+  display: flex;
+  justify-content: center;
+}
+
+.testimonials__arrows .theme-arrow {
+  margin: 0 5px;
 }
 
 
@@ -901,6 +1071,105 @@ body{
 
 .our-partners .logo-carousel .logo-carousel__partner:hover img {
   filter: grayscale(0);
+}
+
+
+/*----------------------------------*\
+  #ABOUT US PAGE
+\*----------------------------------*/
+
+/**
+  * About us section
+   */
+
+.about.about-page .about__quote .quote-decoration .quote-lines {
+  left: 30px;
+  transform: scaleX(-1);
+}
+
+.about.about-page .about__list {
+  margin: 2.7rem 0 0;
+}
+
+/**
+  * Our team carousel
+   */
+
+.our-team{
+  padding: var(--section-block-space-500) 0 0;
+  overflow: hidden;
+}
+
+.our-team .content-column {
+  margin-bottom: 4rem;
+}
+
+.our-team .section-title{
+  margin-bottom: 3rem;
+}
+
+.our-team .our-team__arrows {
+  margin-top: 3rem;
+  display: flex;
+}
+
+.our-team .our-team__arrows .theme-arrow {
+  margin-right: 1rem;
+}
+
+.our-team .our-team__card{
+  padding: 1.8rem;
+  border-radius: var(--br-500);
+  border: 1px solid var(--clr-carousel-border);
+}
+
+.our-team .our-team__card-image {
+  border-radius: var(--br-500);
+  overflow: hidden;
+}
+
+.our-team .our-team__card-image img {
+  width: 100%;
+}
+
+.our-team .our-team__card-description {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.8rem;
+}
+
+.our-team .our-team__card-name {
+  color: var(--clr-black);
+  line-height: normal;
+  margin-bottom: 1rem;
+}
+
+.our-team .our-team__card-signature {
+  font-size: var(--fs-body-300);
+  line-height: normal;
+}
+
+.our-team .our-team__card-socials {
+  display: flex;
+  align-items: center;
+}
+
+.our-team .our-team__card-socials .our-team__card-socials-item{
+  margin-left: 1rem;
+}
+
+.our-team .our-team__card-socials .our-team__card-socials-item:first-child{
+  margin-left: 0;
+}
+
+.our-team .our-team__card-socials .our-team__card-socials-link img{
+  transition: transform .4s;
+}
+
+.our-team .our-team__card-socials .our-team__card-socials-link:hover img,
+.our-team .our-team__card-socials .our-team__card-socials-link:focus-visible img{
+  transform: scale(1.2);
 }
 
 
@@ -1006,6 +1275,29 @@ body{
 .user-access-page .form-column .form-question a:hover,
 .user-access-page .form-column .form-question a:focus-visible{
   color: var(--clr-primary);
+}
+
+
+/*----------------------------------*\
+  #FAQ PAGE
+\*----------------------------------*/
+
+.faq {
+  padding: var(--section-block-space-400) 0 var(--section-block-space-500);
+}
+
+.faq .row.accordion-row {
+  margin-top: 4rem;
+}
+
+.faq .accordion-column {
+  margin-bottom: 4rem;
+}
+
+.faq .faq__image {
+  height: 300px;
+  border-radius: var(--br-500);
+  background: url("/media/others/faq-image.jpg") no-repeat center / cover;
 }
 
 
@@ -1320,6 +1612,7 @@ body{
    */
 
 @media screen and (min-width: 768px){
+
   /*----------------------------------*\
     #HEADER
   \*----------------------------------*/
@@ -1354,7 +1647,6 @@ body{
   
   .about .about__collage{
     display: flex;
-    width: 100%;
   }
 
   .about .about__collage .column-single .image.single {
@@ -1396,7 +1688,51 @@ body{
     top: 20%;
     transform: unset;
   }
+
+
+  /**
+   * Testimonials section
+   */
+
+  .testimonials .testimonials__carousel {
+    padding: 6rem 0;
+  }
+
+  .testimonials .testimony__card {
+    padding: 2.4rem;
+  }
+
+  .testimonials .testimony__avatar img {
+    width: 70px;
+    height: 70px;
+  }
   
+
+  /*----------------------------------*\
+    #ABOUT US PAGE
+  \*----------------------------------*/
+
+  /**
+    * About us section
+    */
+
+  .about.about-page .about__collage {
+    flex-direction: row-reverse;
+  }
+
+  .about.about-page .about__quote {
+    left: unset;
+    right: 25%;
+  }
+
+
+  /*----------------------------------*\
+    #FAQ PAGE
+  \*----------------------------------*/
+
+  .faq .faq__image {
+    height: 500px;
+  }
 
 
   /*----------------------------------*\
@@ -1506,7 +1842,7 @@ body{
       * About us section
       */
 
-    .about .container{
+    .about .row{
       grid-template-columns: 1fr 1fr;
     }
 
@@ -1520,6 +1856,55 @@ body{
       position: absolute;
       left: 30px;
       top: 5%;
+    }
+
+    /*----------------------------------*\
+      #ABOUT US PAGE
+    \*----------------------------------*/
+
+    /**
+      * About us section
+      */
+
+    .about.about-page .about__arrow {
+      left: unset;
+      right: 30px;
+      transform: rotate(0) scaleX(-1);
+      animation: aboutArrow2 1s infinite alternate linear;
+    }
+  
+    @keyframes aboutArrow2 {
+      100%{
+        transform: rotate(15deg) scaleX(-1);
+      }
+    }
+  
+    .about.about-page .content-column{
+      order: 2;
+    }
+  
+    .about.about-page .image-column {
+      padding-left: 0;
+      padding-right: 5rem;
+    }
+
+    /**
+      * Our team carousel
+      */
+
+    .our-team .row {
+      display: grid;
+      grid-template-columns: 5fr 7fr;
+    }
+
+    .our-team .content-column{
+      min-width: 0;
+      margin-bottom: 0;
+      padding-right: 6rem;
+    }
+
+    .our-team .carousel-column {
+      min-width: 0;
     }
 
 
@@ -1546,6 +1931,26 @@ body{
 
     .user-access-page .testimony__wrapper .testimony__content {
       font-size: 2.4rem;
+    }
+
+
+    /*----------------------------------*\
+      #FAQ PAGE
+    \*----------------------------------*/
+
+    .faq .row.accordion-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: 6rem;
+      margin-top: 5rem;
+    }
+
+    .faq .accordion-column {
+      margin-bottom: 0;
+    }
+
+    .faq .faq__image {
+      height: 100%;
     }
 
 
@@ -1601,7 +2006,7 @@ body{
       * About us section
       */
 
-    .about .container {
+    .about .row {
       grid-template-columns: 5fr 7fr;
     }
 
@@ -1621,6 +2026,43 @@ body{
     .about .about__arrow {
       left: 0px;
       top: 10%;
+    }
+
+
+    /*----------------------------------*\
+      #ABOUT US PAGE
+    \*----------------------------------*/
+
+    /**
+      * About us section
+      */
+
+    .about.about-page .row {
+      grid-template-columns: 7fr 5fr;
+    }
+
+    /**
+     * Our team carousel
+     */
+
+    .our-team .container {
+      max-width: calc(100% - (100% - var(--container-400)) / 2 + var(--side-space));
+      padding: 0 10px 0 var(--side-space);
+      margin: 0 0 0 auto;
+    }
+
+    .our-team .row {
+      display: grid;
+      grid-template-columns: 480px auto;
+    }
+
+
+    /*----------------------------------*\
+      #FAQ PAGE
+    \*----------------------------------*/
+
+    .faq .row.accordion-row {
+      grid-template-columns: 7fr 5fr;
     }
 
 

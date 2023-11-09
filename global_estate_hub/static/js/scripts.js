@@ -1,5 +1,9 @@
+/*----------------------------------*\
+  #HEADER
+\*----------------------------------*/
+
 /**
-   * HEADER USER DROPDOWN
+   * User dropdown
     */
 
 const $userDropdown = document.querySelector('[data-user-dropdown]')
@@ -24,7 +28,7 @@ if($userDropdown){
 
 
 /**
-   * OFFCANVAS TOGGLE
+   * Offcanvas toggle
     */
 
 const $offcanvasToggler = document.querySelector('[data-open-offcanvas]'),
@@ -42,8 +46,74 @@ if ( $offcanvasToggler &&  $offcanvasWrapper && $offcanvasClose ){
 }
 
 
+/*----------------------------------*\
+  #HOME PAGE AND ABOUT
+\*----------------------------------*/
+
 /**
-   * OUR PARTNERS CAROUSEL
+   * Testimonials carousel
+    */
+
+$testimonialsSection = document.querySelector('[data-testimonials]')
+
+if($testimonialsSection) {
+  const $testimonialsCarousel = $testimonialsSection.querySelector('[data-testimonials-carousel]')
+
+  const swiper = new Swiper($testimonialsCarousel, {
+    navigation: {
+      nextEl:  $testimonialsSection.querySelector('[data-right]'),
+      prevEl: $testimonialsSection.querySelector('[data-left]'),
+    },
+    draggable: true,
+    speed: 400,
+    slidesPerView: 1,
+    spaceBetween: 24,
+    breakpoints: {
+      768: {
+        slidesPerView: 2,
+      },
+      992: {
+        slidesPerView: 3,
+      }
+    },
+  })
+}
+
+/**
+   * Our team carousel
+    */
+
+$outTeamSection = document.querySelector('[data-out-team]')
+
+if($outTeamSection) {
+  const $ourTeamCarousel = $outTeamSection.querySelector('[data-our-team-carousel]')
+
+  const swiper = new Swiper($ourTeamCarousel, {
+    navigation: {
+      nextEl:  $outTeamSection.querySelector('[data-right]'),
+      prevEl: $outTeamSection.querySelector('[data-left]'),
+    },
+    draggable: true,
+    speed: 400,
+    slidesPerView: 1,
+    spaceBetween: 24,
+    breakpoints: {
+      768: {
+        slidesPerView: 2,
+      },
+      992: {
+        slidesPerView: 2,
+      },
+      1500: {
+        slidesPerView: 3,
+      },
+    },
+  })
+}
+
+
+/**
+   * Our partners carousel
     */
 
 const $partnersCarousel = document.querySelector('[data-partners-carousel]')
@@ -73,8 +143,12 @@ if($partnersCarousel){
 }
 
 
+/*----------------------------------*\
+  #FORMS
+\*----------------------------------*/
+
 /**
-   * NEWSLETTER FOOTER SUBSCRIBTION
+   * Newsletter footer form
     */
 
 const $newsletterForm = document.querySelector('[data-newsletter-form]')
@@ -127,7 +201,7 @@ if ($newsletterForm){
 
 
 /**
-   * FORMS
+   * Show / hide password
     */
 
 const $eyeIcons = document.querySelectorAll('[data-password-eye]')
@@ -145,7 +219,9 @@ if($eyeIcons.length){
   });
 }
 
-
+/**
+   * Sign up / login validation (F)
+    */
 const userFormsValidation = ($form, response, redirectionPath) => {
   const fieldsNumber = response.length
   let validFields = 0
@@ -172,7 +248,6 @@ const userFormsValidation = ($form, response, redirectionPath) => {
         $message.remove()
       }
     }
-
     if ( validFields === fieldsNumber ) {
       window.location.href = redirectionPath
     }
@@ -182,7 +257,7 @@ const userFormsValidation = ($form, response, redirectionPath) => {
 
 
 /**
-   * LOGIN FORM AJAX VALIDATION
+   * Login form ajax validation
     */
 
 const $loginForm = document.querySelector('[data-login-form]')
@@ -193,12 +268,10 @@ if ($loginForm){
     let csrftoken = this.querySelector('[name="csrftoken"]').value
     const $emailInput = this.querySelector('[data-email]')
     const $passwordInput = this.querySelector('[data-password]')
-    const $termsInput = this.querySelector('[data-terms]')
 
     const data = {
       "email": [$emailInput.value, "data-email"],
-      "password": [$passwordInput.value, "data-password"],
-      "terms": [$termsInput.checked, "data-terms"]
+      "password": [$passwordInput.value, "data-password"]
     }
 
     const xhr = new XMLHttpRequest()
@@ -218,7 +291,7 @@ if ($loginForm){
 
 
 /**
-   * SIGNUP FORM AJAX VALIDATION
+   * Signup form ajax validation
     */
 
 const $signUpForm = document.querySelector('[data-signup-form]')
@@ -231,12 +304,14 @@ if ($signUpForm){
     const $emailInput = this.querySelector('[data-email]')
     const $password1Input = this.querySelector('[data-password1]')
     const $password2Input = this.querySelector('[data-password2]')
+    const $termsInput = this.querySelector('[data-terms]')
 
     const data = {
       "userName": [$userNameInput.value, "data-username"],
       "email": [$emailInput.value, "data-email"],
       "password1": [$password1Input.value, "data-password1"],
-      "password2": [$password2Input.value, "data-password2"]
+      "password2": [$password2Input.value, "data-password2"],
+      "terms": [$termsInput.checked, "data-terms"]
     }
 
     const xhr = new XMLHttpRequest()
@@ -256,7 +331,7 @@ if ($signUpForm){
 
 
 /**
-   * FORGOT PASSWORD AJAX VALIDATION
+   * Forgot password ajax validation
     */
 
 const $forgotPasswordForm = document.querySelector('[data-forgot-password-form]')
@@ -285,9 +360,64 @@ if ($forgotPasswordForm){
           if( response.valid == true ) {
             window.location.href = '/password-reset'
           } else{
-//            alert(response.message)
-              null
+           alert(response.message)
           }
+      }
+    }
+  })
+}
+
+
+/*----------------------------------*\
+  #OTHERS
+\*----------------------------------*/
+
+/**
+   * Theme accordion
+    */
+
+const $accordion = document.querySelector('[data-theme-accordion]')
+
+if ($accordion){
+
+  $accordion.addEventListener('click', e =>{
+
+    function assignClickedHeading () {
+      if ( e.target.hasAttribute('data-heading') ) { return e.target }
+      else if ( e.target.closest('[data-heading]') ) { return e.target.closest('[data-heading]') }
+      else { return false }
+    }
+
+    let $clickedHeading = assignClickedHeading()
+
+    if ( $clickedHeading ) {
+      const $allHeadings = $accordion.querySelectorAll('[data-heading]')
+      const $allContents = $accordion.querySelectorAll('.accordion__content')
+      const $content = $clickedHeading.nextElementSibling
+
+      const hideContent = (content) =>{
+        content.style.maxHeight = content.scrollHeight
+        setTimeout(() => {
+          content.style.maxHeight = '0px'
+        }, 1);
+      }
+
+      if ( $clickedHeading.classList.contains('active') ) { 
+        $clickedHeading.classList.remove('active')
+        hideContent($content)
+      } else {
+        $allContents.forEach(content => {
+          if ( content.previousElementSibling.classList.contains('active') ) {
+            hideContent(content)
+          }
+        })
+        $allHeadings.forEach(heading => {heading.classList.remove('active')})
+        $clickedHeading.classList.add('active')
+        const contentHeight = $content.scrollHeight
+        $content.style.maxHeight = contentHeight + 'px'
+        setTimeout(() => {
+          $content.style.maxHeight = 'unset'
+        }, 400);
       }
     }
   })
