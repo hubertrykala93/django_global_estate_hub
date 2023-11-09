@@ -6,7 +6,7 @@ import re
 
 
 def index(request):
-    return render(request=request, template_name='estates/index.html', context={
+    return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
     })
 
@@ -52,36 +52,36 @@ def newsletter(request):
 
 
 def about(request):
-    return render(request=request, template_name='estates/about.html', context={
+    return render(request=request, template_name='core/about.html', context={
         'title': 'About',
     })
 
 
 def properties(request):
-    return render(request=request, template_name='estates/properties.html', context={
+    return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
     })
 
 
 def blog(request):
-    return render(request=request, template_name='estates/blog.html', context={
+    return render(request=request, template_name='core/blog.html', context={
         'title': 'Blog',
     })
 
 
 def faq(request):
-    return render(request=request, template_name='estates/faq.html', context={
+    return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',
     })
 
 
 def contact(request):
-    return render(request=request, template_name='estates/contact.html', context={
+    return render(request=request, template_name='core/contact.html', context={
         'title': 'Contact',
     })
 
 
 def error(request):
-    return render(request=request, template_name='estates/error.html', context={
+    return render(request=request, template_name='core/error.html', context={
         'title': 'Error',
     })

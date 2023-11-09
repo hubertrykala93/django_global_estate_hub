@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("estates", "0005_emailsender"),
+        ("core", "0005_emailsender"),
     ]
 
     operations = [

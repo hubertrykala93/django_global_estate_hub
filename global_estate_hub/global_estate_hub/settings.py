@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "estates",
+    "core",
     "accounts",
 ]
 
@@ -76,8 +76,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "estates.context_processors.breadcrumbs_urls",
-                "estates.context_processors.generate_token",
+                "core.context_processors.breadcrumbs_urls",
+                "core.context_processors.generate_token",
             ],
         },
     },

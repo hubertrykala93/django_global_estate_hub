@@ -7,7 +7,7 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("estates", "0003_alter_newsletter_email"),
+        ("core", "0003_alter_newsletter_email"),
     ]
 
     operations = [
