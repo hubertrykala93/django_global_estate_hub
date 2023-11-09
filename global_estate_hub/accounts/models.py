@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from PIL import Image
+from random import randint
 
 
 class CustomUserManager(UserManager):
@@ -39,6 +40,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=100, unique=True, null=False, blank=False)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
+    one_time_password = models.CharField(max_length=4, default='0000')
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

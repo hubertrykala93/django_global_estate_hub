@@ -1,18 +1,17 @@
 import os
-
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from .models import User
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
 from django.core.mail import send_mail, BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
-import smtplib, ssl
+from django.contrib.sessions.models import Session
 
 load_dotenv()
 
@@ -112,6 +111,7 @@ def create_user(request):
             return JsonResponse(data=response, safe=False)
 
 
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def log_in(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -177,119 +177,97 @@ def log_in(request):
     })
 
 
-@login_required
 def log_out(request):
     logout(request=request)
 
     return redirect(to='login')
 
 
-@login_required
+@login_required(login_url='login')
 def account_settings(request):
     return render(request=request, template_name='accounts/account-settings.html', context={
         'title': 'Account Settings',
     })
 
 
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
 def forget_password(request):
-    if request.method == 'POST':
-        code = ''.join([str(randint(a=0, b=9)) for _ in range(4)])
-        data = json.loads(s=request.body.decode('utf-8'))
-        email = data['email']
-        email_field = list(data.keys())[0]
-
-        print(email)
-
-        if email:
-            print('Is email.')
-            if User.objects.filter(email=email).exists():
-                print('User exists.')
-                try:
-                    print('Email present.')
-
-                    send_mail(
-                        subject=f"Password reset request for {email}.",
-                        message=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'code': code,
-                        }),
-                        from_email=os.environ.get("EMAIL_FROM"),
-                        recipient_list=[email],
-                        fail_silently=True
-                    )
-
-                    message = EmailMessage(
-                        subject=f"Password reset request for {email}.",
-                        body=render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'code': code
-                        }),
-                        from_email=os.environ.get("EMAIL_HOST_USER"),
-                        to=[email],
-                    )
-
-                    message.send(fail_silently=True)
-
-                    print('Email sent.')
-
-                    return JsonResponse(data=
-                    {
-                        "valid": True,
-                        "field": email_field,
-                        "email": email,
-                        "message": "The message has been sent successfully.",
-                    }
-                        , safe=False)
-
-                except:
-                    print('Email not sent.')
-                    return JsonResponse(data=
-                    {
-                        "valid": False,
-                        "field": email_field,
-                        "message": "The message could not be sent.",
-                    }
-                        , safe=False)
-
-            else:
-                print('User does not exists.')
-                return JsonResponse(data=
-                {
-                    "valid": False,
-                    "email_field": email_field,
-                    "message": "The user with the provided email address does not exist.",
-                }
-                    , safe=False)
-
-        else:
-            print('Is not email.')
-            return JsonResponse(data=
-            {
-                "valid": False,
-                "field": email_field,
-                "message": "The e-mail field cannot be empty.",
-            }
-                , safe=False)
-
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
     })
 
 
-def send_otp(request):
-    pass
-
-
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
 def password_reset(request):
     return render(request=request, template_name='accounts/password-reset.html', context={
         'title': 'Password Reset',
     })
 
 
+def send_otp(request):
+    if request.method == 'POST':
+        one_time_password = randint(a=1111, b=9999)
+        data = json.loads(s=request.body.decode('utf-8'))
+        email = data['email']
+        email_field = list(data.keys())[0]
+        request.session['email'] = email
+
+        response = {
+            "valid":
+                False if not email else
+                False if not User.objects.filter(email=email).exists() else
+                True,
+            "field": email_field,
+            "message":
+                "The e-mail field cannot be empty." if not email else
+                "The user with the provided email address does not exist." if not User.objects.filter(
+                    email=email).exists() else
+                "",
+        }
+
+        if response['valid']:
+            user = User.objects.get(email=email)
+            user.one_time_password = one_time_password
+            user.save()
+
+            try:
+                print(request.session.__dict__)
+                message = EmailMessage(
+                    subject=f"Password reset request for {user.username}.",
+                    body=render_to_string(template_name='accounts/password_reset_email.html', context={
+                        'one_time_password': one_time_password,
+                    }),
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
+                    to=[user.email]
+                )
+
+                message.send(fail_silently=True)
+
+                return JsonResponse(data=response, safe=False)
+
+            except BadHeaderError:
+                return JsonResponse(data={
+                    "valid": False,
+                    "field": email_field,
+                    "message": "The message could not be sent.",
+                })
+
+        else:
+            return JsonResponse(data=response, safe=False)
+
+
+def check_otp(request):
+    pass
+
+
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
 def new_password(request):
     return render(request=request, template_name='accounts/new-password.html', context={
         'title': 'New Password',
     })
 
 
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
 def done(request):
     return render(request=request, template_name='accounts/done.html', context={
         'title': 'Done',
