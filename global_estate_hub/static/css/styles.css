@@ -1357,6 +1357,10 @@ section.remind-password{
   margin-top: 3rem;
 }
 
+.remind-password .forgot-password__form input {
+  padding: 0 1.8rem;
+}
+
 .remind-password .verification-password__form{
   margin-top: 3rem;
 }
@@ -1392,11 +1396,63 @@ section.remind-password{
   text-align: center;
 }
 
-.remind-password .remind-password__resend-link span{
+.remind-password .remind-password__resend-link button{
   color: var(--clr-dark);
   font-weight: 500;
   cursor: pointer;
+  font-size: inherit;
+  transition: color .4s;
 }
+
+.remind-password .remind-password__resend-link button:hover,
+.remind-password .remind-password__resend-link button:focus-visible{
+  color: var(--clr-secondary);
+  text-decoration: underline;
+}
+
+.remind-password .new-password__form {
+  margin-top: 3rem;
+}
+
+.remind-password .new-password__form input{
+  height: 45px;
+  border: none;
+  padding: 0;
+  border-bottom: 1px solid #DFDFDF;
+  border-radius: 0;
+  color: #D9D9D9;
+  background-color: var(--clr-white);
+  transition: border-color .4s;
+}
+
+.remind-password .new-password__form input:focus-visible {
+  box-shadow: none;
+  border-color: var(--clr-dark);
+}
+
+.remind-password .done-password__buttons {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.8rem;
+  margin-top: 3rem;
+}
+
+.remind-password .done-password__buttons .btn{
+  display: block;
+  line-height: 55px;
+  text-align: center;
+}
+
+.remind-password .done-password__buttons .border-btn {
+  border: 1px solid #DFDFDF;
+}
+
+.remind-password .done-password__buttons .border-btn:hover,
+.remind-password .done-password__buttons .border-btn:focus-visible {
+  background-color: var(--clr-dark);
+  color: var(--clr-white);
+}
+
 
 
 /*----------------------------------*\
