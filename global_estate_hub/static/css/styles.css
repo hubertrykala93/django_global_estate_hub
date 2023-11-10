@@ -1397,6 +1397,10 @@ section.remind-password{
   text-align: center;
 }
 
+.remind-password .verification-password__form .form__input-wrap input.highlighted {
+  border-color: var(--clr-black);
+}
+
 .remind-password .verification-password__form input::-webkit-outer-spin-button,
 .remind-password .verification-password__form input::-webkit-inner-spin-button {
   -webkit-appearance: none;

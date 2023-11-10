@@ -340,6 +340,25 @@ if ($forgotPasswordWrapper){
 
   //2nd step
   const secondStep = ()=> {
+    const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
+    const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
+
+    $verificationFormInputs.forEach((input, index) => {
+      input.addEventListener('input', ()=>{
+        if ( !input.value.match(/^[0-9]+$/) ) {
+          input.value = ''
+          input.classList.remove('highlighted')
+        } else {
+          input.classList.add('highlighted')
+          const inputToFocus = index + 1 < $verificationFormInputs.length ? index + 1 : false
+          if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
+        }
+      })
+    })
+
+
+
+
 
   }
 
