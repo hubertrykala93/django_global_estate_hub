@@ -30,11 +30,13 @@ def create_user(request):
         email = data['email'][0]
         raw_password1 = data['password1'][0]
         raw_password2 = data['password2'][0]
+        terms = data['terms'][0]
 
         username_field = data['userName'][1]
         email_field = data['email'][1]
         raw_password1_field = data['password1'][1]
         raw_password2_field = data['password2'][1]
+        terms_field = data['terms'][1]
 
         response = [
             {
@@ -98,6 +100,15 @@ def create_user(request):
                     "The password field must be filled in." if not raw_password1 else
                     "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
                     "Correct password confirmation.",
+            },
+            {
+                "valid":
+                    False if not terms else
+                    True,
+                "field": terms_field,
+                "message":
+                    "The Terms & Privacy policy must be accepted." if not terms else
+                    "",
             }
         ]
 
@@ -118,11 +129,9 @@ def log_in(request):
 
         email = data['email'][0]
         password = data['password'][0]
-        terms = data['terms'][0]
 
         email_field = data['email'][1]
         password_field = data['password'][1]
-        terms_field = data['terms'][1]
 
         response = [
             {
@@ -152,15 +161,6 @@ def log_in(request):
                                                                          email=email).password) else
                     True,
             },
-            {
-                "valid":
-                    False if not terms else
-                    True,
-                "field": terms_field,
-                "message":
-                    "The Terms & Privacy policy must be accepted." if not terms else
-                    "",
-            }
         ]
 
         if list(set([data['valid'] for data in response]))[0]:
