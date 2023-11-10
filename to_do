@@ -1,9 +1,11 @@
 @Szymon-Levy
 
-python3 manage.py createsuperuser
+python manage.py createsuperuser
 3. Slajd 18.
 4. Slajd 19.
 5. Slajd 20.
 6. Slajd 21.
 
 @hubertrykala93
+
+w pierwszym kroku forgot password ma nie zwracać field

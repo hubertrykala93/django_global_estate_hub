@@ -1298,6 +1298,17 @@ section.remind-password{
 
 .remind-password .remind-password__slides {
   position: relative;
+  overflow: hidden;
+}
+
+.remind-password .remind-password__step {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  transform: translateX(-100%);
+  transition: transform .4s;
 }
 
 .remind-password .remind-password__icon {
@@ -1351,6 +1362,11 @@ section.remind-password{
 
 .remind-password .remind-password__step-number.active{
   opacity: 1;
+}
+
+.remind-password .forgot-password__step-wrapper {
+  position: relative;
+  transform: translateX(0);
 }
 
 .remind-password .forgot-password__form {

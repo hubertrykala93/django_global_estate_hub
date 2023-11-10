@@ -334,9 +334,48 @@ if ($signUpForm){
    * Forgot password ajax validation
     */
 
-const $forgotPasswordForm = document.querySelector('[data-forgot-password-form]')
+const $forgotPasswordWrapper = document.querySelector('[data-forgot-password-wrapper]')
 
-if ($forgotPasswordForm){
+if ($forgotPasswordWrapper){
+
+  //2nd step
+  const secondStep = ()=> {
+
+  }
+
+  //1st step
+  const $forgotPasswordForm = $forgotPasswordWrapper.querySelector('[data-forgot-password-form]')
+
+  const firstStepValidation = (form, response) =>{
+    const $formField = form.querySelector('.form__field')
+    const $message = $formField.querySelector('.info')
+
+    if($message){ 
+      $message.textContent = response.message 
+    } else {
+      const info = document.createElement('span')
+      info.classList.add('info')
+      info.classList.add('error')
+      info.textContent = response.message
+      $formField.append(info)
+    }
+  }
+
+  const goToStepTwo = ()=> {
+    const $stepOne = $forgotPasswordWrapper.querySelector('[data-forgot-password-step]')
+    const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
+    $stepTwo.style.zIndex = 2
+    $stepTwo.style.transform = "translateX(0)"
+    
+
+    setTimeout(() => {
+      $stepOne.style.position = "absolute"
+      $stepTwo.style.position = "relative"
+    }, 400);
+
+    secondStep()
+  }
+
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
     let csrftoken = this.querySelector('[name="csrftoken"]').value
@@ -355,17 +394,22 @@ if ($forgotPasswordForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
 
           if( response.valid == true ) {
-//            window.location.href = '/password-reset'
+            goToStepTwo()
           } else{
-           alert(response.message)
+           firstStepValidation($forgotPasswordForm, response)
           }
       }
     }
   })
 }
+
+
+
+
+
+
 
 
 /*----------------------------------*\
