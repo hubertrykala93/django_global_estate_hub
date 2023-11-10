@@ -8,7 +8,7 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
-from django.core.mail import send_mail, BadHeaderError, EmailMessage
+from django.core.mail import BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
 from django.contrib.sessions.models import Session
@@ -16,6 +16,7 @@ from django.contrib.sessions.models import Session
 load_dotenv()
 
 
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def register(request):
     return render(request=request, template_name='accounts/register.html', context={
         'title': 'Sign Up',
@@ -190,17 +191,12 @@ def account_settings(request):
     })
 
 
-@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
+@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def forget_password(request):
+    body = request.body.decode('utf-8')
+    print(body)
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
-    })
-
-
-@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
-def password_reset(request):
-    return render(request=request, template_name='accounts/password-reset.html', context={
-        'title': 'Password Reset',
     })
 
 
@@ -209,19 +205,19 @@ def send_otp(request):
         one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
         email = data['email']
-        email_field = list(data.keys())[0]
-        request.session['email'] = email
 
         response = {
             "valid":
                 False if not email else
                 False if not User.objects.filter(email=email).exists() else
+                False if User.objects.get(email=email).has_otp() else
                 True,
-            "field": email_field,
+            "email": email,
             "message":
                 "The e-mail field cannot be empty." if not email else
                 "The user with the provided email address does not exist." if not User.objects.filter(
                     email=email).exists() else
+                "The code is already assigned to this user. Please try again in 5 minutes."
                 "",
         }
 
@@ -231,7 +227,6 @@ def send_otp(request):
             user.save()
 
             try:
-                print(request.session.__dict__)
                 message = EmailMessage(
                     subject=f"Password reset request for {user.username}.",
                     body=render_to_string(template_name='accounts/password_reset_email.html', context={
@@ -248,7 +243,7 @@ def send_otp(request):
             except BadHeaderError:
                 return JsonResponse(data={
                     "valid": False,
-                    "field": email_field,
+                    "email": email,
                     "message": "The message could not be sent.",
                 })
 
@@ -258,17 +253,3 @@ def send_otp(request):
 
 def check_otp(request):
     pass
-
-
-@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
-def new_password(request):
-    return render(request=request, template_name='accounts/new-password.html', context={
-        'title': 'New Password',
-    })
-
-
-@user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='index')
-def done(request):
-    return render(request=request, template_name='accounts/done.html', context={
-        'title': 'Done',
-    })

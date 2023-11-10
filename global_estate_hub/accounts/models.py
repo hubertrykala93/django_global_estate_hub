@@ -72,6 +72,9 @@ class User(AbstractBaseUser, PermissionsMixin):
             img.thumbnail(size=(300, 300))
             img.save(fp=self.image.path)
 
+    def has_otp(self):
+        return True if self.one_time_password != '0000' else False
+
 
 class Profile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
