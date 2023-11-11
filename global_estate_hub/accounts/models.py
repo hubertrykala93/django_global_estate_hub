@@ -1,4 +1,3 @@
-import datetime
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
@@ -82,6 +81,7 @@ class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
     created_at = models.DateTimeField(default=now, blank=True)
+    expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
     objects = OneTimePasswordManager()
 
     class Meta:

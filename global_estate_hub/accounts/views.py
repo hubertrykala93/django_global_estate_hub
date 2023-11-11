@@ -215,6 +215,7 @@ def send_otp(request):
                             subject=f"Password reset request for {user.username}.",
                             body=render_to_string(template_name='accounts/password_reset_email.html', context={
                                 'one_time_password': one_time_password.password,
+                                'expire_password': one_time_password.expires_in,
                             }),
                             from_email=os.environ.get("EMAIL_HOST_USER"),
                             to=[user.email]
