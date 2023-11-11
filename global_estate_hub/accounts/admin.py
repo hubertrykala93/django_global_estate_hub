@@ -16,7 +16,7 @@ class AdminUser(admin.ModelAdmin):
 
 @admin.register(OneTimePassword)
 class AdminOneTimePassword(admin.ModelAdmin):
-    list_display = ['user', 'password', 'created_at', 'expires_at', 'is_sent']
+    list_display = ['user', 'password', 'created_at']
 
 
 @admin.register(Profile)

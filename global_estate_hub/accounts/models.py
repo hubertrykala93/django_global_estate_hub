@@ -1,5 +1,4 @@
 import datetime
-
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
@@ -74,12 +73,16 @@ class User(AbstractBaseUser, PermissionsMixin):
             img.save(fp=self.image.path)
 
 
+class OneTimePasswordManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
+
+
 class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    password = models.CharField(max_length=20, default='0000')
-    created_at = models.DateTimeField(default=now)
-    expires_at = models.DateTimeField(default=now() + datetime.timedelta(seconds=60))
-    is_sent = models.BooleanField(default=False)
+    password = models.CharField(max_length=20)
+    created_at = models.DateTimeField(default=now, blank=True)
+    objects = OneTimePasswordManager()
 
     class Meta:
         verbose_name = 'One Time Password'
@@ -87,16 +90,6 @@ class OneTimePassword(models.Model):
 
     def __str__(self):
         return f'One Time Password for {self.user.username}.'
-
-    def has_password(self):
-        return True if self.password != '0000' else False
-
-    def reset_password(self):
-        if now() == self.expires_at:
-            self.password = '0000'
-
-    def __len__(self):
-        return len(self.password)
 
 
 class Profile(models.Model):
