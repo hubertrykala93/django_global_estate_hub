@@ -1377,6 +1377,10 @@ section.remind-password{
   padding: 0 1.8rem;
 }
 
+.remind-password .verification-password__verifying-email span{
+  color: var(--clr-dark);
+}
+
 .remind-password .verification-password__form{
   margin-top: 3rem;
 }
@@ -1409,25 +1413,6 @@ section.remind-password{
 
 .remind-password .verification-password__form input[type="number"]{
   appearance: textfield;
-}
-
-.remind-password .remind-password__resend-link {
-  margin-top: 3rem;
-  text-align: center;
-}
-
-.remind-password .remind-password__resend-link button{
-  color: var(--clr-dark);
-  font-weight: 500;
-  cursor: pointer;
-  font-size: inherit;
-  transition: color .4s;
-}
-
-.remind-password .remind-password__resend-link button:hover,
-.remind-password .remind-password__resend-link button:focus-visible{
-  color: var(--clr-secondary);
-  text-decoration: underline;
 }
 
 .remind-password .new-password__form {

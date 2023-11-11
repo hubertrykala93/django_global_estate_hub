@@ -395,6 +395,11 @@ if ($forgotPasswordWrapper){
     secondStep()
   }
 
+  const setEmailToStorage = (email) => {
+    sessionStorage.setItem('verifyingEmail', email)
+    console.log(email)
+  }
+
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
     let csrftoken = this.querySelector('[name="csrftoken"]').value
@@ -415,6 +420,7 @@ if ($forgotPasswordWrapper){
           const response = JSON.parse(this.responseText)
 
           if( response.valid == true ) {
+            setEmailToStorage(response.email)
             goToStepTwo()
           } else{
            firstStepValidation($forgotPasswordForm, response)
