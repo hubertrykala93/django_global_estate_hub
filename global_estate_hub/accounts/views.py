@@ -2,7 +2,7 @@ import os
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
-from .models import User
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -208,22 +208,23 @@ def send_otp(request):
             "valid":
                 False if not email else
                 False if not User.objects.filter(email=email).exists() else
-                False if User.objects.get(email=email).has_otp() else
+                # False if OneTimePassword(user=User.objects.get(email=email)).password != '0000' else
                 True,
             "email": email,
             "message":
                 "The e-mail field cannot be empty." if not email else
                 "The user with the provided email address does not exist." if not User.objects.filter(
                     email=email).exists() else
-                # "The code is already assigned to this user. Please try again in 5 minutes."
+                # "The code is already assigned to this user. Please try again in 5 minutes." if OneTimePassword(
+                #     user=User.objects.get(email=email)).password != '0000' else
                 "",
         }
 
         if response['valid']:
             user = User.objects.get(email=email)
-            user.one_time_password = one_time_password
-            user.one_time_password_sent_email = True
-            user.save()
+            one_time_password = OneTimePassword(user=user, password=one_time_password)
+            one_time_password.is_sent = True
+            one_time_password.save()
 
             try:
                 message = EmailMessage(
@@ -236,8 +237,6 @@ def send_otp(request):
                 )
 
                 message.send(fail_silently=True)
-
-                user.reset_otp()
 
                 return JsonResponse(data=response, safe=False)
 

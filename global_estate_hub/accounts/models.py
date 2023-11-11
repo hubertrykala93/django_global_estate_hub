@@ -73,18 +73,30 @@ class User(AbstractBaseUser, PermissionsMixin):
             img.thumbnail(size=(300, 300))
             img.save(fp=self.image.path)
 
-    def has_otp(self):
-        return True if self.one_time_password != '0000' else False
-
-    def reset_otp(self):
-        pass
-
 
 class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20, default='0000')
     created_at = models.DateTimeField(default=now)
-    sent = models.BooleanField(default=False)
+    expires_at = models.DateTimeField(default=now() + datetime.timedelta(seconds=60))
+    is_sent = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = 'One Time Password'
+        verbose_name_plural = 'One Time Passwords'
+
+    def __str__(self):
+        return f'One Time Password for {self.user.username}.'
+
+    def has_password(self):
+        return True if self.password != '0000' else False
+
+    def reset_password(self):
+        if now() == self.expires_at:
+            self.password = '0000'
+
+    def __len__(self):
+        return len(self.password)
 
 
 class Profile(models.Model):
