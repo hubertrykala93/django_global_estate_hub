@@ -11,7 +11,7 @@ from random import randint
 from django.core.mail import BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
 from dotenv import load_dotenv
-from django.contrib.sessions.models import Session
+import datetime
 
 load_dotenv()
 
@@ -193,8 +193,6 @@ def account_settings(request):
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def forget_password(request):
-    body = request.body.decode('utf-8')
-    print(body)
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
     })
@@ -217,13 +215,14 @@ def send_otp(request):
                 "The e-mail field cannot be empty." if not email else
                 "The user with the provided email address does not exist." if not User.objects.filter(
                     email=email).exists() else
-                "The code is already assigned to this user. Please try again in 5 minutes."
+                # "The code is already assigned to this user. Please try again in 5 minutes."
                 "",
         }
 
         if response['valid']:
             user = User.objects.get(email=email)
             user.one_time_password = one_time_password
+            user.one_time_password_sent_email = True
             user.save()
 
             try:
@@ -237,6 +236,8 @@ def send_otp(request):
                 )
 
                 message.send(fail_silently=True)
+
+                user.reset_otp()
 
                 return JsonResponse(data=response, safe=False)
 

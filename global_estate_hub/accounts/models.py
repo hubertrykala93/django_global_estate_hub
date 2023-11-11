@@ -1,8 +1,9 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
-from django.utils.timezone import now
+from django.utils.timezone import now, timedelta
 from PIL import Image
-from random import randint
 
 
 class CustomUserManager(UserManager):
@@ -74,6 +75,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def has_otp(self):
         return True if self.one_time_password != '0000' else False
+
+    def reset_otp(self):
+        pass
+
+
+class OneTimePassword(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    password = models.CharField(max_length=20, default='0000')
+    created_at = models.DateTimeField(default=now)
+    sent = models.BooleanField(default=False)
 
 
 class Profile(models.Model):
