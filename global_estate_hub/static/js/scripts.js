@@ -341,7 +341,25 @@ if ($forgotPasswordWrapper){
   //2nd step
   const secondStep = ()=> {
     const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
+    const $veryfyingEmail = $forgotPasswordWrapper.querySelector('[data-verification-email]')
     const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
+
+    $veryfyingEmail.textContent = sessionStorage.getItem('verifyingEmail')
+
+    const secondStepValidation = (form, message) =>{
+      const $formField = form.querySelector('.form__field')
+      const $message = $formField.querySelector('.info')
+  
+      if($message){ 
+        $message.textContent = message 
+      } else {
+        const info = document.createElement('span')
+        info.classList.add('info')
+        info.classList.add('error')
+        info.textContent = message
+        $formField.append(info)
+      }
+    }
 
     $verificationFormInputs.forEach((input, index) => {
       input.addEventListener('input', ()=>{
@@ -354,6 +372,47 @@ if ($forgotPasswordWrapper){
           if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
         }
       })
+    })
+
+    $verificationForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      let csrftoken = this.querySelector('[name="csrftoken"]').value
+      const $codeInputs = this.querySelectorAll('[data-code]')
+      let filledInputs = 0
+      let typedCode = ""
+      $codeInputs.forEach(input=> {
+        if (input.value !== ''){
+          filledInputs++
+          typedCode += input.value
+        }
+      })
+
+      if ( filledInputs !== $codeInputs.length ) {
+        secondStepValidation($verificationForm, "Fill all inputs.")
+      } else {
+        const data = {
+          "code": typedCode,
+          "email": sessionStorage.getItem('verifyingEmail')
+        }
+        
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', 'send-code', true)
+        xhr.setRequestHeader('X-CSRFToken', csrftoken)
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+        xhr.send(JSON.stringify(data))
+    
+        xhr.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+              const response = JSON.parse(this.responseText)
+    
+              if( response.valid == true ) {
+                // goToStepThree()
+              } else{
+                secondStepValidation($verificationForm, response.message)
+              }
+          }
+        }
+      }
     })
 
 
@@ -395,11 +454,6 @@ if ($forgotPasswordWrapper){
     secondStep()
   }
 
-  const setEmailToStorage = (email) => {
-    sessionStorage.setItem('verifyingEmail', email)
-    console.log(email)
-  }
-
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
     let csrftoken = this.querySelector('[name="csrftoken"]').value
@@ -420,7 +474,7 @@ if ($forgotPasswordWrapper){
           const response = JSON.parse(this.responseText)
 
           if( response.valid == true ) {
-            setEmailToStorage(response.email)
+            sessionStorage.setItem('verifyingEmail', response.email)
             goToStepTwo()
           } else{
            firstStepValidation($forgotPasswordForm, response)
