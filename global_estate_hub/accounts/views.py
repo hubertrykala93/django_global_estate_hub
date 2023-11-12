@@ -54,7 +54,7 @@ def create_user(request):
                     "The username already exists." if re.match(pattern='^[a-zA-Z0-9_.-]+$',
                                                                string=username) and User.objects.filter(
                         username=username).exists() else
-                    "Correct username.",
+                    "",
             },
             {
                 "valid":
@@ -71,7 +71,7 @@ def create_user(request):
                     "The e-mail address already exists." if re.match(
                         pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
                         string=email) and User.objects.filter(email=email).exists() else
-                    "Correct e-mail address.",
+                    "",
             },
             {
                 "valid":
@@ -86,20 +86,26 @@ def create_user(request):
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
-                    "Correct password.",
+                    "",
             },
             {
                 "valid":
                     False if not raw_password2 else
                     False if not raw_password1 else
+                    False if not re.match(pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                                          string=raw_password2) else
                     False if raw_password2 != raw_password1 else
                     True,
                 "field": raw_password2_field,
                 "message":
                     "The confirm password field cannot be empty." if not raw_password2 else
                     "The password field must be filled in." if not raw_password1 else
+                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    "one lowercase letter, one digit, and one special character." if not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
                     "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
-                    "Correct password confirmation.",
+                    "",
             },
             {
                 "valid":
@@ -143,7 +149,7 @@ def log_in(request):
                 "message":
                     "The e-mail field cannot be empty." if not email else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
-                    "Correct e-mail address.",
+                    "",
             },
             {
                 "valid":
@@ -159,7 +165,7 @@ def log_in(request):
                         email=email).exists() and not check_password(password=password,
                                                                      encoded=User.objects.get(
                                                                          email=email).password) else
-                    True,
+                    "",
             },
         ]
 
@@ -232,7 +238,6 @@ def send_password(request):
                     except BadHeaderError:
                         return JsonResponse(data={
                             "valid": False,
-                            "email": email,
                             "message": "The message could not be sent.",
                         })
 
@@ -277,7 +282,7 @@ def validate_password(request):
             else:
                 return JsonResponse(data={
                     "valid": False,
-                    "message": "Invalid password.",
+                    "message": "Invalid code.",
                 }, safe=False)
 
         else:
@@ -288,4 +293,59 @@ def validate_password(request):
 
 
 def set_password(request):
-    pass
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        raw_password1 = data['password1'][0]
+        raw_password1_field = data['password1'][1]
+
+        raw_password2 = data['password2'][0]
+        raw_password2_field = data['password2'][1]
+
+        email = data['email']
+
+        response = [
+            {
+                "valid":
+                    False if not raw_password1 else
+                    False if not re.match(pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                                          string=raw_password1) else
+                    True,
+                "field": raw_password1_field,
+                "message":
+                    "The password cannot be empty." if not raw_password1 else
+                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    "one lowercase letter, one digit, and one special character." if not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    "",
+            },
+            {
+                "valid":
+                    False if not raw_password2 else
+                    False if not raw_password1 else
+                    False if not re.match(pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                                          string=raw_password2) else
+                    False if raw_password2 != raw_password1 else
+                    True,
+                "field": raw_password2_field,
+                "message":
+                    "The confirm password field cannot be empty." if not raw_password2 else
+                    "The password field must be filled in." if not raw_password1 else
+                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    "one lowercase letter, one digit, and one special character." if not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
+                    "",
+            },
+        ]
+
+        if list(set([data['valid'] for data in response]))[0]:
+            user = User.objects.get(email=email)
+            user.set_password(raw_password=raw_password1)
+            user.save()
+
+            return JsonResponse(data=response, safe=False)
+
+        else:
+            return JsonResponse(data=response, safe=False)
