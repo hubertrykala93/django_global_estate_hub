@@ -266,22 +266,26 @@ def validate_password(request):
         if password:
             user_id = User.objects.get(email=email).pk
             token = OneTimePassword.objects.get(user_id=user_id).password
-            
+
             if password == token:
                 return JsonResponse(data={
                     "valid": True,
                     "email": email,
                     "message": "",
-                })
+                }, safe=False)
 
             else:
                 return JsonResponse(data={
                     "valid": False,
                     "message": "Invalid password.",
-                })
+                }, safe=False)
 
         else:
             return JsonResponse(data={
                 "valid": False,
                 "message": "Fill all inputs.",
-            })
+            }, safe=False)
+
+
+def set_password(request):
+    pass
