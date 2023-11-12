@@ -197,7 +197,7 @@ def forget_password(request):
     })
 
 
-def send_otp(request):
+def send_password(request):
     if request.method == 'POST':
         one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
@@ -257,5 +257,31 @@ def send_otp(request):
             }, safe=False)
 
 
-def check_otp(request):
-    pass
+def validate_password(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        password = data['code']
+        email = data['email']
+
+        if password:
+            user_id = User.objects.get(email=email).pk
+            token = OneTimePassword.objects.get(user_id=user_id).password
+            
+            if password == token:
+                return JsonResponse(data={
+                    "valid": True,
+                    "email": email,
+                    "message": "",
+                })
+
+            else:
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": "Invalid password.",
+                })
+
+        else:
+            return JsonResponse(data={
+                "valid": False,
+                "message": "Fill all inputs.",
+            })

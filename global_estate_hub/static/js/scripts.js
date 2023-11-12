@@ -396,7 +396,7 @@ if ($forgotPasswordWrapper){
         }
         
         const xhr = new XMLHttpRequest()
-        xhr.open('POST', 'send-code', true)
+        xhr.open('POST', 'validate-password', true)
         xhr.setRequestHeader('X-CSRFToken', csrftoken)
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
         xhr.send(JSON.stringify(data))
@@ -464,7 +464,7 @@ if ($forgotPasswordWrapper){
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'send-otp', true)
+    xhr.open('POST', 'send-password', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))

@@ -8,5 +8,6 @@ urlpatterns = [
     path(route='logout', view=accounts_views.log_out, name='logout'),
     path(route='account-settings', view=accounts_views.account_settings, name='account-settings'),
     path(route='forget-password', view=accounts_views.forget_password, name='forget-password'),
-    path(route='send-otp', view=accounts_views.send_otp, name='send-otp'),
+    path(route='send-password', view=accounts_views.send_password, name='send-password'),
+    path(route='validate-password', view=accounts_views.validate_password, name='validate-password'),
 ]
