@@ -63,12 +63,6 @@ def properties(request):
     })
 
 
-def blog(request):
-    return render(request=request, template_name='core/blog.html', context={
-        'title': 'Blog',
-    })
-
-
 def faq(request):
     return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',

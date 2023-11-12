@@ -342,8 +342,12 @@ def set_password(request):
 
         if list(set([data['valid'] for data in response]))[0]:
             user = User.objects.get(email=email)
+            user_id = User.objects.get(email=email).pk
             user.set_password(raw_password=raw_password1)
             user.save()
+
+            password = OneTimePassword.objects.get(user_id=user_id)
+            password.delete()
 
             return JsonResponse(data=response, safe=False)
 
