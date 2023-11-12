@@ -4,9 +4,13 @@ from .models import Category, Tag, Article, Comment
 
 @admin.register(Category)
 class AdminCategory(admin.ModelAdmin):
-    list_display = ['category']
-    list_filter = ['category']
-    list_display_links = ['category']
+    list_display = ['name', 'slug']
+    list_editable = ['slug']
+    list_filter = ['name']
+    prepopulated_fields = {
+        'slug': ['name']
+    }
+    list_display_links = ['name']
 
 
 @admin.register(Tag)
@@ -18,10 +22,10 @@ class AdminTag(admin.ModelAdmin):
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    fields = ['user', 'image', 'date_posted', 'title', 'content', 'categories', 'tags']
-    list_display = ['user', 'image', 'date_posted', 'title', 'content']
-    list_filter = ['user', 'date_posted', 'categories', 'tags']
-    list_editable = ['title', 'content']
+    fields = ['user', 'image', 'date_posted', 'title', 'content', 'slug', 'category', 'tags']
+    list_display = ['user', 'category', 'image', 'date_posted', 'title', 'slug', 'content']
+    list_filter = ['user', 'date_posted', 'category', 'tags']
+    list_editable = ['title', 'content', 'category']
     list_display_links = ['user']
     prepopulated_fields = {'slug': ['title']}
 

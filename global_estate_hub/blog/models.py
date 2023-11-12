@@ -1,10 +1,11 @@
 from django.db import models
 from accounts.models import User
 from django.utils.timezone import now
+from django.shortcuts import reverse
 
 
 class Category(models.Model):
-    category = models.CharField(max_length=50, choices=[
+    name = models.CharField(max_length=50, choices=[
         ('Apartment', 'Apartment'),
         ('Family House', 'Family House'),
         ('Luxury Villa', 'Luxury Villa'),
@@ -12,13 +13,19 @@ class Category(models.Model):
         ('Rentals', 'Rentals'),
         ('Buys', 'Buys'),
     ])
+    slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
     def __str__(self):
-        return self.category
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse(viewname='article-category', kwargs={
+            'category_slug': self.slug,
+        })
 
 
 class Tag(models.Model):
@@ -43,11 +50,11 @@ class Article(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article_images')
     date_posted = models.DateTimeField(default=now)
-    title = models.CharField(max_length=200)
+    title = models.CharField(max_length=200, unique=True)
     content = models.TextField(max_length=2000)
-    categories = models.ManyToManyField(to=Category)
+    category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to=Tag)
-    slug = models.SlugField(max_length=200, null=True)
+    slug = models.SlugField(max_length=200, null=True, unique=True)
 
     class Meta:
         verbose_name = 'Article'
@@ -55,6 +62,12 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse(viewname='article-details', kwargs={
+            'category_slug': self.category.slug,
+            'article_slug': self.slug,
+        })
 
 
 class Comment(models.Model):

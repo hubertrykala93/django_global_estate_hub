@@ -10,11 +10,13 @@
                     <li>
                         <a href="{% url 'index' %}">Home</a>
                     </li>
+
                     {% for url in breadcrumbs_urls|slice:":-1" %}
                     <li>
                         <a href="{% url url %}">{{ url|title|replace }}</a>
                     </li>
                     {% endfor %}
+
                     <li>
                         <span>{{ title }}</span>
                     </li>
