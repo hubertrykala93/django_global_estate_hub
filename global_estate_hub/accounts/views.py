@@ -257,57 +257,5 @@ def send_otp(request):
             }, safe=False)
 
 
-# def send_otp(request):
-#     if request.method == 'POST':
-#         one_time_password = randint(a=1111, b=9999)
-#         data = json.loads(s=request.body.decode('utf-8'))
-#         email = data['email']
-#
-#         response = {
-#             "valid":
-#                 False if not email else
-#                 False if not User.objects.filter(email=email).exists() else
-#                 # False if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) else
-#                 True,
-#             "email": email,
-#             "message":
-#                 "The e-mail field cannot be empty." if not email else
-#                 "The user with the provided email address does not exist." if not User.objects.filter(
-#                     email=email).exists() else
-#                 # "The code is already assigned to this user. Please try again in 5 minutes." if len(
-#                 #     OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) else
-#                 "",
-#         }
-#
-#         if response['valid']:
-#             user = User.objects.get(email=email)
-#             one_time_password = OneTimePassword(user=user, password=one_time_password)
-#             one_time_password.save()
-#
-#             try:
-#                 message = EmailMessage(
-#                     subject=f"Password reset request for {user.username}.",
-#                     body=render_to_string(template_name='accounts/password_reset_email.html', context={
-#                         'one_time_password': one_time_password,
-#                     }),
-#                     from_email=os.environ.get("EMAIL_HOST_USER"),
-#                     to=[user.email]
-#                 )
-#
-#                 message.send(fail_silently=True)
-#
-#                 return JsonResponse(data=response, safe=False)
-#
-#             except BadHeaderError:
-#                 return JsonResponse(data={
-#                     "valid": False,
-#                     "email": email,
-#                     "message": "The message could not be sent.",
-#                 })
-#
-#         else:
-#             return JsonResponse(data=response, safe=False)
-
-
 def check_otp(request):
     pass
