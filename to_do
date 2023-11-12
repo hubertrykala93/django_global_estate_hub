@@ -1,6 +1,5 @@
 @Szymon-Levy
 
-python manage.py createsuperuser
 3. Slajd 18.
 4. Slajd 19.
 5. Slajd 20.
@@ -8,4 +7,5 @@ python manage.py createsuperuser
 
 @hubertrykala93
 
-w pierwszym kroku forgot password ma nie zwracać field
+1. zły kod ma zwracać invalid code
+2. w pierwszym kroku forgot password ma nie zwracać field (nie wiem czy zrobione, sami sobie kasujmy zadania bo tylko każdy wie czy na 100% spełnił swoją misję)

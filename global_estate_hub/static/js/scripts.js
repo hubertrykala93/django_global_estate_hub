@@ -338,6 +338,43 @@ const $forgotPasswordWrapper = document.querySelector('[data-forgot-password-wra
 
 if ($forgotPasswordWrapper){
 
+  //3rd step
+  const thirdStep = ()=> {
+    const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
+
+    $newPasswordForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      let csrftoken = this.querySelector('[name="csrftoken"]').value
+      const $password1Input = $newPasswordForm.querySelector('[data-password1]')
+      const $password2Input = $newPasswordForm.querySelector('[data-password2]')
+      const data = {
+        "password1": [$password1Input.value, "data-password1"],
+        "password2": [$password2Input.value, "data-password2"],
+        "email": sessionStorage.getItem('verifyingEmail')
+      }
+      console.log(data)
+        
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', 'set-password', true)
+      xhr.setRequestHeader('X-CSRFToken', csrftoken)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.send(JSON.stringify(data))
+  
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+            console.log(response)
+  
+            if( response.valid == true ) {
+              // goToStepFour()
+            } else{
+              // thirdStepValidation($verificationForm, response.message)
+            }
+        }
+      }
+    })
+  }
+
   //2nd step
   const secondStep = ()=> {
     const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
@@ -359,6 +396,21 @@ if ($forgotPasswordWrapper){
         info.textContent = message
         $formField.append(info)
       }
+    }
+
+    const goToStepThree = ()=> {
+      const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
+      const $stepThree = $forgotPasswordWrapper.querySelector('[data-new-password-step]')
+      $stepThree.style.zIndex = 2
+      $stepThree.style.transform = "translateX(0)"
+      
+  
+      setTimeout(() => {
+        $stepTwo.style.position = "absolute"
+        $stepThree.style.position = "relative"
+      }, 400);
+  
+      thirdStep()
     }
 
     $verificationFormInputs.forEach((input, index) => {
@@ -406,7 +458,8 @@ if ($forgotPasswordWrapper){
               const response = JSON.parse(this.responseText)
     
               if( response.valid == true ) {
-                // goToStepThree()
+                sessionStorage.setItem('verifyingEmail', response.email)
+                goToStepThree()
               } else{
                 secondStepValidation($verificationForm, response.message)
               }
