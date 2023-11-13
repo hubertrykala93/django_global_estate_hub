@@ -3,7 +3,6 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-
 <section class="blog">
     <div class="container">
         <div class="row title-row">
@@ -13,7 +12,7 @@
             </div>
 
             <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
             </p>
         </div>
 
@@ -21,7 +20,8 @@
             {% for article in articles %}
             <div class="blog-card__column">
                 <div class="blog-card__wrapper">
-                    <a class="blog-card__category" href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
+                    <a class="blog-card__category"
+                       href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
                     <div class="blog-card__image">
                         <img src="{{ article.image.url }}">
                     </div>
@@ -35,7 +35,7 @@
 
                                 <div class="blog-card__info__title">{{ article.user.username }}</div>
                             </div>
-    
+
                             <div class="blog-card__info__item">
                                 <div class="blog-card__info__icon">
                                     <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
@@ -44,11 +44,11 @@
                                 <div class="blog-card__info__title">{{ article.date_posted }}</div>
                             </div>
                         </div>
-    
+
                         <div class="blog-card__article-title">
                             <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
                         </div>
-    
+
                         <a class="blog-card__read-more" href="{{ article.get_absolute_url }}">
                             Read more
                             <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
@@ -58,33 +58,13 @@
             </div>
             {% endfor %}
         </div>
+        <!--
+  - #PAGINATION
+-->
+        <div class="pagination">
+            {% include 'blog/pagination.html' %}
+        </div>
+
     </div>
 </section>
-
-
-<!-- {% for article in articles %}
-<div class="container">
-    <div class="article-card">
-        <div class="card">
-            <div class="article-image">
-                <img src="{{ article.image.url }}">
-            </div>
-            <div class="article-username">
-                {{ article.user.username }}
-            </div>
-            <div class="article-date-posted">
-                {{ article.date_posted }}
-            </div>
-            <div class="article-title">
-                <a href="{{ article.get_absolute_url }}"><h2>{{ article.title }}</h2></a>
-            </div>
-
-            <div class="article-category">
-                <a href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
-            </div>
-        </div>
-    </div>
-</div>
-{% endfor %} -->
-
 {% endblock %}

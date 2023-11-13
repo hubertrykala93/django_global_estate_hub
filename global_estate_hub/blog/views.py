@@ -1,10 +1,19 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
+from django.core.paginator import Paginator
 
 
 def blog(request):
+    articles = Article.objects.all()
+
+    paginator = Paginator(object_list=articles, per_page=3)
+    page = request.GET.get('page')
+    pages = paginator.get_page(number=page)
+
     return render(request=request, template_name='blog/blog.html', context={
         'title': 'Blog',
+        'articles': articles,
+        'pages': pages,
     })
 
 
