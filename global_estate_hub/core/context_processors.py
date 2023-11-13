@@ -2,8 +2,24 @@ from django.middleware.csrf import get_token
 
 
 def breadcrumbs_urls(request):
+    arr = request.path.split(sep='/')[1:]
+    titles = [title.replace('-', ' ').title() for title in arr]
+    paths = []
+
+    for parent_index, parent_loop in enumerate(arr):
+        path = ''
+
+        for child_index, child_loop in enumerate(arr):
+            if child_index <= parent_index:
+                path += '/' + child_loop
+
+        paths.append(path)
+
+    titles = titles[:-1]
+    paths = paths[:-1]
+
     return {
-        'breadcrumbs_urls': request.path.split('/')[1:],
+        'urls': list(zip(titles, paths))
     }
 
 
@@ -11,15 +27,3 @@ def generate_token(request):
     return {
         'csrf_token': get_token(request=request)
     }
-
-
-# def breadcrumbs_urls(path):
-#     return {
-#         'breadcrumbs_urls': path.split('/')[1:],
-#     }
-
-
-# path = '/blog/buys/choosing-the-perfect-family-house'
-# urls = breadcrumbs_urls(path=path)['breadcrumbs_urls']
-#
-# paths = []
