@@ -22,9 +22,9 @@ class AdminTag(admin.ModelAdmin):
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    fields = ['user', 'image', 'date_posted', 'title', 'content', 'slug', 'category', 'tags']
+    fields = ['user', 'category', 'image', 'date_posted', 'title', 'content', 'slug', 'tags']
     list_display = ['user', 'category', 'image', 'date_posted', 'title', 'slug', 'content']
-    list_filter = ['user', 'date_posted', 'category', 'tags']
+    list_filter = ['user', 'category', 'date_posted', 'tags']
     list_editable = ['title', 'content', 'category']
     list_display_links = ['user']
     prepopulated_fields = {'slug': ['title']}

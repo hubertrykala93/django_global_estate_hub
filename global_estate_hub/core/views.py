@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import Newsletter
 import json
 import re
+from blog.models import Article
 
 
 def index(request):
@@ -66,6 +67,12 @@ def properties(request):
 def faq(request):
     return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',
+    })
+
+
+def pages(request):
+    return render(request=request, template_name='core/pages.html', context={
+        'title': 'Pages',
     })
 
 

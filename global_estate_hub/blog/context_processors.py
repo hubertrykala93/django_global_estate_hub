@@ -1,4 +1,10 @@
-from .models import Category, Tag
+from .models import Category, Tag, Article
+
+
+def articles(request):
+    return {
+        'articles': Article.objects.all()
+    }
 
 
 def categories(request):

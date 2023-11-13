@@ -23,7 +23,7 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse(viewname='article-category', kwargs={
+        return reverse(viewname='article-categories', kwargs={
             'category_slug': self.slug,
         })
 
