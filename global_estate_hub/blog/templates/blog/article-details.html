@@ -2,4 +2,31 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<section class="page-article">
+    <div class="container">
+        <div class="article-card">
+            <div class="card">
+                <div class="article-image">
+                    <img src="{{ article.image.url }}">
+                </div>
+                <div class="article-username">
+                    {{ article.user.username }}
+                </div>
+                <div class="article-date-posted">
+                    {{ article.date_posted }}
+                </div>
+                <div class="article-title">
+                    <h2>{{ article.title }}</h2>
+                </div>
+                <div class="article-content">
+                    {{ article.content }}
+                </div>
+                <div class="article-tags">
+                    {{ tag }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
