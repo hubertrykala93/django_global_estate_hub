@@ -1,9 +1,7 @@
-{% if pages.has_previous %}
-<a href="?page=1">&laquo; First</a>
-<a href="?page={{ pages.previous_page_number }}">Previous</a>
-{% endif %}
-
-{% if pages.has_next %}
-<a href="?page={{ pages.next_page_number }}">Next</a>
-<a href="?page={{ pages.paginator.num_pages }}">Last &raquo;</a>
-{% endif %}
+<div class="pagination">
+    <ul>
+        {% for page in paginator.page_range %}
+        {{ page }}
+        {% endfor %}
+    </ul>
+</div>

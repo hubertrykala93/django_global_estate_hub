@@ -6,4 +6,5 @@ Ty te pliki .html musisz zrobić od nowa raczej po swojemu, bo je te divy itd. p
 2. article-details.html ajax form.
 
 @hubertrykala93
-1. blog.html pagination.
+1. waidacja do newslettera, False jeśli field jest pusty.
+2. blog.html pagination.

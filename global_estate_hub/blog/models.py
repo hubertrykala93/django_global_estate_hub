@@ -2,6 +2,7 @@ from django.db import models
 from accounts.models import User
 from django.utils.timezone import now
 from django.shortcuts import reverse
+from PIL import Image
 
 
 class Category(models.Model):
@@ -13,6 +14,7 @@ class Category(models.Model):
         ('Rentals', 'Rentals'),
         ('Buys', 'Buys'),
     ])
+
     slug = models.SlugField(max_length=50, null=True, unique=True)
 
     class Meta:
@@ -68,6 +70,23 @@ class Article(models.Model):
             'category_slug': self.category.slug,
             'article_slug': self.slug,
         })
+
+    def save(self, *args, **kwargs):
+        super(Article, self).save(*args, **kwargs)
+
+        img = Image.open(fp=self.image.path)
+
+        if img.mode == 'RGBA':
+            img.convert(mode='RGB')
+
+        img_width = img.width
+        img_height = img.height
+
+        output_width = 1100
+        output_height = img_height * output_width / img_width
+
+        img.thumbnail(size=(output_width, output_height))
+        img.save(fp=self.image.path)
 
 
 class Comment(models.Model):

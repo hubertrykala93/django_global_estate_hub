@@ -17,13 +17,13 @@
         </div>
 
         <div class="row blog-cards_row">
-            {% for article in articles %}
+            {% for page in pages %}
             <div class="blog-card__column">
                 <div class="blog-card__wrapper">
                     <a class="blog-card__category"
-                       href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
+                       href="{{ page.category.get_absolute_url }}">{{ page.category }}</a>
                     <div class="blog-card__image">
-                        <img src="{{ article.image.url }}">
+                        <img src="{{ page.image.url }}">
                     </div>
 
                     <div class="blog-card__content">
@@ -33,7 +33,7 @@
                                     <img src="/media/icons/blog-card-author.svg" alt="author icon">
                                 </div>
 
-                                <div class="blog-card__info__title">{{ article.user.username }}</div>
+                                <div class="blog-card__info__title">{{ page.user.username }}</div>
                             </div>
 
                             <div class="blog-card__info__item">
@@ -41,15 +41,15 @@
                                     <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
                                 </div>
 
-                                <div class="blog-card__info__title">{{ article.date_posted }}</div>
+                                <div class="blog-card__info__title">{{ page.date_posted }}</div>
                             </div>
                         </div>
 
                         <div class="blog-card__article-title">
-                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                            <h3><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></h3>
                         </div>
 
-                        <a class="blog-card__read-more" href="{{ article.get_absolute_url }}">
+                        <a class="blog-card__read-more" href="{{ page.get_absolute_url }}">
                             Read more
                             <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
                         </a>
@@ -61,9 +61,7 @@
         <!--
   - #PAGINATION
 -->
-        <div class="pagination">
-            {% include 'blog/pagination.html' %}
-        </div>
+        {% include 'blog/pagination.html' %}
 
     </div>
 </section>

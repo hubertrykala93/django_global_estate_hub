@@ -1,19 +1,27 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, InvalidPage, EmptyPage
 
 
 def blog(request):
-    articles = Article.objects.all()
-
-    paginator = Paginator(object_list=articles, per_page=3)
+    paginator = Paginator(object_list=Article.objects.all(), per_page=3)
     page = request.GET.get('page')
-    pages = paginator.get_page(number=page)
+
+    try:
+        articles = paginator.get_page(number=page)
+
+    except PageNotAnInteger:
+        page = 1
+        articles = paginator.page(number=page)
+
+    except EmptyPage:
+        page = paginator.num_pages
+        articles = paginator.page(number=page)
 
     return render(request=request, template_name='blog/blog.html', context={
         'title': 'Blog',
-        'articles': articles,
-        'pages': pages,
+        'pages': articles,
+        'paginator': paginator,
     })
 
 

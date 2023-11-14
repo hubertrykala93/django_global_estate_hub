@@ -84,5 +84,5 @@ def contact(request):
 
 def error(request):
     return render(request=request, template_name='core/error.html', context={
-        'title': 'Error',
+        'title': 'Error 404',
     })
