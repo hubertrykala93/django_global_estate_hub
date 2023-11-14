@@ -7,8 +7,11 @@ from blog.models import Article
 
 
 def index(request):
+    articles = Article.objects.order_by('date_posted')[:3]
+
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
+        'articles': articles,
     })
 
 
