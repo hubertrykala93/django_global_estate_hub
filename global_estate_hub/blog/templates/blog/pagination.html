@@ -1,7 +1,23 @@
-<div class="pagination">
-    <ul>
-        {% for page in paginator.page_range %}
-        {{ page }}
-        {% endfor %}
-    </ul>
+<!--<div class="pagination">-->
+<!--    <ul>-->
+<!--        {% for page in pages.paginator.page_range %}-->
+<!--        {% if page <= pages.number|add:2 and page >= pages.number|add:-2 %}-->
+<!--        <li style="display:inline-block;">-->
+<!--            <a href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>-->
+<!--        </li>-->
+<!--        {% endif %}-->
+<!--        {% endfor %}-->
+<!--    </ul>-->
+<!--</div>-->
+
+<div class="container">
+    <div class="pagination">
+        <ul>
+            {% if pages.has_previous %}
+            <li><a href="?page={{ pages.previous_page_number }}"></a>{{ pages.previous_page_number }}</li>
+            {% else %}
+            <li><a href="" </li>
+            {% endif %}
+        </ul>
+    </div>
 </div>

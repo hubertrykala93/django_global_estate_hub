@@ -78,7 +78,7 @@
 
             <div class="properties-column">
                 <div class="footer__heading">
-                    <h3 class="h3">Featured properties</h3>
+                    <h3 class="h3">Featured Properties</h3>
                 </div>
 
                 <div class="footer__properties">
@@ -88,8 +88,8 @@
                         </div>
 
                         <div class="property__data">
-                            <a href="#" class="property__title h3">Luxary Family Home</a>
-                            <p class="property__price">$ 1, 250 / per month</p>
+                            <a href="#" class="property__title h3">Luxury Family Home</a>
+                            <p class="property__price">$ 1, 250 / Per Month</p>
                         </div>
                     </div>
 
@@ -99,8 +99,8 @@
                         </div>
 
                         <div class="property__data">
-                            <a href="#" class="property__title h3">Luxury vila Rego park</a>
-                            <p class="property__price">$ 2, 250 / per month</p>
+                            <a href="#" class="property__title h3">Luxury Villa Rego Park</a>
+                            <p class="property__price">$ 2, 250 / Per Month</p>
                         </div>
                     </div>
 
@@ -111,7 +111,7 @@
 
                         <div class="property__data">
                             <a href="" class="property__title h3">Manufactured Home</a>
-                            <p class="property__price">$ 2, 250 / per month</p>
+                            <p class="property__price">$ 2, 250 / Per Month</p>
                         </div>
                     </div>
                 </div>
@@ -119,30 +119,33 @@
 
             <div class="links-column links1">
                 <div class="footer__heading">
-                    <h3 class="h3">Quick links</h3>
+                    <h3 class="h3">Quick Links</h3>
                 </div>
 
                 <ul class="footer-links">
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Home 3</a>
+                        <a class="footer-links__link" href="{% url 'index' %}">Home</a>
                     </li>
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="{% url 'about' %}">About us</a>
+                        <a class="footer-links__link" href="{% url 'about' %}">About Us</a>
                     </li>
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Services</a>
+                        <a class="footer-links__link" href="{% url 'properties' %}">Properties</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'faq' %}">Faq</a>
                     </li>
                     <li class="footer-links__item">
                         <a class="footer-links__link" href="{% url 'blog' %}">Blog</a>
                     </li>
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Blog Details</a>
-                    </li>
-                    <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Faq</a>
-                    </li>
-                    <li class="footer-links__item">
                         <a class="footer-links__link" href="{% url 'contact' %}">Contact us</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'register' %}">Sign Up</a>
                     </li>
                 </ul>
             </div>
