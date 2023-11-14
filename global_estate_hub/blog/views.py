@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator
 
 
 def blog(request):

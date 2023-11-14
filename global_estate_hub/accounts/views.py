@@ -10,6 +10,10 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
 from django.core.mail import BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.auth.tokens import default_token_generator
+from .tokens import token_generator
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -126,6 +130,18 @@ def create_user(request):
 
         else:
             return JsonResponse(data=response, safe=False)
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_str(s=urlsafe_base64_decode(s=uidb64))
+        user = User.objects.get(pk=uid)
+    except:
+        user = None
+
+    if user and token_generator.check_token(user=user, token=token):
+        user.is_verified = True
+        user.save()
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
