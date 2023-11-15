@@ -46,7 +46,7 @@
                         </div>
 
                         <div class="blog-card__article-title">
-                            <h3><a href="#">{{ page.title }}</a></h3>
+                            <h3><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></h3>
                         </div>
 
                         <a class="blog-card__read-more" href="{{ page.get_absolute_url }}">
