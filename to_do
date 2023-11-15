@@ -4,14 +4,14 @@ Ty te pliki .html musisz zrobić od nowa raczej po swojemu, bo je te divy itd. p
 
 1. article-details.html,
 2. article-details.html ajax form,
-3. stylizacja mail'a password_reset_email.html i activation email,
-4. error.html.
-5. captcha do wszystkich formów,
-6. poprawa forma rejestracji - dodanie wiadomości o aktywacji konta,
-dodatkowo w consoli sie wyswietlaja jakies bleduy przy klikaniu sign up
+3. stylizacja -> blog/templates/blog/pagination.html
+4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html,
+5. stylizacja core/templates/core/error.html.
+6. stylizacja core/templates/core.messages.html,
+7. poprawa forma rejestracji - dodanie wiadomości o aktywacji konta -> accounts/views.py, 145 linia kodu, dodatkowo w consoli sie wyswietlaja jakies bledy przy klikaniu sign up
+8. captcha do wszystkich formów,
+9. ogarnięcie ckeditor w admin -> articles.
 
 @hubertrykala93
-2. ogarnąć ckeditor,
-3. ogarnąć manytomanyfield dla kategorii article,
-5. aktywacja do newslettera,
-5. captcha do wszystkich formów.
+2. ogarnąć manytomanyfield dla kategorii article,
+3. captcha do wszystkich formów.

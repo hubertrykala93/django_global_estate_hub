@@ -20,7 +20,7 @@
                     <h2>{{ article.title }}</h2>
                 </div>
                 <div class="article-content">
-                    {{ article.content }}
+                    {{ article.content|safe }}
                 </div>
                 <div class="article-tags">
                     {{ tag }}

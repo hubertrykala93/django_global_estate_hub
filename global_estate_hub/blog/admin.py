@@ -23,9 +23,9 @@ class AdminTag(admin.ModelAdmin):
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
     fields = ['user', 'category', 'image', 'date_posted', 'title', 'content', 'slug', 'tags']
-    list_display = ['user', 'category', 'image', 'date_posted', 'title', 'slug', 'content']
+    list_display = ['user', 'category', 'image', 'date_posted', 'title', 'slug']
     list_filter = ['user', 'category', 'date_posted', 'tags']
-    list_editable = ['title', 'content', 'category']
+    list_editable = ['image', 'title', 'category']
     list_display_links = ['user']
     prepopulated_fields = {'slug': ['title']}
 
