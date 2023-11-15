@@ -79,6 +79,22 @@ if($aboutSection){
   ScrollReveal().reveal($aboutSection.querySelectorAll('.about__list .about__list-item'), listAnimation)
 }
 
+const $blogSection = document.querySelector('[data-home-blog-animation]')
+
+if ($blogSection) {
+  const cardAnimation = {
+    delay: 200,
+    distance: '90px',
+    duration: 900,
+    opacity: 0,
+    origin: 'right',
+    easing: 'ease',
+    interval: 150,
+  }
+
+  ScrollReveal().reveal($blogSection.querySelectorAll('.blog-card__wrapper'), cardAnimation)
+}
+
 
 /**
    * -SECTION TITLE

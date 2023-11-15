@@ -348,18 +348,63 @@
     </div>
 </section>
 
+
 <!--
   - #BLOG SECTION
 -->
-<section class="blog">
+<section class="home-blog" data-home-blog-animation>
     <div class="container">
-        <div class="row">
+        <div class="row title-row">
+            <div class="section-title" data-sectiontitle-animation>
+                <div class="upper-title h4">Blog</div>
+                <h2 class="main-title h2">Our Latest Blog</h2>
+            </div>
+
+            <p>
+                Your Trusted Guide to Buying, Selling, and Investing in Real Estate
+            </p>
+        </div>
+
+        <div class="row blog-cards-row">
             {% for article in articles %}
-            {{ article.category }}
-            <img src="{{ article.image.url }}">
-            {{ article.user.username }}
-            {{ article.date_posted }}
-            {{ article.title }}
+            <div class="blog-card__column">
+                <div class="blog-card__wrapper">
+                    <a class="blog-card__category"
+                       href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
+                    <div class="blog-card__image">
+                        <img src="{{ article.image.url }}">
+                    </div>
+
+                    <div class="blog-card__content">
+                        <div class="blog-card__info">
+                            <div class="blog-card__info__item">
+                                <div class="blog-card__info__icon">
+                                    <img src="/media/icons/blog-card-author.svg" alt="author icon">
+                                </div>
+
+                                <div class="blog-card__info__title">{{ article.user.username }}</div>
+                            </div>
+
+                            <div class="blog-card__info__item">
+                                <div class="blog-card__info__icon">
+                                    <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
+                                </div>
+
+                                <div class="blog-card__info__title">{{ article.date_posted }}</div>
+                            </div>
+                        </div>
+
+                        <div class="blog-card__article-title">
+                            <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
+                        </div>
+
+                        <a class="blog-card__read-more" href="{{ article.get_absolute_url }}">
+                            Read more
+                            <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
+                        </a>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </div>
     </div>
