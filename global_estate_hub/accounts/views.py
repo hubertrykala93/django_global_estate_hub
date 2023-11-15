@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
-from .models import User, OneTimePassword, VerificationToken
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -14,6 +14,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import token_generator
+from django.contrib import messages
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -153,8 +154,6 @@ def create_user(request):
                     "message": "The message could not be sent.",
                 })
 
-            # return JsonResponse(data=response, safe=False)
-
         else:
             return JsonResponse(data=response, safe=False)
 
@@ -166,11 +165,19 @@ def activate(request, uidb64, token):
     except:
         user = None
 
-    if user and VerificationToken().check_token(user=user, token=token):
+    if user and token_generator.check_token(user=user, token=token):
         user.is_verified = True
         user.save()
 
+        messages.success(request=request, message='Congratulations, your account has been activated.')
+
         return redirect(to=reverse(viewname='login'))
+
+    else:
+        user.delete()
+
+        messages.info(request=request, message='Your activation link has expired. Please create your account again.')
+        return redirect(to=reverse(viewname='register'))
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')

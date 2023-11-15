@@ -38,11 +38,6 @@ class CustomUserManager(UserManager):
         return self._create_user(username=username, email=email, password=password, **extra_fields)
 
 
-class VerificationToken(models.Model, PasswordResetTokenGenerator):
-    def _make_hash_value(self, user, timestamp):
-        return six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_verified)
-
-
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=100, unique=True, null=False, blank=False)

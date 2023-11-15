@@ -2,6 +2,10 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block messages %}
+{% include 'core/messages.html' %}
+{% endblock %}
+
 {% block content %}
 <section class="user-access-page signup-page">
     <div class
@@ -72,7 +76,8 @@
                                     <img class="form__hint-icon" src="/media/icons/form-password.svg"
                                          alt="password icon">
                                     <input data-password1 type="password" id="password1" placeholder="Your Password">
-                                    <img data-password-eye class="form__eye-icon" src="/media/icons/form-see-password.svg"
+                                    <img data-password-eye class="form__eye-icon"
+                                         src="/media/icons/form-see-password.svg"
                                          alt="see password icon">
                                 </div>
                             </div>
@@ -85,7 +90,8 @@
                                     <img class="form__hint-icon" src="/media/icons/form-password.svg"
                                          alt="password icon">
                                     <input data-password2 type="password" id="password2" placeholder="Confirm Password">
-                                    <img data-password-eye class="form__eye-icon" src="/media/icons/form-see-password.svg"
+                                    <img data-password-eye class="form__eye-icon"
+                                         src="/media/icons/form-see-password.svg"
                                          alt="see password icon">
                                 </div>
                             </div>

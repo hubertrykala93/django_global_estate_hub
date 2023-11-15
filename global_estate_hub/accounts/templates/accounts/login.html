@@ -2,6 +2,10 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block messages %}
+{% include 'core/messages.html' %}
+{% endblock %}
+
 {% block content %}
 <section class="user-access-page signup-page">
     <div class="container">
