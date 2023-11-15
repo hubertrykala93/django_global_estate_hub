@@ -6,6 +6,9 @@ Ty te pliki .html musisz zrobić od nowa raczej po swojemu, bo je te divy itd. p
 2. article-details.html ajax form,
 3. stylizacja mail'a password_reset_email.html,
 4. error.html.
+5. captcha do wszystkich formów,
+6. poprawa forma rejestracji - dodanie wiadomości o aktywacji konta,
+dodatkowo w consoli sie wyswietlaja jakies bleduy przy klikaniu sign up
 
 @hubertrykala93
 2. ogarnąć ckeditor,

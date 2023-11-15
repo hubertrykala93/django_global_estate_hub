@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
 from PIL import Image
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
 
 
 class CustomUserManager(UserManager):
@@ -33,6 +36,11 @@ class CustomUserManager(UserManager):
             raise ValueError('Superuser must have is_superuser=True.')
 
         return self._create_user(username=username, email=email, password=password, **extra_fields)
+
+
+class VerificationToken(models.Model, PasswordResetTokenGenerator):
+    def _make_hash_value(self, user, timestamp):
+        return six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_verified)
 
 
 class User(AbstractBaseUser, PermissionsMixin):

@@ -190,11 +190,14 @@ def log_in(request):
                 "valid":
                     False if not email else
                     False if not User.objects.filter(email=email).exists() else
+                    False if not User.objects.get(email=email).is_verified else
                     True,
                 "field": email_field,
                 "message":
                     "The e-mail field cannot be empty." if not email else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
+                    f"Your account has not been activated yet. Check your inbox." if not User.objects.get(
+                        email=email).is_verified else
                     "",
             },
             {
