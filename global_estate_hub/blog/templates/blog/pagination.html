@@ -1,6 +1,6 @@
 <ul class="pagination" style="display: flex; column-gap: 1rem;">
 
-    {% if pages.paginator.num_pages > 2 %}
+    {% if not pages.number == 1 %}
     <li>
         <a href="?page=1">First</a>
     </li>
@@ -34,7 +34,7 @@
     </li>
     {% endif %}
 
-    {% if pages.paginator.num_pages > 2 %}
+    {% if not pages.number == pages.paginator.num_pages %}
     <li>
         <a href="{% if pages.has_next %}?page={{ pages.next_page_number }}{% endif %}">Next</a>
     </li>

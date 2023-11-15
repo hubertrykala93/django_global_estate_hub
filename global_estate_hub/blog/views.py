@@ -63,3 +63,58 @@ def article_details(request, category_slug, article_slug):
         'category': category,
         'article': article,
     })
+
+
+def blog_results(request):
+    if request.method == 'POST':
+        keywords = request.POST.get('keywords').split()
+
+        if not keywords:
+            articles = Article.objects.all().order_by('-date_posted')
+
+            paginator = Paginator(object_list=articles, per_page=9)
+            page = request.GET.get('page')
+            pages = paginator.get_page(number=page)
+
+            return render(request=request, template_name='blog/blog-results.html', context={
+                'title': 'Blog Results',
+                'pages': pages,
+            })
+
+        elif len(keywords) == 1:
+            articles = Article.objects.filter(title__icontains=keywords[0]).all() and Article.objects.filter(
+                content__icontains=keywords[0]).all()
+
+            articles = articles.order_by('-date_posted')
+
+            paginator = Paginator(object_list=articles, per_page=9)
+            page = request.GET.get('page')
+            pages = paginator.get_page(number=page)
+
+            return render(request=request, template_name='blog/blog-results.html', context={
+                'title': 'Blog Results',
+                'pages': pages,
+            })
+
+        else:
+            articles = []
+
+            for keyword in keywords:
+                articles.extend(
+                    Article.objects.filter(title__icontains=keyword).order_by('date_posted') and
+                    Article.objects.filter(content__icontains=keyword).order_by('-date_posted')
+                )
+
+            paginator = Paginator(object_list=articles, per_page=9)
+            page = request.GET.get('page')
+            pages = paginator.get_page(number=page)
+
+            return render(request=request, template_name='blog/blog-results.html', context={
+                'title': 'Blog Results',
+                'pages': pages,
+            })
+
+    else:
+        return render(request=request, template_name='blog/blog-results.html', context={
+            'title': 'Blog Results',
+        })

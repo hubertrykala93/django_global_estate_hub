@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "core",
     "accounts",
     "blog",
-    "estates"
 ]
 
 AUTH_USER_MODEL = "accounts.User"
@@ -84,8 +83,9 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "core.context_processors.breadcrumbs_urls",
                 "core.context_processors.generate_token",
+                "blog.context_processors.length_categories",
+                "blog.context_processors.newest_articles",
                 "blog.context_processors.categories",
-                "blog.context_processors.tags",
             ],
         },
     },
