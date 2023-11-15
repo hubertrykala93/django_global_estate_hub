@@ -1,5 +1,6 @@
 import os
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
+from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
 from .models import User, OneTimePassword
@@ -12,7 +13,6 @@ from django.core.mail import BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth.tokens import default_token_generator
 from .tokens import token_generator
 from dotenv import load_dotenv
 
@@ -126,7 +126,34 @@ def create_user(request):
             user = User(username=username, email=email, password=make_password(password=raw_password1))
             user.save()
 
-            return JsonResponse(data=response, safe=False)
+            try:
+                message = EmailMessage(
+                    subject="Account activation request.",
+                    body=render_to_string(template_name='accounts/activation_email.html', context={
+                        'user': user,
+                        'domain': get_current_site(request=request),
+                        'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                        'token': token_generator.make_token(user=user),
+                    }),
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
+                    to=[user.email]
+                )
+
+                message.send(fail_silently=True)
+
+                return JsonResponse(data={
+                    "valid": True,
+                    "email": email,
+                    "message": f"The activation link has been sent to {email}.",
+                }, safe=False)
+
+            except BadHeaderError:
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": "The message could not be sent.",
+                })
+
+            # return JsonResponse(data=response, safe=False)
 
         else:
             return JsonResponse(data=response, safe=False)
@@ -136,12 +163,15 @@ def activate(request, uidb64, token):
     try:
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
         user = User.objects.get(pk=uid)
+        print(user)
     except:
         user = None
 
     if user and token_generator.check_token(user=user, token=token):
         user.is_verified = True
         user.save()
+
+        return redirect(to=reverse(viewname='login'))
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
