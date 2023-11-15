@@ -16,49 +16,90 @@
             </p>
         </div>
 
-        <div class="row blog-cards_row">
-            {% for page in pages %}
-            <div class="blog-card__column">
-                <div class="blog-card__wrapper">
-                    <a class="blog-card__category"
-                       href="{{ page.category.get_absolute_url }}">{{ page.category }}</a>
-                    <div class="blog-card__image">
-                        <img src="{{ page.image.url }}">
-                    </div>
-
-                    <div class="blog-card__content">
-                        <div class="blog-card__info">
-                            <div class="blog-card__info__item">
-                                <div class="blog-card__info__icon">
-                                    <img src="/media/icons/blog-card-author.svg" alt="author icon">
-                                </div>
-
-                                <div class="blog-card__info__title">{{ page.user.username }}</div>
+        <div class="row blog__row">
+            <div class="cards__column">
+                <div class="row blog-cards_row">
+                    {% for page in pages %}
+                    <div class="blog-card__column">
+                        <div class="blog-card__wrapper">
+                            <a class="blog-card__category"
+                               href="{{ page.category.get_absolute_url }}">{{ page.category }}</a>
+                            <div class="blog-card__image">
+                                <img src="{{ page.image.url }}">
                             </div>
-
-                            <div class="blog-card__info__item">
-                                <div class="blog-card__info__icon">
-                                    <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
+        
+                            <div class="blog-card__content">
+                                <div class="blog-card__info">
+                                    <div class="blog-card__info__item">
+                                        <div class="blog-card__info__icon">
+                                            <img src="/media/icons/blog-card-author.svg" alt="author icon">
+                                        </div>
+        
+                                        <div class="blog-card__info__title">{{ page.user.username }}</div>
+                                    </div>
+        
+                                    <div class="blog-card__info__item">
+                                        <div class="blog-card__info__icon">
+                                            <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
+                                        </div>
+        
+                                        <div class="blog-card__info__title">{{ page.date_posted }}</div>
+                                    </div>
                                 </div>
-
-                                <div class="blog-card__info__title">{{ page.date_posted }}</div>
+        
+                                <div class="blog-card__article-title">
+                                    <h3><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></h3>
+                                </div>
+        
+                                <a class="blog-card__read-more" href="{{ page.get_absolute_url }}">
+                                    Read more
+                                    <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
+                                </a>
                             </div>
                         </div>
-
-                        <div class="blog-card__article-title">
-                            <h3><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></h3>
-                        </div>
-
-                        <a class="blog-card__read-more" href="{{ page.get_absolute_url }}">
-                            Read more
-                            <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
-                        </a>
                     </div>
+                    {% endfor %}
                 </div>
+                {% include 'blog/pagination.html' %}
             </div>
-            {% endfor %}
+
+            <div class="sidebar__column">
+                <aside class="aside">
+                    <form class="theme-form aside__blog-search__form">
+                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <div class="form__input-wrap">
+                                    <input type="text" placeholder="Search by keyword">
+                                </div>
+                                <button type="submit">
+                                    <img class="form__search-icon" src="/media/icons/blog-search.svg" alt="search icon">
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="aside__module">
+                        <div class="h4 aside__title">Categories</div>
+
+                        <ul class="aside__categories">
+                            {% for category in categories %}
+                            <li class="aside__categories__item">
+                                <a class="aside__categories__link" href="">
+                                    {{ category }}
+                                    <span class="aside__categories__count">(20)</span>
+                                </a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                </aside>
+            </div>
         </div>
-        {% include 'blog/pagination.html' %}
+
+        
     </div>
 </section>
 {% endblock %}

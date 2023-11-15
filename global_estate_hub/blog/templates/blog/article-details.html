@@ -5,8 +5,7 @@
 {% block content %}
 <section class="blog">
     <div class="container">
-<<<<<<< HEAD
-        <div class="row blog-details__row">
+        <div class="row blog__row blog-details__row">
             <div class="article__column">
                 <article class="article">
                     <div class="article-card">
@@ -35,7 +34,7 @@
             </div>
 
             <div class="sidebar__column">
-                <aside class="aside">
+                <!-- <aside class="aside">
                     <form data-blog-search-form class="theme-form">
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
@@ -61,29 +60,7 @@
                         </ul>
                     </div>
                     
-                </aside>
-=======
-        <div class="article-card">
-            <div class="card">
-                <div class="article-image">
-                    <img src="{{ article.image.url }}">
-                </div>
-                <div class="article-username">
-                    {{ article.user.username }}
-                </div>
-                <div class="article-date-posted">
-                    {{ article.date_posted }}
-                </div>
-                <div class="article-title">
-                    <h2>{{ article.title }}</h2>
-                </div>
-                <div class="article-content">
-                    {{ article.content|safe }}
-                </div>
-                <div class="article-tags">
-                    {{ tag }}
-                </div>
->>>>>>> h_develop
+                </aside> -->
             </div>
         </div>
     </div>

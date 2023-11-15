@@ -1527,6 +1527,95 @@ section.blog .row.title-row .section-title {
   align-items: center;
 }
 
+section.blog .blog__row {
+  display: grid;
+  row-gap: var(--section-block-space-400);
+  margin: 0 -1.5rem;
+  padding-top: var(--section-block-space-400);
+}
+
+section.blog .blog__row > div {
+  padding: 0 1.5rem;
+}
+
+section.blog .blog__row .sidebar__column {
+  order: -1;
+}
+
+
+/**
+  * Blog aside
+   */
+
+
+.aside__blog-search__form {
+  margin-bottom: 3rem;
+}
+
+.aside__blog-search__form .form__row {
+  margin: 0;
+}
+
+.aside__blog-search__form .form__field{
+  position: relative;
+  padding: 0 !important;
+}
+
+.aside__blog-search__form input[type="text"] {
+  height: unset;
+  padding: 0 0 1.8rem 3.2rem;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #DFDFDF;
+  border-radius: 0;
+  font-size: var(--fs-body-300);
+}
+
+.aside__blog-search__form input[type="text"]:focus-visible{
+  box-shadow: none;
+  border-color: var(--clr-dark);
+}
+
+.aside__blog-search__form button {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: transform .4s;
+}
+
+.aside__blog-search__form button:hover,
+.aside__blog-search__form button:focus-visible{
+  transform: scale(1.2);
+}
+
+.aside__module {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border: 1px solid #DFDFDF;
+  border-radius: var(--br-500);
+}
+
+.aside .aside__title {
+  margin-bottom: 2.4rem;
+}
+
+.aside__categories .aside__categories__item {
+  border-top: 1px solid #DFDFDF;
+}
+
+.aside__categories .aside__categories__link{
+  display: flex;
+  justify-content: space-between;
+  padding: 1.4rem 0;
+  transition: color .4s;
+}
+
+.aside__categories .aside__categories__link:hover,
+.aside__categories .aside__categories__link:focus-visible,
+.aside__categories .aside__categories__link.active{
+  color: var(--clr-secondary);
+}
+
 
 /**
   * Blog blocks
@@ -1534,7 +1623,6 @@ section.blog .row.title-row .section-title {
 
 section.blog .blog-cards_row {
   display: grid;
-  padding-top: var(--section-block-space-400);
   margin: 0 -1.2rem;
 }
 
@@ -2122,16 +2210,13 @@ section.blog .blog-card__column{
     #BLOG PAGE
   \*----------------------------------*/
 
-
-  /**
-    * Blog blocks
-    */
-
-  section.blog .blog-cards_row {
-    grid-template-columns: repeat(2, 1fr);
+  section.blog .blog__row {
+    grid-template-columns: 1fr 330px;
   }
-  
 
+  section.blog .blog__row .sidebar__column {
+    order: 0;
+  }
 
   /*----------------------------------*\
     #FOOTER
@@ -2482,7 +2567,7 @@ section.blog .blog-card__column{
       */
 
     section.blog .blog-cards_row {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
 
 

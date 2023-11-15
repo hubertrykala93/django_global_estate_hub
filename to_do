@@ -1,7 +1,5 @@
 @Szymon-Levy
 
-Ty te pliki .html musisz zrobić od nowa raczej po swojemu, bo je te divy itd. pisałem tak na czuja xd
-
 1. article-details.html,
 2. article-details.html ajax form,
 3. stylizacja -> blog/templates/blog/pagination.html
@@ -13,5 +11,7 @@ Ty te pliki .html musisz zrobić od nowa raczej po swojemu, bo je te divy itd. p
 9. ogarnięcie ckeditor w admin -> articles.
 
 @hubertrykala93
+
+1. blog > aside > categories - 1. nie przechodzi do właściwej kategorii (??), 2. przechodząc na konkretną w elemencie a ma być klasa 'active'
 2. ogarnąć manytomanyfield dla kategorii article,
 3. captcha do wszystkich formów.
