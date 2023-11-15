@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.http import JsonResponse
-from .models import User, OneTimePassword
+from .models import User, OneTimePassword, VerificationToken
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -163,11 +163,10 @@ def activate(request, uidb64, token):
     try:
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
         user = User.objects.get(pk=uid)
-        print(user)
     except:
         user = None
 
-    if user and token_generator.check_token(user=user, token=token):
+    if user and VerificationToken().check_token(user=user, token=token):
         user.is_verified = True
         user.save()
 
