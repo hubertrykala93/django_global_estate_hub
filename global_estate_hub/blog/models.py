@@ -3,7 +3,7 @@ from accounts.models import User
 from django.utils.timezone import now
 from django.shortcuts import reverse
 from PIL import Image
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Category(models.Model):
@@ -54,8 +54,7 @@ class Article(models.Model):
     image = models.ImageField(upload_to='article_images')
     date_posted = models.DateTimeField(default=now)
     title = models.CharField(max_length=200, unique=True)
-    # content = models.TextField(max_length=2000)
-    content = RichTextField(max_length=10000, unique=True)
+    content = RichTextUploadingField(max_length=10000, unique=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to=Tag)
     slug = models.SlugField(max_length=200, null=True, unique=True)

@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
 from PIL import Image
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+import six
 
 
 class CustomUserManager(UserManager):
@@ -39,6 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True, null=False, blank=False)
     email = models.EmailField(max_length=100, unique=True, null=False, blank=False)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
+    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
