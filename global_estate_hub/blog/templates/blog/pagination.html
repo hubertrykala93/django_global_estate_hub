@@ -1,6 +1,6 @@
 <ul class="pagination" style="display: flex; column-gap: 1rem;">
 
-    {% if not pages.number == 1 %}
+    {% if pages.number > 1 %}
     <li>
         <a href="?page=1">First</a>
     </li>
@@ -18,9 +18,17 @@
 
     {% for i in pages.paginator.page_range %}
     {% if pages.number == i %}
+
+    {% if i in request.build_absolute_uri|slice:'-1:' %}
     <li>
         <a href="?page={{ i }}">{{ i }}</a>
     </li>
+    {% else %}
+    <li>
+        <span>{{ request.build_absolute_uri|slice:'-1:' }}</span>
+    </li>
+    {% endif %}
+
     {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
     <li>
         <a href="?page={{ i }}">{{ i }}</a>
@@ -34,13 +42,13 @@
     </li>
     {% endif %}
 
-    {% if not pages.number == pages.paginator.num_pages %}
+    {% if pages.number < pages.paginator.num_pages %}
     <li>
         <a href="{% if pages.has_next %}?page={{ pages.next_page_number }}{% endif %}">Next</a>
     </li>
 
     <li>
-        <a href="{% if pages.has_next %} ?page={{ pages.paginator.num_pages }}{% endif %}">Last</a>
+        <a href="{% if pages.has_next %}?page={{ pages.paginator.num_pages }}{% endif %}">Last</a>
     </li>
     {% endif %}
 </ul>
