@@ -19,18 +19,18 @@
         </li>
         {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
         <li>
-            <a href="?page={{ i }}">{{ i }}</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ i }}{% else %}?{% url_replace request 'page' i %}{% endif %}">{{ i }}</a>
         </li>
         {% endif %}
         {% endfor %}
 
         {% if pages.has_next %}
         <li>
-            <a href="?page={{ pages.next_page_number }}">Next</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.next_page_number }}{% else %}?{% url_replace request 'page' pages.next_page_number %}{% endif %}">Next</a>
         </li>
 
         <li>
-            <a href="?page={{ pages.paginator.num_pages }}">Last</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.paginator.num_pages }}{% else %}?{% url_replace request 'page' pages.paginator.num_pages %}{% endif %}">Last</a>
         </li>
         {% endif %}
     </ul>
