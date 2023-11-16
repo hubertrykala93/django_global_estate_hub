@@ -1,11 +1,10 @@
 <aside class="aside">
-    <form class="theme-form aside__blog-search__form" method="post" action="{% url 'blog-results' %}">
-        {% csrf_token %}
+    <form class="theme-form aside__blog-search__form" method="get" action="{% url 'blog-results' %}">
 
         <div class="form__row">
             <div class="form__field">
                 <div class="form__input-wrap">
-                    <input type="text" placeholder="Search by keyword" name="keywords">
+                    <input type="text" placeholder="Search by keyword" name="search" required>
                 </div>
                 <button type="submit">
                     <img class="form__search-icon" src="/media/icons/blog-search.svg" alt="search icon">

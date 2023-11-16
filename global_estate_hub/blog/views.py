@@ -1,25 +1,20 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def blog(request):
     paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=9)
     page = request.GET.get('page')
 
-    if page is None:
+    try:
         pages = paginator.get_page(number=page)
 
-    elif page == '0':
+    except PageNotAnInteger:
         pages = paginator.get_page(number=1)
 
-    elif paginator.num_pages >= int(page) >= 1:
-        pages = paginator.get_page(number=page)
-
-    else:
-        return render(request=request, template_name='core/error.html', context={
-            'title': 'Error 404',
-        })
+    except EmptyPage:
+        pages = paginator.get_page(number=paginator.num_pages)
 
     return render(request=request, template_name='blog/blog.html', context={
         'title': 'Blog',
@@ -66,10 +61,11 @@ def article_details(request, category_slug, article_slug):
 
 
 def blog_results(request):
-    if request.method == 'POST':
-        keywords = request.POST.get('keywords').split()
+    if request.method == 'GET':
+        keywords = request.GET.get('search').split()
+        print(request.get_full_path())
 
-        if not keywords:
+        if not keywords or keywords is None:
             articles = Article.objects.all().order_by('-date_posted')
 
             paginator = Paginator(object_list=articles, per_page=9)
