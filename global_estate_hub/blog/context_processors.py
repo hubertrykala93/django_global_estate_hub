@@ -1,23 +1,23 @@
 from .models import Category, Article
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 
 def length_categories(request):
     categories = Category.objects.all()
 
-    category_slugs = []
-    category_urls = []
-    category_titles = []
-    category_lengths = []
-
-    for category in categories:
-        category_slugs.append(category.slug)
-        category_urls.append(category.get_absolute_url())
-        category_titles.append(category.name)
-        category_lengths.append(Article.objects.filter(category=category).count())
+    category_slugs = [category.slug for category in categories]
+    category_urls = [category.get_absolute_url() for category in categories]
+    category_titles = [category.name for category in categories]
+    category_lengths = [Article.objects.filter(category=category).count() for category in categories]
 
     return {
-        'category_length': list(zip(category_slugs, category_urls, category_titles, category_lengths)),
+        'category_length': list(
+            zip(
+                category_slugs,
+                category_urls,
+                category_titles,
+                category_lengths
+            )
+        ),
     }
 
 

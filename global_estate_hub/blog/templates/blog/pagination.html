@@ -1,19 +1,21 @@
+{% load pagination_tag %}
+
 <nav class="paginator">
     <ul style="display: flex; column-gap: 1rem;">
         {% if pages.has_previous %}
         <li>
-            <a href="?page=1">First</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page=1{% else %}?{% url_replace request 'page' 1 %}{% endif %}">First</a>
         </li>
 
         <li>
-            <a href="?page=?page={{ pages.previous_page_number }}">Previous</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.previous_page_number }}{% else %}?{% url_replace request 'page' pages.previous_page_number%}{% endif %}">Previous</a>
         </li>
         {% endif %}
 
         {% for i in pages.paginator.page_range %}
         {% if pages.number == i %}
         <li>
-            <a href="?page={{ i }}">{{ i }}</a>
+            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ i }}{% else %}?{% url_replace request 'page' i %}{% endif %}">{{ i }}</a>
         </li>
         {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
         <li>
