@@ -35,39 +35,3 @@
         {% endif %}
     </ul>
 </nav>
-
-<!--<nav class="paginator">-->
-<!--    <ul style="display: flex; column-gap: 1rem;">-->
-<!--        {% if pages.has_previous %}-->
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page=1{% else %}?{% url_replace request 'page' 1 %}{% endif %}">First</a>-->
-<!--        </li>-->
-
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.previous_page_number }}{% else %}?{% url_replace request 'page' pages.previous_page_number%}{% endif %}">Previous</a>-->
-<!--        </li>-->
-<!--        {% endif %}-->
-
-<!--        {% for i in pages.paginator.page_range %}-->
-<!--        {% if pages.number == i %}-->
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ i }}{% else %}?{% url_replace request 'page' i %}{% endif %}">{{ i }}</a>-->
-<!--        </li>-->
-<!--        {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}-->
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ i }}{% else %}?{% url_replace request 'page' i %}{% endif %}">{{ i }}</a>-->
-<!--        </li>-->
-<!--        {% endif %}-->
-<!--        {% endfor %}-->
-
-<!--        {% if pages.has_next %}-->
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.next_page_number }}{% else %}?{% url_replace request 'page' pages.next_page_number %}{% endif %}">Next</a>-->
-<!--        </li>-->
-
-<!--        <li>-->
-<!--            <a href="{% if request.resolver_match.url_name != 'blog-results' %}?page={{ pages.paginator.num_pages }}{% else %}?{% url_replace request 'page' pages.paginator.num_pages %}{% endif %}">Last</a>-->
-<!--        </li>-->
-<!--        {% endif %}-->
-<!--    </ul>-->
-<!--</nav>
