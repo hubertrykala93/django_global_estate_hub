@@ -17,11 +17,11 @@
         <div class="h4 aside__title">Categories</div>
 
         <ul class="aside__categories">
-            {% for slug, url, title, number in category_length %}
+            {% for slug, url, name, number in get_category_info %}
             <li class="aside__categories__item">
                 <a class="aside__categories__link {% if slug in request.path %}active{% endif %}"
                    href="{{ url }}">
-                    {{ title }}
+                    {{ name }}
                     <span class="aside__categories__count">({{ number }})</span>
                 </a>
             </li>

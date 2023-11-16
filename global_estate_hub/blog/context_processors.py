@@ -1,24 +1,20 @@
 from .models import Category, Article
 
 
-def length_categories(request):
-    categories = Category.objects.all()
-
-    category_slugs = [category.slug for category in categories]
-    category_urls = [category.get_absolute_url() for category in categories]
-    category_titles = [category.name for category in categories]
-    category_lengths = [Article.objects.filter(category=category).count() for category in categories]
-
+def get_category_info(request, category):
     return {
-        'category_length': list(
-            zip(
-                category_slugs,
-                category_urls,
-                category_titles,
-                category_lengths
-            )
-        ),
+        'get_category_info': Article.objects.filter(category=category)
     }
+    # return {
+    #     'get_category_info': list(
+    #         zip(
+    #             [category.slug for category in Category.objects.all()],
+    #             [category.get_absolute_url() for category in Category.objects.all()],
+    #             [category.name for category in Category.objects.all()],
+    #             [Article.objects.filter(category=category).count() for category in Category.objects.all()]
+    #         )
+    #     ),
+    # }
 
 
 def newest_articles(request):

@@ -15,7 +15,7 @@
         {% for i in pages.paginator.page_range %}
         {% if pages.number == i %}
         <li>
-            <a href="?{% url_replace request 'page' i %}">{{ i }}</a>{% else %}<span>{{ i }}</span>
+            <a href="?{% url_replace request 'page' i %}">{{ i }}</a>
         </li>
         {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
         <li>

@@ -93,6 +93,7 @@ class Article(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
     email = models.EmailField(max_length=100)
     date_posted = models.DateTimeField(default=now)
