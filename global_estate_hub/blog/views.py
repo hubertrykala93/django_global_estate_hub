@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
 
 
 def blog(request):
@@ -9,6 +9,9 @@ def blog(request):
 
     try:
         pages = paginator.get_page(number=page)
+        
+        for i in pages.paginator.get_elided_page_range():
+            print(i)
 
     except PageNotAnInteger:
         pages = paginator.get_page(number=1)
@@ -25,22 +28,17 @@ def blog(request):
 def article_categories(request, category_slug):
     category = get_object_or_404(klass=Category, slug=category_slug)
 
-    paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=9)
+    paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=2)
     page = request.GET.get('page')
 
-    if page is None:
+    try:
         pages = paginator.get_page(number=page)
 
-    elif page == '0':
+    except PageNotAnInteger:
         pages = paginator.get_page(number=1)
 
-    elif paginator.num_pages >= int(page) >= 1:
-        pages = paginator.get_page(number=page)
-
-    else:
-        return render(request=request, template_name='core/error.html', context={
-            'title': 'Error 404',
-        })
+    except EmptyPage:
+        pages = paginator.get_page(number=paginator.num_pages)
 
     return render(request=request, template_name='blog/article-categories.html', context={
         'title': category,
@@ -61,38 +59,10 @@ def article_details(request, category_slug, article_slug):
 
 
 def blog_results(request):
-    if request.method == 'GET':
-        keywords = request.GET.get('search').split()
-        print(request.get_full_path())
+    if 'search' in request.GET:
+        if request.GET.get('search'):
+            keywords = request.GET.get('search').split()
 
-        if not keywords or keywords is None:
-            articles = Article.objects.all().order_by('-date_posted')
-
-            paginator = Paginator(object_list=articles, per_page=9)
-            page = request.GET.get('page')
-            pages = paginator.get_page(number=page)
-
-            return render(request=request, template_name='blog/blog-results.html', context={
-                'title': 'Blog Results',
-                'pages': pages,
-            })
-
-        elif len(keywords) == 1:
-            articles = Article.objects.filter(title__icontains=keywords[0]).all() and Article.objects.filter(
-                content__icontains=keywords[0]).all()
-
-            articles = articles.order_by('-date_posted')
-
-            paginator = Paginator(object_list=articles, per_page=9)
-            page = request.GET.get('page')
-            pages = paginator.get_page(number=page)
-
-            return render(request=request, template_name='blog/blog-results.html', context={
-                'title': 'Blog Results',
-                'pages': pages,
-            })
-
-        else:
             articles = []
 
             for keyword in keywords:
@@ -101,9 +71,37 @@ def blog_results(request):
                     Article.objects.filter(content__icontains=keyword).order_by('-date_posted')
                 )
 
-            paginator = Paginator(object_list=articles, per_page=9)
+            paginator = Paginator(object_list=articles, per_page=3)
             page = request.GET.get('page')
-            pages = paginator.get_page(number=page)
+
+            try:
+                pages = paginator.get_page(number=page)
+
+            except PageNotAnInteger:
+                pages = paginator.get_page(number=1)
+
+            except EmptyPage:
+                pages = paginator.get_page(number=paginator.num_pages)
+
+            return render(request=request, template_name='blog/blog-results.html', context={
+                'title': 'Blog Results',
+                'pages': pages,
+            })
+
+        else:
+            articles = Article.objects.all().order_by('-date_posted')
+
+            paginator = Paginator(object_list=articles, per_page=3)
+            page = request.GET.get('page')
+
+            try:
+                pages = paginator.get_page(number=page)
+
+            except PageNotAnInteger:
+                pages = paginator.get_page(number=1)
+
+            except EmptyPage:
+                pages = paginator.get_page(number=paginator.num_pages)
 
             return render(request=request, template_name='blog/blog-results.html', context={
                 'title': 'Blog Results',

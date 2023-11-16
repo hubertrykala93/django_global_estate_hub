@@ -1,57 +1,33 @@
 <ul class="pagination" style="display: flex; column-gap: 1rem;">
-    {% if request.method == 'POST' %}
-    {% if pages.number > 1 %}
+    {% if pages.has_previous %}
     <li>
         <a href="?page=1">First</a>
     </li>
 
     <li>
-        <a href="{% if pages.has_previous %}?page={{ pages.previous_page_number }}{% endif %}">Previous</a>
-    </li>
-    {% endif %}
-
-    {% if pages.number|add:'-2' > 1 %}
-    <li>
-        <a href="?page={{ pages.number|add:'-3' }}">&hellip;</a>
+        <a href="?page=?page={{ pages.previous_page_number }}">Previous</a>
     </li>
     {% endif %}
 
     {% for i in pages.paginator.page_range %}
     {% if pages.number == i %}
-
-    {% if i not in request.build_absolute_uri|slice:'-1:' %}
     <li>
-        <a href="?page={{ i }}">{{ i }}</a>
+        <span>{{ i }}</span>
     </li>
     {% else %}
-    <li>
-        <span>{{ request.build_absolute_uri|slice:'-1:' }}</span>
-    </li>
-    {% endif %}
-
-    {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
     <li>
         <a href="?page={{ i }}">{{ i }}</a>
     </li>
     {% endif %}
     {% endfor %}
 
-    {% if pages.paginator.num_pages > pages.number|add:'2' %}
+    {% if pages.has_next %}
     <li>
-        <a href="{% if pages.number|add:'2' %}?page={{ pages.number|add:'2' }}{% else %}?page={{ pages.paginator.num_pages }}{% endif %}">&hellip;</a>
-    </li>
-    {% endif %}
-
-    {% if pages.number < pages.paginator.num_pages %}
-    <li>
-        <a href="{% if pages.has_next %}?page={{ pages.next_page_number }}{% endif %}">Next</a>
+        <a href="?page={{ pages.next_page_number }}">Next</a>
     </li>
 
     <li>
-        <a href="{% if pages.has_next %}?page={{ pages.paginator.num_pages }}{% endif %}">Last</a>
+        <a href="?page={{ pages.paginator.num_pages }}">Last</a>
     </li>
-    {% endif %}
-    {% else %}
-    <h1>Stara.</h1>
     {% endif %}
 </ul>
