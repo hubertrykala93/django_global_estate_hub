@@ -11,7 +11,3 @@
 9. ogarnięcie ckeditor w admin -> articles.
 
 @hubertrykala93
-
-1. blog > aside > categories - 1. nie przechodzi do właściwej kategorii (??), 2. przechodząc na konkretną w elemencie a ma być klasa 'active'
-2. ogarnąć manytomanyfield dla kategorii article,
-3. captcha do wszystkich formów.
