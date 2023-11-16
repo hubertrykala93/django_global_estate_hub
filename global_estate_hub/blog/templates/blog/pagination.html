@@ -1,33 +1,35 @@
-<ul class="pagination" style="display: flex; column-gap: 1rem;">
-    {% if pages.has_previous %}
-    <li>
-        <a href="?page=1">First</a>
-    </li>
+<nav class="paginator">
+    <ul style="display: flex; column-gap: 1rem;">
+        {% if pages.has_previous %}
+        <li>
+            <a href="?page=1">First</a>
+        </li>
 
-    <li>
-        <a href="?page=?page={{ pages.previous_page_number }}">Previous</a>
-    </li>
-    {% endif %}
+        <li>
+            <a href="?page=?page={{ pages.previous_page_number }}">Previous</a>
+        </li>
+        {% endif %}
 
-    {% for i in pages.paginator.page_range %}
-    {% if pages.number == i %}
-    <li>
-        <span>{{ i }}</span>
-    </li>
-    {% else %}
-    <li>
-        <a href="?page={{ i }}">{{ i }}</a>
-    </li>
-    {% endif %}
-    {% endfor %}
+        {% for i in pages.paginator.page_range %}
+        {% if pages.number == i %}
+        <li>
+            <a href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
+        <li>
+            <a href="?page={{ i }}">{{ i }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
 
-    {% if pages.has_next %}
-    <li>
-        <a href="?page={{ pages.next_page_number }}">Next</a>
-    </li>
+        {% if pages.has_next %}
+        <li>
+            <a href="?page={{ pages.next_page_number }}">Next</a>
+        </li>
 
-    <li>
-        <a href="?page={{ pages.paginator.num_pages }}">Last</a>
-    </li>
-    {% endif %}
-</ul>
+        <li>
+            <a href="?page={{ pages.paginator.num_pages }}">Last</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>

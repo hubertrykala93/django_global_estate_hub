@@ -4,14 +4,11 @@ from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, Invali
 
 
 def blog(request):
-    paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=9)
+    paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=2)
     page = request.GET.get('page')
 
     try:
         pages = paginator.get_page(number=page)
-        
-        for i in pages.paginator.get_elided_page_range():
-            print(i)
 
     except PageNotAnInteger:
         pages = paginator.get_page(number=1)
