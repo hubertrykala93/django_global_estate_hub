@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article, Category
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage, InvalidPage
+from django.core.paginator import Paginator
 
 
 def blog(request):
@@ -71,14 +71,14 @@ def blog_results(request):
             paginator = Paginator(object_list=articles, per_page=3)
             page = request.GET.get('page')
 
-            try:
-                pages = paginator.get_page(number=page)
+            pages = paginator.get_page(number=page)
 
-            except PageNotAnInteger:
+            if page is None:
                 pages = paginator.get_page(number=1)
 
-            except EmptyPage:
-                pages = paginator.get_page(number=paginator.num_pages)
+            else:
+                if page not in list(str(i) for i in pages.paginator.page_range):
+                    return redirect(to='error')
 
             return render(request=request, template_name='blog/blog-results.html', context={
                 'title': 'Blog Results',
@@ -91,14 +91,14 @@ def blog_results(request):
             paginator = Paginator(object_list=articles, per_page=3)
             page = request.GET.get('page')
 
-            try:
-                pages = paginator.get_page(number=page)
+            pages = paginator.get_page(number=page)
 
-            except PageNotAnInteger:
+            if page is None:
                 pages = paginator.get_page(number=1)
 
-            except EmptyPage:
-                pages = paginator.get_page(number=paginator.num_pages)
+            else:
+                if page not in list(str(i) for i in pages.paginator.page_range):
+                    return redirect(to='error')
 
             return render(request=request, template_name='blog/blog-results.html', context={
                 'title': 'Blog Results',
