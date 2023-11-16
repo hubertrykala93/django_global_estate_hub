@@ -56,6 +56,7 @@ def article_details(request, category_slug, article_slug):
 
 
 def blog_results(request):
+    print(request)
     if 'search' in request.GET:
         if request.GET.get('search'):
             keywords = request.GET.get('search').split()

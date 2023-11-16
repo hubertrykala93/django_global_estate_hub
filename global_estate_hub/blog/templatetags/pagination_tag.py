@@ -4,8 +4,8 @@ register = template.Library()
 
 
 @register.simple_tag(name='url_replace')
-def url_replace(request, attribute, value):
+def url_replace(request, page, number):
     dict_ = request.GET.copy()
-    dict_[attribute] = value
+    dict_[page] = number
 
     return dict_.urlencode()
