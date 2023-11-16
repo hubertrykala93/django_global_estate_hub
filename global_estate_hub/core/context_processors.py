@@ -1,4 +1,5 @@
 from django.middleware.csrf import get_token
+from blog.models import Article
 
 
 def breadcrumbs_urls(request):
@@ -26,4 +27,10 @@ def breadcrumbs_urls(request):
 def generate_token(request):
     return {
         'csrf_token': get_token(request=request)
+    }
+
+
+def latest_articles(request):
+    return {
+        'latest_articles': Article.objects.all().order_by('-date_posted')[:3]
     }

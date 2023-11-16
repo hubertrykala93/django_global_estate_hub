@@ -1,20 +1,16 @@
 from .models import Category, Article
 
-
-def get_category_info(request, category):
+def get_category_info(request):
     return {
-        'get_category_info': Article.objects.filter(category=category)
+        'get_category_info': list(
+            zip(
+                [category.slug for category in Category.objects.all()],
+                [category.get_absolute_url() for category in Category.objects.all()],
+                [category.name for category in Category.objects.all()],
+                [Article.objects.filter(category=category).count() for category in Category.objects.all()]
+            )
+        ),
     }
-    # return {
-    #     'get_category_info': list(
-    #         zip(
-    #             [category.slug for category in Category.objects.all()],
-    #             [category.get_absolute_url() for category in Category.objects.all()],
-    #             [category.name for category in Category.objects.all()],
-    #             [Article.objects.filter(category=category).count() for category in Category.objects.all()]
-    #         )
-    #     ),
-    # }
 
 
 def newest_articles(request):
