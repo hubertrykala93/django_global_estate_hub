@@ -273,7 +273,7 @@ def send_password(request):
 
                     try:
                         message = EmailMessage(
-                            subject=f"Password reset request for {user.username}.",
+                            subject=f"Password reset request for {user.email}.",
                             body=render_to_string(template_name='accounts/password_reset_email.html', context={
                                 'one_time_password': one_time_password.password,
                                 'expire_password': one_time_password.expires_in,
@@ -348,7 +348,7 @@ def validate_password(request):
 
 
 def set_password(request):
-    if request.method == 'POST':
+    if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
         raw_password1 = data['password1'][0]
         raw_password1_field = data['password1'][1]
