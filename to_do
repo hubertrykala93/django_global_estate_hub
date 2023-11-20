@@ -1,8 +1,8 @@
 @Szymon-Levy
 
+. pouzupełniać sidebar na pozostałych podstronach blogowych
 1. article-details.html,
 2. article-details.html ajax form,
-3. stylizacja -> blog/templates/blog/pagination.html
 4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html,
 5. stylizacja core/templates/core/error.html.
 6. stylizacja core/templates/core.messages.html,
@@ -11,3 +11,5 @@
 9. ogarnięcie ckeditor w admin -> articles.
 
 @hubertrykala93
+
+1. ustawienie parzystej liczby elementów do stronicowania na stronie blog.html i pozostałych korzystających z boxów blogowych

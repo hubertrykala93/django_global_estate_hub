@@ -1,37 +1,43 @@
 {% load pagination_tag %}
 
-<nav class="paginator">
-    <ul style="display: flex; column-gap: 1rem;">
+<div class="pagination">
+    <ul class="pagination__list">
         {% if pages.has_previous %}
-        <li>
+        <li class="pagination__item">
             <a href="?{% url_replace request 'page' 1 %}">First</a>
         </li>
 
-        <li>
-            <a href="?{% url_replace request 'page' pages.previous_page_number %}">Previous</a>
+        <li class="pagination__item pagination__item--with-icon pagination__item--icon-left">
+            <a href="?{% url_replace request 'page' pages.previous_page_number %}">
+                <img src="/media/icons/pagination-left-arrow.svg" alt="previous pages">
+                Previous
+            </a>
         </li>
         {% endif %}
 
         {% for i in pages.paginator.page_range %}
         {% if pages.number == i %}
-        <li>
+        <li class="pagination__item">
             <a href="?{% url_replace request 'page' i %}">{{ i }}</a>
         </li>
         {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
-        <li>
+        <li class="pagination__item">
             <a href="?{% url_replace request 'page' i %}">{{ i }}</a>
         </li>
         {% endif %}
         {% endfor %}
 
         {% if pages.has_next %}
-        <li>
-            <a href="?{% url_replace request 'page' pages.next_page_number %}">Next</a>
+        <li class="pagination__item pagination__item--with-icon pagination__item--icon-right">
+            <a href="?{% url_replace request 'page' pages.next_page_number %}">
+                Next
+                <img src="/media/icons/pagination-right-arrow.svg" alt="next pages">
+            </a>
         </li>
 
-        <li>
+        <li class="pagination__item">
             <a href="?{% url_replace request 'page' pages.paginator.num_pages %}">Last</a>
         </li>
         {% endif %}
     </ul>
-</nav>
+</div>
