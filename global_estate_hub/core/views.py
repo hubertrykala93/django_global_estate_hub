@@ -13,49 +13,46 @@ def index(request):
 
 def newsletter(request):
     if request.method == 'POST':
-        email = json.loads(s=request.body.decode('utf-8'))['email']
-        checkbox = json.loads(s=request.body.decode('utf-8'))['checkbox']
+        data = json.loads(s=request.body.decode('utf-8'))
+        email = data['email']
+        checkbox = data['checkbox']
 
-        if checkbox:
-            return JsonResponse(data={
-                "valid": False,
-                "message": "You are a bot!",
-            })
+        response = [
+            {
+                "valid":
+                    False if not email else
+                    False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                    False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                                      string=email) and Newsletter.objects.filter(email=email).exists() else
+                    True,
+                "message":
+                    "The email field cannot be empty." if not email else
+                    "The e-mail address format is invalid." if not re.match(
+                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                    f"The e-mail address {email} already exists." if re.match(
+                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                        string=email) and Newsletter.objects.filter(
+                        email=email).exists() else
+                    "",
+            },
+            {
+                "valid":
+                    False if checkbox else
+                    True,
+                "message":
+                    "" if checkbox else
+                    "",
+            }
+        ]
 
-        if not email:
-            return JsonResponse(data={
-                "valid": False,
-                "message": "The email address cannot be empty.",
-            })
+        if response[0]['valid'] is True and response[1]['valid'] is False:
+            new_subscriber = Newsletter(email=email)
+            new_subscriber.save()
+
+            return JsonResponse(data=response, safe=False)
 
         else:
-            if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email):
-                if Newsletter.objects.filter(email=email).exists():
-                    return JsonResponse(data={
-                        "valid": False,
-                        "message": "The email address already exists.",
-                    })
-
-                else:
-                    new_subscriber = Newsletter(email=email)
-                    new_subscriber.save()
-
-                    return JsonResponse(data={
-                        "valid": True,
-                        "message": "Congratulations! You have subscribed to our newsletter.",
-                    })
-
-            else:
-                return JsonResponse(data={
-                    "valid": False,
-                    "message": "Invalid email address format.",
-                })
-
-    else:
-        return JsonResponse(data={
-            "valid": False,
-            "message": "The email address was not added.",
-        })
+            return JsonResponse(data=response, safe=False)
 
 
 def about(request):

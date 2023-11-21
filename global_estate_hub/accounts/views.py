@@ -73,7 +73,7 @@ def create_user(request):
                     "The e-mail field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
                         pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                    "The e-mail address already exists." if re.match(
+                    f"The e-mail address {email} already exists." if re.match(
                         pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
                         string=email) and User.objects.filter(email=email).exists() else
                     "",
