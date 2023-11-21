@@ -14,6 +14,13 @@ def index(request):
 def newsletter(request):
     if request.method == 'POST':
         email = json.loads(s=request.body.decode('utf-8'))['email']
+        checkbox = json.loads(s=request.body.decode('utf-8'))['checkbox']
+
+        if checkbox:
+            return JsonResponse(data={
+                "valid": "False",
+                "message": "You are a bot!",
+            })
 
         if not email:
             return JsonResponse(data={
