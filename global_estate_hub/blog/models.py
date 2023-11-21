@@ -104,4 +104,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Comments'
 
     def __str__(self):
-        return self.content
+        return f'{self.full_name} comment.'

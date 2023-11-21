@@ -4,7 +4,7 @@ from django.core.paginator import Paginator
 
 
 def blog(request):
-    paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=9)
+    paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=8)
     page = request.GET.get('page')
 
     pages = paginator.get_page(number=page)
@@ -25,7 +25,7 @@ def blog(request):
 def article_categories(request, category_slug):
     category = get_object_or_404(klass=Category, slug=category_slug)
 
-    paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=9)
+    paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=8)
     page = request.GET.get('page')
 
     pages = paginator.get_page(number=page)
@@ -68,7 +68,7 @@ def blog_results(request):
                     Article.objects.filter(content__icontains=keyword).order_by('-date_posted')
                 )
 
-            paginator = Paginator(object_list=articles, per_page=9)
+            paginator = Paginator(object_list=articles, per_page=8)
             page = request.GET.get('page')
 
             pages = paginator.get_page(number=page)
@@ -88,7 +88,7 @@ def blog_results(request):
         else:
             articles = Article.objects.all().order_by('-date_posted')
 
-            paginator = Paginator(object_list=articles, per_page=3)
+            paginator = Paginator(object_list=articles, per_page=8)
             page = request.GET.get('page')
 
             pages = paginator.get_page(number=page)
