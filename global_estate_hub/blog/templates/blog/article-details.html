@@ -8,9 +8,11 @@
         <div class="row blog__row blog-details__row">
             <div class="article__column">
                 <article class="article">
-                    <div class="article-card">
-                        <div class="card">
-                            <div class="article-image">
+                    <div class="article__full-image">
+                        <img src="{{ article.image.url }}" alt="article image">
+                    </div>
+
+                            <!-- <div class="article-image">
                                 <img src="{{ article.image.url }}">
                             </div>
                             <div class="article-username">
@@ -23,44 +25,18 @@
                                 <h2>{{ article.title }}</h2>
                             </div>
                             <div class="article-content">
-                                {{ article.content }}
+                                {{ article.content|safe }}
                             </div>
                             <div class="article-tags">
                                 {{ tag }}
-                            </div>
-                        </div>
-                    </div>
+                            </div> -->
+
+
                 </article>
             </div>
 
             <div class="sidebar__column">
-                <!-- <aside class="aside">
-                    <form data-blog-search-form class="theme-form">
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
-                        <div class="form__row">
-                            <div class="form__field">
-                                <div class="form__input-wrap">
-                                    <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
-                                    <input data-search type="text" placeholder="Search by keyword">
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                    <div class="aside__module">
-                        <div class="h4 aside__title">Categories</div>
-
-                        <ul class="aside__categories">
-                            {% for category in categories %}
-                            <li class="aside__categories__item">
-                                <a class="aside__categories__link" href="">{{ category }}</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    
-                </aside> -->
+                {% include 'blog/sidebar.html' %}
             </div>
         </div>
     </div>

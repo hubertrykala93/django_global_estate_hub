@@ -1578,6 +1578,7 @@ section.blog {
 }
 
 section.blog .row.title-row {
+  padding-bottom: var(--section-block-space-400);
   text-align: center;
 }
 
@@ -1589,7 +1590,6 @@ section.blog .blog__row {
   display: grid;
   row-gap: var(--section-block-space-400);
   margin: 0 -1.5rem;
-  padding-top: var(--section-block-space-400);
 }
 
 section.blog .blog__row > div {
@@ -1827,6 +1827,13 @@ section.blog .blog-card__column{
 .blog-card__read-more img {
   margin-left: 1rem;
 }
+
+
+/**
+  * Blog article details
+   */
+
+
 
 
 
@@ -2094,6 +2101,24 @@ section.blog .blog-card__column{
 #footer .legals-links .legals-links__link:hover,
 #footer .legals-links .legals-links__link:focus-visible{
   color: var(--clr-secondary);
+}
+
+
+/*----------------------------------*\
+  #ERROR 404 PAGE
+\*----------------------------------*/
+
+.error-page {
+  padding: var(--section-block-space-400) 0 var(--section-block-space-500);
+  text-align: center;
+}
+
+.error-page .error__image {
+  margin: 0 auto var(--section-block-space-400);
+}
+
+.error-page .error__title {
+  margin-bottom: 3rem;
 }
 
 

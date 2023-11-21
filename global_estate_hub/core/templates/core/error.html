@@ -2,4 +2,16 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+  <section class="error-page">
+    <div class="container">
+      <div class="row">
+        <img src="/media/others/error-image.jpg" alt="error image" class="error__image" aria-hidden="true">
+
+        <div class="error__title h2">Sorry, Page not found!</div>
+
+        <a href="/" class="btn secondary-btn">Back to home</a>
+      </div>
+    </div>
+  </section>
+{% endblock %}

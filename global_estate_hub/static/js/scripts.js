@@ -158,8 +158,10 @@ if ($newsletterForm){
     e.preventDefault()
     let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
     const $emailInput = $newsletterForm.querySelector('[data-email]')
+    const $checkBoxInput = $newsletterForm.querySelector('[data-checkbox]')
     const data = {
-      "email": $emailInput.value
+      "email": $emailInput.value,
+      "checkbox": $checkBoxInput.checked
     }
 
     const xhr = new XMLHttpRequest()
