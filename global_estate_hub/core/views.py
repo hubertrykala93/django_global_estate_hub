@@ -18,7 +18,7 @@ def newsletter(request):
 
         if checkbox:
             return JsonResponse(data={
-                "valid": "False",
+                "valid": False,
                 "message": "You are a bot!",
             })
 

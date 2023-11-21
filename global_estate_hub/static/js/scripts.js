@@ -158,7 +158,7 @@ if ($newsletterForm){
     e.preventDefault()
     let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
     const $emailInput = $newsletterForm.querySelector('[data-email]')
-    const $checkBoxInput = $newsletterForm.querySelector('[data-checkbox]')
+    const $checkBoxInput = $newsletterForm.querySelector('[data-form]')
     const data = {
       "email": $emailInput.value,
       "checkbox": $checkBoxInput.checked
@@ -176,6 +176,7 @@ if ($newsletterForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
+
           const info = document.createElement('span')
           info.classList.add('info')
 

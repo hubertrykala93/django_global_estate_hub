@@ -358,6 +358,14 @@ body{
   padding: 0 2.1rem;
 }
 
+form .form__field.form__form{
+  position: absolute;
+  left: -999999px;
+  opacity: 0;
+  visibility: hidden;
+  font-size: 0;
+}
+
 .theme-form .form__row:last-child{
   margin-bottom: 0;
 }
