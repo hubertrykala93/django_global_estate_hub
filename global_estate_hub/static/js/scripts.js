@@ -158,11 +158,12 @@ if ($newsletterForm){
     e.preventDefault()
     let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
     const $emailInput = $newsletterForm.querySelector('[data-email]')
-    const $checkBoxInput = $newsletterForm.querySelector('[data-form]')
+    const $phoneInput = $newsletterForm.querySelector('[name="phone"]')
     const data = {
       "email": $emailInput.value,
-//      "checkbox": $checkBoxInput.checked
+      "phone": $phoneInput.value
     }
+    console.log('wysyłam:', data)
 
     const xhr = new XMLHttpRequest()
     
@@ -176,6 +177,7 @@ if ($newsletterForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
+          console.log('odbieram:', response)
 
           const info = document.createElement('span')
           info.classList.add('info')

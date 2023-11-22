@@ -12,7 +12,7 @@ def index(request):
     })
 
 
-@check_honeypot(field_name='checkbox')
+# @check_honeypot(field_name='checkbox')
 def newsletter(request):
     data = json.loads(s=request.body.decode('utf-8'))
     print(data)
