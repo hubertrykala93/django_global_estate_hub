@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from .models import Newsletter
 import json
 import re
-from honeypot.decorators import check_honeypot
 
 
 def index(request):
@@ -12,14 +11,18 @@ def index(request):
     })
 
 
-# @check_honeypot(field_name='checkbox')
 def newsletter(request):
-    data = json.loads(s=request.body.decode('utf-8'))
-    print(data)
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        print(data)
         email = data['email']
+        spam_verification = data['url']
+        # spam_verification = spam_verification + '123'
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": -1,
+                "message": "",
+            })
 
         response = {
             "valid":
@@ -36,16 +39,17 @@ def newsletter(request):
                     pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
                     string=email) and Newsletter.objects.filter(
                     email=email).exists() else
-                "",
+                "Congratulations! You have successfully subscribed to our newsletter.",
         }
 
-        print(response)
+        if response['valid'] is True:
+            new_subscriber = Newsletter(email=email)
+            new_subscriber.save()
 
-        # if response[0]['valid'] is True and response[1]['valid'] is False:
-        #     new_subscriber = Newsletter(email=email)
-        #     new_subscriber.save()
+            return JsonResponse(data=response)
 
-        return JsonResponse(data=response, safe=False)
+        else:
+            return JsonResponse(data=response)
 
 
 def about(request):

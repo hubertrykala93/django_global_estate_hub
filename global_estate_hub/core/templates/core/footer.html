@@ -20,13 +20,14 @@
 
                 <div class="footer__newsletter">
                     <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
-                        {% render_honeypot_field 'checkbox' %}
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         <div class="form__row">
                             <div class="form__field">
                                 <input data-email type="text" id="email" placeholder="Your Email">
                             </div>
+
+                            {% render_honeypot_field 'url' %}
 
                             <div class="form__submit">
                                 <button type="submit" id="send-newsletter">Subscribe</button>

@@ -158,10 +158,10 @@ if ($newsletterForm){
     e.preventDefault()
     let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
     const $emailInput = $newsletterForm.querySelector('[data-email]')
-    const $phoneInput = $newsletterForm.querySelector('[name="phone"]')
+    const $urlInput = $newsletterForm.querySelector('[name="url"]')
     const data = {
       "email": $emailInput.value,
-      "phone": $phoneInput.value
+      "url": $urlInput.value
     }
     console.log('wysyłam:', data)
 
