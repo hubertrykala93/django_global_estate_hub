@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import Newsletter
 import json
 import re
+from honeypot.decorators import check_honeypot
 
 
 def index(request):
@@ -11,48 +12,40 @@ def index(request):
     })
 
 
+@check_honeypot(field_name='checkbox')
 def newsletter(request):
+    data = json.loads(s=request.body.decode('utf-8'))
+    print(data)
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        print(data)
         email = data['email']
-        checkbox = data['checkbox']
 
-        response = [
-            {
-                "valid":
-                    False if not email else
-                    False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                    False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                                      string=email) and Newsletter.objects.filter(email=email).exists() else
-                    True,
-                "message":
-                    "The email field cannot be empty." if not email else
-                    "The e-mail address format is invalid." if not re.match(
-                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                    f"The e-mail address {email} already exists." if re.match(
-                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                        string=email) and Newsletter.objects.filter(
-                        email=email).exists() else
-                    "",
-            },
-            {
-                "valid":
-                    None if checkbox else
-                    True,
-                "message":
-                    None if checkbox else
-                    "",
-            }
-        ]
+        response = {
+            "valid":
+                False if not email else
+                False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                                  string=email) and Newsletter.objects.filter(email=email).exists() else
+                True,
+            "message":
+                "The email field cannot be empty." if not email else
+                "The e-mail address format is invalid." if not re.match(
+                    pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                f"The e-mail address {email} already exists." if re.match(
+                    pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                    string=email) and Newsletter.objects.filter(
+                    email=email).exists() else
+                "",
+        }
 
-        if response[0]['valid'] is True and response[1]['valid'] is False:
-            new_subscriber = Newsletter(email=email)
-            new_subscriber.save()
+        print(response)
 
-            return JsonResponse(data=response, safe=False)
+        # if response[0]['valid'] is True and response[1]['valid'] is False:
+        #     new_subscriber = Newsletter(email=email)
+        #     new_subscriber.save()
 
-        else:
-            return JsonResponse(data=response, safe=False)
+        return JsonResponse(data=response, safe=False)
 
 
 def about(request):

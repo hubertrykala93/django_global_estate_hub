@@ -1,3 +1,5 @@
+{% load honeypot %}
+
 <footer id="footer">
     <div class="footer-shape" aria-hidden="true">
         <img src="/media/shapes/footer.svg" alt="footer property shape">
@@ -18,6 +20,7 @@
 
                 <div class="footer__newsletter">
                     <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
+                        {% render_honeypot_field 'checkbox' %}
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         <div class="form__row">
@@ -25,10 +28,10 @@
                                 <input data-email type="text" id="email" placeholder="Your Email">
                             </div>
 
-                            <div class="form__field form__form">
-                                Leave this input blank.
-                                <input data-form type="checkbox">
-                            </div>
+<!--                            <div class="form__field form__form">-->
+<!--                                Leave this input blank.-->
+<!--                                <input data-form type="checkbox">-->
+<!--                            </div>-->
 
                             <div class="form__submit">
                                 <button type="submit" id="send-newsletter">Subscribe</button>

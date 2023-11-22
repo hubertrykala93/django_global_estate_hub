@@ -161,7 +161,7 @@ if ($newsletterForm){
     const $checkBoxInput = $newsletterForm.querySelector('[data-form]')
     const data = {
       "email": $emailInput.value,
-      "checkbox": $checkBoxInput.checked
+//      "checkbox": $checkBoxInput.checked
     }
 
     const xhr = new XMLHttpRequest()
