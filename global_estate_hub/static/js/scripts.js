@@ -154,6 +154,38 @@ if($partnersCarousel){
 const $newsletterForm = document.querySelector('[data-newsletter-form]')
 
 if ($newsletterForm){
+
+  const newsletterValidation = (response) => {
+    let $messageNode = $newsletterForm.querySelector('.info')
+    if ( response.valid < 0 ){ 
+      if ($messageNode) { $messageNode.remove() }
+      console.log('bot')
+      return false
+    }
+    
+    if ( !$messageNode ){ 
+      const info = document.createElement('span')
+      info.classList.add('info')
+      $newsletterForm.append(info) 
+    }
+    $messageNode = $newsletterForm.querySelector('.info')
+    if ( response.valid === 0) {
+      $messageNode.classList.add('error')
+      $messageNode.classList.remove('success')
+      console.log('błąd')
+    } else if ( response.valid > 0 ) {
+      $messageNode.classList.add('success')
+      $messageNode.classList.remove('error')
+      $newsletterForm.querySelector('[data-email]').value = ""
+      console.log('dobrze')
+      setTimeout(() => {
+        $messageNode.remove()
+      }, "3000");
+    }
+
+    $messageNode.textContent = response.message
+  }
+
   $newsletterForm.addEventListener('submit', e =>{
     e.preventDefault()
     let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
@@ -178,27 +210,28 @@ if ($newsletterForm){
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('odbieram:', response)
+          newsletterValidation(response)
 
-          const info = document.createElement('span')
-          info.classList.add('info')
+          // const info = document.createElement('span')
+          // info.classList.add('info')
 
-          let $messageNode = $newsletterForm.querySelector('.info')
-          if ( !$messageNode ){ 
-            $newsletterForm.append(info) 
-          }
-          $messageNode = $newsletterForm.querySelector('.info')
-          if (response.valid){
-            $messageNode.classList.add('success')
-            $messageNode.classList.remove('error')
-            $emailInput.value = ""
-            setTimeout(() => {
-              $messageNode.remove()
-            }, "3000");
-          } else{
-            $messageNode.classList.add('error')
-            $messageNode.classList.remove('success')
-          }
-          $messageNode.textContent = response.message
+          // let $messageNode = $newsletterForm.querySelector('.info')
+          // if ( !$messageNode ){ 
+          //   $newsletterForm.append(info) 
+          // }
+          // $messageNode = $newsletterForm.querySelector('.info')
+          // if (response.valid){
+            // $messageNode.classList.add('success')
+            // $messageNode.classList.remove('error')
+            // $emailInput.value = ""
+            // setTimeout(() => {
+            //   $messageNode.remove()
+            // }, "3000");
+          // } else{
+          //   $messageNode.classList.add('error')
+          //   $messageNode.classList.remove('success')
+          // }
+          // $messageNode.textContent = response.message
       }
     }
   })
