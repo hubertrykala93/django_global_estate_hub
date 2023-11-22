@@ -36,15 +36,15 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=50, unique=True, null=False, blank=False)
-    email = models.EmailField(max_length=100, unique=True, null=False, blank=False)
+    username = models.CharField(max_length=50, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=now)
-    last_login = models.DateTimeField(blank=True, null=True)
+    last_login = models.DateTimeField(null=True)
 
     objects = CustomUserManager()
 
@@ -80,7 +80,7 @@ class OneTimePasswordManager(models.Manager):
 class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
-    created_at = models.DateTimeField(default=now, blank=True)
+    created_at = models.DateTimeField(default=now)
     expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
     objects = OneTimePasswordManager()
 
@@ -94,16 +94,24 @@ class OneTimePassword(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, null=True, blank=True)
-    last_name = models.CharField(max_length=100, null=True, blank=True)
+    first_name = models.CharField(max_length=100, null=True)
+    last_name = models.CharField(max_length=100, null=True)
+    company_name = models.CharField(max_length=100, null=True)
     gender = models.CharField(max_length=100, choices=(
         ('Not Defined', 'Not Defined'),
         ('Male', 'Male'),
         ('Female', 'Female')
     ))
-    country = models.CharField(max_length=100, null=True, blank=True)
-    province = models.CharField(max_length=100, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True)
+    province = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=100, null=True)
+    street = models.CharField(max_length=100, null=True)
+    postal_code = models.CharField(max_length=20, null=True)
+    phone_number = models.CharField(max_length=150, null=True)
+    website_url = models.URLField(max_length=200, null=True)
+    facebook_url = models.URLField(max_length=200, null=True)
+    instagram_url = models.URLField(max_length=200, null=True)
+    linkedin_url = models.URLField(max_length=200, null=True)
 
     class Meta:
         verbose_name = 'Profile'

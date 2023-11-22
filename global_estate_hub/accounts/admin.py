@@ -21,6 +21,11 @@ class AdminOneTimePassword(admin.ModelAdmin):
 
 @admin.register(Profile)
 class AdminProfile(admin.ModelAdmin):
-    list_display = ['user', 'first_name', 'last_name', 'gender', 'country', 'province', 'city']
-    list_editable = ['first_name', 'last_name', 'gender', 'country', 'province', 'city']
-    list_filter = ['last_name', 'country', 'province', 'city']
+    list_display = ['user', 'first_name', 'last_name', 'company_name', 'gender', 'country', 'province', 'city',
+                    'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
+                    'linkedin_url']
+    list_editable = ['first_name', 'last_name', 'company_name', 'gender', 'country', 'province', 'city',
+                     'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
+                     'linkedin_url']
+    list_filter = ['last_name', 'company_name', 'country', 'province', 'city', 'street', 'postal_code']
+    list_display_links = ['user']

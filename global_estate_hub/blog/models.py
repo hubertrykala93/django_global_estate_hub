@@ -16,7 +16,7 @@ class Category(models.Model):
         ('Buys', 'Buys'),
     ])
 
-    slug = models.SlugField(max_length=50, null=True, unique=True)
+    slug = models.SlugField(max_length=50, null=True)
 
     class Meta:
         verbose_name = 'Category'
@@ -57,7 +57,7 @@ class Article(models.Model):
     content = RichTextUploadingField(max_length=10000, unique=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to=Tag)
-    slug = models.SlugField(max_length=200, null=True, unique=True)
+    slug = models.SlugField(max_length=200, unique=True, null=True)
 
     class Meta:
         verbose_name = 'Article'

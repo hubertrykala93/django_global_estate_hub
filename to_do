@@ -1,5 +1,6 @@
 @Szymon-Levy
 
+0. contact.html i contact form,
 1. article-details.html,
 2. article-details.html ajax form,
 4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html,

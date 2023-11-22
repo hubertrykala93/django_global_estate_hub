@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from .models import Newsletter
 import json
 import re
+from django.core.mail import BadHeaderError, EmailMessage
+from django.template.loader import render_to_string
 
 
 def index(request):
@@ -16,7 +18,7 @@ def newsletter(request):
         data = json.loads(s=request.body.decode('utf-8'))
         email = data['email']
         spam_verification = data['url']
-        # spam_verification = spam_verification + '123'
+        spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -26,11 +28,11 @@ def newsletter(request):
 
         response = {
             "valid":
-                False if not email else
-                False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                                  string=email) and Newsletter.objects.filter(email=email).exists() else
-                True,
+                0 if not email else
+                0 if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                0 if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                              string=email) and Newsletter.objects.filter(email=email).exists() else
+                1,
             "message":
                 "The email field cannot be empty." if not email else
                 "The e-mail address format is invalid." if not re.match(
