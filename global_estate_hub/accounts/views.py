@@ -129,7 +129,7 @@ def create_user(request):
 
             try:
                 message = EmailMessage(
-                    subject="Account activation request.",
+                    subject='Account activation request.',
                     body=render_to_string(template_name='accounts/activation_email.html', context={
                         'user': user,
                         'domain': get_current_site(request=request),
@@ -163,7 +163,7 @@ def activate(request, uidb64, token):
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
         user = User.objects.get(pk=uid)
     except:
-        user = None
+        return redirect(to=reverse(viewname='register'))
 
     if user and token_generator.check_token(user=user, token=token):
         user.is_verified = True

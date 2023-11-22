@@ -5,6 +5,10 @@ import json
 import re
 from django.core.mail import BadHeaderError, EmailMessage
 from django.template.loader import render_to_string
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def index(request):
@@ -18,7 +22,7 @@ def newsletter(request):
         data = json.loads(s=request.body.decode('utf-8'))
         email = data['email']
         spam_verification = data['url']
-        spam_verification = spam_verification + '123'
+        # spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -44,11 +48,30 @@ def newsletter(request):
                 "Congratulations! You have successfully subscribed to our newsletter.",
         }
 
-        if response['valid'] is True:
+        if response['valid'] == 1:
             new_subscriber = Newsletter(email=email)
             new_subscriber.save()
 
-            return JsonResponse(data=response)
+            try:
+                message = EmailMessage(
+                    subject='Thank you for subscribing to our newsletter!',
+                    body=render_to_string(template_name='core/newsletter_mail.html', context={
+                        "email": email,
+                    }),
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
+                    to=[email],
+                )
+
+                message.send(fail_silently=True)
+
+                return JsonResponse(data=response)
+
+            except BadHeaderError:
+                return JsonResponse(data={
+                    "valid": 0,
+                    "message": "Unfortunately, we were unable to sign up your email for our newsletter. "
+                               "Please try again.",
+                })
 
         else:
             return JsonResponse(data=response)
@@ -69,12 +92,6 @@ def properties(request):
 def faq(request):
     return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',
-    })
-
-
-def pages(request):
-    return render(request=request, template_name='core/pages.html', context={
-        'title': 'Pages',
     })
 
 

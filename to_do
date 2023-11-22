@@ -3,7 +3,7 @@
 0. contact.html i contact form,
 1. article-details.html,
 2. article-details.html ajax form,
-4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html,
+4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html i core/templates/core/newsletter_mail.html
 6. stylizacja core/templates/core/messages.html,
 7. poprawa forma rejestracji - dodanie wiadomości o aktywacji konta -> accounts/views.py, 145 linia kodu, dodatkowo w consoli sie wyswietlaja jakies bledy przy klikaniu sign up
 8. captcha do wszystkich formów,
@@ -12,3 +12,4 @@ te pola, aby były poprawne i klikniesz sign up to te errory powinny znikać a o
 Podejrzewam, że tak może być przy wszystkich formach, więc to ogarnij.
 
 @hubertrykala93
+1. Sprawdzic, czy link aktywacyjny redirectuje do register.
