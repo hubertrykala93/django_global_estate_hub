@@ -37,10 +37,10 @@ def newsletter(request):
             },
             {
                 "valid":
-                    False if checkbox else
+                    None if checkbox else
                     True,
                 "message":
-                    "" if checkbox else
+                    None if checkbox else
                     "",
             }
         ]
