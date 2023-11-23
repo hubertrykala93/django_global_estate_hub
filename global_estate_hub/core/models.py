@@ -19,10 +19,10 @@ class ContactMail(models.Model):
     full_name = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=150)
     email = models.CharField(max_length=150)
-    message = models.TextField(max_length=2000)
+    content = models.TextField(max_length=2000)
 
     class Meta:
-        verbose_name_plural = 'Contact Form Mails'
+        verbose_name_plural = 'Contact Mails'
         ordering = ['-date_sent']
 
     def __str__(self):

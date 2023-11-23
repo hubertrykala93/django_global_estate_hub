@@ -591,17 +591,17 @@ if ($contactUsForm) {
   $contactUsForm.addEventListener('submit', e =>{
     e.preventDefault()
     let csrftoken = $contactUsForm.querySelector('[name="csrftoken"]').value
-    const $firstNameInput = $contactUsForm.querySelector('[data-firstname]')
+    const $fullNameInput = $contactUsForm.querySelector('[data-fullname]')
     const $phoneInput = $contactUsForm.querySelector('[data-phone]')
     const $emailInput = $contactUsForm.querySelector('[data-email]')
-    const $messageInput = $contactUsForm.querySelector('[data-message]')
+    const $contentInput = $contactUsForm.querySelector('[data-content]')
     const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
-      "firstName": $firstNameInput.value,
+      "fullName": $fullNameInput.value,
       "phone": $phoneInput.value,
       "email": $emailInput.value,
-      "message": $messageInput.value,
+      "content": $contentInput.value,
       "url": $urlInput.value,
     }
 

@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from .models import Newsletter
+from .models import Newsletter, ContactMail
 import json
 import re
 from django.core.mail import BadHeaderError, EmailMultiAlternatives
@@ -115,4 +115,94 @@ def error(request):
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        print(data)
+        fullname_field, phone_field, email_field, content_field = tuple(data.keys())[:-1]
+
+        fullname = data['fullName']
+        phone_number = data['phone']
+        email = data['email']
+        content = data['content']
+        spam_verification = data['url']
+        # spam_verification = spam_verification + '123'
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data=[], safe=False)
+
+        response = [
+            {
+                "valid":
+                    False if not fullname else
+                    True,
+                "field": fullname_field,
+                "message":
+                    "The full name field cannot be empty" if not fullname else
+                    "",
+            },
+            {
+                "valid":
+                    False if not phone_number else
+                    True,
+                "field": phone_field,
+                "message":
+                    "The phone number field cannot be empty." if not phone_number else
+                    "",
+            },
+            {
+                "valid":
+                    False if not email else
+                    True,
+                "field": email_field,
+                "message":
+                    "The e-mail field cannot be empty." if not email else
+                    "",
+            },
+            {
+                "valid":
+                    False if not content else
+                    True,
+                "field": content_field,
+                "message":
+                    "The message field cannot be empty." if not content else
+                    "",
+            }
+        ]
+
+        validation = list(set([data['valid'] for data in response]))
+
+        if len(validation) == 1:
+            if validation[0]:
+                new_mail = ContactMail(full_name=fullname, phone_number=phone_number, email=email, content=content)
+                new_mail.save()
+
+                try:
+                    html_message = render_to_string(template_name='core/contact_mail.html', context={
+                        'fullname': fullname,
+                        'phone_number': phone_number,
+                        'email': email,
+                        'content': content,
+                    })
+                    plain_message = strip_tags(html_message)
+
+                    message = EmailMultiAlternatives(
+                        subject=f"E-mail from Global Estate Hub.",
+                        body=plain_message,
+                        from_email=os.environ.get("EMAIL_HOST_USER"),
+                        to=[os.environ.get("EMAIL_HOST_USER")],
+                        headers={'Reply-To': email},
+                    )
+
+                    message.attach_alternative(content=html_message, mimetype='text/html')
+                    # message.send(fail_silently=True)
+
+                    return JsonResponse(data=response, safe=False)
+
+                except BadHeaderError:
+                    return JsonResponse(data={
+                        "valid": False,
+                        "message": "The message could not be sent."
+                    }, safe=False)
+
+            else:
+                return JsonResponse(data=response, safe=False)
+
+        else:
+            return JsonResponse(data=response, safe=False)
