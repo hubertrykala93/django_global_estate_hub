@@ -159,7 +159,6 @@ if ($newsletterForm){
     let $messageNode = $newsletterForm.querySelector('.info')
     if ( response.valid < 0 ){ 
       if ($messageNode) { $messageNode.remove() }
-      console.log('bot')
       return false
     }
     
@@ -172,12 +171,10 @@ if ($newsletterForm){
     if ( response.valid === 0) {
       $messageNode.classList.add('error')
       $messageNode.classList.remove('success')
-      console.log('błąd')
     } else if ( response.valid > 0 ) {
       $messageNode.classList.add('success')
       $messageNode.classList.remove('error')
       $newsletterForm.querySelector('[data-email]').value = ""
-      console.log('dobrze')
       setTimeout(() => {
         $messageNode.remove()
       }, "3000");
@@ -195,7 +192,6 @@ if ($newsletterForm){
       "email": $emailInput.value,
       "url": $urlInput.value
     }
-    console.log('wysyłam:', data)
 
     const xhr = new XMLHttpRequest()
     
@@ -209,29 +205,7 @@ if ($newsletterForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odbieram:', response)
           newsletterValidation(response)
-
-          // const info = document.createElement('span')
-          // info.classList.add('info')
-
-          // let $messageNode = $newsletterForm.querySelector('.info')
-          // if ( !$messageNode ){ 
-          //   $newsletterForm.append(info) 
-          // }
-          // $messageNode = $newsletterForm.querySelector('.info')
-          // if (response.valid){
-            // $messageNode.classList.add('success')
-            // $messageNode.classList.remove('error')
-            // $emailInput.value = ""
-            // setTimeout(() => {
-            //   $messageNode.remove()
-            // }, "3000");
-          // } else{
-          //   $messageNode.classList.add('error')
-          //   $messageNode.classList.remove('success')
-          // }
-          // $messageNode.textContent = response.message
       }
     }
   })
@@ -602,6 +576,48 @@ if ($forgotPasswordWrapper){
           } else{
            firstStepValidation($forgotPasswordForm, response)
           }
+      }
+    }
+  })
+}
+
+/**
+  * Contact us ajax
+   */
+
+const $contactUsForm = document.querySelector('[data-contact-form]')
+
+if ($contactUsForm) {
+  $contactUsForm.addEventListener('submit', e =>{
+    e.preventDefault()
+    let csrftoken = $contactUsForm.querySelector('[name="csrftoken"]').value
+    const $firstNameInput = $contactUsForm.querySelector('[data-firstname]')
+    const $phoneInput = $contactUsForm.querySelector('[data-phone]')
+    const $emailInput = $contactUsForm.querySelector('[data-email]')
+    const $messageInput = $contactUsForm.querySelector('[data-message]')
+    // const $urlInput = $contactUsForm.querySelector('[name="url"]')
+
+    const data = {
+      "firstName": $firstNameInput.value,
+      "phone": $phoneInput.value,
+      "email": $emailInput.value,
+      "message": $messageInput.value,
+      // "url": $urlInput.value
+    }
+
+    console.log(data)
+
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('POST', 'contact-us', true)
+    xhr.setRequestHeader('X-CSRFToken', csrftoken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
       }
     }
   })

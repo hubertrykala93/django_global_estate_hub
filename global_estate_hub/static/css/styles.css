@@ -103,7 +103,8 @@ button{
 }
 
 input,
-button{
+button,
+textarea{
   font-family: inherit;
   border: none;
   outline: none;
@@ -236,6 +237,10 @@ body{
 
 .btn .btn-icon.right{
   margin-left: 1rem;
+}
+
+.btn--line {
+  border: 2px solid;
 }
 
 
@@ -399,23 +404,37 @@ form .form__field.form__form{
 
 .theme-form input[type="text"],
 .theme-form input[type="password"],
-.theme-form input[type="number"] {
+.theme-form input[type="number"],
+.theme-form textarea {
   width: 100%;
   background-color: var(--clr-input-bg);
   border-radius: var(--br-500);
   border: 1px solid #E1E1E1;
-  height: 55px;
-  padding: 0 4.2rem;
   font-size: var(--fs-body-400);
   color: var(--clr-black);
   transition: box-shadow .2s;
 }
 
-.theme-form input:focus-visible {
+.theme-form input[type="text"],
+.theme-form input[type="password"],
+.theme-form input[type="number"] {
+  height: 55px;
+  padding: 0 1.8rem;
+}
+
+.theme-form textarea {
+  padding: 1.8rem;
+  min-height: 150px;
+  resize: none;
+}
+
+.theme-form input:focus-visible,
+.theme-form textarea:focus-visible {
   box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
 }
 
-.theme-form input::placeholder{
+.theme-form input::placeholder,
+.theme-form textarea::placeholder{
   color: var(--clr-body-text);
 }
 
@@ -1844,6 +1863,88 @@ section.blog .blog-card__column{
 
 
 
+/*----------------------------------*\
+  #CONTACT PAGE
+\*----------------------------------*/
+
+.get-in-touch {
+  padding: var(--section-block-space-400) 0;
+}
+
+.get-in-touch .section-title {
+  margin-bottom: 3rem;
+}
+
+.get-in-touch .icons-column {
+  margin-bottom: 4rem;
+}
+
+.get-in-touch .contact__icons {
+  display: flex;
+  flex-direction: column;
+}
+
+.get-in-touch .contact__icons li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.get-in-touch .contact__icons li:last-child{
+  margin-bottom: 0;
+}
+
+.get-in-touch .contact__icons li img {
+  flex: 0 0 42px;
+  margin-right: 10px;
+}
+
+.get-in-touch .contact__icons li span{
+  font-size: var(--fs-body-300);
+}
+
+.get-in-touch .form__title {
+  margin-bottom: 3rem;
+  font-size: 2.4rem;
+  font-weight: 600;
+  line-height: normal;
+  color: var(--clr-dark);
+}
+
+.get-in-touch .contact__form {
+  padding: 3rem 1.5rem;
+  border-radius: var(--br-500);
+  box-shadow: 0 5px 30px rgb(199, 199, 199, 0.3)
+}
+
+.contact__map .contact__map__row {
+  height: 300px;
+}
+
+.call-to-action {
+  padding: var(--section-block-space-400) 0 var(--section-block-space-500);
+}
+
+.call-to-action .call-to-action__wrapper {
+  padding: 4rem 1.5rem;
+  border-radius: var(--br-500);
+  background-color: var(--clr-primary);
+}
+
+.call-to-action .call-to-action__title{
+  margin-bottom: 3rem;
+  color: var(--clr-white);
+}
+
+.call-to-action .btn--line {
+  color: white;
+  font-size: 1.8rem;
+}
+
+.call-to-action .btn--line:hover,
+.call-to-action .btn--line:focus-visible{
+  background-color: var(--clr-secondary);
+}
 
 
 /*----------------------------------*\
@@ -2362,6 +2463,34 @@ section.blog .blog-card__column{
     order: 0;
   }
 
+
+  /*----------------------------------*\
+    #CONTACT PAGE
+  \*----------------------------------*/
+
+  .get-in-touch .contact__icons li span {
+    font-size: var(--fs-body-400);
+  }
+
+  .get-in-touch .contact__form {
+    padding: 3rem;
+    position: relative;
+    background-color: white;
+    z-index: 2;
+  }
+
+  .call-to-action .call-to-action__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6.8rem 4rem;
+  }
+
+  .call-to-action .call-to-action__title {
+    margin-bottom: 0;
+  }
+
+
   /*----------------------------------*\
     #FOOTER
   \*----------------------------------*/
@@ -2596,6 +2725,28 @@ section.blog .blog-card__column{
 
     .faq .faq__image {
       height: 100%;
+    }
+
+
+    /*----------------------------------*\
+      #CONTACT PAGE
+    \*----------------------------------*/
+
+    .get-in-touch .row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .get-in-touch .contact__form {
+      margin-bottom: -1000px;
+    }
+
+    .get-in-touch .icons-column {
+      margin-bottom: 0;
+    }
+
+    .contact__map .contact__map__row {
+      height: 608px;
     }
 
 
