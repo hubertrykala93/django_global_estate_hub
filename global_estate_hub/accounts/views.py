@@ -9,7 +9,8 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
-from django.core.mail import BadHeaderError, EmailMessage
+from django.core.mail import BadHeaderError, EmailMessage, EmailMultiAlternatives
+from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -128,18 +129,22 @@ def create_user(request):
             user.save()
 
             try:
-                message = EmailMessage(
+                html_message = render_to_string(template_name='accounts/activation_email.html', context={
+                    'user': user,
+                    'domain': get_current_site(request=request),
+                    'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                    'token': token_generator.make_token(user=user),
+                })
+                plain_message = strip_tags(html_message)
+
+                message = EmailMultiAlternatives(
                     subject='Account activation request.',
-                    body=render_to_string(template_name='accounts/activation_email.html', context={
-                        'user': user,
-                        'domain': get_current_site(request=request),
-                        'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
-                        'token': token_generator.make_token(user=user),
-                    }),
+                    body=plain_message,
                     from_email=os.environ.get("EMAIL_HOST_USER"),
                     to=[user.email]
                 )
 
+                message.attach_alternative(content=html_message, mimetype='text/html')
                 message.send(fail_silently=True)
 
                 return JsonResponse(data={
@@ -272,16 +277,20 @@ def send_password(request):
                     one_time_password.save()
 
                     try:
-                        message = EmailMessage(
+                        html_message = render_to_string(template_name='accounts/password_reset_email.html', context={
+                            'one_time_password': one_time_password.password,
+                            'expire_password': one_time_password.expires_in,
+                        })
+                        plain_message = strip_tags(html_message)
+
+                        message = EmailMultiAlternatives(
                             subject=f"Password reset request for {user.username}.",
-                            body=render_to_string(template_name='accounts/password_reset_email.html', context={
-                                'one_time_password': one_time_password.password,
-                                'expire_password': one_time_password.expires_in,
-                            }),
+                            body=plain_message,
                             from_email=os.environ.get("EMAIL_HOST_USER"),
                             to=[user.email]
                         )
 
+                        message.attach_alternative(content=html_message, mimetype='text/html')
                         message.send(fail_silently=True)
 
                         return JsonResponse(data={

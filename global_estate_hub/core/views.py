@@ -3,10 +3,11 @@ from django.http import JsonResponse
 from .models import Newsletter
 import json
 import re
-from django.core.mail import BadHeaderError, EmailMessage
+from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
+from django.utils.html import strip_tags
 
 load_dotenv()
 
@@ -53,15 +54,19 @@ def newsletter(request):
             new_subscriber.save()
 
             try:
-                message = EmailMessage(
+                html_message = render_to_string(template_name='core/newsletter_mail.html', context={
+                    'email': email,
+                })
+                plain_message = strip_tags(html_message)
+
+                message = EmailMultiAlternatives(
                     subject='Thank you for subscribing to our newsletter!',
-                    body=render_to_string(template_name='core/newsletter_mail.html', context={
-                        "email": email,
-                    }),
+                    body=plain_message,
                     from_email=os.environ.get("EMAIL_HOST_USER"),
                     to=[email],
                 )
 
+                message.attach_alternative(content=html_message, mimetype='text/html')
                 message.send(fail_silently=True)
 
                 return JsonResponse(data=response)
