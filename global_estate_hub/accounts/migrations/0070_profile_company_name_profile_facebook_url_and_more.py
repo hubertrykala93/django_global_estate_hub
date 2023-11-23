@@ -3,11 +3,9 @@
 import datetime
 from django.db import migrations, models
 import django.utils.timezone
-import phone_field.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("accounts", "0069_alter_onetimepassword_expires_in"),
     ]
@@ -32,7 +30,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="profile",
             name="phone_number",
-            field=phone_field.models.PhoneField(max_length=31, null=True),
+            field=models.CharField(max_length=31, null=True),
         ),
         migrations.AddField(
             model_name="profile",

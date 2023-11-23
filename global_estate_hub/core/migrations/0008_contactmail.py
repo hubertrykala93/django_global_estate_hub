@@ -2,11 +2,9 @@
 
 from django.db import migrations, models
 import django.utils.timezone
-import phone_field.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("core", "0007_newsletter_is_verified"),
     ]
@@ -26,7 +24,7 @@ class Migration(migrations.Migration):
                 ),
                 ("date_sent", models.DateTimeField(default=django.utils.timezone.now)),
                 ("full_name", models.CharField(max_length=150)),
-                ("phone_number", phone_field.models.PhoneField(max_length=31)),
+                ("phone_number", models.CharField(max_length=31)),
                 ("email", models.CharField(max_length=150)),
                 ("message", models.TextField(max_length=2000)),
             ],

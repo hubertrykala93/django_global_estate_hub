@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load honeypot %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -7,112 +8,118 @@
   - #CONTACT ICONS & FORM
 -->
 <section class="get-in-touch" id="contact-form">
-  <div class="container">
-    <div class="row">
-      <div class="icons-column">
-        <div class="section-title" data-sectiontitle-animation>
-          <h2 class="main-title h2">Let’s Get In Touch</h2>
-        </div>
-
-        <ul class="contact__icons">
-          <li>
-            <img src="/media/icons/contact-address.svg" alt="address icon">
-            <span>150 Brunswick Street, Fitzory Vic 3065</span>
-          </li>
-
-          <li>
-            <img src="/media/icons/contact-phone.svg" alt="phone icon">
-            <span>+977 9826813451</span>
-          </li>
-
-          <li>
-            <img src="/media/icons/contact-email.svg" alt="email icon">
-            <span>Info@shapezone.com</span>
-          </li>
-        </ul>
-      </div>
-      <div class="form-column">
-        <form data-contact-form class="theme-form contact__form">
-          <div class="form__title">Have Questions? Get in touch!</div>
-
-          <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
-          <div class="form__row">
-              <div class="form__field">
-                  <label for="contact-firstname">First name</label>
-                  <div class="form__input-wrap">
-                      <input data-firstname type="text" id="contact-firstname" placeholder="First name">
-                  </div>
-              </div>
-          </div>
-
-          <div class="form__row">
-            <div class="form__field">
-                <label for="contact-phone">Phone Number</label>
-                <div class="form__input-wrap">
-                    <input data-phone type="text" id="contact-phone" placeholder="Number">
+    <div class="container">
+        <div class="row">
+            <div class="icons-column">
+                <div class="section-title" data-sectiontitle-animation>
+                    <h2 class="main-title h2">Let’s Get In Touch</h2>
                 </div>
+
+                <ul class="contact__icons">
+                    <li>
+                        <img src="/media/icons/contact-address.svg" alt="address icon">
+                        <span>150 Brunswick Street, Fitzory Vic 3065</span>
+                    </li>
+
+                    <li>
+                        <img src="/media/icons/contact-phone.svg" alt="phone icon">
+                        <span>+977 9826813451</span>
+                    </li>
+
+                    <li>
+                        <img src="/media/icons/contact-email.svg" alt="email icon">
+                        <span>Info@shapezone.com</span>
+                    </li>
+                </ul>
             </div>
-          </div>
+            <div class="form-column">
+                <form data-contact-form class="theme-form contact__form" action="{% url 'send-message' %}">
+                    <div class="form__title">Have Questions? Get in touch!</div>
 
-          <div class="form__row">
-              <div class="form__field">
-                  <label for="contact-email">Email</label>
-                  <div class="form__input-wrap">
-                      <input data-email type="text" id="contact-email" placeholder="Your Email">
-                  </div>
-              </div>
-          </div>
+                    <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-          <div class="form__row">
-              <div class="form__field">
-                  <label for="contact-message">Message</label>
-                  <div class="form__input-wrap">
-                    <textarea data-message id="contact-message" placeholder="Type your message"></textarea>
-                  </div>
-              </div>
-          </div>
+                    {% render_honeypot_field 'url' %}
 
-          <div class="form__row submit-row">
-              <div class="form__field form__submit">
-                  <button class="btn secondary-btn" type="submit">Send message</button>
-              </div>
-          </div>
-      </form>
-      </div>
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="contact-firstname">First name</label>
+                            <div class="form__input-wrap">
+                                <input data-firstname type="text" id="contact-firstname" placeholder="First name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="contact-phone">Phone Number</label>
+                            <div class="form__input-wrap">
+                                <input data-phone type="text" id="contact-phone" placeholder="Number">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="contact-email">Email</label>
+                            <div class="form__input-wrap">
+                                <input data-email type="text" id="contact-email" placeholder="Your Email">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form__row">
+                        <div class="form__field">
+                            <label for="contact-message">Message</label>
+                            <div class="form__input-wrap">
+                                <textarea data-message id="contact-message" placeholder="Type your message"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form__row submit-row">
+                        <div class="form__field form__submit">
+                            <button class="btn secondary-btn" type="submit">Send message</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </section>
 
 <!--
   - #CONTACT MAP
 -->
 <section class="contact__map">
-  <div class="row contact__map__row">
-    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59968.88856251052!2d144.99407278317634!3d-37.819875575803266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad64323ea85662b%3A0x27e3916238e0d6f2!2s150%20Brunswick%20St%2C%20Fitzroy%20VIC%203065%2C%20Australia!5e0!3m2!1spl!2spl!4v1700761536081!5m2!1spl!2spl" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
+    <div class="row contact__map__row">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59968.88856251052!2d144.99407278317634!3d-37.819875575803266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad64323ea85662b%3A0x27e3916238e0d6f2!2s150%20Brunswick%20St%2C%20Fitzroy%20VIC%203065%2C%20Australia!5e0!3m2!1spl!2spl!4v1700761536081!5m2!1spl!2spl"
+                width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
 </section>
 
 <!--
   - #CONTACT CALL TO ACTION
 -->
 <section class="call-to-action">
-  <div class="container">
-    <div class="row">
-      <div class="call-to-action__wrapper">
-        <div class="text-column">
-          <div class="call-to-action__title h2">Need Help? Talk To Our Expert</div>
-        </div>
+    <div class="container">
+        <div class="row">
+            <div class="call-to-action__wrapper">
+                <div class="text-column">
+                    <div class="call-to-action__title h2">Need Help? Talk To Our Expert</div>
+                </div>
 
-        <div class="button-column">
-          <a href="#contact-form" class="btn btn--line">
-            Contact us
-            <img class="btn-icon right" src="/media/icons/call-to-action-btn-arrow.svg" alt="contact us" aria-hidden="true">
-          </a>
+                <div class="button-column">
+                    <a href="#contact-form" class="btn btn--line">
+                        Contact us
+                        <img class="btn-icon right" src="/media/icons/call-to-action-btn-arrow.svg" alt="contact us"
+                             aria-hidden="true">
+                    </a>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </section>
 
 {% endblock %}

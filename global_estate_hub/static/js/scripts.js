@@ -595,21 +595,21 @@ if ($contactUsForm) {
     const $phoneInput = $contactUsForm.querySelector('[data-phone]')
     const $emailInput = $contactUsForm.querySelector('[data-email]')
     const $messageInput = $contactUsForm.querySelector('[data-message]')
-    // const $urlInput = $contactUsForm.querySelector('[name="url"]')
+    const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
       "firstName": $firstNameInput.value,
       "phone": $phoneInput.value,
       "email": $emailInput.value,
       "message": $messageInput.value,
-      // "url": $urlInput.value
+      "url": $urlInput.value,
     }
 
     console.log(data)
 
     const xhr = new XMLHttpRequest()
 
-    xhr.open('POST', 'contact-us', true)
+    xhr.open('POST', 'send-message', true)
     xhr.setRequestHeader('X-CSRFToken', csrftoken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))

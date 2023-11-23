@@ -110,3 +110,9 @@ def error(request):
     return render(request=request, template_name='core/error.html', context={
         'title': 'Error 404',
     })
+
+
+def send_message(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        print(data)
