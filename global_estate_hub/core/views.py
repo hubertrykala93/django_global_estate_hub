@@ -21,8 +21,8 @@ def index(request):
 def newsletter(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        email = data['email']
-        spam_verification = data['url']
+
+        email, spam_verification = [data[key] for key in data.keys()]
         # spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
@@ -115,13 +115,9 @@ def error(request):
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        fullname_field, phone_field, email_field, content_field = tuple(data.keys())[:-1]
 
-        fullname = data['fullName']
-        phone_number = data['phone']
-        email = data['email']
-        content = data['content']
-        spam_verification = data['url']
+        fullname, phone_number, email, content, spam_verification = [data[key] for key in data]
+        fullname_field, phone_field, email_field, content_field = list(data.keys())[:-1]
         # spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
@@ -191,7 +187,7 @@ def send_message(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    # message.send(fail_silently=True)
+                    message.send(fail_silently=True)
 
                     return JsonResponse(data=response, safe=False)
 

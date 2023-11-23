@@ -9,7 +9,7 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
-from django.core.mail import BadHeaderError, EmailMessage, EmailMultiAlternatives
+from django.core.mail import BadHeaderError, EmailMultiAlternatives
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
@@ -32,17 +32,9 @@ def create_user(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        username = data['userName'][0]
-        email = data['email'][0]
-        raw_password1 = data['password1'][0]
-        raw_password2 = data['password2'][0]
-        terms = data['terms'][0]
-
-        username_field = data['userName'][1]
-        email_field = data['email'][1]
-        raw_password1_field = data['password1'][1]
-        raw_password2_field = data['password2'][1]
-        terms_field = data['terms'][1]
+        username, email, raw_password1, raw_password2, terms = [data[key][0] for key in data]
+        username_field, email_field, raw_password1_field, raw_password2_field, terms_field = [data[key][1] for key in
+                                                                                              data]
 
         response = [
             {
@@ -124,40 +116,44 @@ def create_user(request):
             }
         ]
 
-        if list(set([data['valid'] for data in response]))[0]:
-            user = User(username=username, email=email, password=make_password(password=raw_password1))
-            user.save()
+        validation = list(set([data['valid'] for data in response]))
 
-            try:
-                html_message = render_to_string(template_name='accounts/activation_email.html', context={
-                    'user': user,
-                    'domain': get_current_site(request=request),
-                    'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
-                    'token': token_generator.make_token(user=user),
-                })
-                plain_message = strip_tags(html_message)
+        if len(validation) == 1:
+            if validation[0]:
+                user = User(username=username, email=email, password=make_password(password=raw_password1))
+                user.save()
 
-                message = EmailMultiAlternatives(
-                    subject='Account activation request.',
-                    body=plain_message,
-                    from_email=os.environ.get("EMAIL_HOST_USER"),
-                    to=[user.email]
-                )
+                try:
+                    html_message = render_to_string(template_name='accounts/activation_email.html', context={
+                        'user': user,
+                        'domain': get_current_site(request=request),
+                        'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                        'token': token_generator.make_token(user=user),
+                    })
+                    plain_message = strip_tags(html_message)
 
-                message.attach_alternative(content=html_message, mimetype='text/html')
-                message.send(fail_silently=True)
+                    message = EmailMultiAlternatives(
+                        subject='Account activation request.',
+                        body=plain_message,
+                        from_email=os.environ.get("EMAIL_HOST_USER"),
+                        to=[user.email]
+                    )
 
-                return JsonResponse(data={
-                    "valid": True,
-                    "email": email,
-                    "message": f"The activation link has been sent to {email}.",
-                }, safe=False)
+                    message.attach_alternative(content=html_message, mimetype='text/html')
+                    message.send(fail_silently=True)
 
-            except BadHeaderError:
-                return JsonResponse(data={
-                    "valid": False,
-                    "message": "The message could not be sent.",
-                })
+                    messages.info(request=request, message=f"The activation link has been sent to {email}.")
+
+                    return JsonResponse(data=response, safe=False)
+
+                except BadHeaderError:
+                    return JsonResponse(data={
+                        "valid": False,
+                        "message": "The message could not be sent.",
+                    })
+
+            else:
+                return JsonResponse(data=response, safe=False)
 
         else:
             return JsonResponse(data=response, safe=False)
@@ -190,22 +186,22 @@ def log_in(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        email = data['email'][0]
-        password = data['password'][0]
-
-        email_field = data['email'][1]
-        password_field = data['password'][1]
+        email, password = [data[key][0] for key in data]
+        email_field, password_field = [data[key][1] for key in data]
 
         response = [
             {
                 "valid":
                     False if not email else
+                    False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
                     False if not User.objects.filter(email=email).exists() else
                     False if not User.objects.get(email=email).is_verified else
                     True,
                 "field": email_field,
                 "message":
                     "The e-mail field cannot be empty." if not email else
+                    "The e-mail address format is invalid." if not re.match(
+                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
                     f"Your account has not been activated yet. Check your inbox." if not User.objects.get(
                         email=email).is_verified else
@@ -229,12 +225,19 @@ def log_in(request):
             },
         ]
 
-        if list(set([data['valid'] for data in response]))[0]:
-            user = authenticate(request=request, email=email, password=password,
-                                backend='django.contrib.auth.backends.ModelBackend')
-            login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
+        validation = list(set([data['valid'] for data in response]))
 
-            return JsonResponse(data=response, safe=False)
+        if len(validation) == 1:
+            if validation[0]:
+                user = authenticate(request=request, email=email, password=password,
+                                    backend='django.contrib.auth.backends.ModelBackend')
+                login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
+
+                return JsonResponse(data=response, safe=False)
+
+            else:
+                return JsonResponse(data=response, safe=False)
+
         else:
             return JsonResponse(data=response, safe=False)
 
@@ -270,53 +273,60 @@ def send_password(request):
         email = data['email']
 
         if email:
-            if User.objects.filter(email=email).exists():
-                if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
-                    user = User.objects.get(email=email)
-                    one_time_password = OneTimePassword(user=user, password=one_time_password)
-                    one_time_password.save()
+            if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email):
+                if User.objects.filter(email=email).exists():
+                    if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
+                        user = User.objects.get(email=email)
+                        one_time_password = OneTimePassword(user=user, password=one_time_password)
+                        one_time_password.save()
 
-                    try:
-                        html_message = render_to_string(template_name='accounts/password_reset_email.html', context={
-                            'one_time_password': one_time_password.password,
-                            'expire_password': one_time_password.expires_in,
-                        })
-                        plain_message = strip_tags(html_message)
+                        try:
+                            html_message = render_to_string(template_name='accounts/password_reset_email.html',
+                                                            context={
+                                                                'one_time_password': one_time_password.password,
+                                                                'expire_password': one_time_password.expires_in,
+                                                            })
+                            plain_message = strip_tags(html_message)
 
-                        message = EmailMultiAlternatives(
-                            subject=f"Password reset request for {user.username}.",
-                            body=plain_message,
-                            from_email=os.environ.get("EMAIL_HOST_USER"),
-                            to=[user.email]
-                        )
+                            message = EmailMultiAlternatives(
+                                subject=f"Password reset request for {user.username}.",
+                                body=plain_message,
+                                from_email=os.environ.get("EMAIL_HOST_USER"),
+                                to=[user.email]
+                            )
 
-                        message.attach_alternative(content=html_message, mimetype='text/html')
-                        message.send(fail_silently=True)
+                            message.attach_alternative(content=html_message, mimetype='text/html')
+                            message.send(fail_silently=True)
 
+                            return JsonResponse(data={
+                                "valid": True,
+                                "email": email,
+                                "message": "",
+                            }, safe=False)
+
+                        except BadHeaderError:
+                            return JsonResponse(data={
+                                "valid": False,
+                                "message": "The message could not be sent.",
+                            })
+
+                    elif len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 1:
                         return JsonResponse(data={
                             "valid": True,
                             "email": email,
                             "message": "",
                         }, safe=False)
 
-                    except BadHeaderError:
-                        return JsonResponse(data={
-                            "valid": False,
-                            "message": "The message could not be sent.",
-                        })
-
-                elif len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 1:
+                else:
                     return JsonResponse(data={
-                        "valid": True,
-                        "email": email,
-                        "message": "The code is already assigned to this user. Check your inbox. "
-                                   "The token is valid for 5 minutes.",
+                        "valid": False,
+                        "message": "The user with the provided email address does not exist.",
                     }, safe=False)
 
             else:
                 return JsonResponse(data={
                     "valid": False,
-                    "message": "The user with the provided email address does not exist.",
+                    "message": "The e-mail address format is invalid.",
                 }, safe=False)
 
         else:
@@ -359,11 +369,11 @@ def validate_password(request):
 def set_password(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        raw_password1 = data['password1'][0]
-        raw_password1_field = data['password1'][1]
 
+        raw_password1_field, raw_password2_field = [data[key][1] for key in list(data.keys())[:-1]]
+
+        raw_password1 = data['password1'][0]
         raw_password2 = data['password2'][0]
-        raw_password2_field = data['password2'][1]
 
         email = data['email']
 
@@ -404,16 +414,22 @@ def set_password(request):
             },
         ]
 
-        if list(set([data['valid'] for data in response]))[0]:
-            user = User.objects.get(email=email)
-            user_id = User.objects.get(email=email).pk
-            user.set_password(raw_password=raw_password1)
-            user.save()
+        validation = list(set([data['valid'] for data in response]))
 
-            password = OneTimePassword.objects.get(user_id=user_id)
-            password.delete()
+        if len(validation) == 1:
+            if validation[0]:
+                user = User.objects.get(email=email)
+                user_id = User.objects.get(email=email).pk
+                user.set_password(raw_password=raw_password1)
+                user.save()
 
-            return JsonResponse(data=response, safe=False)
+                password = OneTimePassword.objects.get(user_id=user_id)
+                password.delete()
+
+                return JsonResponse(data=response, safe=False)
+
+            else:
+                return JsonResponse(data=response, safe=False)
 
         else:
             return JsonResponse(data=response, safe=False)
