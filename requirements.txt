@@ -1,11 +1,15 @@
 asgiref==3.7.2
+beautifulsoup4==4.12.2
+cssutils==2.9.0
 Django==4.2.7
 django-ckeditor==6.7.0
 django-honeypot==1.0.4
 django-js-asset==2.1.0
-django-phone-field==1.8.1
+future==0.18.3
 Pillow==10.1.0
+pynliner==0.8.0
 python-dotenv==1.0.0
 six==1.16.0
+soupsieve==2.5
 sqlparse==0.4.4
 typing_extensions==4.8.0
