@@ -155,59 +155,91 @@ const $newsletterForm = document.querySelector('[data-newsletter-form]')
 
 if ($newsletterForm){
 
-  const newsletterValidation = (response) => {
+  const showInfo = (isValid, message)=>{
     let $messageNode = $newsletterForm.querySelector('.info')
-    if ( response.valid < 0 ){ 
-      if ($messageNode) { $messageNode.remove() }
-      return false
-    }
-    
     if ( !$messageNode ){ 
       const info = document.createElement('span')
       info.classList.add('info')
       $newsletterForm.append(info) 
     }
+
     $messageNode = $newsletterForm.querySelector('.info')
-    if ( response.valid === 0) {
-      $messageNode.classList.add('error')
-      $messageNode.classList.remove('success')
-    } else if ( response.valid > 0 ) {
+
+    if ( isValid) {
       $messageNode.classList.add('success')
       $messageNode.classList.remove('error')
       $newsletterForm.querySelector('[data-email]').value = ""
       setTimeout(() => {
         $messageNode.remove()
       }, "3000");
+    } else {
+        $messageNode.classList.add('error')
+        $messageNode.classList.remove('success')
     }
-
-    $messageNode.textContent = response.message
+    
+    $messageNode.textContent = message
   }
 
-  $newsletterForm.addEventListener('submit', e =>{
-    e.preventDefault()
-    let csrftoken = $newsletterForm.querySelector('[name="csrftoken"]').value
-    const $emailInput = $newsletterForm.querySelector('[data-email]')
-    const $urlInput = $newsletterForm.querySelector('[name="url"]')
-    const data = {
-      "email": $emailInput.value,
-      "url": $urlInput.value
+  const removeInfo = ()=>{
+    const $messageNode = $newsletterForm.querySelector('.info')
+    if ($messageNode) { $messageNode.remove() }
+  }
+
+  const serverResponse = (response) => {
+    if ( response.valid === null ) {
+      removeInfo()
+    } else{
+      showInfo(response.valid, response.message)
     }
+  }
 
+  const clientValidation = (data) => {
+    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+    if ( data.url !== '' ) {
+      removeInfo()
+    }
+    else if ( data.email == '' ) {
+      showInfo(false, 'Empty field.')
+    }
+    else if ( !data.email.match(emailRegex) ) {
+      showInfo(false, 'Invalid email format.')
+    }
+    else {
+      removeInfo()
+      ajaxRequest(data)
+    }
+  }
+
+  const getToken = (form) => {
+    return form.querySelector('[name="csrftoken"]').value
+  }
+
+  const ajaxRequest = (data) => {
     const xhr = new XMLHttpRequest()
-    
-
     xhr.open('POST', 'newsletter', true)
-    xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    // xhr.setRequestHeader("Content-type", "application/json")
+    xhr.setRequestHeader('X-CSRFToken', getToken($newsletterForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          newsletterValidation(response)
+          console.log('dane z serwera', response)
+          serverResponse(response)
       }
     }
+  }
+
+  $newsletterForm.addEventListener('submit', e =>{
+    e.preventDefault()
+    const $emailInput = $newsletterForm.querySelector('[data-email]')
+    const $urlInput = $newsletterForm.querySelector('[name="url"]')
+    const data = {
+      "email": $emailInput.value.trim(),
+      "url": $urlInput.value
+    }
+    clientValidation(data)
   })
 }
 
