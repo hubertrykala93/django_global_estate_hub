@@ -27,17 +27,17 @@ def newsletter(request):
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
-                "valid": -1,
+                "valid": None,
                 "message": "",
             })
 
         response = {
             "valid":
-                0 if not email else
-                0 if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                0 if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
-                              string=email) and Newsletter.objects.filter(email=email).exists() else
-                1,
+                False if not email else
+                False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                                  string=email) and Newsletter.objects.filter(email=email).exists() else
+                True,
             "message":
                 "The email field cannot be empty." if not email else
                 "The e-mail address format is invalid." if not re.match(
@@ -51,7 +51,7 @@ def newsletter(request):
 
         if response['valid'] == 1:
             new_subscriber = Newsletter(email=email)
-            new_subscriber.save()
+            # new_subscriber.save()
 
             try:
                 html_message = render_to_string(template_name='core/newsletter_mail.html', context={
@@ -67,7 +67,7 @@ def newsletter(request):
                 )
 
                 message.attach_alternative(content=html_message, mimetype='text/html')
-                message.send(fail_silently=True)
+                # message.send(fail_silently=True)
 
                 return JsonResponse(data=response)
 
@@ -121,7 +121,10 @@ def send_message(request):
         # spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
-            return JsonResponse(data=[], safe=False)
+            return JsonResponse(data={
+                "valid": None,
+                "message": "",
+            }, safe=False)
 
         response = [
             {
