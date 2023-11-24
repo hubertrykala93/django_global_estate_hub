@@ -136,10 +136,15 @@ def send_message(request):
             {
                 "valid":
                     False if not phone_number else
+                    False if not re.match(pattern='^[+0](?:\d\s?){8,12}$',
+                                          string=phone_number) else
                     True,
                 "field": phone_field,
                 "message":
                     "The phone number field cannot be empty." if not phone_number else
+                    "The phone number format is invalid." if not re.match(
+                        pattern='^[+0](?:\d\s?){8,12}$',
+                        string=phone_number) else
                     "",
             },
             {
@@ -167,7 +172,7 @@ def send_message(request):
         if len(validation) == 1:
             if validation[0]:
                 new_mail = ContactMail(full_name=fullname, phone_number=phone_number, email=email, content=content)
-                new_mail.save()
+                # new_mail.save()
 
                 try:
                     html_message = render_to_string(template_name='core/contact_mail.html', context={
@@ -187,7 +192,7 @@ def send_message(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    message.send(fail_silently=True)
+                    # message.send(fail_silently=True)
 
                     return JsonResponse(data=response, safe=False)
 

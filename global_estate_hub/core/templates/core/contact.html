@@ -1,6 +1,12 @@
 {% extends 'core/base.html' %}
 {% load honeypot %}
 
+{% block page_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
@@ -33,7 +39,7 @@
                 </ul>
             </div>
             <div class="form-column">
-                <form data-contact-form class="theme-form contact__form" action="{% url 'send-message' %}">
+                <form data-contact-form class="theme-form contact__form">
                     <div class="form__title">Have Questions? Get in touch!</div>
 
                     <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
@@ -123,4 +129,9 @@
     </div>
 </section>
 
+{% block page_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+{% endblock %}
 {% endblock %}

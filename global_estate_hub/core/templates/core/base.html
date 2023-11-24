@@ -25,6 +25,7 @@
       - custom css
     -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    {% block page_css %}{% endblock %}
 
     {% if title %}
     <title>{% block title %}{% endblock %} | Global Estate Hub</title>
@@ -101,9 +102,8 @@
 <!--
   - #CUSTOM JAVASCRIPT
 -->
-<script src="{% static 'js/scripts.js' %}"></script>
-
 {% block page_scripts %}{% endblock %}
+<script src="{% static 'js/scripts.js' %}"></script>
 </body>
 
 </html>

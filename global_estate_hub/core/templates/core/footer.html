@@ -19,7 +19,7 @@
                 </div>
 
                 <div class="footer__newsletter">
-                    <form action="{% url 'newsletter' %}" method="post" data-newsletter-form>
+                    <form method="post" data-newsletter-form>
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         {% render_honeypot_field 'url' %}
