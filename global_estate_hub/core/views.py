@@ -34,16 +34,16 @@ def newsletter(request):
         response = {
             "valid":
                 False if not email else
-                False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
+                False if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                                   string=email) and Newsletter.objects.filter(email=email).exists() else
                 True,
             "message":
                 "The email field cannot be empty." if not email else
                 "The e-mail address format is invalid." if not re.match(
-                    pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                    pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                 f"The e-mail address {email} already exists." if re.match(
-                    pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                    pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                     string=email) and Newsletter.objects.filter(
                     email=email).exists() else
                 "Congratulations! You have successfully subscribed to our newsletter.",

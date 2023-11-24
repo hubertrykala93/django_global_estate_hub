@@ -194,16 +194,16 @@ if ($newsletterForm){
   }
 
   const clientValidation = (data) => {
-    const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
     if ( data.url !== '' ) {
       removeInfo()
     }
     else if ( data.email == '' ) {
-      showInfo(false, 'Empty field.')
+      showInfo(false, 'The email field cannot be empty.')
     }
     else if ( !data.email.match(emailRegex) ) {
-      showInfo(false, 'Invalid email format.')
+      showInfo(false, 'The e-mail address format is invalid.')
     }
     else {
       removeInfo()
