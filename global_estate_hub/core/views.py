@@ -12,6 +12,13 @@ from django.utils.html import strip_tags
 load_dotenv()
 
 
+def is_ajax(request):
+    if request.headers['X-Requested-With'] == 'XMLHttpRequest':
+        return True
+    else:
+        return False
+
+
 def index(request):
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
@@ -115,13 +122,15 @@ def send_message(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        fullname, phone_number, email, content, spam_verification = [data[key] for key in data]
-        fullname_field, phone_field, email_field, content_field = list(data.keys())[:-1]
-        # spam_verification = spam_verification + '123'
+        fullname, phone_number, email, content = [data[key][0] for key in list(data.keys())[:-1]]
+        spam_verification = [data[key] for key in data][-1]
+        spam_verification_field = list(data.keys())[-1]
+        fullname_field, phone_field, email_field, content_field = [data[key][1] for key in list(data.keys())[:-1]]
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
                 "valid": None,
+                "field": spam_verification_field,
                 "message": "",
             }, safe=False)
 
@@ -138,14 +147,14 @@ def send_message(request):
             {
                 "valid":
                     False if not phone_number else
-                    False if not re.match(pattern='^[+0](?:\d\s?){8,12}$',
+                    False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
                                           string=phone_number) else
                     True,
                 "field": phone_field,
                 "message":
                     "The phone number field cannot be empty." if not phone_number else
                     "The phone number format is invalid." if not re.match(
-                        pattern='^[+0](?:\d\s?){8,12}$',
+                        pattern="^\\+?[1-9][0-9]{7,14}$",
                         string=phone_number) else
                     "",
             },

@@ -685,14 +685,14 @@ if ($contactUsForm) {
 
       if ( field === 'data-phone' ) {
         if ( !passwordRegex.test(value) ) {
-          showInfo(false, 'Ivalid phone format.', form, field)
+          showInfo(false, 'The phone number format is invalid.', form, field)
           isAllFilled = false
         }
       }
 
       if ( field === 'data-email' ) {
         if ( !emailRegex.test(value) ) {
-          showInfo(false, 'Ivalid email format.', form, field)
+          showInfo(false, 'The e-mail address format is invalid.', form, field)
           isAllFilled = false
         }
       }
