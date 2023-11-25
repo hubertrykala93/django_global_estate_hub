@@ -23,7 +23,6 @@ def newsletter(request):
         data = json.loads(s=request.body.decode('utf-8'))
 
         email, spam_verification = [data[key] for key in data.keys()]
-        # spam_verification = spam_verification + '123'
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -153,10 +152,14 @@ def send_message(request):
             {
                 "valid":
                     False if not email else
+                    False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                                          string=email) else
                     True,
                 "field": email_field,
                 "message":
                     "The e-mail field cannot be empty." if not email else
+                    "The e-mail address format is invalid." if not re.match(
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     "",
             },
             {

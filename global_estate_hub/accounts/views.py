@@ -57,17 +57,18 @@ def create_user(request):
             {
                 "valid":
                     False if not email else
-                    False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
-                    False if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                    False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                                          string=email) else
+                    False if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                                       string=email) and User.objects.filter(email=email).exists() else
                     True,
                 "field": email_field,
                 "message":
                     "The e-mail field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
-                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     f"The e-mail address {email} already exists." if re.match(
-                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$',
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                         string=email) and User.objects.filter(email=email).exists() else
                     "",
             },
@@ -193,7 +194,8 @@ def log_in(request):
             {
                 "valid":
                     False if not email else
-                    False if not re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                    False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                                          string=email) else
                     False if not User.objects.filter(email=email).exists() else
                     False if not User.objects.get(email=email).is_verified else
                     True,
@@ -201,7 +203,7 @@ def log_in(request):
                 "message":
                     "The e-mail field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
-                        pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email) else
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
                     f"Your account has not been activated yet. Check your inbox." if not User.objects.get(
                         email=email).is_verified else
@@ -273,7 +275,7 @@ def send_password(request):
         email = data['email']
 
         if email:
-            if re.match(pattern='^[a-z 0-9]+[\._]?[a-z 0-9]+[@]\w+[.]\w{2,3}$', string=email):
+            if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
                 if User.objects.filter(email=email).exists():
                     if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
                         user = User.objects.get(email=email)
