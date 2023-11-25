@@ -666,12 +666,10 @@ if ($contactUsForm) {
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
 
-    console.log(data)
-
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
+          serverResponse(response)
       }
     }
   }
@@ -685,14 +683,14 @@ if ($contactUsForm) {
 
       if ( field === 'data-phone' ) {
         if ( !passwordRegex.test(value) ) {
-          showInfo(false, 'The phone number format is invalid.', form, field)
+          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
           isAllFilled = false
         }
       }
 
       if ( field === 'data-email' ) {
         if ( !emailRegex.test(value) ) {
-          showInfo(false, 'The e-mail address format is invalid.', form, field)
+          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
           isAllFilled = false
         }
       }
@@ -707,7 +705,7 @@ if ($contactUsForm) {
 
     Object.entries(newData).forEach(([key, value]) => {
       if ( value[0] === '' ) {
-        showInfo(false, `Empty ${value[2]} field`, form, value[1])
+        showInfo(false, `The ${value[2]} field cannot be empty`, form, value[1])
         isAllFilled = false
       } else {
         removeInfo(form, value[1])
@@ -717,6 +715,20 @@ if ($contactUsForm) {
 
     if ( isAllFilled ) {
       ajaxRequest(data)
+    }
+  }
+
+  const serverResponse = (response)=> {
+    if ( response.valid === null ) {
+      return false
+    } else{
+      response.forEach(item => {
+        if ( !item.valid ) {
+          showInfo(item.valid, item.message, $contactUsForm, item.field)
+        } else {
+          removeInfo($contactUsForm, item.field)
+        }
+      })
     }
   }
 
