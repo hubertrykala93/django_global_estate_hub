@@ -48,7 +48,7 @@ def newsletter(request):
                 "Congratulations! You have successfully subscribed to our newsletter.",
         }
 
-        if response['valid'] == 1:
+        if response['valid']:
             new_subscriber = Newsletter(email=email)
             # new_subscriber.save()
 
@@ -72,7 +72,7 @@ def newsletter(request):
 
             except BadHeaderError:
                 return JsonResponse(data={
-                    "valid": 0,
+                    "valid": False,
                     "message": "Unfortunately, we were unable to sign up your email for our newsletter. "
                                "Please try again.",
                 })

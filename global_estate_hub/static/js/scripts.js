@@ -148,6 +148,14 @@ if($partnersCarousel){
 \*----------------------------------*/
 
 /**
+   * Reusable functions
+    */
+
+const getToken = (form) => {
+  return form.querySelector('[name="csrftoken"]').value
+}
+
+/**
    * Newsletter footer form
     */
 
@@ -211,21 +219,17 @@ if ($newsletterForm){
     }
   }
 
-  const getToken = (form) => {
-    return form.querySelector('[name="csrftoken"]').value
-  }
-
   const ajaxRequest = (data) => {
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'newsletter', true)
     xhr.setRequestHeader('X-CSRFToken', getToken($newsletterForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('dane z serwera', response)
           serverResponse(response)
       }
     }
@@ -620,6 +624,102 @@ if ($forgotPasswordWrapper){
 const $contactUsForm = document.querySelector('[data-contact-form]')
 
 if ($contactUsForm) {
+
+  const showInfo = (isValid, message, $form, field)=> {
+    const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
+    let $messageNode = $inputParentField.querySelector('.info')
+
+    if ( !$messageNode ){ 
+      const info = document.createElement('span')
+      info.classList.add('info')
+      $inputParentField.append(info) 
+    }
+
+    $messageNode = $inputParentField.querySelector('.info')
+
+    if ( isValid) {
+      $messageNode.classList.add('success')
+      $messageNode.classList.remove('error')
+      $form.querySelector(`[${field}]`).value = ""
+      setTimeout(() => {
+        $messageNode.remove()
+      }, "3000");
+    } else {
+        $messageNode.classList.add('error')
+        $messageNode.classList.remove('success')
+    }
+    
+    $messageNode.textContent = message
+  }
+
+  const removeInfo = (form, field)=>{
+    const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
+    if ($messageNode) { $messageNode.remove() }
+  }
+
+  const ajaxRequest = (data)=>{
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('POST', 'send-message', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($contactUsForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    console.log(data)
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
+      }
+    }
+  }
+
+  const clientValidation = (form, data) => {
+    let isAllFilled = true
+
+    const regexValidation = (form, field, value) => {
+      const passwordRegex = /^\+?[1-9][0-9]{7,14}$/
+      const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+
+      if ( field === 'data-phone' ) {
+        if ( !passwordRegex.test(value) ) {
+          showInfo(false, 'Ivalid phone format.', form, field)
+          isAllFilled = false
+        }
+      }
+
+      if ( field === 'data-email' ) {
+        if ( !emailRegex.test(value) ) {
+          showInfo(false, 'Ivalid email format.', form, field)
+          isAllFilled = false
+        }
+      }
+    }
+
+    if ( data.url !== '' ) {
+      return false
+    }
+    const newData = { ...data }
+    delete newData.url
+    
+
+    Object.entries(newData).forEach(([key, value]) => {
+      if ( value[0] === '' ) {
+        showInfo(false, 'Empty field', form, value[1])
+        isAllFilled = false
+      } else {
+        removeInfo(form, value[1])
+        regexValidation(form, value[1], value[0])
+      }
+    })
+
+    if ( isAllFilled ) {
+      ajaxRequest(data)
+    }
+  }
+
   $contactUsForm.addEventListener('submit', e =>{
     e.preventDefault()
     let csrftoken = $contactUsForm.querySelector('[name="csrftoken"]').value
@@ -630,28 +730,14 @@ if ($contactUsForm) {
     const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
-      "fullName": $fullNameInput.value,
-      "phone": $phoneInput.value,
-      "email": $emailInput.value,
-      "content": $contentInput.value,
+      "fullName": [$fullNameInput.value, 'data-fullname'],
+      "phone": [$phoneInput.value, 'data-phone'],
+      "email": [$emailInput.value, 'data-email'],
+      "content": [$contentInput.value, 'data-content'],
       "url": $urlInput.value,
     }
-
-    console.log(data)
-
-    const xhr = new XMLHttpRequest()
-
-    xhr.open('POST', 'send-message', true)
-    xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    xhr.send(JSON.stringify(data))
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-          const response = JSON.parse(this.responseText)
-          console.log(response)
-      }
-    }
+    
+    clientValidation($contactUsForm, data)
   })
 }
 
