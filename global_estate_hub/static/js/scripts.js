@@ -707,7 +707,7 @@ if ($contactUsForm) {
 
     Object.entries(newData).forEach(([key, value]) => {
       if ( value[0] === '' ) {
-        showInfo(false, 'Empty field', form, value[1])
+        showInfo(false, `Empty ${value[2]} field`, form, value[1])
         isAllFilled = false
       } else {
         removeInfo(form, value[1])
@@ -722,18 +722,21 @@ if ($contactUsForm) {
 
   $contactUsForm.addEventListener('submit', e =>{
     e.preventDefault()
-    let csrftoken = $contactUsForm.querySelector('[name="csrftoken"]').value
     const $fullNameInput = $contactUsForm.querySelector('[data-fullname]')
+    const $fullNameLabel = $contactUsForm.querySelector('[data-fullname]').parentElement.parentElement.querySelector('label').textContent
     const $phoneInput = $contactUsForm.querySelector('[data-phone]')
+    const $phoneLabel = $contactUsForm.querySelector('[data-phone]').parentElement.parentElement.querySelector('label').textContent
     const $emailInput = $contactUsForm.querySelector('[data-email]')
+    const $emailLabel = $contactUsForm.querySelector('[data-email]').parentElement.parentElement.querySelector('label').textContent
     const $contentInput = $contactUsForm.querySelector('[data-content]')
+    const $contentLabel = $contactUsForm.querySelector('[data-content]').parentElement.parentElement.querySelector('label').textContent
     const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
-      "fullName": [$fullNameInput.value, 'data-fullname'],
-      "phone": [$phoneInput.value, 'data-phone'],
-      "email": [$emailInput.value, 'data-email'],
-      "content": [$contentInput.value, 'data-content'],
+      "fullName": [$fullNameInput.value, 'data-fullname', $fullNameLabel],
+      "phone": [$phoneInput.value, 'data-phone', $phoneLabel],
+      "email": [$emailInput.value, 'data-email', $emailLabel],
+      "content": [$contentInput.value, 'data-content', $contentLabel],
       "url": $urlInput.value,
     }
     
