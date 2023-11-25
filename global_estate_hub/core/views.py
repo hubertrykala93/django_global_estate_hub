@@ -121,17 +121,17 @@ def error(request):
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        print(data)
 
         fullname, phone_number, email, content = [data[key][0] for key in list(data.keys())[:-1]]
         spam_verification = [data[key] for key in data][-1]
         spam_verification_field = list(data.keys())[-1]
         fullname_field, phone_field, email_field, content_field = [data[key][1] for key in list(data.keys())[:-1]]
+        fullname_label, phone_label, email_label, content_label = [data[key][2] for key in list(data.keys())[:-1]]
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
                 "valid": None,
-                "field": spam_verification_field,
-                "message": "",
             }, safe=False)
 
         response = [
@@ -141,7 +141,7 @@ def send_message(request):
                     True,
                 "field": fullname_field,
                 "message":
-                    "The full name field cannot be empty" if not fullname else
+                    f"The {fullname_label} field cannot be empty" if not fullname else
                     "",
             },
             {
@@ -152,8 +152,8 @@ def send_message(request):
                     True,
                 "field": phone_field,
                 "message":
-                    "The phone number field cannot be empty." if not phone_number else
-                    "The phone number format is invalid." if not re.match(
+                    f"The {phone_label} field cannot be empty." if not phone_number else
+                    f"The {phone_label} format is invalid." if not re.match(
                         pattern="^\\+?[1-9][0-9]{7,14}$",
                         string=phone_number) else
                     "",
@@ -166,8 +166,8 @@ def send_message(request):
                     True,
                 "field": email_field,
                 "message":
-                    "The e-mail field cannot be empty." if not email else
-                    "The e-mail address format is invalid." if not re.match(
+                    f"The {email_label} field cannot be empty." if not email else
+                    f"The {email_label} format is invalid." if not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     "",
             },
@@ -177,7 +177,7 @@ def send_message(request):
                     True,
                 "field": content_field,
                 "message":
-                    "The message field cannot be empty." if not content else
+                    f"The {content_label} field cannot be empty." if not content else
                     "",
             }
         ]
