@@ -48,17 +48,14 @@ def create_user(request):
             {
                 "valid":
                     False if not username else
-                    False if not re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username) else
-                    False if re.match(pattern='^[a-zA-Z0-9_.-]+$', string=username) and User.objects.filter(
-                        username=username).exists() else
+                    False if len(username) < 8 else
+                    False if len(username) >= 8 and User.objects.filter(username=username).exists() else
                     True,
                 "field": username_field,
                 "message":
                     "The username field cannot be empty." if not username else
-                    "The username must consist only of lowercase/uppercase letters, digits or '.', '_', '-'." if not re.match(
-                        pattern='^[a-zA-Z0-9_.-]+$', string=username) else
-                    "The username already exists." if re.match(pattern='^[a-zA-Z0-9_.-]+$',
-                                                               string=username) and User.objects.filter(
+                    "The username should contain at least 8 characters." if len(username) < 8 else
+                    "The username already exists." if len(username) >= 8 and User.objects.filter(
                         username=username).exists() else
                     "",
             },
