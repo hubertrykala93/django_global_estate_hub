@@ -270,38 +270,168 @@ if($eyeIcons.length){
 
 
 /**
-   * Sign up / login validation (F)
+   * Forms reusable functions
     */
-const userFormsValidation = ($form, response, redirectionPath) => {
-  const fieldsNumber = response.length
-  let validFields = 0
 
-  response.forEach(field => {
-    const $currentformField = $form.querySelector(`[${field.field}]`).closest('.form__field')
-    const $message = $currentformField.querySelector('.info')
-    if (field.valid == false) {
-      const $message = $currentformField.querySelector('.info')
-      validFields = 0
+const removeInfo = (form, field)=>{
+  const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
+  if ($messageNode) { $messageNode.remove() }
+}
 
-      if($message){ 
-        $message.textContent = field.message 
-      }else {
-        const info = document.createElement('span')
-        info.classList.add('info')
-        info.classList.add('error')
-        info.textContent = field.message
-        $currentformField.append(info)
-      }
-    } else{
-      validFields++
-      if($message){ 
-        $message.remove()
+const showInfo = (isValid, message, $form, field)=> {
+  const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
+  let $messageNode = $inputParentField.querySelector('.info')
+
+  if ( !$messageNode ){ 
+    const info = document.createElement('span')
+    info.classList.add('info')
+    $inputParentField.append(info) 
+  }
+
+  $messageNode = $inputParentField.querySelector('.info')
+
+  if ( isValid) {
+    $messageNode.classList.add('success')
+    $messageNode.classList.remove('error')
+    $form.querySelector(`[${field}]`).value = ""
+    setTimeout(() => {
+      $messageNode.remove()
+    }, "3000");
+  } else {
+      $messageNode.classList.add('error')
+      $messageNode.classList.remove('success')
+  }
+  
+  $messageNode.textContent = message
+}
+
+const clientValidation = (form, data) => {
+  let isAllValid = true
+
+  const regexValidation = (form, field, value) => {
+    const phoneRegex = /^\+?[1-9][0-9]{7,14}$/
+    const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+
+    if ( field === 'data-username' ) {
+      if ( value.length < 8 ) {
+        showInfo(false, `The ${data.userName[2]} field must contains at least 8 characters.`, form, field)
+        isAllValid = false
       }
     }
-    if ( validFields === fieldsNumber ) {
-      window.location.href = redirectionPath
+
+    if ( field === 'data-phone' ) {
+      if ( !phoneRegex.test(value) ) {
+        showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
+        isAllValid = false
+      }
     }
-  });
+
+    if ( field === 'data-email' ) {
+      if ( !emailRegex.test(value) ) {
+        showInfo(false, `The ${data.email[2]} format is invalid.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-password1' ) {
+      if ( !passwordRegex.test(value) ) {
+        showInfo(false, `The ${data.password1[2]} format is invalid.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-password2' ) {
+      if ( data.password1[0] != value ) {
+        showInfo(false, `Password are not identical.`, form, field)
+        isAllValid = false
+      }
+    }
+  }
+
+  if ( data.url !== '' ) {
+    return false
+  }
+  const newData = { ...data }
+  delete newData.url
+
+  Object.entries(newData).forEach(([key, value]) => {
+    if ( value[0] === '' || value[0] === false ) {
+      showInfo(false, `The ${value[2]} field cannot be empty`, form, value[1])
+      isAllValid = false
+    } else {
+      removeInfo(form, value[1])
+      regexValidation(form, value[1], value[0])
+    }
+  })
+
+  if ( isAllValid ) {
+    return true
+  }
+}
+
+const clearFormValues = (form) => {
+  const allInputs = form.querySelectorAll('[data-input]')
+
+  if ( allInputs.length ) {
+    allInputs.forEach(input => {
+      input.value = ''
+    });
+  }
+}
+
+
+/**
+   * Register form
+    */
+
+const $signUpForm = document.querySelector('[data-signup-form]')
+
+if ($signUpForm){
+
+  const ajaxRequest = (data)=>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'create-user', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($signUpForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+    console.log('wysłane dane', data)
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odebrane dane', response)
+      }
+    }
+  }
+
+  $signUpForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const $userNameInput = this.querySelector('[data-username]')
+    const userNameLabel = $userNameInput.parentElement.parentElement.querySelector('label').textContent
+    const $emailInput = this.querySelector('[data-email]')
+    const emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
+    const $password1Input = this.querySelector('[data-password1]')
+    const password1Label = $password1Input.parentElement.parentElement.querySelector('label').textContent
+    const $password2Input = this.querySelector('[data-password2]')
+    const password2Label = $password2Input.parentElement.parentElement.querySelector('label').textContent
+    const $termsInput = this.querySelector('[data-checkbox]')
+    const $urlInput = this.querySelector('[name="url"]')
+
+    const data = {
+      "userName": [$userNameInput.value.trim(), "data-username", userNameLabel],
+      "email": [$emailInput.value.trim(), "data-email", emailLabel],
+      "password1": [$password1Input.value.trim(), "data-password1", password1Label],
+      "password2": [$password2Input.value.trim(), "data-password2", password2Label],
+      "terms": [$termsInput.checked, "data-checkbox", 'terms'],
+      "url": $urlInput.value,
+    }
+    
+    if ( clientValidation($signUpForm, data) ) {
+      ajaxRequest(data)
+    }
+  })
 }
 
 
@@ -324,7 +454,7 @@ if ($loginForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          // loginServerResponse(response, )
+          // loginServerResponse(response)
       }
     }
   }
@@ -339,45 +469,6 @@ if ($loginForm){
       "password": [$passwordInput.value, "data-password"]
     }
 
-  })
-}
-
-
-/**
-   * Signup form
-    */
-
-const $signUpForm = document.querySelector('[data-signup-form]')
-
-if ($signUpForm){
-  $signUpForm.addEventListener('submit', function (e) {
-    e.preventDefault()
-    const $userNameInput = this.querySelector('[data-username]')
-    const $emailInput = this.querySelector('[data-email]')
-    const $password1Input = this.querySelector('[data-password1]')
-    const $password2Input = this.querySelector('[data-password2]')
-    const $termsInput = this.querySelector('[data-terms]')
-
-    const data = {
-      "userName": [$userNameInput.value, "data-username"],
-      "email": [$emailInput.value, "data-email"],
-      "password1": [$password1Input.value, "data-password1"],
-      "password2": [$password2Input.value, "data-password2"],
-      "terms": [$termsInput.checked, "data-terms"]
-    }
-
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'create-user', true)
-    xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    xhr.send(JSON.stringify(data))
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-          const response = JSON.parse(this.responseText)
-          userFormsValidation($signUpForm, response, '/login')
-      }
-    }
   })
 }
 
@@ -631,38 +722,6 @@ const $contactUsForm = document.querySelector('[data-contact-form]')
 
 if ($contactUsForm) {
 
-  const showInfo = (isValid, message, $form, field)=> {
-    const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
-    let $messageNode = $inputParentField.querySelector('.info')
-
-    if ( !$messageNode ){ 
-      const info = document.createElement('span')
-      info.classList.add('info')
-      $inputParentField.append(info) 
-    }
-
-    $messageNode = $inputParentField.querySelector('.info')
-
-    if ( isValid) {
-      $messageNode.classList.add('success')
-      $messageNode.classList.remove('error')
-      $form.querySelector(`[${field}]`).value = ""
-      setTimeout(() => {
-        $messageNode.remove()
-      }, "3000");
-    } else {
-        $messageNode.classList.add('error')
-        $messageNode.classList.remove('success')
-    }
-    
-    $messageNode.textContent = message
-  }
-
-  const removeInfo = (form, field)=>{
-    const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
-    if ($messageNode) { $messageNode.remove() }
-  }
-
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
 
@@ -677,60 +736,6 @@ if ($contactUsForm) {
           const response = JSON.parse(this.responseText)
           serverResponse(response)
       }
-    }
-  }
-
-  const clientValidation = (form, data) => {
-    let isAllFilled = true
-
-    const regexValidation = (form, field, value) => {
-      const passwordRegex = /^\+?[1-9][0-9]{7,14}$/
-      const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
-
-      if ( field === 'data-phone' ) {
-        if ( !passwordRegex.test(value) ) {
-          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
-          isAllFilled = false
-        }
-      }
-
-      if ( field === 'data-email' ) {
-        if ( !emailRegex.test(value) ) {
-          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
-          isAllFilled = false
-        }
-      }
-    }
-
-    if ( data.url !== '' ) {
-      return false
-    }
-    const newData = { ...data }
-    delete newData.url
-    
-
-    Object.entries(newData).forEach(([key, value]) => {
-      if ( value[0] === '' ) {
-        showInfo(false, `The ${value[2]} field cannot be empty`, form, value[1])
-        isAllFilled = false
-      } else {
-        removeInfo(form, value[1])
-        regexValidation(form, value[1], value[0])
-      }
-    })
-
-    if ( isAllFilled ) {
-      ajaxRequest(data)
-    }
-  }
-
-  const clearFormValues = (form) => {
-    const allInputs = form.querySelectorAll('[data-input]')
-
-    if ( allInputs.length ) {
-      allInputs.forEach(input => {
-        input.value = ''
-      });
     }
   }
 
@@ -765,16 +770,16 @@ if ($contactUsForm) {
     }
   }
 
-  $contactUsForm.addEventListener('submit', e =>{
+  $contactUsForm.addEventListener('submit', function(e) {
     e.preventDefault()
-    const $fullNameInput = $contactUsForm.querySelector('[data-fullname]')
-    const $fullNameLabel = $contactUsForm.querySelector('[data-fullname]').parentElement.parentElement.querySelector('label').textContent
-    const $phoneInput = $contactUsForm.querySelector('[data-phone]')
-    const $phoneLabel = $contactUsForm.querySelector('[data-phone]').parentElement.parentElement.querySelector('label').textContent
-    const $emailInput = $contactUsForm.querySelector('[data-email]')
-    const $emailLabel = $contactUsForm.querySelector('[data-email]').parentElement.parentElement.querySelector('label').textContent
-    const $contentInput = $contactUsForm.querySelector('[data-content]')
-    const $contentLabel = $contactUsForm.querySelector('[data-content]').parentElement.parentElement.querySelector('label').textContent
+    const $fullNameInput = this.querySelector('[data-fullname]')
+    const $fullNameLabel = $fullNameInput.parentElement.parentElement.querySelector('label').textContent
+    const $phoneInput = this.querySelector('[data-phone]')
+    const $phoneLabel = $phoneInput.parentElement.parentElement.querySelector('label').textContent
+    const $emailInput = this.querySelector('[data-email]')
+    const $emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
+    const $contentInput = this.querySelector('[data-content]')
+    const $contentLabel = $contentInput.parentElement.parentElement.querySelector('label').textContent
     const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
@@ -785,7 +790,9 @@ if ($contactUsForm) {
       "url": $urlInput.value,
     }
     
-    clientValidation($contactUsForm, data)
+    if( clientValidation($contactUsForm, data) ) {
+      ajaxRequest(data)
+    }
   })
 }
 
