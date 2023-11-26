@@ -148,8 +148,136 @@ if($partnersCarousel){
 \*----------------------------------*/
 
 /**
-   * Reusable functions
+   * Forms reusable functions
     */
+
+const removeInfo = (form, field)=>{
+  const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
+  if ($messageNode) { $messageNode.remove() }
+}
+
+const showInfo = (isValid, message, $form, field)=> {
+  const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
+  let $messageNode = $inputParentField.querySelector('.info')
+
+  if ( !$messageNode ){ 
+    const info = document.createElement('span')
+    info.classList.add('info')
+    $inputParentField.append(info) 
+  }
+
+  $messageNode = $inputParentField.querySelector('.info')
+
+  if ( isValid) {
+    $messageNode.classList.add('success')
+    $messageNode.classList.remove('error')
+    $form.querySelector(`[${field}]`).value = ""
+    setTimeout(() => {
+      $messageNode.remove()
+    }, "3000");
+  } else {
+      $messageNode.classList.add('error')
+      $messageNode.classList.remove('success')
+  }
+  
+  $messageNode.textContent = message
+}
+
+const clientValidation = (form, data) => {
+  let isAllValid = true
+
+  const regexValidation = (form, field, value) => {
+    const phoneRegex = /^\+?[1-9][0-9]{7,14}$/
+    const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+
+    if ( field === 'data-username' ) {
+      if ( value.length < 8 ) {
+        showInfo(false, `The ${data.userName[2]} should contain at least 8 characters.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-phone' ) {
+      if ( !phoneRegex.test(value) ) {
+        showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-email' ) {
+      if ( !emailRegex.test(value) ) {
+        showInfo(false, `The ${data.email[2]} format is invalid.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-password1' ) {
+      if ( !passwordRegex.test(value) ) {
+        showInfo(false, `The ${data.password1[2]} should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.
+        `, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-password2' ) {
+      if ( data.password1[0] != value ) {
+        showInfo(false, `The ${data.password2[2]} field does not match the previously entered password.`, form, field)
+        isAllValid = false
+      }
+    }
+
+    if ( field === 'data-checkbox' ) {
+      if ( value === false ) {
+        showInfo(false, `The ${data.terms[2]} checkbox must be accepted.`, form, field)
+        isAllValid = false
+      }
+    }
+  }
+
+  if ( data.url !== '' ) {
+    return false
+  }
+  const newData = { ...data }
+  delete newData.url
+
+  Object.entries(newData).forEach(([key, value]) => {
+    if ( value[0] === '' ) {
+      showInfo(false, `The ${value[2]} field cannot be empty.`, form, value[1])
+      isAllValid = false
+    } else {
+      removeInfo(form, value[1])
+      regexValidation(form, value[1], value[0])
+    }
+  })
+
+  if ( isAllValid ) {
+    return true
+  }
+}
+
+const clearFormValues = (form) => {
+  const allInputs = form.querySelectorAll('[data-input]')
+
+  if ( allInputs.length ) {
+    allInputs.forEach(input => {
+      input.value = ''
+    });
+  }
+}
+
+const successfullySentMessage = (form, message, hide)=>{
+  const messageContainer = document.createElement('div')
+  messageContainer.classList.add('form__sent-message')
+  messageContainer.textContent = message
+
+  form.append(messageContainer)
+  if (hide) {
+    setTimeout(() => {
+      form.querySelector('.form__sent-message').remove()
+    }, 2500);
+  }
+}
 
 const getToken = (form) => {
   return form.querySelector('[name="csrftoken"]').value
@@ -270,124 +398,32 @@ if($eyeIcons.length){
 
 
 /**
-   * Forms reusable functions
-    */
-
-const removeInfo = (form, field)=>{
-  const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
-  if ($messageNode) { $messageNode.remove() }
-}
-
-const showInfo = (isValid, message, $form, field)=> {
-  const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
-  let $messageNode = $inputParentField.querySelector('.info')
-
-  if ( !$messageNode ){ 
-    const info = document.createElement('span')
-    info.classList.add('info')
-    $inputParentField.append(info) 
-  }
-
-  $messageNode = $inputParentField.querySelector('.info')
-
-  if ( isValid) {
-    $messageNode.classList.add('success')
-    $messageNode.classList.remove('error')
-    $form.querySelector(`[${field}]`).value = ""
-    setTimeout(() => {
-      $messageNode.remove()
-    }, "3000");
-  } else {
-      $messageNode.classList.add('error')
-      $messageNode.classList.remove('success')
-  }
-  
-  $messageNode.textContent = message
-}
-
-const clientValidation = (form, data) => {
-  let isAllValid = true
-
-  const regexValidation = (form, field, value) => {
-    const phoneRegex = /^\+?[1-9][0-9]{7,14}$/
-    const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
-    const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-
-    if ( field === 'data-username' ) {
-      if ( value.length < 8 ) {
-        showInfo(false, `The ${data.userName[2]} field must contains at least 8 characters.`, form, field)
-        isAllValid = false
-      }
-    }
-
-    if ( field === 'data-phone' ) {
-      if ( !phoneRegex.test(value) ) {
-        showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
-        isAllValid = false
-      }
-    }
-
-    if ( field === 'data-email' ) {
-      if ( !emailRegex.test(value) ) {
-        showInfo(false, `The ${data.email[2]} format is invalid.`, form, field)
-        isAllValid = false
-      }
-    }
-
-    if ( field === 'data-password1' ) {
-      if ( !passwordRegex.test(value) ) {
-        showInfo(false, `The ${data.password1[2]} format is invalid.`, form, field)
-        isAllValid = false
-      }
-    }
-
-    if ( field === 'data-password2' ) {
-      if ( data.password1[0] != value ) {
-        showInfo(false, `Password are not identical.`, form, field)
-        isAllValid = false
-      }
-    }
-  }
-
-  if ( data.url !== '' ) {
-    return false
-  }
-  const newData = { ...data }
-  delete newData.url
-
-  Object.entries(newData).forEach(([key, value]) => {
-    if ( value[0] === '' || value[0] === false ) {
-      showInfo(false, `The ${value[2]} field cannot be empty.`, form, value[1])
-      isAllValid = false
-    } else {
-      removeInfo(form, value[1])
-      regexValidation(form, value[1], value[0])
-    }
-  })
-
-  if ( isAllValid ) {
-    return true
-  }
-}
-
-const clearFormValues = (form) => {
-  const allInputs = form.querySelectorAll('[data-input]')
-
-  if ( allInputs.length ) {
-    allInputs.forEach(input => {
-      input.value = ''
-    });
-  }
-}
-
-
-/**
    * Register form
     */
 
 const $signUpForm = document.querySelector('[data-signup-form]')
 
 if ($signUpForm){
+
+  const serverResponse = (response, data)=> {
+    let isSent = true
+    if ( response.valid === null ) {
+      return false
+    } else{
+      response.forEach(item => {
+        if ( !item.valid ) {
+          isSent = false
+          showInfo(item.valid, item.message, $signUpForm, item.field)
+        } else {
+          removeInfo($signUpForm, item.field)
+        }
+      })
+      if (isSent) { 
+        clearFormValues($signUpForm)
+        successfullySentMessage($signUpForm, `The activation link has been sent to ${data.email[0]}.`, false)
+      }
+    }
+  }
 
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
@@ -396,12 +432,11 @@ if ($signUpForm){
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
-    console.log('wysłane dane', data)
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odebrane dane', response)
+          serverResponse(response, data)
       }
     }
   }
@@ -739,17 +774,6 @@ if ($contactUsForm) {
     }
   }
 
-  const successfullySentMessage = (form)=>{
-    const messageContainer = document.createElement('div')
-    messageContainer.classList.add('form__sent-message')
-    messageContainer.textContent = 'The message has been sent successfully, we will respond shortly.'
-
-    form.append(messageContainer)
-    setTimeout(() => {
-      form.querySelector('.form__sent-message').remove()
-    }, 2500);
-  }
-
   const serverResponse = (response)=> {
     let isSent = true
     if ( response.valid === null ) {
@@ -765,7 +789,7 @@ if ($contactUsForm) {
       })
       if (isSent) { 
         clearFormValues($contactUsForm)
-        successfullySentMessage($contactUsForm) 
+        successfullySentMessage($contactUsForm, 'The message has been sent successfully, we will respond shortly.', true)
       }
     }
   }
