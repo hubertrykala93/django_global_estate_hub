@@ -357,7 +357,7 @@ const clientValidation = (form, data) => {
 
   Object.entries(newData).forEach(([key, value]) => {
     if ( value[0] === '' || value[0] === false ) {
-      showInfo(false, `The ${value[2]} field cannot be empty`, form, value[1])
+      showInfo(false, `The ${value[2]} field cannot be empty.`, form, value[1])
       isAllValid = false
     } else {
       removeInfo(form, value[1])
@@ -742,7 +742,7 @@ if ($contactUsForm) {
   const successfullySentMessage = (form)=>{
     const messageContainer = document.createElement('div')
     messageContainer.classList.add('form__sent-message')
-    messageContainer.textContent = 'Message has been successfully sent.'
+    messageContainer.textContent = 'The message has been sent successfully, we will respond shortly.'
 
     form.append(messageContainer)
     setTimeout(() => {

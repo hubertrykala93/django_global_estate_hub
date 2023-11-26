@@ -140,7 +140,7 @@ def send_message(request):
                     True,
                 "field": fullname_field,
                 "message":
-                    f"The {fullname_label} field cannot be empty" if not fullname else
+                    f"The {fullname_label} field cannot be empty." if not fullname else
                     "",
             },
             {
@@ -186,7 +186,7 @@ def send_message(request):
         if len(validation) == 1:
             if validation[0]:
                 new_mail = ContactMail(full_name=fullname, phone_number=phone_number, email=email, content=content)
-                new_mail.save()
+                # new_mail.save()
 
                 try:
                     html_message = render_to_string(template_name='core/contact_mail.html', context={
@@ -206,7 +206,7 @@ def send_message(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    message.send(fail_silently=True)
+                    # message.send(fail_silently=True)
 
                     return JsonResponse(data=response, safe=False)
 

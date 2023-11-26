@@ -40,9 +40,18 @@ def create_user(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        username, email, raw_password1, raw_password2, terms = [data[key][0] for key in data]
+        username, email, raw_password1, raw_password2, terms = [data[key][0] for key in list(data.keys())[:-1]]
+        spam_verification = [data[key] for key in data][-1]
         username_field, email_field, raw_password1_field, raw_password2_field, terms_field = [data[key][1] for key in
-                                                                                              data]
+                                                                                              list(data.keys())[:-1]]
+        username_label, email_label, raw_password1_label, raw_password2_label, terms_label = [data[key][2] for
+                                                                                              key in
+                                                                                              list(data.keys())[:-1]]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            }, safe=False)
 
         response = [
             {
@@ -53,7 +62,7 @@ def create_user(request):
                     True,
                 "field": username_field,
                 "message":
-                    "The username field cannot be empty." if not username else
+                    f"The {username_label} field cannot be empty." if not username else
                     "The username should contain at least 8 characters." if len(username) < 8 else
                     "The username already exists." if len(username) >= 8 and User.objects.filter(
                         username=username).exists() else
@@ -69,7 +78,7 @@ def create_user(request):
                     True,
                 "field": email_field,
                 "message":
-                    "The e-mail field cannot be empty." if not email else
+                    f"The {email_label} field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     f"The e-mail address {email} already exists." if re.match(
@@ -85,7 +94,7 @@ def create_user(request):
                     True,
                 "field": raw_password1_field,
                 "message":
-                    "The password cannot be empty." if not raw_password1 else
+                    f"The {raw_password1_label} field cannot be empty." if not raw_password1 else
                     "The password should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
@@ -102,13 +111,13 @@ def create_user(request):
                     True,
                 "field": raw_password2_field,
                 "message":
-                    "The confirm password field cannot be empty." if not raw_password2 else
-                    "The password field must be filled in." if not raw_password1 else
+                    f"The {raw_password2_label} field cannot be empty." if not raw_password2 else
+                    f"The {raw_password2_label} field must be filled in." if not raw_password1 else
                     "The password should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
-                    "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
+                    f"The {raw_password2_label} field does not match the previously entered password." if raw_password2 != raw_password1 else
                     "",
             },
             {
@@ -117,7 +126,7 @@ def create_user(request):
                     True,
                 "field": terms_field,
                 "message":
-                    "The Terms & Privacy policy must be accepted." if not terms else
+                    "The Terms checkbox must be accepted." if not terms else
                     "",
             }
         ]
@@ -127,7 +136,7 @@ def create_user(request):
         if len(validation) == 1:
             if validation[0]:
                 user = User(username=username, email=email, password=make_password(password=raw_password1))
-                # user.save()
+                user.save()
 
                 try:
                     html_message = render_to_string(template_name='accounts/activation_email.html', context={
@@ -146,7 +155,7 @@ def create_user(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    # message.send(fail_silently=True)
+                    message.send(fail_silently=True)
 
                     messages.info(request=request, message=f"The activation link has been sent to {email}.")
 
