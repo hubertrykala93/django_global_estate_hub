@@ -122,7 +122,7 @@ def create_user(request):
         if len(validation) == 1:
             if validation[0]:
                 user = User(username=username, email=email, password=make_password(password=raw_password1))
-                user.save()
+                # user.save()
 
                 try:
                     html_message = render_to_string(template_name='accounts/activation_email.html', context={
@@ -141,7 +141,7 @@ def create_user(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    message.send(fail_silently=True)
+                    # message.send(fail_silently=True)
 
                     messages.info(request=request, message=f"The activation link has been sent to {email}.")
 

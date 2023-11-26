@@ -57,7 +57,7 @@ def newsletter(request):
 
         if response['valid']:
             new_subscriber = Newsletter(email=email)
-            # new_subscriber.save()
+            new_subscriber.save()
 
             try:
                 html_message = render_to_string(template_name='core/newsletter_mail.html', context={
@@ -73,7 +73,7 @@ def newsletter(request):
                 )
 
                 message.attach_alternative(content=html_message, mimetype='text/html')
-                # message.send(fail_silently=True)
+                message.send(fail_silently=True)
 
                 return JsonResponse(data=response)
 
@@ -187,7 +187,7 @@ def send_message(request):
         if len(validation) == 1:
             if validation[0]:
                 new_mail = ContactMail(full_name=fullname, phone_number=phone_number, email=email, content=content)
-                # new_mail.save()
+                new_mail.save()
 
                 try:
                     html_message = render_to_string(template_name='core/contact_mail.html', context={
@@ -207,7 +207,7 @@ def send_message(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    # message.send(fail_silently=True)
+                    message.send(fail_silently=True)
 
                     return JsonResponse(data=response, safe=False)
 
