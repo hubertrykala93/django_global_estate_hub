@@ -371,7 +371,7 @@ form .form__field.form__form{
   font-size: 0;
 }
 
-.theme-form .form__row:last-child{
+.theme-form .form__row.submit-row{
   margin-bottom: 0;
 }
 
@@ -483,6 +483,14 @@ form .form__field.form__form{
 .theme-form .forgot-password:hover,
 .theme-form .forgot-password:focus-visible{
   color: var(--clr-primary);
+}
+
+.theme-form .form__sent-message {
+  margin-top: 2rem;
+  font-size: 1.7rem;
+  line-height: normal;
+  font-weight: 500;
+  color: var(--clr-success);
 }
 
 
@@ -1391,6 +1399,10 @@ form .form__field.form__form{
   color: var(--clr-primary);
 }
 
+.user-access-page .form-column .theme-form input {
+  padding: 0 4.2rem;
+}
+
 
 /*----------------------------------*\
   #FORGOT PASSWORD SLIDER
@@ -1914,10 +1926,12 @@ section.blog .blog-card__column{
 .get-in-touch .contact__form {
   padding: 3rem 1.5rem;
   border-radius: var(--br-500);
-  box-shadow: 0 5px 30px rgb(199, 199, 199, 0.3)
+  box-shadow: 0 5px 30px rgb(199, 199, 199, 0.3);
+  position: relative;
+  z-index: 9999;
 }
 
-.contact__map .contact__map__row {
+.contact__map .map__wrapper {
   height: 300px;
 }
 
@@ -2474,9 +2488,7 @@ section.blog .blog-card__column{
 
   .get-in-touch .contact__form {
     padding: 3rem;
-    position: relative;
     background-color: white;
-    z-index: 2;
   }
 
   .call-to-action .call-to-action__wrapper {
@@ -2745,8 +2757,10 @@ section.blog .blog-card__column{
       margin-bottom: 0;
     }
 
-    .contact__map .contact__map__row {
+    .contact__map .map__wrapper {
       height: 608px;
+      margin-left: -150px;
+      width: auto;
     }
 
 

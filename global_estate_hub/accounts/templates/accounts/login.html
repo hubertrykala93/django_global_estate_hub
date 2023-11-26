@@ -50,12 +50,14 @@
                     <form data-login-form class="theme-form">
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
+                        {% render_honeypot_field 'url' %}
+
                         <div class="form__row">
                             <div class="form__field">
                                 <label for="login-email">Email</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
-                                    <input data-email type="text" id="login-email" placeholder="Your Email">
+                                    <input data-email data-input type="text" id="login-email" placeholder="Your Email">
                                 </div>
                             </div>
                         </div>
@@ -66,7 +68,7 @@
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-password.svg"
                                          alt="password icon">
-                                    <input data-password type="password" id="password" placeholder="Your Password">
+                                    <input data-password data-input type="password" id="password" placeholder="Your Password">
                                     <img data-password-eye class="form__eye-icon"
                                          src="/media/icons/form-see-password.svg"
                                          alt="see password icon">

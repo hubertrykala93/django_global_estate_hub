@@ -49,6 +49,8 @@
                     <form data-signup-form class="theme-form">
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
+                        {% render_honeypot_field 'url' %}
+
                         <div class="form__row">
                             <div class="form__field">
                                 <label for="username">Username</label>

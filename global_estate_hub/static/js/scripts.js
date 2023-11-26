@@ -155,6 +155,7 @@ const getToken = (form) => {
   return form.querySelector('[name="csrftoken"]').value
 }
 
+
 /**
    * Newsletter footer form
     */
@@ -267,6 +268,7 @@ if($eyeIcons.length){
   });
 }
 
+
 /**
    * Sign up / login validation (F)
     */
@@ -304,15 +306,31 @@ const userFormsValidation = ($form, response, redirectionPath) => {
 
 
 /**
-   * Login form ajax validation
+   * Login form
     */
 
 const $loginForm = document.querySelector('[data-login-form]')
 
 if ($loginForm){
+
+  const ajaxRequest = (data)=>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'login', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($loginForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          // loginServerResponse(response, )
+      }
+    }
+  }
+
   $loginForm.addEventListener('submit', function (e) {
     e.preventDefault()
-    let csrftoken = this.querySelector('[name="csrftoken"]').value
     const $emailInput = this.querySelector('[data-email]')
     const $passwordInput = this.querySelector('[data-password]')
 
@@ -321,24 +339,12 @@ if ($loginForm){
       "password": [$passwordInput.value, "data-password"]
     }
 
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'login', true)
-    xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    xhr.send(JSON.stringify(data))
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-          const response = JSON.parse(this.responseText)
-          userFormsValidation($loginForm, response, '/')
-      }
-    }
   })
 }
 
 
 /**
-   * Signup form ajax validation
+   * Signup form
     */
 
 const $signUpForm = document.querySelector('[data-signup-form]')
@@ -346,7 +352,6 @@ const $signUpForm = document.querySelector('[data-signup-form]')
 if ($signUpForm){
   $signUpForm.addEventListener('submit', function (e) {
     e.preventDefault()
-    let csrftoken = this.querySelector('[name="csrftoken"]').value
     const $userNameInput = this.querySelector('[data-username]')
     const $emailInput = this.querySelector('[data-email]')
     const $password1Input = this.querySelector('[data-password1]')
@@ -378,7 +383,7 @@ if ($signUpForm){
 
 
 /**
-   * Forgot password ajax validation
+   * Forgot password
     */
 
 const $forgotPasswordWrapper = document.querySelector('[data-forgot-password-wrapper]')
@@ -617,8 +622,9 @@ if ($forgotPasswordWrapper){
   })
 }
 
+
 /**
-  * Contact us ajax
+  * Contact us form
    */
 
 const $contactUsForm = document.querySelector('[data-contact-form]')
@@ -718,17 +724,44 @@ if ($contactUsForm) {
     }
   }
 
+  const clearFormValues = (form) => {
+    const allInputs = form.querySelectorAll('[data-input]')
+
+    if ( allInputs.length ) {
+      allInputs.forEach(input => {
+        input.value = ''
+      });
+    }
+  }
+
+  const successfullySentMessage = (form)=>{
+    const messageContainer = document.createElement('div')
+    messageContainer.classList.add('form__sent-message')
+    messageContainer.textContent = 'Message has been successfully sent.'
+
+    form.append(messageContainer)
+    setTimeout(() => {
+      form.querySelector('.form__sent-message').remove()
+    }, 2500);
+  }
+
   const serverResponse = (response)=> {
+    let isSent = true
     if ( response.valid === null ) {
       return false
     } else{
       response.forEach(item => {
         if ( !item.valid ) {
+          isSent = false
           showInfo(item.valid, item.message, $contactUsForm, item.field)
         } else {
           removeInfo($contactUsForm, item.field)
         }
       })
+      if (isSent) { 
+        clearFormValues($contactUsForm)
+        successfullySentMessage($contactUsForm) 
+      }
     }
   }
 
@@ -745,10 +778,10 @@ if ($contactUsForm) {
     const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
-      "fullName": [$fullNameInput.value, 'data-fullname', $fullNameLabel],
-      "phone": [$phoneInput.value, 'data-phone', $phoneLabel],
-      "email": [$emailInput.value, 'data-email', $emailLabel],
-      "content": [$contentInput.value, 'data-content', $contentLabel],
+      "fullName": [$fullNameInput.value.trim(), 'data-fullname', $fullNameLabel],
+      "phone": [$phoneInput.value.trim(), 'data-phone', $phoneLabel],
+      "email": [$emailInput.value.trim(), 'data-email', $emailLabel],
+      "content": [$contentInput.value.trim(), 'data-content', $contentLabel],
       "url": $urlInput.value,
     }
     
@@ -810,4 +843,25 @@ if ($accordion){
       }
     }
   })
+}
+
+/**
+   * Contact map
+    */
+
+const $contactMap = document.querySelector('[data-contact-map]')
+
+if ($contactMap) {
+  const map = L.map('map').setView([-37.79347799465808, 144.97906345418576], 13)
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+  }).addTo(map)
+  const mapMArker = L.icon({
+    iconUrl: '/media/icons/map-marker.svg',
+
+    iconSize:     [41, 59],
+    iconAnchor:   [41, 59],
+  });
+  const marker = L.marker([-37.79347799465808, 144.97906345418576], {icon: mapMArker}).addTo(map);
 }
