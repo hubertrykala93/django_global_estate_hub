@@ -21,6 +21,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+def is_ajax(request):
+    if request.headers['X-Requested-With'] == 'XMLHttpRequest':
+        return True
+
+    else:
+        return False
+
+
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def register(request):
     return render(request=request, template_name='accounts/register.html', context={

@@ -15,6 +15,7 @@ load_dotenv()
 def is_ajax(request):
     if request.headers['X-Requested-With'] == 'XMLHttpRequest':
         return True
+
     else:
         return False
 
@@ -121,11 +122,9 @@ def error(request):
 def send_message(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        print(data)
 
         fullname, phone_number, email, content = [data[key][0] for key in list(data.keys())[:-1]]
         spam_verification = [data[key] for key in data][-1]
-        spam_verification_field = list(data.keys())[-1]
         fullname_field, phone_field, email_field, content_field = [data[key][1] for key in list(data.keys())[:-1]]
         fullname_label, phone_label, email_label, content_label = [data[key][2] for key in list(data.keys())[:-1]]
 
