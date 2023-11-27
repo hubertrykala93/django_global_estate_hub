@@ -533,7 +533,6 @@ if ($loginForm){
       "password": [$passwordInput.value.trim(), "data-password", passwordLabel],
       "url": $urlInput.value
     }
-    console.log(data)
 
     if ( clientValidation($loginForm, data) ) {
       ajaxRequest(data)
@@ -551,80 +550,101 @@ const $forgotPasswordWrapper = document.querySelector('[data-forgot-password-wra
 
 if ($forgotPasswordWrapper){
 
-  //3rd step
-  const thirdStep = ()=> {
-    const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
+  let currentStep = 1
 
-    const goToStepFour = ()=> {
-      const $stepThree = $forgotPasswordWrapper.querySelector('[data-new-password-step]')
-      const $stepFour = $forgotPasswordWrapper.querySelector('[data-done-password-step]')
-      $stepFour.style.zIndex = 4
-      $stepFour.style.transform = "translateX(0)"
+  const firstStepAjaxRequest = (data, form) =>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'send-password', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+
+          console.log('odebrane dane: ', response)
+          // sessionStorage.setItem('verifyingEmail', response.email)
+
+      }
+    }
+  }
+
+  //3rd step
+  // const thirdStep = ()=> {
+  //   const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
+
+  //   const goToStepFour = ()=> {
+  //     const $stepThree = $forgotPasswordWrapper.querySelector('[data-new-password-step]')
+  //     const $stepFour = $forgotPasswordWrapper.querySelector('[data-done-password-step]')
+  //     $stepFour.style.zIndex = 4
+  //     $stepFour.style.transform = "translateX(0)"
       
   
-      setTimeout(() => {
-        $stepThree.style.position = "absolute"
-        $stepFour.style.position = "relative"
-      }, 400);
-    }
+  //     setTimeout(() => {
+  //       $stepThree.style.position = "absolute"
+  //       $stepFour.style.position = "relative"
+  //     }, 400);
+  //   }
 
-    const thirdStepValidation = ($form, response) => {
-      const fieldsNumber = response.length
-      let validFields = 0
+  //   const thirdStepValidation = ($form, response) => {
+  //     const fieldsNumber = response.length
+  //     let validFields = 0
     
-      response.forEach(field => {
-        const $currentformField = $form.querySelector(`[${field.field}]`).closest('.form__field')
-        const $message = $currentformField.querySelector('.info')
-        if (field.valid == false) {
-          const $message = $currentformField.querySelector('.info')
-          validFields = 0
+  //     response.forEach(field => {
+  //       const $currentformField = $form.querySelector(`[${field.field}]`).closest('.form__field')
+  //       const $message = $currentformField.querySelector('.info')
+  //       if (field.valid == false) {
+  //         const $message = $currentformField.querySelector('.info')
+  //         validFields = 0
     
-          if($message){ 
-            $message.textContent = field.message 
-          }else {
-            const info = document.createElement('span')
-            info.classList.add('info')
-            info.classList.add('error')
-            info.textContent = field.message
-            $currentformField.append(info)
-          }
-        } else{
-          validFields++
-          if($message){ 
-            $message.remove()
-          }
-        }
-        if ( validFields === fieldsNumber ) {
-          goToStepFour()
-        }
-      });
-    }
+  //         if($message){ 
+  //           $message.textContent = field.message 
+  //         }else {
+  //           const info = document.createElement('span')
+  //           info.classList.add('info')
+  //           info.classList.add('error')
+  //           info.textContent = field.message
+  //           $currentformField.append(info)
+  //         }
+  //       } else{
+  //         validFields++
+  //         if($message){ 
+  //           $message.remove()
+  //         }
+  //       }
+  //       if ( validFields === fieldsNumber ) {
+  //         goToStepFour()
+  //       }
+  //     });
+  //   }
 
-    $newPasswordForm.addEventListener('submit', function (e) {
-      e.preventDefault()
-      let csrftoken = this.querySelector('[name="csrftoken"]').value
-      const $password1Input = $newPasswordForm.querySelector('[data-password1]')
-      const $password2Input = $newPasswordForm.querySelector('[data-password2]')
-      const data = {
-        "password1": [$password1Input.value, "data-password1"],
-        "password2": [$password2Input.value, "data-password2"],
-        "email": sessionStorage.getItem('verifyingEmail')
-      }
+  //   $newPasswordForm.addEventListener('submit', function (e) {
+  //     e.preventDefault()
+  //     let csrftoken = this.querySelector('[name="csrftoken"]').value
+  //     const $password1Input = $newPasswordForm.querySelector('[data-password1]')
+  //     const $password2Input = $newPasswordForm.querySelector('[data-password2]')
+  //     const data = {
+  //       "password1": [$password1Input.value, "data-password1"],
+  //       "password2": [$password2Input.value, "data-password2"],
+  //       "email": sessionStorage.getItem('verifyingEmail')
+  //     }
         
-      const xhr = new XMLHttpRequest()
-      xhr.open('PATCH', 'set-password', true)
-      xhr.setRequestHeader('X-CSRFToken', csrftoken)
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-      xhr.send(JSON.stringify(data))
+  //     const xhr = new XMLHttpRequest()
+  //     xhr.open('PATCH', 'set-password', true)
+  //     xhr.setRequestHeader('X-CSRFToken', csrftoken)
+  //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+  //     xhr.send(JSON.stringify(data))
   
-      xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            const response = JSON.parse(this.responseText)
-            thirdStepValidation($newPasswordForm, response)
-        }
-      }
-    })
-  }
+  //     xhr.onreadystatechange = function () {
+  //       if (this.readyState == 4 && this.status == 200) {
+  //           const response = JSON.parse(this.responseText)
+  //           thirdStepValidation($newPasswordForm, response)
+  //       }
+  //     }
+  //   })
+  // }
 
   //2nd step
   const secondStep = ()=> {
@@ -723,62 +743,50 @@ if ($forgotPasswordWrapper){
   //1st step
   const $forgotPasswordForm = $forgotPasswordWrapper.querySelector('[data-forgot-password-form]')
 
-  const firstStepValidation = (form, response) =>{
-    const $formField = form.querySelector('.form__field')
-    const $message = $formField.querySelector('.info')
+  // const firstStepValidation = (form, response) =>{
+  //   const $formField = form.querySelector('.form__field')
+  //   const $message = $formField.querySelector('.info')
 
-    if($message){ 
-      $message.textContent = response.message 
-    } else {
-      const info = document.createElement('span')
-      info.classList.add('info')
-      info.classList.add('error')
-      info.textContent = response.message
-      $formField.append(info)
-    }
-  }
+  //   if($message){ 
+  //     $message.textContent = response.message 
+  //   } else {
+  //     const info = document.createElement('span')
+  //     info.classList.add('info')
+  //     info.classList.add('error')
+  //     info.textContent = response.message
+  //     $formField.append(info)
+  //   }
+  // }
 
-  const goToStepTwo = ()=> {
-    const $stepOne = $forgotPasswordWrapper.querySelector('[data-forgot-password-step]')
-    const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
-    $stepTwo.style.zIndex = 2
-    $stepTwo.style.transform = "translateX(0)"
+  // const goToStepTwo = ()=> {
+  //   const $stepOne = $forgotPasswordWrapper.querySelector('[data-forgot-password-step]')
+  //   const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
+  //   $stepTwo.style.zIndex = 2
+  //   $stepTwo.style.transform = "translateX(0)"
     
 
-    setTimeout(() => {
-      $stepOne.style.position = "absolute"
-      $stepTwo.style.position = "relative"
-    }, 400);
+  //   setTimeout(() => {
+  //     $stepOne.style.position = "absolute"
+  //     $stepTwo.style.position = "relative"
+  //   }, 400);
 
-    secondStep()
-  }
+  //   secondStep()
+  // }
 
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
-    let csrftoken = this.querySelector('[name="csrftoken"]').value
     const $emailInput = this.querySelector('[data-email]')
+    const emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
+    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
-      "email": $emailInput.value
+      "email": [$emailInput.value.trim(), 'data-email', emailLabel],
+      "url": $urlInput.value
     }
-
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'send-password', true)
-    xhr.setRequestHeader('X-CSRFToken', csrftoken)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-    xhr.send(JSON.stringify(data))
-
-    xhr.onreadystatechange = function () {
-      if (this.readyState == 4 && this.status == 200) {
-          const response = JSON.parse(this.responseText)
-
-          if( response.valid == true ) {
-            sessionStorage.setItem('verifyingEmail', response.email)
-            goToStepTwo()
-          } else{
-           firstStepValidation($forgotPasswordForm, response)
-          }
-      }
+    console.log('wysłane dane: ', data)
+    
+    if ( clientValidation($forgotPasswordForm, data) ) {
+      firstStepAjaxRequest(data, $forgotPasswordForm)
     }
   })
 }
