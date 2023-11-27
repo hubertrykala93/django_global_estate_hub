@@ -9,7 +9,7 @@ import re
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required, user_passes_test
 from random import randint
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.utils.html import strip_tags
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_str
@@ -21,22 +21,27 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def is_ajax(request):
-    if request.headers['X-Requested-With'] == 'XMLHttpRequest':
-        return True
-
-    else:
-        return False
-
-
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def register(request):
+    """
+    Returns an HttpResponse with the register template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='accounts/register.html', context={
         'title': 'Sign Up',
     })
 
 
 def create_user(request):
+    """
+    The function handling the registration form for a new user in the database
+    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    Upon successful form validation, an email message is automatically sent from the website administrator
+    to the provided email address for account activation.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -157,11 +162,9 @@ def create_user(request):
                     message.attach_alternative(content=html_message, mimetype='text/html')
                     message.send(fail_silently=True)
 
-                    messages.info(request=request, message=f"The activation link has been sent to {email}.")
-
                     return JsonResponse(data=response, safe=False)
 
-                except BadHeaderError:
+                except Exception:
                     return JsonResponse(data={
                         "valid": False,
                         "message": "The message could not be sent.",
@@ -175,6 +178,14 @@ def create_user(request):
 
 
 def activate(request, uidb64, token):
+    """
+    The function activating the account of a new user. The activation link is valid for 5 minutes.
+    Upon successful verification, the user is redirected to the login page.
+    If the activation link has expired and the user has not activated the account,
+    they are removed from the database and must register again.
+
+    return: HttpResponseRedirect
+    """
     try:
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
         user = User.objects.get(pk=uid)
@@ -198,6 +209,15 @@ def activate(request, uidb64, token):
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def log_in(request):
+    """
+    Returns an HttpResponse with the login template.
+
+    The function handling the user authentication form using
+    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    Upon successful form validation, the user is logged in.
+
+    return: HttpResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -219,7 +239,8 @@ def log_in(request):
                     "The e-mail address format is invalid." if not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
-                    f"Your account has not been activated yet. Check your inbox." if not User.objects.get(
+                    f"Your account is not yet activated. Check your email inbox"
+                    f"or register again if the activation link has expired." if not User.objects.get(
                         email=email).is_verified else
                     "",
             },
@@ -263,6 +284,11 @@ def log_in(request):
 
 
 def log_out(request):
+    """
+    Logout user.
+
+    return: HttpResponseRedirect
+    """
     logout(request=request)
 
     return redirect(to='login')
@@ -270,6 +296,11 @@ def log_out(request):
 
 @login_required(login_url='login')
 def account_settings(request):
+    """
+    Returns an HttpResponse with the account settings template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='accounts/account-settings.html', context={
         'title': 'Account Settings',
     })
@@ -277,12 +308,30 @@ def account_settings(request):
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def forget_password(request):
+    """
+    Returns an HttpResponse with the forget password template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
     })
 
 
 def send_password(request):
+    """
+    The function handling the user email address validation form using
+    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+
+    This function sends an email message with a OneTimePassword to the user who requests password recovery/change.
+    The OneTimePassword is active for 5 minutes and then deleted. While the OneTimePassword is active,
+    the user cannot go back to the previous step to send another email message.
+    Only after deleting the OneTimePassword from the database can another password change request be sent.
+    This is done to prevent potential email spam. Upon successful verification of the user's email address,
+    the user is redirected to the next step for OneTimePassword validation.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
@@ -320,7 +369,7 @@ def send_password(request):
                                 "message": "",
                             }, safe=False)
 
-                        except BadHeaderError:
+                        except Exception:
                             return JsonResponse(data={
                                 "valid": False,
                                 "message": "The message could not be sent.",
@@ -353,6 +402,13 @@ def send_password(request):
 
 
 def validate_password(request):
+    """
+    The function handling the OneTimePassword validation form using
+    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    Upon successful form validation, the user can proceed to set a new password for their account.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
         password = data['code']
@@ -383,7 +439,14 @@ def validate_password(request):
 
 
 def set_password(request):
-    if request.method == 'POST':
+    """
+    The function handling the user password update form and saving it to the database
+    using the PATCH method with Asynchronous JavaScript and XML (AJAX) request.
+    Upon successful form validation, the database is automatically updated.
+
+    return: JsonResponse
+    """
+    if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
 
         raw_password1_field, raw_password2_field = [data[key][1] for key in list(data.keys())[:-1]]

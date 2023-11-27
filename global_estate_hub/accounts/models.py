@@ -5,6 +5,10 @@ from PIL import Image
 
 
 class CustomUserManager(UserManager):
+    """
+    Creating custom User Manager model.
+    """
+
     def _create_user(self, username, email, password, **extra_fields):
         if not email:
             raise ValueError('You have not provided a valid e-mail address.')
@@ -36,6 +40,9 @@ class CustomUserManager(UserManager):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    """
+    Creating custom User model instance.
+    """
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
@@ -57,9 +64,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name_plural = 'Accounts'
 
     def __str__(self):
+        """
+        Returns the string representation of the user's username and displays it in the administrator panel.
+
+        return: str
+        """
         return self.username
 
     def save(self, *args, **kwargs):
+        """
+        Converts the user's profile image to a smaller size of 300 x 300.
+
+        return: None
+        """
         super(User, self).save(*args, **kwargs)
 
         img = Image.open(fp=self.image.path)
@@ -73,11 +90,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class OneTimePasswordManager(models.Manager):
+    """
+    Creating OneTimePasswordManager model.
+    """
+
     def get_queryset(self):
+        """
+        Automatically deletes the OneTimePassword after 5 minutes.
+        """
         return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
 
 
 class OneTimePassword(models.Model):
+    """
+    Creating OneTimePassword model instance.
+    """
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
     created_at = models.DateTimeField(default=now)
@@ -89,10 +116,19 @@ class OneTimePassword(models.Model):
         verbose_name_plural = 'One Time Passwords'
 
     def __str__(self):
+        """
+        Returns the string representation of the username of the user
+        to whom the OneTimePassword has been assigned and displays it in the administrator panel.
+
+        return: str
+        """
         return f'One Time Password for {self.user.username}.'
 
 
 class Profile(models.Model):
+    """
+    Creating Profile model instance.
+    """
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, null=True)
     last_name = models.CharField(max_length=100, null=True)
@@ -118,4 +154,9 @@ class Profile(models.Model):
         verbose_name_plural = 'Profiles'
 
     def __str__(self):
+        """
+        Returns the string representation of the profile's username and displays it in the administrator panel.
+
+        return: str
+        """
         return f'{self.user.username} Profile.'

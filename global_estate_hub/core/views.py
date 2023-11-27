@@ -1,9 +1,9 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import Newsletter, ContactMail
 import json
 import re
-from django.core.mail import BadHeaderError, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
@@ -12,21 +12,26 @@ from django.utils.html import strip_tags
 load_dotenv()
 
 
-def is_ajax(request):
-    if request.headers['X-Requested-With'] == 'XMLHttpRequest':
-        return True
-
-    else:
-        return False
-
-
 def index(request):
+    """
+    Returns an HttpResponse with the homepage template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
     })
 
 
 def newsletter(request):
+    """
+    The function handling the form for saving an email address for the newsletter to the database
+    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    Upon successful form validation, an email message is automatically sent
+    from the website administrator to the provided email address.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -41,7 +46,8 @@ def newsletter(request):
         response = {
             "valid":
                 False if not email else
-                False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
+                False if not re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                                      string=email) else
                 False if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                                   string=email) and Newsletter.objects.filter(email=email).exists() else
                 True,
@@ -78,7 +84,7 @@ def newsletter(request):
 
                 return JsonResponse(data=response)
 
-            except BadHeaderError:
+            except Exception:
                 return JsonResponse(data={
                     "valid": False,
                     "message": "Unfortunately, we were unable to sign up your email for our newsletter. "
@@ -90,36 +96,69 @@ def newsletter(request):
 
 
 def about(request):
+    """
+    Returns an HttpResponse with the about template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/about.html', context={
         'title': 'About',
     })
 
 
 def properties(request):
+    """
+    Returns an HttpResponse with the properties template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
     })
 
 
 def faq(request):
+    """
+    Returns an HttpResponse with the FAQ template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',
     })
 
 
 def contact(request):
+    """
+    Returns an HttpResponse with the contact template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/contact.html', context={
         'title': 'Contact',
     })
 
 
 def error(request):
+    """
+    Returns an HttpResponse with the error404 template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/error.html', context={
         'title': 'Error 404',
     })
 
 
 def send_message(request):
+    """
+    The function handling the form for sending an email message to the website administrator
+    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    The function also saves data such as Full Name, Phone Number, Email Address, and Message to the database.
+    Upon successful form validation, an email message is automatically sent to the website administrator.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -186,7 +225,7 @@ def send_message(request):
         if len(validation) == 1:
             if validation[0]:
                 new_mail = ContactMail(full_name=fullname, phone_number=phone_number, email=email, content=content)
-                # new_mail.save()
+                new_mail.save()
 
                 try:
                     html_message = render_to_string(template_name='core/contact_mail.html', context={
@@ -206,11 +245,11 @@ def send_message(request):
                     )
 
                     message.attach_alternative(content=html_message, mimetype='text/html')
-                    # message.send(fail_silently=True)
+                    message.send(fail_silently=True)
 
                     return JsonResponse(data=response, safe=False)
 
-                except BadHeaderError:
+                except Exception:
                     return JsonResponse(data={
                         "valid": False,
                         "message": "The message could not be sent."

@@ -7,6 +7,9 @@ from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class Category(models.Model):
+    """
+    Creating Category model instance.
+    """
     name = models.CharField(max_length=50, choices=[
         ('Apartment', 'Apartment'),
         ('Family House', 'Family House'),
@@ -23,15 +26,28 @@ class Category(models.Model):
         verbose_name_plural = 'Categories'
 
     def __str__(self):
+        """
+        Returns the string representation of the category's name and displays it in the administrator panel.
+
+        return: str
+        """
         return self.name
 
     def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given category.
+
+        return HttpsResponseRedirect
+        """
         return reverse(viewname='article-categories', kwargs={
             'category_slug': self.slug,
         })
 
 
 class Tag(models.Model):
+    """
+    Creating Tag model instance.
+    """
     tag = models.CharField(max_length=50, choices=[
         ('Apartment', 'Apartment'),
         ('Business', 'Business'),
@@ -46,10 +62,18 @@ class Tag(models.Model):
         verbose_name_plural = 'Tags'
 
     def __str__(self):
+        """
+        Returns the string representation of the tag's name and displays it in the administrator panel.
+
+        return: str
+        """
         return self.tag
 
 
 class Article(models.Model):
+    """
+    Creating Article model instance.
+    """
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article_images')
     date_posted = models.DateTimeField(default=now)
@@ -65,15 +89,30 @@ class Article(models.Model):
         ordering = ['date_posted']
 
     def __str__(self):
+        """
+        Returns the string representation of the article's title and displays it in the administrator panel.
+
+        return: str
+        """
         return self.title
 
     def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given article.
+
+        return HttpsResponseRedirect
+        """
         return reverse(viewname='article-details', kwargs={
             'category_slug': self.category.slug,
             'article_slug': self.slug,
         })
 
     def save(self, *args, **kwargs):
+        """
+        Converts the article's image to a smaller size based on proportions.
+
+        return: None
+        """
         super(Article, self).save(*args, **kwargs)
 
         img = Image.open(fp=self.image.path)
@@ -92,6 +131,9 @@ class Article(models.Model):
 
 
 class Comment(models.Model):
+    """
+    Creating Comment model instance.
+    """
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True)
     full_name = models.CharField(max_length=200)
@@ -104,4 +146,10 @@ class Comment(models.Model):
         verbose_name_plural = 'Comments'
 
     def __str__(self):
+        """
+        Returns the string representation of the fullname of the user who commented on a given article
+        and displays it in the administrator panel.
+
+        return: str
+        """
         return f'{self.full_name} comment.'

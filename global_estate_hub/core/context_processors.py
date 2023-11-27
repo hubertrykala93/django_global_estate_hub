@@ -2,7 +2,12 @@ from django.middleware.csrf import get_token
 from blog.models import Article
 
 
-def breadcrumbs_urls(request):
+def breadcrumbs_urls(request) -> dict:
+    """
+    Creating breadcrumbs for the entire project.
+
+    return: dict
+    """
     arr = request.path.split(sep='/')[1:]
     titles = [title.replace('-', ' ').title() for title in arr]
     paths = []
@@ -24,13 +29,24 @@ def breadcrumbs_urls(request):
     }
 
 
-def generate_token(request):
+def generate_token(request) -> dict:
+    """
+    Generating CSRF middleware tokens for all forms in the project.
+
+    return: dict
+    """
     return {
         'csrf_token': get_token(request=request)
     }
 
 
-def latest_articles(request):
+def latest_articles(request) -> dict:
+    """
+    Creates a query set for the database and returns the three most recent articles from the Blog application,
+    which are then rendered in the Blog section on the homepage.
+
+    return: dict
+    """
     return {
         'latest_articles': Article.objects.all().order_by('-date_posted')[:3]
     }

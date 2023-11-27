@@ -4,6 +4,11 @@ from django.core.paginator import Paginator
 
 
 def blog(request):
+    """
+    Returns an HttpResponse with the blog template along with pagination.
+
+    return: HttpResponse
+    """
     paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=8)
     page = request.GET.get('page')
 
@@ -23,6 +28,11 @@ def blog(request):
 
 
 def article_categories(request, category_slug):
+    """
+    Returns an HttpResponse with the article-categories template along with pagination.
+
+    return: HttpResponse
+    """
     category = get_object_or_404(klass=Category, slug=category_slug)
 
     paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=8)
@@ -45,6 +55,11 @@ def article_categories(request, category_slug):
 
 
 def article_details(request, category_slug, article_slug):
+    """
+    Returns an HttpResponse with the article-details template.
+
+    return: HttpResponse
+    """
     category = get_object_or_404(klass=Category, slug=category_slug)
     article = get_object_or_404(klass=Article, category=category, slug=article_slug)
 
@@ -56,6 +71,14 @@ def article_details(request, category_slug, article_slug):
 
 
 def blog_results(request):
+    """
+    Returns an HttpResponse with the blog-results template along with pagination.
+
+    On this page, articles are listed based on keywords provided by the user
+    and retrieved through the GET request method. Model attributes such as title and content are searched.
+
+    return: HttpResponse
+    """
     if 'search' in request.GET:
         if request.GET.get('search'):
             keywords = request.GET.get('search').split()

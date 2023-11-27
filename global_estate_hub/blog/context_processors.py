@@ -1,6 +1,12 @@
 from .models import Category, Article
 
-def get_category_info(request):
+
+def get_category_info(request) -> dict:
+    """
+    Returns full information about categories.
+
+    return dict
+    """
     return {
         'get_category_info': list(
             zip(
@@ -13,13 +19,24 @@ def get_category_info(request):
     }
 
 
-def newest_articles(request):
+def newest_articles(request) -> dict:
+    """
+    Creates a query set for the database and returns the four most recent articles from the Blog application,
+    which are then rendered in the Blog sidebar.
+
+    return: dict
+    """
     return {
         'newest_articles': Article.objects.order_by('-date_posted')[:4],
     }
 
 
-def categories(request):
+def categories(request) -> dict:
+    """
+    Creates a query set for the database and returns all categories from the Blog application.
+
+    return: dict
+    """
     return {
         'categories': Category.objects.all(),
     }

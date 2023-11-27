@@ -3,6 +3,9 @@ from django.utils.timezone import now
 
 
 class Newsletter(models.Model):
+    """
+    Creating Newsletter model instance.
+    """
     subscribed_at = models.DateTimeField(default=now)
     email = models.EmailField(max_length=200, unique=True, null=True)
 
@@ -11,10 +14,18 @@ class Newsletter(models.Model):
         ordering = ['-subscribed_at']
 
     def __str__(self):
+        """
+        Returns the string representation of the user's email address and displays it in the administrator panel.
+
+        return: str
+        """
         return self.email
 
 
 class ContactMail(models.Model):
+    """
+    Creating ContactMail model instance.
+    """
     date_sent = models.DateTimeField(default=now)
     full_name = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=150)
@@ -26,4 +37,9 @@ class ContactMail(models.Model):
         ordering = ['-date_sent']
 
     def __str__(self):
+        """
+        Returns the string representation of the user's full name and displays it in the administrator panel.
+
+        return: str
+        """
         return f'E-mail from {self.full_name}.'

@@ -3,7 +3,14 @@ import six
 
 
 class TokenGenerator(PasswordResetTokenGenerator):
+    """
+    Creating TokenGenerator.
+    """
+
     def _make_hash_value(self, user, timestamp):
+        """
+        Generates a token for the user for the purpose of account activation.
+        """
         return six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_verified)
 
 
