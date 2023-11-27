@@ -212,6 +212,13 @@ const clientValidation = (form, data) => {
       }
     }
 
+    if ( field === 'data-password' ) {
+      if ( !passwordRegex.test(value) ) {
+        showInfo(false, `The ${data.password[2]} should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.`, form, field)
+        isAllValid = false
+      }
+    }
+
     if ( field === 'data-password1' ) {
       if ( !passwordRegex.test(value) ) {
         showInfo(false, `The ${data.password1[2]} should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.
@@ -478,6 +485,25 @@ const $loginForm = document.querySelector('[data-login-form]')
 
 if ($loginForm){
 
+  const serverResponse = (response)=> {
+    let isSent = true
+    if ( response.valid === null ) {
+      return false
+    } else{
+      response.forEach(item => {
+        if ( !item.valid ) {
+          isSent = false
+          showInfo(item.valid, item.message, $loginForm, item.field)
+        } else {
+          removeInfo($loginForm, item.field)
+        }
+      })
+      if (isSent) { 
+        location.href = '/properties'
+      }
+    }
+  }
+
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'login', true)
@@ -489,7 +515,7 @@ if ($loginForm){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          // loginServerResponse(response)
+          serverResponse(response)
       }
     }
   }
@@ -497,11 +523,20 @@ if ($loginForm){
   $loginForm.addEventListener('submit', function (e) {
     e.preventDefault()
     const $emailInput = this.querySelector('[data-email]')
+    const emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
     const $passwordInput = this.querySelector('[data-password]')
+    const passwordLabel = $passwordInput.parentElement.parentElement.querySelector('label').textContent
+    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
-      "email": [$emailInput.value, "data-email"],
-      "password": [$passwordInput.value, "data-password"]
+      "email": [$emailInput.value.trim(), "data-email", emailLabel],
+      "password": [$passwordInput.value.trim(), "data-password", passwordLabel],
+      "url": $urlInput.value
+    }
+    console.log(data)
+
+    if ( clientValidation($loginForm, data) ) {
+      ajaxRequest(data)
     }
 
   })
