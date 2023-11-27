@@ -211,18 +211,32 @@ def activate(request, uidb64, token):
 def log_in(request):
     """
     Returns an HttpResponse with the login template.
+    """
+    return render(request=request, template_name='accounts/login.html', context={
+        'title': 'Login'
+    })
 
+
+def authorization(request):
+    """
     The function handling the user authentication form using
     the POST method with Asynchronous JavaScript and XML (AJAX) request.
     Upon successful form validation, the user is logged in.
 
-    return: HttpResponse
+    return: JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        email, password = [data[key][0] for key in data]
-        email_field, password_field = [data[key][1] for key in data]
+        email, password = [data[key][0] for key in list(data.keys())[:-1]]
+        spam_verification = [data[key] for key in data][-1]
+        email_field, password_field = [data[key][1] for key in list(data.keys())[:-1]]
+        email_label, password_label = [data[key][2] for key in list(data.keys())[:-1]]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            }, safe=False)
 
         response = [
             {
@@ -235,7 +249,7 @@ def log_in(request):
                     True,
                 "field": email_field,
                 "message":
-                    "The e-mail field cannot be empty." if not email else
+                    f"The {email_label} field cannot be empty." if not email else
                     "The e-mail address format is invalid." if not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
                     f"The e-mail {email} does not exists." if not User.objects.filter(email=email).exists() else
@@ -253,7 +267,7 @@ def log_in(request):
                     True,
                 "field": password_field,
                 "message":
-                    "The password field cannot be empty." if not password else
+                    f"The {password_label} field cannot be empty." if not password else
                     f"Incorrect password for the e-mail address {email}." if User.objects.filter(
                         email=email).exists() and not check_password(password=password,
                                                                      encoded=User.objects.get(
@@ -277,10 +291,6 @@ def log_in(request):
 
         else:
             return JsonResponse(data=response, safe=False)
-
-    return render(request=request, template_name='accounts/login.html', context={
-        'title': 'Login'
-    })
 
 
 def log_out(request):

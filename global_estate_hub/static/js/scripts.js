@@ -499,14 +499,14 @@ if ($loginForm){
         }
       })
       if (isSent) { 
-        location.href = '/properties'
+        location.href = '/'
       }
     }
   }
 
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'login', true)
+    xhr.open('POST', 'authorization', true)
     xhr.setRequestHeader('X-CSRFToken', getToken($loginForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
