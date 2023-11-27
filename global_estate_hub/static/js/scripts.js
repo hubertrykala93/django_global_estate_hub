@@ -551,6 +551,31 @@ const $forgotPasswordWrapper = document.querySelector('[data-forgot-password-wra
 if ($forgotPasswordWrapper){
 
   let currentStep = 1
+  const $allSteps = $forgotPasswordWrapper.querySelectorAll('[data-step-slide]')
+  const allStepsLenght = $allSteps.length
+
+  const goToNextStep = () => {
+    if ( (currentStep - 1) < allStepsLenght ) {
+      const $currentStep = $allSteps[currentStep - 1]
+      const $nextStep = $allSteps[currentStep]
+      $nextStep.style.zIndex = 2
+      $nextStep.style.transform = "translateX(0)"
+      setTimeout(() => {
+        $currentStep.style.position = "absolute"
+        $nextStep.style.position = "relative"
+      }, 400);
+      currentStep++
+    }
+  }
+
+  const firstStepServerResponse = (response, form) => {
+    if ( response.valid === false ) {
+      showInfo(response.valid, response.message, form, 'data-email')
+    } else{
+      sessionStorage.setItem('verifyingEmail', response.email)
+      goToNextStep()
+    }
+  }
 
   const firstStepAjaxRequest = (data, form) =>{
     const xhr = new XMLHttpRequest()
@@ -565,8 +590,7 @@ if ($forgotPasswordWrapper){
           const response = JSON.parse(this.responseText)
 
           console.log('odebrane dane: ', response)
-          // sessionStorage.setItem('verifyingEmail', response.email)
-
+          firstStepServerResponse(response, form)
       }
     }
   }
@@ -740,38 +764,11 @@ if ($forgotPasswordWrapper){
     })
   }
 
+
+
+
   //1st step
   const $forgotPasswordForm = $forgotPasswordWrapper.querySelector('[data-forgot-password-form]')
-
-  // const firstStepValidation = (form, response) =>{
-  //   const $formField = form.querySelector('.form__field')
-  //   const $message = $formField.querySelector('.info')
-
-  //   if($message){ 
-  //     $message.textContent = response.message 
-  //   } else {
-  //     const info = document.createElement('span')
-  //     info.classList.add('info')
-  //     info.classList.add('error')
-  //     info.textContent = response.message
-  //     $formField.append(info)
-  //   }
-  // }
-
-  // const goToStepTwo = ()=> {
-  //   const $stepOne = $forgotPasswordWrapper.querySelector('[data-forgot-password-step]')
-  //   const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
-  //   $stepTwo.style.zIndex = 2
-  //   $stepTwo.style.transform = "translateX(0)"
-    
-
-  //   setTimeout(() => {
-  //     $stepOne.style.position = "absolute"
-  //     $stepTwo.style.position = "relative"
-  //   }, 400);
-
-  //   secondStep()
-  // }
 
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
