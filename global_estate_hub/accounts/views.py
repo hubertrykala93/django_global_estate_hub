@@ -345,7 +345,14 @@ def send_password(request):
     if request.method == 'POST':
         one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
-        email = data['email']
+
+        email, spam_verification = [data[key][0] for key in list(data.keys())[:-1]][0], [data[key] for key in data][1]
+        email_label = [data[key][2] for key in list(data.keys())[:-1]][0]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            })
 
         if email:
             if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
@@ -377,7 +384,7 @@ def send_password(request):
                                 "valid": True,
                                 "email": email,
                                 "message": "",
-                            }, safe=False)
+                            })
 
                         except Exception:
                             return JsonResponse(data={
@@ -389,26 +396,25 @@ def send_password(request):
                         return JsonResponse(data={
                             "valid": True,
                             "email": email,
-                            "message": "",
-                        }, safe=False)
+                        })
 
                 else:
                     return JsonResponse(data={
                         "valid": False,
                         "message": "The user with the provided email address does not exist.",
-                    }, safe=False)
+                    })
 
             else:
                 return JsonResponse(data={
                     "valid": False,
                     "message": "The e-mail address format is invalid.",
-                }, safe=False)
+                })
 
         else:
             return JsonResponse(data={
                 "valid": False,
-                "message": "The e-mail field cannot be empty.",
-            }, safe=False)
+                "message": f"The {email_label} field cannot be empty.",
+            })
 
 
 def validate_password(request):
