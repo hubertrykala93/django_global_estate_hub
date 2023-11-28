@@ -554,8 +554,7 @@ if ($forgotPasswordWrapper){
   const $allSteps = $forgotPasswordWrapper.querySelectorAll('[data-step-slide]')
   const allStepsLenght = $allSteps.length
 
-  const goToNextStep = () => {
-    if ( (currentStep - 1) < allStepsLenght ) {
+  const goToNextStep = (nextStepCallback) => {
       const $currentStep = $allSteps[currentStep - 1]
       const $nextStep = $allSteps[currentStep]
       $nextStep.style.zIndex = 2
@@ -565,7 +564,7 @@ if ($forgotPasswordWrapper){
         $nextStep.style.position = "relative"
       }, 400);
       currentStep++
-    }
+      nextStepCallback()
   }
 
   const firstStepServerResponse = (response, form) => {
@@ -573,7 +572,7 @@ if ($forgotPasswordWrapper){
       showInfo(response.valid, response.message, form, 'data-email')
     } else{
       sessionStorage.setItem('verifyingEmail', response.email)
-      goToNextStep()
+      goToNextStep(secondStep)
     }
   }
 
@@ -588,12 +587,42 @@ if ($forgotPasswordWrapper){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-
-          console.log('odebrane dane: ', response)
           firstStepServerResponse(response, form)
       }
     }
   }
+
+  const secondStepServerResponse = (response, form) => {
+    if ( response.valid === false ) {
+      showInfo(response.valid, response.message, form, 'data-email')
+    } else{
+      sessionStorage.setItem('verifyingEmail', response.email)
+      // goToNextStep(secondStep)
+    }
+  }
+
+  const secondStepAjaxRequest = (data, form) =>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'validate-password', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+    console.log('wysłane dane: ', data)
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          // secondStepServerResponse(response, form)
+      }
+    }
+  }
+  
+
+
+
+
+
 
   //3rd step
   // const thirdStep = ()=> {
@@ -670,99 +699,69 @@ if ($forgotPasswordWrapper){
   //   })
   // }
 
+
   //2nd step
-  const secondStep = ()=> {
-    const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
-    const $veryfyingEmail = $forgotPasswordWrapper.querySelector('[data-verification-email]')
-    const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
+  // const secondSteps = ()=> {
+  //   // const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
+  //   // const $veryfyingEmail = $forgotPasswordWrapper.querySelector('[data-verification-email]')
+  //   // const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
 
-    $veryfyingEmail.textContent = sessionStorage.getItem('verifyingEmail')
+  //   // $veryfyingEmail.textContent = sessionStorage.getItem('verifyingEmail')
 
-    const secondStepValidation = (form, message) =>{
-      const $formField = form.querySelector('.form__field')
-      const $message = $formField.querySelector('.info')
-  
-      if($message){ 
-        $message.textContent = message 
-      } else {
-        const info = document.createElement('span')
-        info.classList.add('info')
-        info.classList.add('error')
-        info.textContent = message
-        $formField.append(info)
-      }
-    }
+  //   // $verificationFormInputs.forEach((input, index) => {
+  //   //   input.addEventListener('input', ()=>{
+  //   //     if ( !input.value.match(/^[0-9]+$/) ) {
+  //   //       input.value = ''
+  //   //       input.classList.remove('highlighted')
+  //   //     } else {
+  //   //       input.classList.add('highlighted')
+  //   //       const inputToFocus = index + 1 < $verificationFormInputs.length ? index + 1 : false
+  //   //       if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
+  //   //     }
+  //   //   })
+  //   // })
 
-    const goToStepThree = ()=> {
-      const $stepTwo = $forgotPasswordWrapper.querySelector('[data-verification-password-step]')
-      const $stepThree = $forgotPasswordWrapper.querySelector('[data-new-password-step]')
-      $stepThree.style.zIndex = 3
-      $stepThree.style.transform = "translateX(0)"
-      
-  
-      setTimeout(() => {
-        $stepTwo.style.position = "absolute"
-        $stepThree.style.position = "relative"
-      }, 400);
-  
-      thirdStep()
-    }
+  //   $verificationForm.addEventListener('submit', function (e) {
+  //     e.preventDefault()
+  //     const $codeInputs = this.querySelectorAll('[data-code]')
+  //     let filledInputs = 0
+  //     let typedCode = ""
+  //     $codeInputs.forEach(input=> {
+  //       if (input.value !== ''){
+  //         filledInputs++
+  //         typedCode += input.value
+  //       }
+  //     })
 
-    $verificationFormInputs.forEach((input, index) => {
-      input.addEventListener('input', ()=>{
-        if ( !input.value.match(/^[0-9]+$/) ) {
-          input.value = ''
-          input.classList.remove('highlighted')
-        } else {
-          input.classList.add('highlighted')
-          const inputToFocus = index + 1 < $verificationFormInputs.length ? index + 1 : false
-          if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
-        }
-      })
-    })
-
-    $verificationForm.addEventListener('submit', function (e) {
-      e.preventDefault()
-      let csrftoken = this.querySelector('[name="csrftoken"]').value
-      const $codeInputs = this.querySelectorAll('[data-code]')
-      let filledInputs = 0
-      let typedCode = ""
-      $codeInputs.forEach(input=> {
-        if (input.value !== ''){
-          filledInputs++
-          typedCode += input.value
-        }
-      })
-
-      if ( filledInputs !== $codeInputs.length ) {
-        secondStepValidation($verificationForm, "Fill all inputs.")
-      } else {
-        const data = {
-          "code": typedCode,
-          "email": sessionStorage.getItem('verifyingEmail')
-        }
+  //     if ( filledInputs !== $codeInputs.length ) {
+  //       secondStepValidation($verificationForm, "Fill all inputs.")
+  //     } else {
+  //       const data = {
+  //         "code": typedCode,
+  //         "email": sessionStorage.getItem('verifyingEmail')
+  //       }
         
-        const xhr = new XMLHttpRequest()
-        xhr.open('POST', 'validate-password', true)
-        xhr.setRequestHeader('X-CSRFToken', csrftoken)
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-        xhr.send(JSON.stringify(data))
+  //       const xhr = new XMLHttpRequest()
+  //       xhr.open('POST', 'validate-password', true)
+  //       xhr.setRequestHeader('X-CSRFToken', csrftoken)
+  //       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+  //       xhr.send(JSON.stringify(data))
     
-        xhr.onreadystatechange = function () {
-          if (this.readyState == 4 && this.status == 200) {
-              const response = JSON.parse(this.responseText)
+  //       xhr.onreadystatechange = function () {
+  //         if (this.readyState == 4 && this.status == 200) {
+  //             const response = JSON.parse(this.responseText)
     
-              if( response.valid == true ) {
-                sessionStorage.setItem('verifyingEmail', response.email)
-                goToStepThree()
-              } else{
-                secondStepValidation($verificationForm, response.message)
-              }
-          }
-        }
-      }
-    })
-  }
+  //             if( response.valid == true ) {
+  //               sessionStorage.setItem('verifyingEmail', response.email)
+  //               goToStepThree()
+  //             } else{
+  //               secondStepValidation($verificationForm, response.message)
+  //             }
+  //         }
+  //       }
+  //     }
+  //   })
+  // }
 
 
 
@@ -780,12 +779,65 @@ if ($forgotPasswordWrapper){
       "email": [$emailInput.value.trim(), 'data-email', emailLabel],
       "url": $urlInput.value
     }
-    console.log('wysłane dane: ', data)
     
     if ( clientValidation($forgotPasswordForm, data) ) {
       firstStepAjaxRequest(data, $forgotPasswordForm)
     }
   })
+
+  //2nd step
+  function secondStep (){
+    const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
+    const $veryfyingEmail = $forgotPasswordWrapper.querySelector('[data-verification-email]')
+    const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
+
+    $veryfyingEmail.textContent = sessionStorage.getItem('verifyingEmail')
+
+    $verificationFormInputs.forEach((input, index) => {
+      input.addEventListener('input', ()=>{
+        if ( !input.value.match(/^[0-9]+$/) ) {
+          input.value = ''
+          input.classList.remove('highlighted')
+        } else {
+          input.classList.add('highlighted')
+          const inputToFocus = index + 1 < $verificationFormInputs.length ? index + 1 : false
+          if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
+        }
+      })
+    })
+
+    $verificationForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const $codeInputs = this.querySelectorAll('[data-code]')
+      let filledInputs = 0
+      let typedCode = ""
+      $codeInputs.forEach(input=> {
+        if (input.value !== ''){
+          filledInputs++
+          typedCode += input.value
+        }
+      })
+
+      if ( filledInputs !== $codeInputs.length ) {
+        showInfo(false, 'Fill all inputs.', $verificationForm, 'data-code')
+      } else {
+        const $urlInput = this.querySelector('[name="url"]')
+
+        const data = {
+          "code": typedCode,
+          "email": sessionStorage.getItem('verifyingEmail'),
+          "url": $urlInput.value
+        }
+
+        if ( data.url === '' ) { secondStepAjaxRequest(data, $verificationForm) }
+      }
+    })
+  }
+
+  //3rd step
+  // function thirdStep (){
+
+  // }
 }
 
 
