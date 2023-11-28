@@ -427,8 +427,12 @@ def validate_password(request):
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        password = data['code']
-        email = data['email']
+        password, email, spam_verification = [data[key] for key in data]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            })
 
         if password:
             user_id = User.objects.get(email=email).pk
