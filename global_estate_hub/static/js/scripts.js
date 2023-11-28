@@ -565,7 +565,7 @@ if ($forgotPasswordWrapper){
         $nextStep.style.position = "relative"
       }, 400);
       currentStep++
-      nextStepCallback()
+      if (nextStepCallback) {nextStepCallback()}
   }
 
   const firstStepServerResponse = (response, form) => {
@@ -632,7 +632,7 @@ if ($forgotPasswordWrapper){
         }
       })
       if (isSent) { 
-        
+        goToNextStep()
       }
     }
   }
@@ -649,145 +649,10 @@ if ($forgotPasswordWrapper){
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('odebrane dane', response)
-          // thirdStepServerResponse(response, form)
+          thirdStepServerResponse(response, form)
       }
     }
   }
-
-
-
-
-
-
-  //3rd step
-  // const thirdStep = ()=> {
-  //   const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
-
-
-
-  //   const thirdStepValidation = ($form, response) => {
-  //     const fieldsNumber = response.length
-  //     let validFields = 0
-    
-  //     response.forEach(field => {
-  //       const $currentformField = $form.querySelector(`[${field.field}]`).closest('.form__field')
-  //       const $message = $currentformField.querySelector('.info')
-  //       if (field.valid == false) {
-  //         const $message = $currentformField.querySelector('.info')
-  //         validFields = 0
-    
-  //         if($message){ 
-  //           $message.textContent = field.message 
-  //         }else {
-  //           const info = document.createElement('span')
-  //           info.classList.add('info')
-  //           info.classList.add('error')
-  //           info.textContent = field.message
-  //           $currentformField.append(info)
-  //         }
-  //       } else{
-  //         validFields++
-  //         if($message){ 
-  //           $message.remove()
-  //         }
-  //       }
-  //       if ( validFields === fieldsNumber ) {
-  //         goToStepFour()
-  //       }
-  //     });
-  //   }
-
-  //   $newPasswordForm.addEventListener('submit', function (e) {
-  //     e.preventDefault()
-  //     let csrftoken = this.querySelector('[name="csrftoken"]').value
-  //     const $password1Input = $newPasswordForm.querySelector('[data-password1]')
-  //     const $password2Input = $newPasswordForm.querySelector('[data-password2]')
-  //     const data = {
-  //       "password1": [$password1Input.value, "data-password1"],
-  //       "password2": [$password2Input.value, "data-password2"],
-  //       "email": sessionStorage.getItem('verifyingEmail')
-  //     }
-        
-  //     const xhr = new XMLHttpRequest()
-  //     xhr.open('PATCH', 'set-password', true)
-  //     xhr.setRequestHeader('X-CSRFToken', csrftoken)
-  //     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-  //     xhr.send(JSON.stringify(data))
-  
-  //     xhr.onreadystatechange = function () {
-  //       if (this.readyState == 4 && this.status == 200) {
-  //           const response = JSON.parse(this.responseText)
-  //           thirdStepValidation($newPasswordForm, response)
-  //       }
-  //     }
-  //   })
-  // }
-
-
-  //2nd step
-  // const secondSteps = ()=> {
-  //   // const $verificationForm = $forgotPasswordWrapper.querySelector('[data-verification-password-form]')
-  //   // const $veryfyingEmail = $forgotPasswordWrapper.querySelector('[data-verification-email]')
-  //   // const $verificationFormInputs = $verificationForm.querySelectorAll('[data-code]')
-
-  //   // $veryfyingEmail.textContent = sessionStorage.getItem('verifyingEmail')
-
-  //   // $verificationFormInputs.forEach((input, index) => {
-  //   //   input.addEventListener('input', ()=>{
-  //   //     if ( !input.value.match(/^[0-9]+$/) ) {
-  //   //       input.value = ''
-  //   //       input.classList.remove('highlighted')
-  //   //     } else {
-  //   //       input.classList.add('highlighted')
-  //   //       const inputToFocus = index + 1 < $verificationFormInputs.length ? index + 1 : false
-  //   //       if (inputToFocus) { $verificationFormInputs[inputToFocus].focus() }
-  //   //     }
-  //   //   })
-  //   // })
-
-  //   $verificationForm.addEventListener('submit', function (e) {
-  //     e.preventDefault()
-  //     const $codeInputs = this.querySelectorAll('[data-code]')
-  //     let filledInputs = 0
-  //     let typedCode = ""
-  //     $codeInputs.forEach(input=> {
-  //       if (input.value !== ''){
-  //         filledInputs++
-  //         typedCode += input.value
-  //       }
-  //     })
-
-  //     if ( filledInputs !== $codeInputs.length ) {
-  //       secondStepValidation($verificationForm, "Fill all inputs.")
-  //     } else {
-  //       const data = {
-  //         "code": typedCode,
-  //         "email": sessionStorage.getItem('verifyingEmail')
-  //       }
-        
-  //       const xhr = new XMLHttpRequest()
-  //       xhr.open('POST', 'validate-password', true)
-  //       xhr.setRequestHeader('X-CSRFToken', csrftoken)
-  //       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-  //       xhr.send(JSON.stringify(data))
-    
-  //       xhr.onreadystatechange = function () {
-  //         if (this.readyState == 4 && this.status == 200) {
-  //             const response = JSON.parse(this.responseText)
-    
-  //             if( response.valid == true ) {
-  //               sessionStorage.setItem('verifyingEmail', response.email)
-  //               goToStepThree()
-  //             } else{
-  //               secondStepValidation($verificationForm, response.message)
-  //             }
-  //         }
-  //       }
-  //     }
-  //   })
-  // }
-
-
 
 
   //1st step
@@ -878,7 +743,6 @@ if ($forgotPasswordWrapper){
       }
 
       if ( clientValidation($newPasswordForm, data) ) {
-        console.log('wysłane dane', data)
         thirdStepAjaxRequest(data, $newPasswordForm)
       }
         
