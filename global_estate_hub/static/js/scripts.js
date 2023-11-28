@@ -249,6 +249,7 @@ const clientValidation = (form, data) => {
   delete newData.url
 
   Object.entries(newData).forEach(([key, value]) => {
+    if ( !Array.isArray(value) ) { return false }
     if ( value[0] === '' ) {
       showInfo(false, `The ${value[2]} field cannot be empty.`, form, value[1])
       isAllValid = false
@@ -594,10 +595,10 @@ if ($forgotPasswordWrapper){
 
   const secondStepServerResponse = (response, form) => {
     if ( response.valid === false ) {
-      showInfo(response.valid, response.message, form, 'data-email')
+      showInfo(response.valid, response.message, form, 'data-code')
     } else{
       sessionStorage.setItem('verifyingEmail', response.email)
-      // goToNextStep(secondStep)
+      goToNextStep(thirdStep)
     }
   }
 
@@ -608,16 +609,50 @@ if ($forgotPasswordWrapper){
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
-    console.log('wysłane dane: ', data)
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          // secondStepServerResponse(response, form)
+          secondStepServerResponse(response, form)
+      }
+    }
+  }
+
+  const thirdStepServerResponse = (response, form)=> {
+    let isSent = true
+    if ( response.valid === null ) {
+      return false
+    } else{
+      response.forEach(item => {
+        if ( !item.valid ) {
+          isSent = false
+          showInfo(item.valid, item.message, form, item.field)
+        } else {
+          removeInfo(form, item.field)
+        }
+      })
+      if (isSent) { 
+        
       }
     }
   }
   
+  const thirdStepAjaxRequest = (data, form) =>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'set-password', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odebrane dane', response)
+          // thirdStepServerResponse(response, form)
+      }
+    }
+  }
 
 
 
@@ -628,18 +663,7 @@ if ($forgotPasswordWrapper){
   // const thirdStep = ()=> {
   //   const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
 
-  //   const goToStepFour = ()=> {
-  //     const $stepThree = $forgotPasswordWrapper.querySelector('[data-new-password-step]')
-  //     const $stepFour = $forgotPasswordWrapper.querySelector('[data-done-password-step]')
-  //     $stepFour.style.zIndex = 4
-  //     $stepFour.style.transform = "translateX(0)"
-      
-  
-  //     setTimeout(() => {
-  //       $stepThree.style.position = "absolute"
-  //       $stepFour.style.position = "relative"
-  //     }, 400);
-  //   }
+
 
   //   const thirdStepValidation = ($form, response) => {
   //     const fieldsNumber = response.length
@@ -835,9 +859,31 @@ if ($forgotPasswordWrapper){
   }
 
   //3rd step
-  // function thirdStep (){
+  function thirdStep (){
+    const $newPasswordForm = $forgotPasswordWrapper.querySelector('[data-new-password-form]')
 
-  // }
+    $newPasswordForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const $password1Input = this.querySelector('[data-password1]')
+      const password1Label = $password1Input.parentElement.parentElement.querySelector('label').textContent
+      const $password2Input = this.querySelector('[data-password2]')
+      const password2Label = $password2Input.parentElement.parentElement.querySelector('label').textContent
+      const $urlInput = this.querySelector('[name="url"]')
+
+      const data = {
+        "password1": [$password1Input.value, "data-password1", password1Label],
+        "password2": [$password2Input.value, "data-password2", password2Label],
+        "email": sessionStorage.getItem('verifyingEmail'),
+        "url": $urlInput.value
+      }
+
+      if ( clientValidation($newPasswordForm, data) ) {
+        console.log('wysłane dane', data)
+        thirdStepAjaxRequest(data, $newPasswordForm)
+      }
+        
+    })
+  }
 }
 
 
