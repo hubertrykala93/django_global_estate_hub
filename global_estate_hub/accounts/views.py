@@ -469,12 +469,17 @@ def set_password(request):
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        raw_password1_field, raw_password2_field = [data[key][1] for key in list(data.keys())[:-1]]
+        raw_password1, raw_password2 = [data[key][0] for key in list(data.keys())[:-2]]
+        raw_password1_field, raw_password2_field = [data[key][1] for key in list(data.keys())[:-2]]
+        raw_password1_label, raw_password2_label = [data[key][2] for key in list(data.keys())[:-2]]
 
-        raw_password1 = data['password1'][0]
-        raw_password2 = data['password2'][0]
+        email = [data[key] for key in data][-2]
+        spam_verification = [data[key] for key in data][-1]
 
-        email = data['email']
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            })
 
         response = [
             {
@@ -485,8 +490,9 @@ def set_password(request):
                     True,
                 "field": raw_password1_field,
                 "message":
-                    "The password cannot be empty." if not raw_password1 else
-                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password1_label} field cannot be empty." if not raw_password1 else
+                    f"The {raw_password1_label} should be at least 8 characters long,"
+                    f"including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
@@ -502,13 +508,13 @@ def set_password(request):
                     True,
                 "field": raw_password2_field,
                 "message":
-                    "The confirm password field cannot be empty." if not raw_password2 else
-                    "The password field must be filled in." if not raw_password1 else
-                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password2_label} field cannot be empty." if not raw_password2 else
+                    f"The {raw_password1_label} field must be filled in." if not raw_password1 else
+                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
-                    "The confirm password field does not match the previously entered password." if raw_password2 != raw_password1 else
+                    f"The {raw_password2_label} field does not match the previously entered password." if raw_password2 != raw_password1 else
                     "",
             },
         ]

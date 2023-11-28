@@ -639,7 +639,7 @@ if ($forgotPasswordWrapper){
   
   const thirdStepAjaxRequest = (data, form) =>{
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'set-password', true)
+    xhr.open('PATCH', 'set-password', true)
     xhr.setRequestHeader('X-CSRFToken', getToken(form))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
