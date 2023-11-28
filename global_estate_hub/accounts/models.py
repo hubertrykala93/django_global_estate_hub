@@ -46,6 +46,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
+    is_private = models.BooleanField(default=True)
+    is_company = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -125,33 +127,32 @@ class OneTimePassword(models.Model):
         return f'One Time Password for {self.user.username}.'
 
 
-class Profile(models.Model):
+class Private(models.Model):
     """
-    Creating Profile model instance.
+    Creating PrivateProfile model instance.
     """
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    company_name = models.CharField(max_length=100, null=True)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    first_name = models.CharField(max_length=100, null=True, blank=True)
+    last_name = models.CharField(max_length=100, null=True, blank=True)
     gender = models.CharField(max_length=100, choices=(
         ('Not Defined', 'Not Defined'),
         ('Male', 'Male'),
         ('Female', 'Female')
-    ))
-    country = models.CharField(max_length=100, null=True)
-    province = models.CharField(max_length=100, null=True)
-    city = models.CharField(max_length=100, null=True)
-    street = models.CharField(max_length=100, null=True)
-    postal_code = models.CharField(max_length=20, null=True)
-    phone_number = models.CharField(max_length=150, null=True)
-    website_url = models.URLField(max_length=200, null=True)
-    facebook_url = models.URLField(max_length=200, null=True)
-    instagram_url = models.URLField(max_length=200, null=True)
-    linkedin_url = models.URLField(max_length=200, null=True)
+    ), blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    province = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    street = models.CharField(max_length=100, null=True, blank=True)
+    postal_code = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    website_url = models.URLField(max_length=200, null=True, blank=True)
+    facebook_url = models.URLField(max_length=200, null=True, blank=True)
+    instagram_url = models.URLField(max_length=200, null=True, blank=True)
+    linkedin_url = models.URLField(max_length=200, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Profile'
-        verbose_name_plural = 'Profiles'
+        verbose_name = 'Private Profile'
+        verbose_name_plural = 'Private Profiles'
 
     def __str__(self):
         """
@@ -160,3 +161,34 @@ class Profile(models.Model):
         return: str
         """
         return f'{self.user.username} Profile.'
+
+
+class Company(models.Model):
+    """
+    Creating CompanyProfile model instance.
+    """
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    company_name = models.CharField(max_length=100, null=True)
+    company_id = models.IntegerField(null=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    province = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    street = models.CharField(max_length=100, null=True, blank=True)
+    postal_code = models.CharField(max_length=20, null=True, blank=True)
+    phone_number = models.CharField(max_length=150, null=True, blank=True)
+    website_url = models.URLField(max_length=200, null=True, blank=True)
+    facebook_url = models.URLField(max_length=200, null=True, blank=True)
+    instagram_url = models.URLField(max_length=200, null=True, blank=True)
+    linkedin_url = models.URLField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Company Profile'
+        verbose_name_plural = 'Company Profiles'
+
+    def __str__(self):
+        """
+        Returns the string representation of the company's name and displays it in the administrator panel.
+
+        return: str
+        """
+        return f'{self.company_name} Profile.'
