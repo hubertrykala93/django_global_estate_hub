@@ -1,12 +1,79 @@
 @Szymon-Levy
 
-0. contact.html i contact form,
-1. article-details.html,
-2. article-details.html ajax form,
+0. dodanie checkboxów w rejestracji
+
+"""
+W modelu dodałem dwa BooleanField'y (is_individual, is_business), to mają chyba być checkbox'y
+z czego oba są ustawione na False. Będzie trzeba dodać walidację, żeby tylko jeden checkbox mógłbyć zaznaczony.
+"""
+
+1. account-settings.html
+
+"""
+W zależności czy szmata ma konto jako osoba fizyczna lub firma będzie trzeba wyświetlić 2 różne formularze.
+
+if user.is_authenticated:
+    if user.is_individual:
+        1. "User Settings" -> Tytuł 1.
+            {{ username }}
+            {{ email }}
+            {{ password1 }}
+            {{ password2 }}
+            {{ image }}
+
+        2. "Profile Settings" -> Tytuł 2.
+            {{ first_name }}
+            {{ last_name }}
+            {{ phone_number }}
+            {{ gender }}
+
+        3. "Localization Settings" -> Tytuł 3.
+            {{ country }}
+            {{ province }}
+            {{ city }}
+            {{ street }}
+            {{ postal_code }}
+
+        4. "Social Media" -> Tytuł 4.
+            {{ website_url }}
+            {{ facebook_url }}
+            {{ instagram_url }}
+            {{ linkedin_url }}
+
+    else:
+        1. "User Settings" -> Tytuł 1.
+            {{ username }}
+            {{ email }}
+            {{ password1 }}
+            {{ password2 }}
+            {{ image }}
+
+        2. "Profile Settings" -> Tytuł 2.
+            {{ company_name }}
+            {{ company_id }}
+            {{ phone_number }}
+
+        3. "Localization Settings" -> Tytuł 3.
+            {{ country }}
+            {{ province }}
+            {{ city }}
+            {{ street }}
+            {{ postal_code }}
+
+        4. "Social Media" -> Tytuł 4.
+            {{ website_url }}
+            {{ facebook_url }}
+            {{ instagram_url }}
+            {{ linkedin_url }}
+
+    endif
+endif
+
+
+2. article-details.html,
+3. article-details.html ajax form,
 4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html i core/templates/core/newsletter_mail.html
-6. stylizacja core/templates/core/messages.html,
-7. poprawa forma rejestracji - dodanie wiadomości o aktywacji konta -> accounts/views.py, 145 linia kodu, dodatkowo w consoli sie wyswietlaja jakies bledy przy klikaniu sign up
-8. poprawić style w klasach theme forma (inline paddings)
+5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
 1. cache buster
