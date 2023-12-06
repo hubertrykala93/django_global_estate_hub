@@ -45,13 +45,16 @@ def create_user(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
-        username, email, raw_password1, raw_password2, terms = [data[key][0] for key in list(data.keys())[:-1]]
+        username, email, raw_password1, raw_password2, terms, account_type = [data[key][0] for key in
+                                                                              list(data.keys())[:-1]]
         spam_verification = [data[key] for key in data][-1]
-        username_field, email_field, raw_password1_field, raw_password2_field, terms_field = [data[key][1] for key in
-                                                                                              list(data.keys())[:-1]]
-        username_label, email_label, raw_password1_label, raw_password2_label, terms_label = [data[key][2] for
-                                                                                              key in
-                                                                                              list(data.keys())[:-1]]
+        username_field, email_field, raw_password1_field, raw_password2_field, terms_field, account_type_field = [
+            data[key][1] for key in
+            list(data.keys())[:-1]]
+        username_label, email_label, raw_password1_label, raw_password2_label, terms_label, account_type_label = [
+            data[key][2] for
+            key in
+            list(data.keys())[:-1]]
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -137,38 +140,73 @@ def create_user(request):
         ]
 
         validation = list(set([data['valid'] for data in response]))
+        print(validation)
 
         if len(validation) == 1:
             if validation[0]:
-                user = User(username=username, email=email, password=make_password(password=raw_password1))
-                user.save()
+                if account_type == 'individual':
+                    user = User(username=username, email=email, password=make_password(password=raw_password1),
+                                is_individual=True, is_business=False)
+                    user.save()
 
-                try:
-                    html_message = render_to_string(template_name='accounts/activation_email.html', context={
-                        'user': user,
-                        'domain': get_current_site(request=request),
-                        'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
-                        'token': token_generator.make_token(user=user),
-                    })
-                    plain_message = strip_tags(html_message)
+                    try:
+                        html_message = render_to_string(template_name='accounts/activation_email.html', context={
+                            'user': user,
+                            'domain': get_current_site(request=request),
+                            'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                            'token': token_generator.make_token(user=user),
+                        })
+                        plain_message = strip_tags(html_message)
 
-                    message = EmailMultiAlternatives(
-                        subject='Account activation request.',
-                        body=plain_message,
-                        from_email=os.environ.get("EMAIL_HOST_USER"),
-                        to=[user.email]
-                    )
+                        message = EmailMultiAlternatives(
+                            subject='Account activation request.',
+                            body=plain_message,
+                            from_email=os.environ.get("EMAIL_HOST_USER"),
+                            to=[user.email]
+                        )
 
-                    message.attach_alternative(content=html_message, mimetype='text/html')
-                    message.send(fail_silently=True)
+                        message.attach_alternative(content=html_message, mimetype='text/html')
+                        message.send(fail_silently=True)
 
-                    return JsonResponse(data=response, safe=False)
+                        return JsonResponse(data=response, safe=False)
 
-                except Exception:
-                    return JsonResponse(data={
-                        "valid": False,
-                        "message": "The message could not be sent.",
-                    })
+                    except Exception:
+                        return JsonResponse(data={
+                            "valid": False,
+                            "message": "The message could not be sent.",
+                        })
+                else:
+                    user = User(username=username, email=email, password=make_password(password=raw_password1),
+                                is_individual=False, is_business=True)
+                    user.save()
+
+                    try:
+                        html_message = render_to_string(template_name='accounts/activation_email.html', context={
+                            'user': user,
+                            'domain': get_current_site(request=request),
+                            'uid': urlsafe_base64_encode(s=force_bytes(s=user.pk)),
+                            'token': token_generator.make_token(user=user),
+                        })
+                        plain_message = strip_tags(html_message)
+
+                        message = EmailMultiAlternatives(
+                            subject='Account activation request.',
+                            body=plain_message,
+                            from_email=os.environ.get("EMAIL_HOST_USER"),
+                            to=[user.email]
+                        )
+
+                        message.attach_alternative(content=html_message, mimetype='text/html')
+                        message.send(fail_silently=True)
+
+                        return JsonResponse(data=response, safe=False)
+
+                    except Exception:
+                        return JsonResponse(data={
+                            "valid": False,
+                            "message": "The message could not be sent.",
+                        })
+
 
             else:
                 return JsonResponse(data=response, safe=False)
