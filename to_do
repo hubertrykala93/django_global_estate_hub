@@ -1,12 +1,5 @@
 @Szymon-Levy
 
-0. dodanie checkboxów w rejestracji
-
-"""
-W modelu dodałem dwa BooleanField'y (is_individual, is_business), to mają chyba być checkbox'y
-z czego oba są ustawione na False. Będzie trzeba dodać walidację, żeby tylko jeden checkbox mógłbyć zaznaczony.
-"""
-
 1. account-settings.html
 
 """

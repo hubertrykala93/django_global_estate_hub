@@ -54,7 +54,7 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="username">username</label>
+                                <label class="form__label" for="username">username</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-user.svg" alt="user icon">
                                     <input data-username data-input type="text" id="username" placeholder="Username">
@@ -64,7 +64,7 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="signup-email">email</label>
+                                <label class="form__label" for="signup-email">email</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
                                     <input data-email data-input type="text" id="signup-email" placeholder="Email">
@@ -74,7 +74,7 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="password1">password</label>
+                                <label class="form__label" for="password1">password</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-password.svg"
                                          alt="password icon">
@@ -88,7 +88,7 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="password2">confirm password</label>
+                                <label class="form__label" for="password2">confirm password</label>
                                 <div class="form__input-wrap">
                                     <img class="form__hint-icon" src="/media/icons/form-password.svg"
                                          alt="password icon">
@@ -102,10 +102,27 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <div class="form__input-wrap checkbox-wrap">
-                                    <input data-checkbox data-input type="checkbox" id="terms">
-                                    <label for="terms">
-                                        I agree to the <a href="#">terms & Privacy</a>
+                                <label class="form__label">account type</label>
+                                <div class="form__input-wrap form__radio-wrapper">
+                                    <label>
+                                        <input data-account-type data-input type="radio" name="account-type" value="individual" checked>
+                                        <div class="radio__label">Individual</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-account-type data-input type="radio" name="account-type" value="business">
+                                        <div class="radio__label">Business</a></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__checkbox-wrapper">
+                                    <label>
+                                        <input data-checkbox data-input type="checkbox">
+                                        <div class="checkbox__label">I agree to the <a href="#">terms & Privacy</a></div>
                                     </label>
                                 </div>
                             </div>

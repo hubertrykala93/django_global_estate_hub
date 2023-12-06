@@ -291,6 +291,17 @@ const getToken = (form) => {
   return form.querySelector('[name="csrftoken"]').value
 }
 
+const getRadioValue = (form, radioDataAttr) => {
+  const radios = form.querySelectorAll(`[${radioDataAttr}]`)
+
+  for (let i = 0; i < radios.length; i++) {
+    if(radios[i].checked === true) {
+      return radios[i].value
+    }
+  }
+  return ''
+}
+
 
 /**
    * Newsletter footer form
@@ -468,8 +479,11 @@ if ($signUpForm){
       "password1": [$password1Input.value.trim(), "data-password1", password1Label],
       "password2": [$password2Input.value.trim(), "data-password2", password2Label],
       "terms": [$termsInput.checked, "data-checkbox", 'terms'],
+      "accountType": [getRadioValue($signUpForm, 'data-account-type'), "data-account-type", 'account type'],
       "url": $urlInput.value,
     }
+
+    console.log(data)
     
     if ( clientValidation($signUpForm, data) ) {
       ajaxRequest(data)

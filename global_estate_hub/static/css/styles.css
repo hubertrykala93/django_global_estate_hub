@@ -375,7 +375,7 @@ form .form__field.form__form{
   margin-bottom: 0;
 }
 
-.theme-form label {
+.theme-form .form__label {
   display: inline-block;
   margin-bottom: 1rem;
   font-size: var(--fs-body-400);
@@ -389,17 +389,81 @@ form .form__field.form__form{
   position: relative;
 }
 
-.theme-form .form__input-wrap.checkbox-wrap{
+.theme-form .form__input-wrap.form__checkbox-wrapper,
+.theme-form .form__input-wrap.form__radio-wrapper{
   display: flex;
+  flex-direction: column;
 }
 
-.theme-form .form__input-wrap.checkbox-wrap label{
-  margin: 0 0 0 .8rem;
-  font-weight: 400;
+.theme-form .form__input-wrap.form__checkbox-wrapper label,
+.theme-form .form__input-wrap.form__radio-wrapper label{
+  display: grid;
+  grid-template-columns: 2.3rem auto;
+  line-height: normal;
+  color: var(--clr-dark);
 }
 
-.theme-form .form__input-wrap.checkbox-wrap label a{
+.theme-form .form__input-wrap.form__checkbox-wrapper label + label,
+.theme-form .form__input-wrap.form__radio-wrapper label + label {
+  margin-top: .7rem;
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper label a,
+.theme-form .form__input-wrap.form__radio-wrapper label a{
   text-decoration: underline;
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"],
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"]{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: white;
+  margin: 0;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid var(--clr-black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(.3rem);
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"] {
+  border-radius: .2em;
+}
+
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"] {
+  border-radius: 50%;
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"]::before,
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"]::before{
+  content: "";
+  width: .7rem;
+  height: .7rem;
+  background-color: var(--clr-primary);
+  transform: scale(0);
+  transition: transform .3s;
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"]::before {
+  border-radius: .2em;
+}
+
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"]::before {
+  border-radius: 50%;
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"]:checked::before,
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+.theme-form .form__input-wrap.form__checkbox-wrapper input[type="checkbox"]:focus-visible,
+.theme-form .form__input-wrap.form__radio-wrapper input[type="radio"]:focus-visible {
+  box-shadow: 2px 2px 4px var(--clr-primary);
 }
 
 .theme-form input[type="text"],
