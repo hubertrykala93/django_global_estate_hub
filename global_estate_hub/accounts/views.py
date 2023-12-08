@@ -354,6 +354,22 @@ def account_settings(request):
     })
 
 
+def user_settings(request):
+    pass
+
+
+def profile_settings(request):
+    pass
+
+
+def localization_settings(request):
+    pass
+
+
+def social_media_settings(request):
+    pass
+
+
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def forget_password(request):
     """
