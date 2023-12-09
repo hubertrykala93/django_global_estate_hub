@@ -69,4 +69,4 @@ endif
 5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
-1. cache buster
+1. cache busting

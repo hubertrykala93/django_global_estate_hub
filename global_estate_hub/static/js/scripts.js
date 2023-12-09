@@ -838,6 +838,99 @@ if ($contactUsForm) {
 
 
 /*----------------------------------*\
+  #ACCOUNT SETTINGS
+\*----------------------------------*/
+
+const accountSettings = document.querySelector('[data-account-settings]')
+
+if (accountSettings){
+
+  /**
+   * Tabs
+    */
+
+  const tabContents = accountSettings.querySelectorAll('[data-tab-content]')
+  const nav = accountSettings.querySelector('[data-account-tabs]')
+  const contentTitleAnimation = {
+    delay: 100,
+    distance: '30px',
+    duration: 400,
+    opacity: .01,
+    origin: 'bottom',
+    easing: 'linear'
+  }
+
+  nav.addEventListener('click', e => {
+    if ( e.target.dataset.hasOwnProperty('accountTab') ) {
+      const tabId = e.target.dataset.accountTab
+      nav.querySelectorAll('[data-account-tab]').forEach(btn => {
+        btn.classList.remove('active')
+      })
+      e.target.classList.add('active')
+
+      tabContents.forEach(content => {
+        if ( content.dataset.tabContent === tabId ) {
+          content.classList.add('active')
+          const contentTitle = content.querySelector('[data-title]')
+          
+          ScrollReveal().reveal(contentTitle, contentTitleAnimation)
+          ScrollReveal().reveal(contentTitle, { afterReveal: function (el) {
+            ScrollReveal().clean(el)
+            el.removeAttribute('style')
+          } })
+        } else {
+          content.classList.remove('active')
+        }
+      })
+    }
+  })
+
+  /**
+   * Account settings forms
+    */
+
+  //User settings
+  const $avatarForm = accountSettings.querySelector('[data-upload-avatar-form]')
+  const $fileInput = $avatarForm.querySelector('[data-avatar]')
+  const $uploadButton = $avatarForm.querySelector('[data-upload-avatar]')
+  
+  $uploadButton.addEventListener('click', () => {
+    $fileInput.click()
+  })
+  
+  $avatarForm.addEventListener('change', () =>{
+    const file = $fileInput.files[0]
+
+    if (file) {
+      const data = new FormData()
+      data.append('file', file)
+  
+      const xhr = new XMLHttpRequest()
+  
+      xhr.open('POST', 'upload-avatar', true)
+      xhr.setRequestHeader('X-CSRFToken', getToken($avatarForm))
+      // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.setRequestHeader("Content-Type","multipart/form-data")
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+  
+      console.log(data)
+      console.log(data.get('file'))
+      console.log(data.get('file').name)
+      xhr.send(data)
+  
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+            console.log(response)
+        }
+      }
+    }
+  })
+
+}
+
+
+/*----------------------------------*\
   #OTHERS
 \*----------------------------------*/
 

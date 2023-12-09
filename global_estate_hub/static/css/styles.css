@@ -64,6 +64,7 @@
     --container-400: 1140px;
     --container-500: 1212px;
     --side-space: 15px;
+    --section-block-space-300: 3rem;
     --section-block-space-400: 4rem;
     --section-block-space-500: 7rem;
   }
@@ -1469,6 +1470,73 @@ form .form__field.form__form{
 
 
 /*----------------------------------*\
+  #ACCOUNT SETTINGS PAGE
+\*----------------------------------*/
+
+.account-settings {
+  padding: var(--section-block-space-400) 0 var(--section-block-space-500);
+}
+
+.account-settings .account-settings__nav {
+  background-color: var(--clr-primary-light-bg);
+  padding: 2rem;
+  border-radius: var(--br-500);
+}
+
+.account-settings .account-settings__nav li + li {
+  margin-top: 1rem;
+}
+
+.account-settings .account-settings__nav button {
+  width: 100%;
+}
+
+.account-settings .account-settings__nav button.active,
+.account-settings .account-settings__nav button:hover,
+.account-settings .account-settings__nav button:focus-visible {
+  background-color: var(--clr-primary);
+  color: var(--clr-white);
+}
+
+.account-settings .account-settings__blocks {
+  margin-top: var(--section-block-space-300);
+}
+
+.account-settings .account-settings__block {
+  display: none;
+}
+
+.account-settings .account-settings__block.active{
+  display: block;
+}
+
+.account-settings .upload-avatar__form {
+  margin-bottom: 3rem;
+}
+
+.account-settings .upload-avatar__form .user-avatar {
+  display: flex;
+  align-items: center;
+}
+
+.account-settings .upload-avatar__form .user-avatar .user-avatar__image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.account-settings .upload-avatar__form .user-avatar .user-avatar__image img {
+  width: 100%;
+  height: 100%;
+}
+
+.account-settings .upload-avatar__form .user-avatar button {
+  margin-left: 2.4rem;
+}
+
+
+/*----------------------------------*\
   #FORGOT PASSWORD SLIDER
 \*----------------------------------*/
 
@@ -2610,6 +2678,7 @@ section.blog .blog-card__column{
         */
 
       --side-space: 30px;
+      --section-block-space-300: 4.5rem;
       --section-block-space-400: 6rem;
       --section-block-space-500: 11rem;
     }
@@ -2781,6 +2850,25 @@ section.blog .blog-card__column{
 
     .user-access-page .testimony__wrapper .testimony__content {
       font-size: 2.4rem;
+    }
+
+
+    /*----------------------------------*\
+      #ACCOUNT SETTINGS PAGE
+    \*----------------------------------*/
+
+    .account-settings .account-settings__nav {
+      display: flex;
+    }
+
+    .account-settings .account-settings__nav li + li {
+      margin-top: 0;
+      margin-left: 2rem;
+    }
+
+    .account-settings .upload-avatar__form .user-avatar .user-avatar__image {
+      width: 150px;
+      height: 150px;
     }
 
 

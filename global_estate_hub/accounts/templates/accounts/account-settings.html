@@ -2,4 +2,122 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<section class="account-settings" data-account-settings>
+  <div class="container">
+    <div class="row">
+      <ul class="account-settings__nav" data-account-tabs>
+        <li>
+          <button class="btn active" data-account-tab="1">User settings</button>
+        </li>
+        <li>
+          <button class="btn" data-account-tab="2">Profile settings</button>
+        </li>
+        <li>
+          <button class="btn" data-account-tab="3">Localization settings</button>
+        </li>
+        <li>
+          <button class="btn" data-account-tab="4">Social media</button>
+        </li>
+      </ul>
+
+      <div class="account-settings__blocks" data-tab-contents>
+        <div class="account-settings__block active" data-tab-content="1">
+          <div class="section-title" data-title>
+            <h3 class="main-title h2">User settings</h3>
+          </div>
+
+          <form data-upload-avatar-form class="theme-form upload-avatar__form">
+
+            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+            <input data-avatar type="file" hidden="hidden">
+
+            <div class="user-avatar">
+              <div class="user-avatar__image">
+                <img src="https://picsum.photos/150" alt="user avatar">
+              </div>
+              <button data-upload-avatar type="button" class="btn primary-btn">Change avatar</button>
+            </div>
+
+          </form>
+
+          <form data-user-settings-form class="theme-form account-settings__form">
+
+            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+            <div class="form__row">
+                <div class="form__field">
+                    <label for="user-username" class="form__label">username</label>
+                    <div class="form__input-wrap">
+                        <input data-username data-input type="text" id="user-username"
+                               placeholder="Username" value="Current username">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form__row">
+                <div class="form__field">
+                    <label for="user-email" class="form__label">email</label>
+                    <div class="form__input-wrap">
+                        <input data-email data-input type="text" id="user-email" placeholder="Your Email" value="Current email">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label class="form__label" for="password1">new password</label>
+                  <div class="form__input-wrap">
+                      <input data-password1 data-input type="password" id="password1" placeholder="New password">
+                      <img data-password-eye class="form__eye-icon"
+                           src="/media/icons/form-see-password.svg"
+                           alt="see password icon">
+                  </div>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label class="form__label" for="password2">confirm password</label>
+                  <div class="form__input-wrap">
+                      <input data-password2 data-input type="password" id="password2" placeholder="Confirm password">
+                      <img data-password-eye class="form__eye-icon"
+                           src="/media/icons/form-see-password.svg"
+                           alt="see password icon">
+                  </div>
+              </div>
+            </div>
+
+            <div class="form__row submit-row">
+                <div class="form__field form__submit">
+                    <button class="btn secondary-btn" type="submit">Save changes</button>
+                </div>
+            </div>
+        </form>
+        </div>
+
+        <div class="account-settings__block" data-tab-content="2">
+          <div class="section-title" data-title>
+            <h3 class="main-title h2">Profile settings</h3>
+          </div>
+        </div>
+
+        <div class="account-settings__block" data-tab-content="3">
+          <div class="section-title" data-title>
+            <h3 class="main-title h2">Localization settings</h3>
+          </div>
+        </div>
+
+        <div class="account-settings__block" data-tab-content="4">
+          <div class="section-title" data-title>
+            <h3 class="main-title h2">Social media</h3>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+{% endblock %}
