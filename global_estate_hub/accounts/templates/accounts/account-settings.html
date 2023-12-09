@@ -35,7 +35,7 @@
 
             <div class="user-avatar">
               <div class="user-avatar__image">
-                <img src="https://picsum.photos/150" alt="user avatar">
+                <img src={{ user.image.url }} alt="user avatar">
               </div>
               <button data-upload-avatar type="button" class="btn primary-btn">Change avatar</button>
             </div>
@@ -51,7 +51,7 @@
                     <label for="user-username" class="form__label">username</label>
                     <div class="form__input-wrap">
                         <input data-username data-input type="text" id="user-username"
-                               placeholder="Username" value="Current username">
+                               placeholder="Username" value="{{ user.username }}">
                     </div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <div class="form__field">
                     <label for="user-email" class="form__label">email</label>
                     <div class="form__input-wrap">
-                        <input data-email data-input type="text" id="user-email" placeholder="Your Email" value="Current email">
+                        <input data-email data-input type="text" id="user-email" placeholder="Your Email" value="{{ user.email }}">
                     </div>
                 </div>
             </div>

@@ -17,6 +17,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .tokens import token_generator
 from django.contrib import messages
 from dotenv import load_dotenv
+import uuid
 
 load_dotenv()
 
@@ -352,6 +353,50 @@ def account_settings(request):
     return render(request=request, template_name='accounts/account-settings.html', context={
         'title': 'Account Settings',
     })
+
+
+def upload_avatar(request):
+    """
+    The function handles the profile picture change form using the PATCH method
+    with Asynchronous JavaScript and XML (AJAX).
+    Upon successful form validation, the new picture is saved in the database.
+
+    return: JsonResponse
+    """
+    if request.method == 'POST':
+        if request.FILES:
+            file = request.FILES['file']
+
+            if file.size > 1000000:
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": "The file size should not exceed 1 MB."
+                })
+
+            else:
+                extensions = ['jpg', 'jpeg', 'webp', 'png', 'svg', 'gif']
+
+                if file.name.split(sep='.')[1] in extensions:
+                    user = User.objects.get(username=request.user)
+                    file.name = str(uuid.uuid4()) + '.' + file.name.split(sep='.')[1]
+                    user.image = file
+                    user.save()
+
+                    return JsonResponse(data={
+                        "valid": True,
+                        "path": user.image.path,
+                    })
+
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": "Invalid file format. The file format should be jpg, jpeg, webp, png, svg, gif."
+                })
+
+        else:
+            return JsonResponse(data={
+                "valid": False,
+                "message": "No file uploaded. Please upload a file.",
+            })
 
 
 def user_settings(request):

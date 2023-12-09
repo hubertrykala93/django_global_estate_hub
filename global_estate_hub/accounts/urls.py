@@ -9,6 +9,7 @@ urlpatterns = [
     path(route='authorization', view=accounts_views.authorization, name='authorization'),
     path(route='logout', view=accounts_views.log_out, name='logout'),
     path(route='account-settings', view=accounts_views.account_settings, name='account-settings'),
+    path(route='upload-avatar', view=accounts_views.upload_avatar, name='upload-avatar'),
     path(route='user-settings', view=accounts_views.user_settings, name='user-settings'),
     path(route='profile-settings', view=accounts_views.profile_settings, name='profile-settings'),
     path(route='localization-settings', view=accounts_views.localization_settings, name='localization-settings'),

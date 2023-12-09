@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
 from PIL import Image
+import os
 
 
 class CustomUserManager(UserManager):

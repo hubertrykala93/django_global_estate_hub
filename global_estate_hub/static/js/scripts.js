@@ -909,8 +909,8 @@ if (accountSettings){
   
       xhr.open('POST', 'upload-avatar', true)
       xhr.setRequestHeader('X-CSRFToken', getToken($avatarForm))
-      // xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-      xhr.setRequestHeader("Content-Type","multipart/form-data")
+//      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+//      xhr.setRequestHeader("Content-Type","multipart/form-data")
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
   
       console.log(data)
