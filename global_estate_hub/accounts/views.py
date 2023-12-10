@@ -374,7 +374,7 @@ def upload_avatar(request):
                 })
 
             else:
-                extensions = ['jpg', 'jpeg', 'webp', 'png', 'svg', 'gif']
+                extensions = ['jpg', 'jpeg', 'webp', 'png', 'svg']
 
                 if file.name.split(sep='.')[1] in extensions:
                     user = User.objects.get(username=request.user)
@@ -384,12 +384,13 @@ def upload_avatar(request):
 
                     return JsonResponse(data={
                         "valid": True,
-                        "path": user.image.path,
+                        "path": user.image.url,
+                        "message": "Profile picture has been uploaded successfully.",
                     })
 
                 return JsonResponse(data={
                     "valid": False,
-                    "message": "Invalid file format. The file format should be jpg, jpeg, webp, png, svg, gif."
+                    "message": "Invalid file format. The file format should be jpg, jpeg, webp, png, svg."
                 })
 
         else:
