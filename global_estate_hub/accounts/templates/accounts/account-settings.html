@@ -35,7 +35,10 @@
 
             <div class="user-avatar">
               <div class="user-avatar__image">
-                <img src={{ user.image.url }} alt="user avatar">
+                <div class="user-avatar__loader" data-avatar-loader>
+                  <span class="material-symbols-outlined">autorenew</span>
+                </div>
+                <img src={{ user.image.url }} alt="user avatar" data-avatar-image>
               </div>
               <button data-upload-avatar type="button" class="btn primary-btn">Change avatar</button>
             </div>

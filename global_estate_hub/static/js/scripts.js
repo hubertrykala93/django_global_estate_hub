@@ -482,8 +482,6 @@ if ($signUpForm){
       "accountType": [getRadioValue($signUpForm, 'data-account-type'), "data-account-type", 'account type'],
       "url": $urlInput.value,
     }
-
-    console.log(data)
     
     if ( clientValidation($signUpForm, data) ) {
       ajaxRequest(data)
@@ -662,7 +660,6 @@ if ($forgotPasswordWrapper){
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odebrane dane', response)
           thirdStepServerResponse(response, form)
       }
     }
@@ -893,6 +890,63 @@ if (accountSettings){
   const $avatarForm = accountSettings.querySelector('[data-upload-avatar-form]')
   const $fileInput = $avatarForm.querySelector('[data-avatar]')
   const $uploadButton = $avatarForm.querySelector('[data-upload-avatar]')
+  const avatarformats = ['jpg', 'jpeg', 'webp', 'png', 'svg']
+
+  const showAvatarMessage = (isValid, message) => {
+    let $messageNode = $avatarForm.querySelector('.info')
+
+    if ( !$messageNode ){ 
+      const info = document.createElement('span')
+      info.classList.add('info')
+      $avatarForm.append(info) 
+      $messageNode = $avatarForm.querySelector('.info')
+    }
+
+    if ( isValid) {
+      $messageNode.classList.add('success')
+      $messageNode.classList.remove('error')
+      setTimeout(() => {
+        $messageNode.remove()
+      }, "3000");
+    } else {
+        $messageNode.classList.add('error')
+        $messageNode.classList.remove('success')
+    }
+
+    $messageNode.textContent = message
+  }
+
+  const uploadAvatarServerResponse = (response) =>{
+    if ( !response.valid ) {
+      showAvatarMessage(response.valid, response.message)
+      return false
+    }
+
+    const $avatarLoader = $avatarForm.querySelector('[data-avatar-loader]')
+    const $avatarImage = $avatarForm.querySelector('[data-avatar-image]')
+    $avatarLoader.classList.add('active')
+    $avatarImage.src = response.path
+    setTimeout(() => {
+      $avatarLoader.classList.remove('active')
+    }, "3000");
+    showAvatarMessage(response.valid, response.message)
+  }
+
+  const uploadAvatarAjaxRequest = (data) => {
+    const xhr = new XMLHttpRequest()
+  
+    xhr.open('POST', 'upload-avatar', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($avatarForm))
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(data)
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          uploadAvatarServerResponse(response)
+      }
+    }
+  }
   
   $uploadButton.addEventListener('click', () => {
     $fileInput.click()
@@ -902,28 +956,24 @@ if (accountSettings){
     const file = $fileInput.files[0]
 
     if (file) {
+      const fileFormat = file.name.slice(file.name.lastIndexOf('.') + 1)
+      
+      if ( !avatarformats.includes(fileFormat) ) {
+        showAvatarMessage(false, 'Invalid file format. The file format should be jpg, jpeg, webp, png, svg.')
+        return false
+      }
+      
+      if ( (file.size / 1024 / 1024) > 1 ) {
+        showAvatarMessage(false, 'The file size should not exceed 1 MB.')
+        return false
+      }
+      
+      let $messageNode = $avatarForm.querySelector('.info')
+      if( $messageNode ) { $messageNode.remove() }
+
       const data = new FormData()
       data.append('file', file)
-  
-      const xhr = new XMLHttpRequest()
-  
-      xhr.open('POST', 'upload-avatar', true)
-      xhr.setRequestHeader('X-CSRFToken', getToken($avatarForm))
-//      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-//      xhr.setRequestHeader("Content-Type","multipart/form-data")
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-  
-      console.log(data)
-      console.log(data.get('file'))
-      console.log(data.get('file').name)
-      xhr.send(data)
-  
-      xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            const response = JSON.parse(this.responseText)
-            console.log(response)
-        }
-      }
+      uploadAvatarAjaxRequest(data)
     }
   })
 
