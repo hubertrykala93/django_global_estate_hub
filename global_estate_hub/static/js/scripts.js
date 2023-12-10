@@ -886,7 +886,7 @@ if (accountSettings){
    * Account settings forms
     */
 
-  //User settings
+  //User settings - avatar
   const $avatarForm = accountSettings.querySelector('[data-upload-avatar-form]')
   const $fileInput = $avatarForm.querySelector('[data-avatar]')
   const $uploadButton = $avatarForm.querySelector('[data-upload-avatar]')
@@ -976,6 +976,122 @@ if (accountSettings){
       uploadAvatarAjaxRequest(data)
     }
   })
+
+  //User settings - form
+  const $userSettingsForm = accountSettings.querySelector('[data-user-settings-form]')
+  const currentUsername = $userSettingsForm.querySelector('[data-username]').value
+  const currentEmail = $userSettingsForm.querySelector('[data-email]').value
+
+  const userSettingsAjaxRequest = (data) =>{
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('POST', 'user-settings', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($userSettingsForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    console.log(data)
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
+      }
+    }
+  }
+
+  const userSettingsClientValidation = (data)=>{
+    let isAllValid = true
+    let isAllEmpty = true
+
+    const regexValidation = (form, field, value) => {
+      const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
+      const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+  
+      if ( field === 'data-username' ) {
+        if ( value.length < 8 ) {
+          showInfo(false, `The ${data.userName[2]} should contain at least 8 characters.`, form, field)
+          isAllValid = false
+        } else {
+          removeInfo(form, field)
+        }
+      }
+
+  
+      if ( field === 'data-email' ) {
+        if ( !emailRegex.test(value) ) {
+          showInfo(false, `The ${data.email[2]} format is invalid.`, form, field)
+          isAllValid = false
+        } else {
+          removeInfo(form, field)
+        }
+      }
+  
+      if ( field === 'data-password1' ) {
+        if ( !passwordRegex.test(value) ) {
+          showInfo(false, `The ${data.password1[2]} should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.
+          `, form, field)
+          isAllValid = false
+        } else {
+          removeInfo(form, field)
+        }
+      }
+  
+      if ( field === 'data-password2' ) {
+        if ( data.password1[0] != value ) {
+          showInfo(false, `The ${data.password2[2]} field does not match the previously entered password.`, form, field)
+          isAllValid = false
+        } else {
+          removeInfo(form, field)
+        }
+      }
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if( value[0] !== '' ) {
+        regexValidation($userSettingsForm, value[1], value[0])
+        isAllEmpty = false
+      }
+    })
+    
+    if ( isAllValid && !isAllEmpty) {
+      return true
+    }
+  }
+
+  $userSettingsForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const $usernameInput = this.querySelector('[data-username]')
+    const usernameLabel = $usernameInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const usernameValue = $usernameInput.value.trim() !== currentUsername ? $usernameInput.value.trim() : ''
+
+    const $emailInput = this.querySelector('[data-email]')
+    const emailLabel = $emailInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const emailValue = $emailInput.value.trim() !== currentEmail ? $emailInput.value.trim() : ''
+
+    const $password1Input = this.querySelector('[data-password1]')
+    const password1Label = $password1Input.parentElement.parentElement.querySelector('.form__label').textContent
+    const password1Value = $password1Input.value.trim()
+
+    const $password2Input = this.querySelector('[data-password2]')
+    const password2Label = $password2Input.parentElement.parentElement.querySelector('.form__label').textContent
+    const password2Value = $password2Input.value.trim()
+
+    const data = {
+      "userName": [usernameValue, "data-username", usernameLabel],
+      "email": [emailValue, "data-email", emailLabel],
+      "password1": [password1Value, "data-password1", password1Label],
+      "password2": [password2Value, "data-password2", password2Label],
+    }
+
+    if ( userSettingsClientValidation(data) ) {
+      userSettingsAjaxRequest(data)
+    } 
+    
+  })
+
+  
 
 }
 
