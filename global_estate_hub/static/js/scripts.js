@@ -985,7 +985,7 @@ if (accountSettings){
   const userSettingsAjaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
 
-    xhr.open('POST', 'user-settings', true)
+    xhr.open('PATCH', 'user-settings', true)
     xhr.setRequestHeader('X-CSRFToken', getToken($userSettingsForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -1008,7 +1008,7 @@ if (accountSettings){
     const regexValidation = (form, field, value) => {
       const emailRegex = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
       const passwordRegex = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-  
+
       if ( field === 'data-username' ) {
         if ( value.length < 8 ) {
           showInfo(false, `The ${data.userName[2]} should contain at least 8 characters.`, form, field)
@@ -1018,7 +1018,7 @@ if (accountSettings){
         }
       }
 
-  
+
       if ( field === 'data-email' ) {
         if ( !emailRegex.test(value) ) {
           showInfo(false, `The ${data.email[2]} format is invalid.`, form, field)
@@ -1027,7 +1027,7 @@ if (accountSettings){
           removeInfo(form, field)
         }
       }
-  
+
       if ( field === 'data-password1' ) {
         if ( !passwordRegex.test(value) ) {
           showInfo(false, `The ${data.password1[2]} should be at least 8 characters long, including at least one uppercase letter, one lowercase letter, one digit, and one special character.
@@ -1037,7 +1037,7 @@ if (accountSettings){
           removeInfo(form, field)
         }
       }
-  
+
       if ( field === 'data-password2' ) {
         if ( data.password1[0] != value ) {
           showInfo(false, `The ${data.password2[2]} field does not match the previously entered password.`, form, field)
@@ -1054,7 +1054,7 @@ if (accountSettings){
         isAllEmpty = false
       }
     })
-    
+
     if ( isAllValid && !isAllEmpty) {
       return true
     }
@@ -1087,7 +1087,7 @@ if (accountSettings){
 
     if ( userSettingsClientValidation(data) ) {
       userSettingsAjaxRequest(data)
-    } 
+    }
     
   })
 

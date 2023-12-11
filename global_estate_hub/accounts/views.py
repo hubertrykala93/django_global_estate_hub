@@ -2,6 +2,7 @@ import os
 from django.shortcuts import render, redirect, reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
 from .models import User, OneTimePassword
 import json
@@ -72,8 +73,8 @@ def create_user(request):
                 "field": username_field,
                 "message":
                     f"The {username_label} field cannot be empty." if not username else
-                    "The username should contain at least 8 characters." if len(username) < 8 else
-                    "The username already exists." if len(username) >= 8 and User.objects.filter(
+                    f"The {username_label} should contain at least 8 characters." if len(username) < 8 else
+                    f"The {username_label} already exists." if len(username) >= 8 and User.objects.filter(
                         username=username).exists() else
                     "",
             },
@@ -88,9 +89,9 @@ def create_user(request):
                 "field": email_field,
                 "message":
                     f"The {email_label} field cannot be empty." if not email else
-                    "The e-mail address format is invalid." if not re.match(
+                    f"The {email_label} address format is invalid." if not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email) else
-                    f"The e-mail address {email} already exists." if re.match(
+                    f"The {email_label} address {email} already exists." if re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
                         string=email) and User.objects.filter(email=email).exists() else
                     "",
@@ -104,7 +105,7 @@ def create_user(request):
                 "field": raw_password1_field,
                 "message":
                     f"The {raw_password1_label} field cannot be empty." if not raw_password1 else
-                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
@@ -122,7 +123,7 @@ def create_user(request):
                 "message":
                     f"The {raw_password2_label} field cannot be empty." if not raw_password2 else
                     f"The {raw_password2_label} field must be filled in." if not raw_password1 else
-                    "The password should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
@@ -401,7 +402,125 @@ def upload_avatar(request):
 
 
 def user_settings(request):
-    pass
+    if request.method == 'PATCH':
+        data = json.loads(s=request.body.decode('utf-8'))
+        username, email, raw_password1, raw_password2 = [data[key][0] for key in data]
+        username_field, email_field, raw_password1_field, raw_password2_field = [data[key][1] for key in data]
+        username_label, email_label, raw_password1_label, raw_password2_label = [data[key][2] for key in data]
+
+        response = [
+            {
+                "valid":
+                    False if len(username) < 8 and len(username) != 0 else
+                    False if (len(username) > 8 and len(username) != 0) and User.objects.filter(
+                        username=username).exists() else
+                    True if len(username) == 0 else
+                    True,
+                "field": username_field,
+                "message":
+                    "The username should contains at least 8 characters." if len(username) < 8 and len(
+                        username) != 0 else
+                    "The username already exists."
+                    if (len(username) > 8 and len(username) != 0) and User.objects.filter(
+                        username=username).exists() else
+                    "" if len(username) == 0 else
+                    "The username has been successfully changed.",
+            },
+            {
+                "valid":
+                    False if len(email) != 0 and not re.match(
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                        string=email) else
+                    False if len(email) != 0 and User.objects.filter(email=email).exists() else
+                    True if len(email) == 0 else
+                    True,
+                "field": email_field,
+                "message":
+                    f"The {email_label} address format is invalid." if len(email) != 0 and not re.match(
+                        pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
+                        string=email) else
+                    f"The {email_label} address {email} already exists." if len(email) != 0 and User.objects.filter(
+                        email=email).exists() else
+                    "" if len(email) == 0 else
+                    "The email address has been successfully changed.",
+            },
+            {
+                "valid":
+                    False if len(raw_password1) != 0 and not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    True if len(raw_password1) != 0 and re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    True,
+                "field": raw_password1_field,
+                "message":
+                    f"The {raw_password1_label} should be at least 8 characters long,"
+                    f"including at least one uppercase letter, "
+                    "one lowercase letter, one digit, and one special character." if len(
+                        raw_password1) != 0 and not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    "The password field is valid." if len(raw_password1) != 0 and re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    "",
+            },
+            {
+                "valid":
+                    False if len(raw_password2) != 0 and not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password2) else
+                    False if raw_password2 != raw_password1 else
+                    True,
+                "field": raw_password2_field,
+                "message":
+                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
+                    "one lowercase letter, one digit, and one special character." if len(
+                        raw_password2) != 0 and not re.match(
+                        pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
+                        string=raw_password1) else
+                    f"The {raw_password2_label} field does not match the previously entered password." if raw_password2 != raw_password1 else
+                    "The confirm password field matches the password field." if (raw_password2 == raw_password1) and (
+                            len(raw_password2) != 0 and raw_password1 != 0) else
+                    "",
+            },
+        ]
+
+        validation = [data['valid'] for data in response]
+
+        if (validation[0] and validation[1]) is True and (len(username) == 0 and len(email) == 0):
+            user = User.objects.get(username=request.user)
+            user.password = make_password(password=raw_password1)
+            user.save()
+            update_session_auth_hash(request=request, user=user)
+
+            return JsonResponse(data=response, safe=False)
+
+        elif (validation[0] and validation[1]) is True and (len(username) == 0 and len(email) != 0):
+            user = User.objects.get(username=request.user)
+            user.email = email
+            user.save()
+
+            return JsonResponse(data=response, safe=False)
+
+        elif (validation[0] and validation[1]) is True and (len(username) != 0 and len(email) == 0):
+            user = User.objects.get(username=request.user)
+            user.username = username
+            user.save()
+
+            return JsonResponse(data=response, safe=False)
+
+        elif (validation[0] and validation[1]) is True and (len(username) != 0 and len(email) != 0):
+            user = User.objects.get(username=request.user)
+            user.username = username
+            user.email = email
+            user.save()
+
+            return JsonResponse(data=response, safe=False)
+
+        else:
+            return JsonResponse(data=response, safe=False)
 
 
 def profile_settings(request):
