@@ -417,6 +417,7 @@ def user_settings(request):
                     True if len(username) == 0 else
                     True,
                 "field": username_field,
+                "value": username,
                 "message":
                     "The username should contains at least 8 characters." if len(username) < 8 and len(
                         username) != 0 else
@@ -435,6 +436,7 @@ def user_settings(request):
                     True if len(email) == 0 else
                     True,
                 "field": email_field,
+                "value": email,
                 "message":
                     f"The {email_label} address format is invalid." if len(email) != 0 and not re.match(
                         pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)',
@@ -454,6 +456,7 @@ def user_settings(request):
                         string=raw_password1) else
                     True,
                 "field": raw_password1_field,
+                "value": raw_password1,
                 "message":
                     f"The {raw_password1_label} should be at least 8 characters long,"
                     f"including at least one uppercase letter, "
@@ -474,6 +477,7 @@ def user_settings(request):
                     False if raw_password2 != raw_password1 else
                     True,
                 "field": raw_password2_field,
+                "value": raw_password2,
                 "message":
                     f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if len(
