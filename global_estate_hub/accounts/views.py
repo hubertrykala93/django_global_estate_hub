@@ -793,21 +793,21 @@ def profile_settings(request):
 
                     return JsonResponse(data=response, safe=False)
 
-                elif len(company_name) != 0 and len(company_id) and len(phone) == 0:
+                elif len(company_name) != 0 and len(company_id) != 0 and len(phone) == 0:
                     request.user.business.company_name = company_name
                     request.user.business.company_id = company_id
                     request.user.business.save()
 
                     return JsonResponse(data=response, safe=False)
 
-                elif len(company_id) != 0 and len(phone) and len(company_name) == 0:
+                elif len(company_id) != 0 and len(phone) != 0 and len(company_name) == 0:
                     request.user.business.company_id = company_id
                     request.user.business.phone_number = phone
                     request.user.business.save()
 
                     return JsonResponse(data=response, safe=False)
 
-                elif len(company_name) != 0 and len(phone) and len(company_id) == 0:
+                elif len(company_name) != 0 and len(phone) != 0 and len(company_id) == 0:
                     request.user.business.company_name = company_name
                     request.user.business.phone_number = phone
                     request.user.business.save()
