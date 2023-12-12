@@ -159,17 +159,17 @@
                                 <label for="user-company-name" class="form__label">company name</label>
                                 <div class="form__input-wrap">
                                     <input data-company-name data-input type="text" id="user-company-name"
-                                           placeholder="Company name" value="{% if user.business.company_name %}{{ user.business.company_name }}{% endif %}">
+                                           placeholder="Company Name" value="{% if user.business.company_name %}{{ user.business.company_name }}{% endif %}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-company-id" class="form__label">company id</label>
+                                <label for="user-company-id" class="form__label">company ID</label>
                                 <div class="form__input-wrap">
                                     <input data-company-id data-input type="text" id="user-company-id"
-                                           placeholder="Company id" value="{% if user.business.company_id %}{{ user.business.company_id }}{% endif %}">
+                                           placeholder="Company ID" value="{% if user.business.company_id %}{{ user.business.company_id }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -178,10 +178,10 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-phone" class="form__label">phone</label>
+                                <label for="user-phone" class="form__label">phone number</label>
                                 <div class="form__input-wrap">
                                     <input data-phone data-input type="text" id="user-phone"
-                                           placeholder="Phone number" value="{% if user.is_individual and user.individual.phone_number %}{{ user.individual.phone_number }}{% elif user.is_business and user.business.phone_number %}{{ user.business.phone_number }}{% endif %}">
+                                           placeholder="Phone Number" value="{% if user.individual and user.individual.phone_number %}{{ user.individual.phone_number }}{% elif user.business and user.business.phone_number %}{{ user.business.phone_number }}{% endif %}">
                                 </div>
                             </div>
                         </div>
