@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword
+from .models import User, OneTimePassword, Individual, Business
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -528,7 +528,131 @@ def user_settings(request):
 
 
 def profile_settings(request):
-    pass
+    if request.method == 'PATCH':
+        if request.user.is_individual:
+            data = json.loads(s=request.body.decode('utf-8'))
+
+            firstname, lastname, gender, phone = [data[key][0] for key in data]
+            firstname_field, lastname_field, gender_field, phone_field = [data[key][1] for key in data]
+            firstname_label, lastname_label, gender_label, phone_label = [data[key][2] for key in data]
+
+            response = [
+                {
+                    "valid":
+                        True if not firstname else
+                        True,
+                    "field": firstname_field,
+                    "value": firstname,
+                    "message":
+                        "" if not firstname else
+                        f"The {firstname_label} has been changed successfully.",
+                },
+                {
+                    "valid":
+                        True if not lastname else
+                        True,
+                    "field": lastname_field,
+                    "value": lastname,
+                    "message":
+                        "" if not lastname else
+                        f"The {lastname_label} has been changed successfully."
+                },
+                {
+                    "valid":
+                        True if gender == 'female' else
+                        True,
+                    "field": gender_field,
+                    "value": gender,
+                    "message":
+                        f"The {gender_label} has been changed successfully." if gender == 'female' else
+                        ""
+                },
+                {
+                    "valid":
+                        True if not phone else
+                        False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$", string=phone) else
+                        True,
+                    "field": phone_field,
+                    "value": phone,
+                    "message":
+                        "" if not phone else
+                        f"Invalid {phone_label} number format." if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
+                                                                                string=phone) else
+                        f"The {phone_label} number has been changed successfully.",
+                }
+            ]
+
+            validation = list(set([data['valid'] for data in response]))
+
+            if validation[0] is True:
+                request.user.individual.first_name = firstname
+                request.user.individual.last_name = lastname
+                request.user.individual.gender = gender.capitalize()
+                request.user.individual.phone_number = phone
+
+                request.user.individual.save()
+
+                return JsonResponse(data=response, safe=False)
+
+            else:
+                return JsonResponse(data=response, safe=False)
+
+        else:
+            data = json.loads(s=request.body.decode('utf-8'))
+
+            company_name, company_id, phone = [data[key][0] for key in data]
+            company_name_field, company_id_field, phone_field = [data[key][1] for key in data]
+            company_name_label, company_id_label, phone_label = [data[key][2] for key in data]
+
+            response = [
+                {
+                    "valid":
+                        True if not company_name else
+                        True,
+                    "field": company_name_field,
+                    "value": company_name,
+                    "message":
+                        "" if not company_name else
+                        f"The {company_name_label} has been changed successfully.",
+                },
+                {
+                    "valid":
+                        True if not company_id else
+                        True,
+                    "field": company_id_field,
+                    "value": company_id,
+                    "message":
+                        "" if not company_id else
+                        f"The {company_id_label} has been changed successfully.",
+                },
+                {
+                    "valid":
+                        True if not phone else
+                        False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$", string=phone) else
+                        True,
+                    "field": phone_field,
+                    "value": phone,
+                    "message":
+                        "" if not phone else
+                        f"Invalid {phone_label} number format." if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
+                                                                                string=phone) else
+                        f"The {phone_label} number has been changed successfully.",
+                }
+            ]
+
+            validation = list(set([data['valid'] for data in response]))
+
+            if validation[0] is True:
+                request.user.business.company_name = company_name
+                request.user.business.company_id = company_id
+                request.user.business.phone_number = phone
+
+                request.user.business.save()
+
+                return JsonResponse(data=response, safe=False)
+
+            else:
+                return JsonResponse(data=response, safe=False)
 
 
 def localization_settings(request):
