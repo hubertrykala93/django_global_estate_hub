@@ -838,16 +838,16 @@ if ($contactUsForm) {
   #ACCOUNT SETTINGS
 \*----------------------------------*/
 
-const accountSettings = document.querySelector('[data-account-settings]')
+const $accountSettings = document.querySelector('[data-account-settings]')
 
-if (accountSettings){
+if ($accountSettings){
 
   /**
    * Tabs
     */
 
-  const tabContents = accountSettings.querySelectorAll('[data-tab-content]')
-  const nav = accountSettings.querySelector('[data-account-tabs]')
+  const tabContents = $accountSettings.querySelectorAll('[data-tab-content]')
+  const nav = $accountSettings.querySelector('[data-account-tabs]')
   const contentTitleAnimation = {
     delay: 100,
     distance: '30px',
@@ -887,7 +887,7 @@ if (accountSettings){
     */
 
   //User settings - avatar
-  const $avatarForm = accountSettings.querySelector('[data-upload-avatar-form]')
+  const $avatarForm = $accountSettings.querySelector('[data-upload-avatar-form]')
   const $fileInput = $avatarForm.querySelector('[data-avatar]')
   const $uploadButton = $avatarForm.querySelector('[data-upload-avatar]')
   const avatarformats = ['jpg', 'jpeg', 'webp', 'png', 'svg']
@@ -978,9 +978,30 @@ if (accountSettings){
   })
 
   //User settings - form
-  const $userSettingsForm = accountSettings.querySelector('[data-user-settings-form]')
-  const currentUsername = $userSettingsForm.querySelector('[data-username]').value
-  const currentEmail = $userSettingsForm.querySelector('[data-email]').value
+  const $userSettingsForm = $accountSettings.querySelector('[data-user-settings-form]')
+  let currentUsername = $userSettingsForm.querySelector('[data-username]').value
+  let currentEmail = $userSettingsForm.querySelector('[data-email]').value
+
+  const userSettingsServerResponse = (response)=> {
+    response.forEach(field => {
+      if ( field.message === '' ) { 
+        removeInfo($userSettingsForm, field.field) 
+      }else {
+        showInfo(field.valid, field.message, $userSettingsForm, field.field)
+        
+        if ( field.valid ) {
+          if ( field.field === 'data-username') {
+            $userSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentUsername = field.value
+          }
+          if ( field.field === 'data-email') {
+            $userSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentEmail = field.value
+          }
+        }
+      }
+    })
+  }
 
   const userSettingsAjaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
@@ -991,12 +1012,10 @@ if (accountSettings){
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
 
-    console.log(data)
-
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
+          userSettingsServerResponse(response)
       }
     }
   }
@@ -1091,8 +1110,133 @@ if (accountSettings){
     
   })
 
+  //Profile settings - form
+  const $profileSettingsForm = $accountSettings.querySelector('[data-profile-settings-form]')
+  let currentFirstName = ''
+  let currentLastName = ''
+  let currentGender = ''
+  let currentCompanyName = ''
+  let currentCompanyId = ''
+  let currentPhone = $profileSettingsForm.querySelector('[data-phone]').value
   
+  if ($profileSettingsForm.querySelector('[data-firstname]')) {
+    currentFirstName = $profileSettingsForm.querySelector('[data-firstname]').value
+  }
+  if ($profileSettingsForm.querySelector('[data-lastname]')) {
+    currentLastName = $profileSettingsForm.querySelector('[data-lastname]').value
+  }
+  if ($profileSettingsForm.querySelector('[data-gender]')) {
+    currentGender = getRadioValue($profileSettingsForm, 'data-gender')
+  }
+  if ($profileSettingsForm.querySelector('[data-company-name]')) {
+    currentCompanyName = $profileSettingsForm.querySelector('[data-company-name]').value
+  }
+  if ($profileSettingsForm.querySelector('[data-company-id]')) {
+    currentCompanyId = $profileSettingsForm.querySelector('[data-company-id]').value
+  }
 
+  const profileSettingsAjaxRequest = (data) =>{
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('PATCH', 'profile-settings', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($profileSettingsForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+
+    console.log('wysłane dane', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odpowiedź z serwera', response)
+          // profileSettingsServerResponse(response)
+      }
+    }
+  }
+
+  const profileSettingsClientValidation = (data)=>{
+    let isAllValid = true
+    let isAllEmpty = true
+
+    const regexValidation = (form, field, value) => {
+      const phoneRegex = /^\+?[1-9][0-9]{7,14}$/
+
+      if ( field === 'data-phone' ) {
+        if ( !phoneRegex.test(value) ) {
+          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
+          isAllValid = false
+        } else {
+          removeInfo(form, field)
+        }
+      }
+    }
+
+    Object.entries(data).forEach(([key, value]) => {
+      if( value[0] !== '' ) {
+        regexValidation($profileSettingsForm, value[1], value[0])
+        isAllEmpty = false
+      } else {
+        removeInfo($profileSettingsForm, value[1])
+      }
+    })
+
+    if ( isAllValid && !isAllEmpty) {
+      return true
+    }
+  }
+
+  $profileSettingsForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+
+    const data = {}
+    
+    const $firstNameInput = this.querySelector('[data-firstname]')
+    if ( $firstNameInput ) {
+      const label = $firstNameInput.parentElement.parentElement.querySelector('.form__label').textContent
+      const value = $firstNameInput.value.trim()
+      data.firstName = [value, "data-firstname", label]
+    }
+
+    const $lastNameInput = this.querySelector('[data-lastname]')
+    if ( $lastNameInput ) {
+      const label = $lastNameInput.parentElement.parentElement.querySelector('.form__label').textContent
+      const value = $lastNameInput.value.trim()
+      data.lastName = [value, "data-lastname", label]
+    }
+
+    const $genderInput = this.querySelector('[data-gender]')
+    if ( $genderInput ) {
+      const label = $genderInput.closest('.form__field').querySelector('.form__label').textContent
+      const value = getRadioValue($profileSettingsForm, 'data-gender')
+      data.gender = [value, "data-gender", label]
+    }
+
+    const $companyNameInput = this.querySelector('[data-company-name]')
+    if ( $companyNameInput ) {
+      const label = $companyNameInput.closest('.form__field').querySelector('.form__label').textContent
+      const value = $companyNameInput.value.trim()
+      data.companyName = [value, "data-company-name", label]
+    }
+
+    const $companyIdInput = this.querySelector('[data-company-id]')
+    if ( $companyIdInput ) {
+      const label = $companyIdInput.closest('.form__field').querySelector('.form__label').textContent
+      const value = $companyIdInput.value.trim()
+      data.companyId = [value, "data-company-id", label]
+    }
+    
+    const $phoneInput = this.querySelector('[data-phone]')
+    const phoneLabel = $phoneInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const phoneValue = $phoneInput.value.trim()
+    data.phone = [phoneValue, "data-phone", phoneLabel]
+
+    profileSettingsAjaxRequest(data)
+
+    // if ( profileSettingsClientValidation(data) ) {
+    //   profileSettingsAjaxRequest(data)
+    // }
+  })
 }
 
 

@@ -17,8 +17,8 @@ if user.is_authenticated:
         2. "Profile Settings" -> Tytuł 2.
             {{ first_name }}
             {{ last_name }}
-            {{ phone_number }}
             {{ gender }}
+            {{ phone_number }}
 
         3. "Localization Settings" -> Tytuł 3.
             {{ country }}
@@ -69,4 +69,11 @@ endif
 5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
-1. cache busting
+
+1. nie wysyłać zwrotnie passwordów z formularza user settings
+2. jak w profile settings jakaś wartość nie istnije to value niech i tak będzie zadeklarowane w html tylko jeśli nie ma nic to niech pozostanie pusty ""
+3. na zapleczu w opcjach użytkownika zmienić (Is individual Is business) z checkboxes na radio
+
+
+
+cache busting

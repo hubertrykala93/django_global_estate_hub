@@ -97,13 +97,98 @@
                     <button class="btn secondary-btn" type="submit">Save changes</button>
                 </div>
             </div>
-        </form>
+          </form>
         </div>
 
         <div class="account-settings__block" data-tab-content="2">
           <div class="section-title" data-title>
             <h3 class="main-title h2">Profile settings</h3>
           </div>
+
+          <form data-profile-settings-form class="theme-form profile-settings__form">
+
+            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+            {% if user.is_individual %}
+
+            <div class="form__row">
+                <div class="form__field">
+                    <label for="user-firstname" class="form__label">first name</label>
+                    <div class="form__input-wrap">
+                        <input data-firstname data-input type="text" id="user-firstname"
+                               placeholder="First name" value="Aktualne imię">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form__row">
+                <div class="form__field">
+                    <label for="user-lastname" class="form__label">last name</label>
+                    <div class="form__input-wrap">
+                        <input data-lastname data-input type="text" id="user-lastname"
+                               placeholder="Last name" value="Aktualne Nazwisko">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label class="form__label">gender</label>
+                  <div class="form__input-wrap form__radio-wrapper">
+                      <label>
+                          <input data-gender data-input type="radio" name="gender" value="male" checked>
+                          <div class="radio__label">Male</a></div>
+                      </label>
+
+                      <label>
+                          <input data-gender data-input type="radio" name="gender" value="female">
+                          <div class="radio__label">Female</a></div>
+                      </label>
+                  </div>
+              </div>
+            </div>
+
+            {% else %}
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label for="user-company-name" class="form__label">company name</label>
+                  <div class="form__input-wrap">
+                      <input data-company-name data-input type="text" id="user-company-name"
+                             placeholder="Company name" value="Aktualna nazwa firmy">
+                  </div>
+              </div>
+            </div>
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label for="user-company-id" class="form__label">company id</label>
+                  <div class="form__input-wrap">
+                      <input data-company-id data-input type="text" id="user-company-id"
+                             placeholder="Company id" value="Aktualny NIP">
+                  </div>
+              </div>
+            </div>
+
+            {% endif %}
+
+            <div class="form__row">
+              <div class="form__field">
+                  <label for="user-phone" class="form__label">phone</label>
+                  <div class="form__input-wrap">
+                      <input data-phone data-input type="text" id="user-phone"
+                            placeholder="Phone number" value="Aktualny numer">
+                  </div>
+              </div>
+            </div>
+
+
+            <div class="form__row submit-row">
+                <div class="form__field form__submit">
+                    <button class="btn secondary-btn" type="submit">Save changes</button>
+                </div>
+            </div>
+          </form>
         </div>
 
         <div class="account-settings__block" data-tab-content="3">
