@@ -113,7 +113,7 @@
 
                         <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-                        {% if user.is_individual %}
+                        {% if user.account_type == 'Individual' %}
 
                         <div class="form__row">
                             <div class="form__field">
@@ -140,12 +140,12 @@
                                 <label class="form__label">gender</label>
                                 <div class="form__input-wrap form__radio-wrapper">
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Male' %}{{ user.individual.gender }}{% endif %}" checked>
+                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Male' %}{{ user.individual.gender }}{% endif %}" {% if user.individual.gender == 'Male' %}checked{% endif %}>
                                         <div class="radio__label">Male</a></div>
                                     </label>
 
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Female' %}{{ user.individual.gender }}{% endif %}">
+                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Female' %}{{ user.individual.gender }}{% endif %}" {% if user.individual.gender == 'Female' %}checked{% endif %}>
                                         <div class="radio__label">Female</a></div>
                                     </label>
                                 </div>

@@ -47,8 +47,10 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
-    is_individual = models.BooleanField(default=True)
-    is_business = models.BooleanField(default=False)
+    account_type = models.CharField(max_length=100, choices=(
+        ('Individual', 'Individual'),
+        ('Business', 'Business'),
+    ), blank=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -140,7 +142,6 @@ class Individual(models.Model):
     last_name = models.CharField(max_length=100, null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
     gender = models.CharField(max_length=100, choices=(
-        ('Not Defined', 'Not Defined'),
         ('Male', 'Male'),
         ('Female', 'Female')
     ), blank=True)

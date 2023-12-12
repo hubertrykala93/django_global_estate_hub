@@ -49,6 +49,8 @@ def create_user(request):
 
         username, email, raw_password1, raw_password2, terms, account_type = [data[key][0] for key in
                                                                               list(data.keys())[:-1]]
+        account_type = account_type.capitalize()
+
         spam_verification = [data[key] for key in data][-1]
         username_field, email_field, raw_password1_field, raw_password2_field, terms_field, account_type_field = [
             data[key][1] for key in
@@ -142,13 +144,12 @@ def create_user(request):
         ]
 
         validation = list(set([data['valid'] for data in response]))
-        print(validation)
 
         if len(validation) == 1:
             if validation[0]:
-                if account_type == 'individual':
+                if account_type == 'Individual':
                     user = User(username=username, email=email, password=make_password(password=raw_password1),
-                                is_individual=True, is_business=False)
+                                account_type='Individual')
                     user.save()
 
                     try:
@@ -179,7 +180,7 @@ def create_user(request):
                         })
                 else:
                     user = User(username=username, email=email, password=make_password(password=raw_password1),
-                                is_individual=False, is_business=True)
+                                account_type='Business')
                     user.save()
 
                     try:
@@ -542,8 +543,9 @@ def profile_settings(request):
     return: JsonResponse
     """
     if request.method == 'PATCH':
-        if request.user.is_individual:
+        if request.user.account_type == 'Individual':
             data = json.loads(s=request.body.decode('utf-8'))
+            print(data)
 
             firstname, lastname, gender, phone = [data[key][0] for key in data]
             firstname_field, lastname_field, gender_field, phone_field = [data[key][1] for key in data]
@@ -596,6 +598,8 @@ def profile_settings(request):
             ]
 
             validation = list(set([data['valid'] for data in response]))
+            print(gender)
+            print(gender.capitalize())
 
             if validation[0] is True:
                 request.user.individual.first_name = firstname

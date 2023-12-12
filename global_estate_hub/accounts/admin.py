@@ -7,10 +7,10 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
-    list_display = ['username', 'email', 'image', 'password', 'is_individual', 'is_business', 'is_verified', 'is_staff',
+    list_display = ['username', 'email', 'image', 'password', 'account_type', 'is_verified', 'is_staff',
                     'is_active', 'is_superuser', 'date_joined']
-    list_editable = ['email', 'is_individual', 'is_business', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
-    list_filter = ['username', 'email', 'is_individual', 'is_business', 'date_joined']
+    list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
+    list_filter = ['username', 'email', 'account_type', 'date_joined']
     list_display_links = ['username']
 
 
