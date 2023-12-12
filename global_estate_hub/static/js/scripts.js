@@ -152,12 +152,12 @@ if($partnersCarousel){
     */
 
 const removeInfo = (form, field)=>{
-  const $messageNode = form.querySelector(`[${field}]`).parentElement.parentElement.querySelector('.info')
+  const $messageNode = form.querySelector(`[${field}]`).closest('.form__field').querySelector('.info')
   if ($messageNode) { $messageNode.remove() }
 }
 
 const showInfo = (isValid, message, $form, field)=> {
-  const $inputParentField = $form.querySelector(`[${field}]`).parentElement.parentElement
+  const $inputParentField = $form.querySelector(`[${field}]`).closest('.form__field')
   let $messageNode = $inputParentField.querySelector('.info')
 
   if ( !$messageNode ){ 
@@ -171,7 +171,7 @@ const showInfo = (isValid, message, $form, field)=> {
   if ( isValid) {
     $messageNode.classList.add('success')
     $messageNode.classList.remove('error')
-    $form.querySelector(`[${field}]`).value = ""
+    if ( field !== 'data-gender' ) { $form.querySelector(`[${field}]`).value = "" }
     setTimeout(() => {
       $messageNode.remove()
     }, "3000");
@@ -1135,6 +1135,45 @@ if ($accountSettings){
     currentCompanyId = $profileSettingsForm.querySelector('[data-company-id]').value
   }
 
+  const profileSettingsServerResponse = (response)=> {
+    response.forEach(field => {
+      if ( field.message === '' ) { 
+        removeInfo($profileSettingsForm, field.field) 
+      }else {
+        showInfo(field.valid, field.message, $profileSettingsForm, field.field)
+        
+        if ( field.valid ) {
+          if ( field.field === 'data-firstname') {
+            $profileSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentFirstName = field.value
+          }
+          if ( field.field === 'data-lastname') {
+            $profileSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentLastName = field.value
+          }
+          if ( field.field === 'data-gender') {
+            $profileSettingsForm.querySelectorAll(`[${field.field}]`).forEach(input => { 
+              if ( input.value === field.value) { input.checked = true }
+             })
+            currentGender = field.value
+          }
+          if ( field.field === 'data-company-name') {
+            $profileSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentCompanyName = field.value
+          }
+          if ( field.field === 'data-company-id') {
+            $profileSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentCompanyId = field.value
+          }
+          if ( field.field === 'data-phone') {
+            $profileSettingsForm.querySelector(`[${field.field}]`).value = field.value
+            currentPhone = field.value
+          }
+        }
+      }
+    })
+  }
+
   const profileSettingsAjaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
 
@@ -1150,7 +1189,7 @@ if ($accountSettings){
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('odpowiedź z serwera', response)
-          // profileSettingsServerResponse(response)
+          profileSettingsServerResponse(response)
       }
     }
   }
@@ -1194,41 +1233,41 @@ if ($accountSettings){
     const $firstNameInput = this.querySelector('[data-firstname]')
     if ( $firstNameInput ) {
       const label = $firstNameInput.parentElement.parentElement.querySelector('.form__label').textContent
-      const value = $firstNameInput.value.trim()
+      const value = $firstNameInput.value.trim() !== currentFirstName ? $firstNameInput.value.trim() : ''
       data.firstName = [value, "data-firstname", label]
     }
 
     const $lastNameInput = this.querySelector('[data-lastname]')
     if ( $lastNameInput ) {
       const label = $lastNameInput.parentElement.parentElement.querySelector('.form__label').textContent
-      const value = $lastNameInput.value.trim()
+      const value = $lastNameInput.value.trim() !== currentLastName ? $lastNameInput.value.trim() : ''
       data.lastName = [value, "data-lastname", label]
     }
 
     const $genderInput = this.querySelector('[data-gender]')
     if ( $genderInput ) {
       const label = $genderInput.closest('.form__field').querySelector('.form__label').textContent
-      const value = getRadioValue($profileSettingsForm, 'data-gender')
+      const value = getRadioValue($profileSettingsForm, 'data-gender') !== currentGender ? getRadioValue($profileSettingsForm, 'data-gender') : ''
       data.gender = [value, "data-gender", label]
     }
 
     const $companyNameInput = this.querySelector('[data-company-name]')
     if ( $companyNameInput ) {
       const label = $companyNameInput.closest('.form__field').querySelector('.form__label').textContent
-      const value = $companyNameInput.value.trim()
+      const value = $companyNameInput.value.trim() !== currentCompanyName ? $companyNameInput.value.trim() : ''
       data.companyName = [value, "data-company-name", label]
     }
 
     const $companyIdInput = this.querySelector('[data-company-id]')
     if ( $companyIdInput ) {
       const label = $companyIdInput.closest('.form__field').querySelector('.form__label').textContent
-      const value = $companyIdInput.value.trim()
+      const value = $companyIdInput.value.trim() !== currentCompanyId ? $companyIdInput.value.trim() : ''
       data.companyId = [value, "data-company-id", label]
     }
     
     const $phoneInput = this.querySelector('[data-phone]')
     const phoneLabel = $phoneInput.parentElement.parentElement.querySelector('.form__label').textContent
-    const phoneValue = $phoneInput.value.trim()
+    const phoneValue = $phoneInput.value.trim() !== currentPhone ? $phoneInput.value.trim() : ''
     data.phone = [phoneValue, "data-phone", phoneLabel]
 
     profileSettingsAjaxRequest(data)

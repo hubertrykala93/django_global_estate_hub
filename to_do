@@ -69,7 +69,8 @@ endif
 5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
-
+1. jak płeć jest zmieniona to nie ma message w odpowiedzi (dobrze widzę?)
+2. dane z profilu znikają bo jak dostajesz pusty string to go przypisujesz a masz odrzucać
 3. na zapleczu w opcjach użytkownika zmienić (Is individual Is business) z checkboxes na radio
 
 

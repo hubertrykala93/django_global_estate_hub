@@ -140,12 +140,12 @@
                                 <label class="form__label">gender</label>
                                 <div class="form__input-wrap form__radio-wrapper">
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Male' %}{{ user.individual.gender }}{% endif %}" {% if user.individual.gender == 'Male' %}checked{% endif %}>
+                                        <input data-gender data-input type="radio" name="gender" value="male" {% if user.individual.gender == 'Male' %}checked{% endif %}>
                                         <div class="radio__label">Male</a></div>
                                     </label>
 
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Female' %}{{ user.individual.gender }}{% endif %}" {% if user.individual.gender == 'Female' %}checked{% endif %}>
+                                        <input data-gender data-input type="radio" name="gender" value="female" {% if user.individual.gender == 'Female' %}checked{% endif %}>
                                         <div class="radio__label">Female</a></div>
                                     </label>
                                 </div>
