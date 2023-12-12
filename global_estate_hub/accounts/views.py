@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -402,6 +402,13 @@ def upload_avatar(request):
 
 
 def user_settings(request):
+    """
+    The function handles the user data change form, including the username, email address, and password,
+    using the PATCH method with Asynchronous JavaScript and XML (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
         username, email, raw_password1, raw_password2 = [data[key][0] for key in data]
@@ -456,7 +463,6 @@ def user_settings(request):
                         string=raw_password1) else
                     True,
                 "field": raw_password1_field,
-                "value": raw_password1,
                 "message":
                     f"The {raw_password1_label} should be at least 8 characters long,"
                     f"including at least one uppercase letter, "
@@ -477,7 +483,6 @@ def user_settings(request):
                     False if raw_password2 != raw_password1 else
                     True,
                 "field": raw_password2_field,
-                "value": raw_password2,
                 "message":
                     f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if len(
@@ -528,6 +533,14 @@ def user_settings(request):
 
 
 def profile_settings(request):
+    """
+    The function handles the form for changing individual user profile data such as first name, last name, gender,
+    and phone number, as well as the form for changing business user profile data such as company name,
+    company ID, and phone number. The function utilizes the PATCH method with Asynchronous JavaScript and XML (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
     if request.method == 'PATCH':
         if request.user.is_individual:
             data = json.loads(s=request.body.decode('utf-8'))

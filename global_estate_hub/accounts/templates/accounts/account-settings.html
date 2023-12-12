@@ -4,208 +4,212 @@
 
 {% block content %}
 <section class="account-settings" data-account-settings>
-  <div class="container">
-    <div class="row">
-      <ul class="account-settings__nav" data-account-tabs>
-        <li>
-          <button class="btn active" data-account-tab="1">User settings</button>
-        </li>
-        <li>
-          <button class="btn" data-account-tab="2">Profile settings</button>
-        </li>
-        <li>
-          <button class="btn" data-account-tab="3">Localization settings</button>
-        </li>
-        <li>
-          <button class="btn" data-account-tab="4">Social media</button>
-        </li>
-      </ul>
+    <div class="container">
+        <div class="row">
+            <ul class="account-settings__nav" data-account-tabs>
+                <li>
+                    <button class="btn active" data-account-tab="1">User settings</button>
+                </li>
+                <li>
+                    <button class="btn" data-account-tab="2">Profile settings</button>
+                </li>
+                <li>
+                    <button class="btn" data-account-tab="3">Localization settings</button>
+                </li>
+                <li>
+                    <button class="btn" data-account-tab="4">Social media</button>
+                </li>
+            </ul>
 
-      <div class="account-settings__blocks" data-tab-contents>
-        <div class="account-settings__block active" data-tab-content="1">
-          <div class="section-title" data-title>
-            <h3 class="main-title h2">User settings</h3>
-          </div>
+            <div class="account-settings__blocks" data-tab-contents>
+                <div class="account-settings__block active" data-tab-content="1">
+                    <div class="section-title" data-title>
+                        <h3 class="main-title h2">User settings</h3>
+                    </div>
 
-          <form data-upload-avatar-form class="theme-form upload-avatar__form">
+                    <form data-upload-avatar-form class="theme-form upload-avatar__form">
 
-            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-            <input data-avatar type="file" hidden="hidden">
+                        <input data-avatar type="file" hidden="hidden">
 
-            <div class="user-avatar">
-              <div class="user-avatar__image">
-                <div class="user-avatar__loader" data-avatar-loader>
-                  <span class="material-symbols-outlined">autorenew</span>
+                        <div class="user-avatar">
+                            <div class="user-avatar__image">
+                                <div class="user-avatar__loader" data-avatar-loader>
+                                    <span class="material-symbols-outlined">autorenew</span>
+                                </div>
+                                <img src={{ user.image.url }} alt="user avatar" data-avatar-image>
+                            </div>
+                            <button data-upload-avatar type="button" class="btn primary-btn">Change avatar</button>
+                        </div>
+
+                    </form>
+
+                    <form data-user-settings-form class="theme-form account-settings__form">
+
+                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-username" class="form__label">username</label>
+                                <div class="form__input-wrap">
+                                    <input data-username data-input type="text" id="user-username"
+                                           placeholder="Username"
+                                           value="{% if user.username %}{{ user.username }}{% else %}''{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-email" class="form__label">email</label>
+                                <div class="form__input-wrap">
+                                    <input data-email data-input type="text" id="user-email" placeholder="Your Email"
+                                           value="{% if user.email %}{{ user.email }}{% else %}''{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label class="form__label" for="password1">new password</label>
+                                <div class="form__input-wrap">
+                                    <input data-password1 data-input type="password" id="password1"
+                                           placeholder="New password">
+                                    <img data-password-eye class="form__eye-icon"
+                                         src="/media/icons/form-see-password.svg"
+                                         alt="see password icon">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label class="form__label" for="password2">confirm password</label>
+                                <div class="form__input-wrap">
+                                    <input data-password2 data-input type="password" id="password2"
+                                           placeholder="Confirm password">
+                                    <img data-password-eye class="form__eye-icon"
+                                         src="/media/icons/form-see-password.svg"
+                                         alt="see password icon">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row submit-row">
+                            <div class="form__field form__submit">
+                                <button class="btn secondary-btn" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <img src={{ user.image.url }} alt="user avatar" data-avatar-image>
-              </div>
-              <button data-upload-avatar type="button" class="btn primary-btn">Change avatar</button>
-            </div>
 
-          </form>
+                <div class="account-settings__block" data-tab-content="2">
+                    <div class="section-title" data-title>
+                        <h3 class="main-title h2">Profile settings</h3>
+                    </div>
 
-          <form data-user-settings-form class="theme-form account-settings__form">
+                    <form data-profile-settings-form class="theme-form profile-settings__form">
 
-            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-            <div class="form__row">
-                <div class="form__field">
-                    <label for="user-username" class="form__label">username</label>
-                    <div class="form__input-wrap">
-                        <input data-username data-input type="text" id="user-username"
-                               placeholder="Username" value="{{ user.username }}">
+                        {% if user.is_individual %}
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-firstname" class="form__label">first name</label>
+                                <div class="form__input-wrap">
+                                    <input data-firstname data-input type="text" id="user-firstname"
+                                           placeholder="First name" value="{% if user.individual.first_name %}{{ user.individual.first_name }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-lastname" class="form__label">last name</label>
+                                <div class="form__input-wrap">
+                                    <input data-lastname data-input type="text" id="user-lastname"
+                                           placeholder="Last name" value="{% if user.individual.last_name %}{{ user.individual.last_name }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label class="form__label">gender</label>
+                                <div class="form__input-wrap form__radio-wrapper">
+                                    <label>
+                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Male' %}{{ user.individual.gender }}{% endif %}" checked>
+                                        <div class="radio__label">Male</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-gender data-input type="radio" name="gender" value="{% if user.individual.gender == 'Female' %}{{ user.individual.gender }}{% endif %}">
+                                        <div class="radio__label">Female</a></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% else %}
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-company-name" class="form__label">company name</label>
+                                <div class="form__input-wrap">
+                                    <input data-company-name data-input type="text" id="user-company-name"
+                                           placeholder="Company name" value="{% if user.business.company_name %}{{ user.business.company_name }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-company-id" class="form__label">company id</label>
+                                <div class="form__input-wrap">
+                                    <input data-company-id data-input type="text" id="user-company-id"
+                                           placeholder="Company id" value="{% if user.business.company_id %}{{ user.business.company_id }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+                        {% endif %}
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <label for="user-phone" class="form__label">phone</label>
+                                <div class="form__input-wrap">
+                                    <input data-phone data-input type="text" id="user-phone"
+                                           placeholder="Phone number" value="{% if user.is_individual and user.individual.phone_number %}{{ user.individual.phone_number }}{% elif user.is_business and user.business.phone_number %}{{ user.business.phone_number }}{% endif %}">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form__row submit-row">
+                            <div class="form__field form__submit">
+                                <button class="btn secondary-btn" type="submit">Save changes</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="account-settings__block" data-tab-content="3">
+                    <div class="section-title" data-title>
+                        <h3 class="main-title h2">Localization settings</h3>
                     </div>
                 </div>
-            </div>
 
-            <div class="form__row">
-                <div class="form__field">
-                    <label for="user-email" class="form__label">email</label>
-                    <div class="form__input-wrap">
-                        <input data-email data-input type="text" id="user-email" placeholder="Your Email" value="{{ user.email }}">
+                <div class="account-settings__block" data-tab-content="4">
+                    <div class="section-title" data-title>
+                        <h3 class="main-title h2">Social media</h3>
                     </div>
                 </div>
+
             </div>
 
-            <div class="form__row">
-              <div class="form__field">
-                  <label class="form__label" for="password1">new password</label>
-                  <div class="form__input-wrap">
-                      <input data-password1 data-input type="password" id="password1" placeholder="New password">
-                      <img data-password-eye class="form__eye-icon"
-                           src="/media/icons/form-see-password.svg"
-                           alt="see password icon">
-                  </div>
-              </div>
-            </div>
-
-            <div class="form__row">
-              <div class="form__field">
-                  <label class="form__label" for="password2">confirm password</label>
-                  <div class="form__input-wrap">
-                      <input data-password2 data-input type="password" id="password2" placeholder="Confirm password">
-                      <img data-password-eye class="form__eye-icon"
-                           src="/media/icons/form-see-password.svg"
-                           alt="see password icon">
-                  </div>
-              </div>
-            </div>
-
-            <div class="form__row submit-row">
-                <div class="form__field form__submit">
-                    <button class="btn secondary-btn" type="submit">Save changes</button>
-                </div>
-            </div>
-          </form>
         </div>
-
-        <div class="account-settings__block" data-tab-content="2">
-          <div class="section-title" data-title>
-            <h3 class="main-title h2">Profile settings</h3>
-          </div>
-
-          <form data-profile-settings-form class="theme-form profile-settings__form">
-
-            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
-            {% if user.is_individual %}
-
-            <div class="form__row">
-                <div class="form__field">
-                    <label for="user-firstname" class="form__label">first name</label>
-                    <div class="form__input-wrap">
-                        <input data-firstname data-input type="text" id="user-firstname"
-                               placeholder="First name" value="Aktualne imię">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form__row">
-                <div class="form__field">
-                    <label for="user-lastname" class="form__label">last name</label>
-                    <div class="form__input-wrap">
-                        <input data-lastname data-input type="text" id="user-lastname"
-                               placeholder="Last name" value="Aktualne Nazwisko">
-                    </div>
-                </div>
-            </div>
-
-            <div class="form__row">
-              <div class="form__field">
-                  <label class="form__label">gender</label>
-                  <div class="form__input-wrap form__radio-wrapper">
-                      <label>
-                          <input data-gender data-input type="radio" name="gender" value="male" checked>
-                          <div class="radio__label">Male</a></div>
-                      </label>
-
-                      <label>
-                          <input data-gender data-input type="radio" name="gender" value="female">
-                          <div class="radio__label">Female</a></div>
-                      </label>
-                  </div>
-              </div>
-            </div>
-
-            {% else %}
-
-            <div class="form__row">
-              <div class="form__field">
-                  <label for="user-company-name" class="form__label">company name</label>
-                  <div class="form__input-wrap">
-                      <input data-company-name data-input type="text" id="user-company-name"
-                             placeholder="Company name" value="Aktualna nazwa firmy">
-                  </div>
-              </div>
-            </div>
-
-            <div class="form__row">
-              <div class="form__field">
-                  <label for="user-company-id" class="form__label">company id</label>
-                  <div class="form__input-wrap">
-                      <input data-company-id data-input type="text" id="user-company-id"
-                             placeholder="Company id" value="Aktualny NIP">
-                  </div>
-              </div>
-            </div>
-
-            {% endif %}
-
-            <div class="form__row">
-              <div class="form__field">
-                  <label for="user-phone" class="form__label">phone</label>
-                  <div class="form__input-wrap">
-                      <input data-phone data-input type="text" id="user-phone"
-                            placeholder="Phone number" value="Aktualny numer">
-                  </div>
-              </div>
-            </div>
-
-
-            <div class="form__row submit-row">
-                <div class="form__field form__submit">
-                    <button class="btn secondary-btn" type="submit">Save changes</button>
-                </div>
-            </div>
-          </form>
-        </div>
-
-        <div class="account-settings__block" data-tab-content="3">
-          <div class="section-title" data-title>
-            <h3 class="main-title h2">Localization settings</h3>
-          </div>
-        </div>
-
-        <div class="account-settings__block" data-tab-content="4">
-          <div class="section-title" data-title>
-            <h3 class="main-title h2">Social media</h3>
-          </div>
-        </div>
-
-      </div>
-
     </div>
-  </div>
 </section>
 {% endblock %}

@@ -70,8 +70,6 @@ endif
 
 @hubertrykala93
 
-1. nie wysyłać zwrotnie passwordów z formularza user settings
-2. jak w profile settings jakaś wartość nie istnije to value niech i tak będzie zadeklarowane w html tylko jeśli nie ma nic to niech pozostanie pusty ""
 3. na zapleczu w opcjach użytkownika zmienić (Is individual Is business) z checkboxes na radio
 
 
