@@ -1181,14 +1181,11 @@ if ($accountSettings){
     xhr.setRequestHeader('X-CSRFToken', getToken($profileSettingsForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-
-    console.log('wysłane dane', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odpowiedź z serwera', response)
           profileSettingsServerResponse(response)
       }
     }
@@ -1203,7 +1200,7 @@ if ($accountSettings){
 
       if ( field === 'data-phone' ) {
         if ( !phoneRegex.test(value) ) {
-          showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
+          showInfo(false, `The ${data.phone_number[2]} format is invalid.`, form, field)
           isAllValid = false
         } else {
           removeInfo(form, field)
@@ -1270,12 +1267,149 @@ if ($accountSettings){
     const phoneValue = $phoneInput.value.trim() !== currentPhone ? $phoneInput.value.trim() : ''
     data.phone_number = [phoneValue, "data-phone", phoneLabel]
 
-    profileSettingsAjaxRequest(data)
-
-    // if ( profileSettingsClientValidation(data) ) {
-    //   profileSettingsAjaxRequest(data)
-    // }
+    if ( profileSettingsClientValidation(data) ) {
+      profileSettingsAjaxRequest(data)
+    }
   })
+
+  //Localizations settings / social media - forms
+  const $localizationSettingsForm = $accountSettings.querySelector('[data-localization-settings-form]')
+  let currentCountry = $localizationSettingsForm.querySelector('[data-country]').value
+  let currentProvince = $localizationSettingsForm.querySelector('[data-province]').value
+  let currentCity = $localizationSettingsForm.querySelector('[data-city]').value
+  let currentStreet = $localizationSettingsForm.querySelector('[data-street]').value
+  let currentPostalCode = $localizationSettingsForm.querySelector('[data-postal-code]').value
+
+  const $socialMediaForm = $accountSettings.querySelector('[data-social-media-settings-form]')
+  let currentWebsiteUrl = $socialMediaForm.querySelector('[data-website-url]').value
+  let currentFacebookUrl = $socialMediaForm.querySelector('[data-facebook-url]').value
+  let currentInstagramUrl = $socialMediaForm.querySelector('[data-instagram-url]').value
+  let currentLinkedinUrl = $socialMediaForm.querySelector('[data-linkedin-url]').value
+
+  const localizationSocialMediaSettingsClientValidation = (data, form)=>{
+    let isAllValid = true
+    let isAllEmpty = true
+
+    Object.entries(data).forEach(([key, value]) => {
+      if( value[0] !== '' ) {
+        isAllEmpty = false
+      } else {
+        removeInfo(form, value[1])
+      }
+    })
+
+    if ( isAllValid && !isAllEmpty) {
+      return true
+    }
+  }
+
+  const localizationSettingsAjaxRequest = (data) =>{
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('PATCH', 'localization-settings', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($localizationSettingsForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('wysłane dane', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odpowiedź', response)
+          // localizationSettingsServerResponse(response)
+      }
+    }
+  }
+
+  const socialMediaSettingsAjaxRequest = (data) =>{
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('PATCH', 'social-media-settings', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($socialMediaForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('wysłane dane', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odpowiedź', response)
+          // socialMediaSettingsServerResponse(response)
+      }
+    }
+  }
+
+  $localizationSettingsForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const $countryInput = this.querySelector('[data-country]')
+    const countryLabel = $countryInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const countryValue = $countryInput.value.trim() !== currentCountry ? $countryInput.value.trim() : ''
+    
+    const $provinceInput = this.querySelector('[data-province]')
+    const provinceLabel = $provinceInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const provinceValue = $provinceInput.value.trim() !== currentProvince ? $provinceInput.value.trim() : ''
+    
+    const $cityInput = this.querySelector('[data-city]')
+    const cityLabel = $cityInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const cityValue = $cityInput.value.trim() !== currentCity ? $cityInput.value.trim() : ''
+    
+    const $streetInput = this.querySelector('[data-street]')
+    const streetLabel = $streetInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const streetValue = $streetInput.value.trim() !== currentStreet ? $streetInput.value.trim() : ''
+    
+    const $postalCodeInput = this.querySelector('[data-postal-code]')
+    const postalCodeLabel = $postalCodeInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const postalCodeValue = $postalCodeInput.value.trim() !== currentPostalCode ? $postalCodeInput.value.trim() : ''
+
+    const data = {
+      "country": [countryValue, "data-country", countryLabel],
+      "province": [provinceValue, "data-province", provinceLabel],
+      "city": [cityValue, "data-city", cityLabel],
+      "street": [streetValue, "data-street", streetLabel],
+      "postal_code": [postalCodeValue, "data-postal-code", postalCodeLabel],
+    }
+
+    localizationSettingsAjaxRequest(data)
+    // if ( localizationSocialMediaSettingsClientValidation(data, $localizationSettingsForm) ) {
+    //   localizationSettingsAjaxRequest(data)
+    // }
+    
+  })
+
+  $socialMediaForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const $websiteUrlInput = this.querySelector('[data-website-url]')
+    const websiteUrlLabel = $websiteUrlInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const websiteUrlValue = $websiteUrlInput.value.trim() !== currentWebsiteUrl ? $websiteUrlInput.value.trim() : ''
+    
+    const $facebookUrlInput = this.querySelector('[data-facebook-url]')
+    const facebookUrlLabel = $facebookUrlInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const facebookUrlValue = $facebookUrlInput.value.trim() !== currentFacebookUrl ? $facebookUrlInput.value.trim() : ''
+
+    const $instagramUrlInput = this.querySelector('[data-instagram-url]')
+    const instagramUrlLabel = $instagramUrlInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const instagramUrlValue = $instagramUrlInput.value.trim() !== currentInstagramUrl ? $instagramUrlInput.value.trim() : ''
+
+    const $linkedinUrlInput = this.querySelector('[data-linkedin-url]')
+    const linkedinUrlLabel = $linkedinUrlInput.parentElement.parentElement.querySelector('.form__label').textContent
+    const linkedinUrlValue = $linkedinUrlInput.value.trim() !== currentLinkedinUrl ? $linkedinUrlInput.value.trim() : ''
+
+    const data = {
+      "website_url": [websiteUrlValue, "data-website-url", websiteUrlLabel],
+      "facebook_url": [facebookUrlValue, "data-facebook-url", facebookUrlLabel],
+      "instagram_url": [instagramUrlValue, "data-instagram-url", instagramUrlLabel],
+      "linkedin_url": [linkedinUrlValue, "data-linkedin-url", linkedinUrlLabel],
+    }
+
+    socialMediaSettingsAjaxRequest(data)
+    // if ( localizationSocialMediaSettingsClientValidation(data, $socialMediaForm) ) {
+    //   socialMediaSettingsAjaxRequest(data)
+    // }
+    
+  })
+
 }
 
 
