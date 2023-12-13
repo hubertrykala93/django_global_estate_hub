@@ -1098,7 +1098,7 @@ if ($accountSettings){
     const password2Value = $password2Input.value.trim()
 
     const data = {
-      "userName": [usernameValue, "data-username", usernameLabel],
+      "username": [usernameValue, "data-username", usernameLabel],
       "email": [emailValue, "data-email", emailLabel],
       "password1": [password1Value, "data-password1", password1Label],
       "password2": [password2Value, "data-password2", password2Label],

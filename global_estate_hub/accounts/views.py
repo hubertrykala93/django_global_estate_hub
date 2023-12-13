@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -38,7 +38,7 @@ def register(request):
 def create_user(request):
     """
     The function handling the registration form for a new user in the database
-    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent from the website administrator
     to the provided email address for account activation.
 
@@ -259,7 +259,7 @@ def log_in(request):
 def authorization(request):
     """
     The function handling the user authentication form using
-    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, the user is logged in.
 
     return: JsonResponse
@@ -358,7 +358,7 @@ def account_settings(request):
 def upload_avatar(request):
     """
     The function handles the profile picture change form using the PATCH method
-    with Asynchronous JavaScript and XML (AJAX).
+    with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the new picture is saved in the database.
 
     return: JsonResponse
@@ -403,7 +403,7 @@ def upload_avatar(request):
 def user_settings(request):
     """
     The function handles the user data change form, including the username, email address, and password,
-    using the PATCH method with Asynchronous JavaScript and XML (AJAX).
+    using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
     return: JsonResponse
@@ -497,61 +497,34 @@ def user_settings(request):
 
         validation = [data['valid'] for data in response]
 
-        if all(validation) and (len(raw_password1) != 0 and sum([len(username), len(email)]) == 0):
-            user = User.objects.get(username=request.user)
-            user.password = make_password(password=raw_password1)
-            user.save()
+        result = {}
 
-            update_session_auth_hash(request=request, user=user)
+        if all(validation):
+            for k, v in data.items():
+                if v[0] != '':
+                    result[k] = v[0]
 
-            return JsonResponse(data=response, safe=False)
+        user = User.objects.get(username=request.user)
 
-        elif all(validation) and (
-                len(username) != 0 and sum([len(email), len(raw_password1), len(raw_password2)]) == 0):
-            user = User.objects.get(username=request.user)
-            user.username = username
-            user.save()
+        for k, v in result.items():
+            if k == 'password1' or k == 'password2':
+                print('if')
+                user.password = make_password(password=raw_password1)
+                update_session_auth_hash(request=request, user=user)
 
-            return JsonResponse(data=response, safe=False)
+            else:
+                setattr(user, k, v)
 
-        elif all(validation) and (
-                len(email) != 0 and sum([len(username), len(raw_password1), len(raw_password2)]) == 0):
-            user = User.objects.get(username=request.user)
-            user.email = email
-            user.save()
+        user.save()
 
-            return JsonResponse(data=response, safe=False)
-
-        elif all(validation) and (
-                len(username) != 0 and len(email) != 0 and sum([len(raw_password1), len(raw_password2)]) == 0):
-            user = User.objects.get(username=request.user)
-            user.username = username
-            user.email = email
-            user.save()
-
-            return JsonResponse(data=response, safe=False)
-
-        elif all(validation) and (len(username) != 0 and len(email) != 0 and len(raw_password1) != 0 and len(
-                raw_password2) != 0):
-            user = User.objects.get(username=request.user)
-            user.username = username
-            user.email = email
-            user.password = make_password(password=raw_password1)
-            user.save()
-
-            update_session_auth_hash(request=request, user=user)
-
-            return JsonResponse(data=response, safe=False)
-
-        else:
-            return JsonResponse(data=response, safe=False)
+        return JsonResponse(data=response, safe=False)
 
 
 def profile_settings(request):
     """
     The function handles the form for changing individual user profile data such as first name, last name, gender,
     and phone number, as well as the form for changing business user profile data such as company name,
-    company ID, and phone number. The function utilizes the PATCH method with Asynchronous JavaScript and XML (AJAX).
+    company ID, and phone number. The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
     return: JsonResponse
@@ -612,13 +585,13 @@ def profile_settings(request):
                 }
             ]
 
-            ret = {}
+            result = {}
 
             for k, v in data.items():
                 if v[0] != '':
-                    ret[k] = v[0]
+                    result[k] = v[0]
 
-            for k, v in ret.items():
+            for k, v in result.items():
                 setattr(request.user.individual, k, v)
 
             request.user.individual.save()
@@ -668,13 +641,13 @@ def profile_settings(request):
                 }
             ]
 
-            ret = {}
+            result = {}
 
             for k, v in data.items():
                 if v[0] != '':
-                    ret[k] = v[0]
+                    result[k] = v[0]
 
-            for k, v in ret.items():
+            for k, v in result.items():
                 setattr(request.user.business, k, v)
 
             request.user.business.save()
@@ -683,11 +656,165 @@ def profile_settings(request):
 
 
 def localization_settings(request):
-    pass
+    """
+    The function handles the form for changing location data in both individual and business user profiles,
+    including country, state, city, street, and postal code.
+    The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
+    if request.method == 'PATCH':
+        data = json.loads(s=request.body.decode('utf-8'))
+
+        country, province, city, street, postal_code = [data[key][0] for key in data]
+        country_field, province_field, city_field, street_field, postal_code_field = [data[key][1] for key in data]
+        country_label, province_label, city_label, street_label, postal_code_label = [data[key][2] for key in data]
+
+        response = [
+            {
+                "valid":
+                    True if not country else
+                    True,
+                "field": country_field,
+                "value": country,
+                "message":
+                    "" if not country else
+                    f"The {country_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not province else
+                    True,
+                "field": province_field,
+                "value": province,
+                "message":
+                    "" if not province else
+                    f"The {province_label} has been changed successfully."
+            },
+            {
+                "valid":
+                    True if not city else
+                    True,
+                "field": city_field,
+                "value": city,
+                "message":
+                    "" if not city else
+                    f"The {city_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not street else
+                    True,
+                "field": street_field,
+                "value": street,
+                "message":
+                    "" if not street else
+                    f"The {street_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not postal_code else
+                    True,
+                "field": postal_code_field,
+                "value": postal_code,
+                "message":
+                    "" if not postal_code else
+                    f"The {postal_code_label} has been changed successfully.",
+            }
+        ]
+
+        result = {}
+
+        for k, v in data.items():
+            if v[0] != '':
+                result[k] = v[0]
+
+        for k, v in result.items():
+            if request.user.account_type == 'Individual':
+                setattr(request.user.individual, k, v)
+                request.user.individual.save()
+            else:
+                setattr(request.user.business, k, v)
+                request.user.business.save()
+
+        return JsonResponse(data=response, safe=False)
 
 
 def social_media_settings(request):
-    pass
+    """
+    The function handles the form for changing website and social media link data in both individual
+    and business user profiles, including website, Facebook page, Instagram page, and LinkedIn page.
+    The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
+    if request.method == 'PATCH':
+        data = json.loads(s=request.body.decode('utf-8'))
+
+        website_url, facebook_url, instagram_url, linkedin_url = [data[key][0] for key in data]
+        website_url_field, facebook_url_field, instagram_url_field, linkedin_url_field = [data[key][1] for key in data]
+        website_url_label, facebook_url_label, instagram_url_label, linkedin_url_label = [data[key][2] for key in data]
+
+        response = [
+            {
+                "valid":
+                    True if not website_url else
+                    True,
+                "field": website_url_field,
+                "value": website_url,
+                "message":
+                    "" if not website_url else
+                    f"The {website_url_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not facebook_url else
+                    True,
+                "field": facebook_url_field,
+                "value": facebook_url,
+                "message":
+                    "" if not facebook_url else
+                    f"The {facebook_url_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not instagram_url else
+                    True,
+                "field": instagram_url_field,
+                "value": instagram_url,
+                "message":
+                    "" if not instagram_url else
+                    f"The {instagram_url_label} has been changed successfully.",
+            },
+            {
+                "valid":
+                    True if not linkedin_url else
+                    True,
+                "field": linkedin_url_field,
+                "value": linkedin_url,
+                "message":
+                    "" if not linkedin_url else
+                    f"The {linkedin_url_label} has been changed successfully.",
+            }
+        ]
+
+        result = {}
+
+        for k, v in data.items():
+            if v[0] != '':
+                result[k] = v[0]
+
+        for k, v in result.items():
+            if request.user.account_type == 'Individual':
+                setattr(request.user.individual, k, v)
+                request.user.individual.save()
+            else:
+                setattr(request.user.business, k, v)
+                request.user.business.save()
+
+        return JsonResponse(data=response, safe=False)
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
@@ -705,7 +832,7 @@ def forget_password(request):
 def send_password(request):
     """
     The function handling the user email address validation form using
-    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
 
     This function sends an email message with a OneTimePassword to the user who requests password recovery/change.
     The OneTimePassword is active for 5 minutes and then deleted. While the OneTimePassword is active,
@@ -794,7 +921,7 @@ def send_password(request):
 def validate_password(request):
     """
     The function handling the OneTimePassword validation form using
-    the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, the user can proceed to set a new password for their account.
 
     return: JsonResponse
@@ -835,7 +962,7 @@ def validate_password(request):
 def set_password(request):
     """
     The function handling the user password update form and saving it to the database
-    using the PATCH method with Asynchronous JavaScript and XML (AJAX) request.
+    using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, the database is automatically updated.
 
     return: JsonResponse

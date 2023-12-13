@@ -209,7 +209,7 @@
                                 <label for="user-country" class="form__label">country</label>
                                 <div class="form__input-wrap">
                                     <input data-country data-input type="text" id="user-country"
-                                           placeholder="Country" value="Aktualny kraj">
+                                           placeholder="Country" value="{% if request.user.individual.country %}{{ request.user.individual.country }}{% elif request.user.business.country %}{{ request.user.business.country }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -219,7 +219,7 @@
                                 <label for="user-province" class="form__label">province</label>
                                 <div class="form__input-wrap">
                                     <input data-province data-input type="text" id="user-province"
-                                           placeholder="Province" value="Aktualny region">
+                                           placeholder="Province" value="{% if request.user.individual.province %}{{ request.user.individual.province }}{% elif request.user.business.province %}{{ request.user.business.province }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -229,7 +229,7 @@
                                 <label for="user-city" class="form__label">city</label>
                                 <div class="form__input-wrap">
                                     <input data-city data-input type="text" id="user-city"
-                                           placeholder="City" value="Aktualne miasto">
+                                           placeholder="City" value="{% if request.user.individual.city %}{{ request.user.individual.city }}{% elif request.user.business.city %}{{ request.user.business.city }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -239,7 +239,7 @@
                                 <label for="user-street" class="form__label">street</label>
                                 <div class="form__input-wrap">
                                     <input data-street data-input type="text" id="user-street"
-                                           placeholder="Street" value="Aktualna ulica">
+                                           placeholder="Street" value="{% if request.user.individual.street %}{{ request.user.individual.street }}{% elif request.user.business.street %}{{ request.user.business.street }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -249,7 +249,7 @@
                                 <label for="user-postal-code" class="form__label">postal code</label>
                                 <div class="form__input-wrap">
                                     <input data-postal-code data-input type="text" id="user-postal-code"
-                                           placeholder="Postal code" value="Aktualny kod">
+                                           placeholder="Postal code" value="{% if request.user.individual.postal_code %}{{ request.user.individual.postal_code }}{% elif request.user.business.postal_code %}{{ request.user.business.postal_code }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -273,40 +273,40 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-website-url" class="form__label">Website url</label>
+                                <label for="user-website-url" class="form__label">Website URL</label>
                                 <div class="form__input-wrap">
                                     <input data-website-url data-input type="text" id="user-website-url"
-                                           placeholder="Your website url" value="Aktualna strona">
+                                           placeholder="Your Website URL" value="{% if request.user.individual.website_url %}{{ request.user.individual.website_url }}{% elif request.user.business.website_url %}{{ request.user.business.website_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-facebook-url" class="form__label">Facebook url</label>
+                                <label for="user-facebook-url" class="form__label">Facebook URL</label>
                                 <div class="form__input-wrap">
                                     <input data-facebook-url data-input type="text" id="user-facebook-url"
-                                           placeholder="Your facebook url" value="Aktualny fb">
+                                           placeholder="Your Facebook URL" value="{% if request.user.individual.facebook_url %}{{ request.user.individual.facebook_url }}{% elif request.user.business.facebook_url %}{{ request.user.business.facebook_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-instagram-url" class="form__label">Instagram url</label>
+                                <label for="user-instagram-url" class="form__label">Instagram URL</label>
                                 <div class="form__input-wrap">
                                     <input data-instagram-url data-input type="text" id="user-instagram-url"
-                                           placeholder="Your instagram url" value="Aktualny instagram">
+                                           placeholder="Your Instagram URL" value="{% if request.user.individual.instagram_url %}{{ request.user.individual.instagram_url }}{% elif request.user.business.instagram_url %}{{ request.user.business.instagram_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
 
                         <div class="form__row">
                             <div class="form__field">
-                                <label for="user-linkedin-url" class="form__label">Linkedin url</label>
+                                <label for="user-linkedin-url" class="form__label">LinkedIn URL</label>
                                 <div class="form__input-wrap">
                                     <input data-linkedin-url data-input type="text" id="user-linkedin-url"
-                                           placeholder="Your linkedin url" value="Aktualny linkedin">
+                                           placeholder="Your LinkedIn URL" value="{% if request.user.individual.linkedin_url %}{{ request.user.individual.linkedin_url }}{% elif request.user.business.linkedin_url %}{{ request.user.business.linkedin_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>

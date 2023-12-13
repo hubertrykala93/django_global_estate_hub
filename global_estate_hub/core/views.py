@@ -26,7 +26,7 @@ def index(request):
 def newsletter(request):
     """
     The function handling the form for saving an email address for the newsletter to the database
-    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent
     from the website administrator to the provided email address.
 
@@ -153,7 +153,7 @@ def error(request):
 def send_message(request):
     """
     The function handling the form for sending an email message to the website administrator
-    using the POST method with Asynchronous JavaScript and XML (AJAX) request.
+    using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     The function also saves data such as Full Name, Phone Number, Email Address, and Message to the database.
     Upon successful form validation, an email message is automatically sent to the website administrator.
 
