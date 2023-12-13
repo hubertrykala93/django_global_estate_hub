@@ -1234,14 +1234,14 @@ if ($accountSettings){
     if ( $firstNameInput ) {
       const label = $firstNameInput.parentElement.parentElement.querySelector('.form__label').textContent
       const value = $firstNameInput.value.trim() !== currentFirstName ? $firstNameInput.value.trim() : ''
-      data.firstName = [value, "data-firstname", label]
+      data.first_name = [value, "data-firstname", label]
     }
 
     const $lastNameInput = this.querySelector('[data-lastname]')
     if ( $lastNameInput ) {
       const label = $lastNameInput.parentElement.parentElement.querySelector('.form__label').textContent
       const value = $lastNameInput.value.trim() !== currentLastName ? $lastNameInput.value.trim() : ''
-      data.lastName = [value, "data-lastname", label]
+      data.last_name = [value, "data-lastname", label]
     }
 
     const $genderInput = this.querySelector('[data-gender]')
@@ -1255,20 +1255,20 @@ if ($accountSettings){
     if ( $companyNameInput ) {
       const label = $companyNameInput.closest('.form__field').querySelector('.form__label').textContent
       const value = $companyNameInput.value.trim() !== currentCompanyName ? $companyNameInput.value.trim() : ''
-      data.companyName = [value, "data-company-name", label]
+      data.company_name = [value, "data-company-name", label]
     }
 
     const $companyIdInput = this.querySelector('[data-company-id]')
     if ( $companyIdInput ) {
       const label = $companyIdInput.closest('.form__field').querySelector('.form__label').textContent
       const value = $companyIdInput.value.trim() !== currentCompanyId ? $companyIdInput.value.trim() : ''
-      data.companyId = [value, "data-company-id", label]
+      data.company_id = [value, "data-company-id", label]
     }
     
     const $phoneInput = this.querySelector('[data-phone]')
     const phoneLabel = $phoneInput.parentElement.parentElement.querySelector('.form__label').textContent
     const phoneValue = $phoneInput.value.trim() !== currentPhone ? $phoneInput.value.trim() : ''
-    data.phone = [phoneValue, "data-phone", phoneLabel]
+    data.phone_number = [phoneValue, "data-phone", phoneLabel]
 
     profileSettingsAjaxRequest(data)
 

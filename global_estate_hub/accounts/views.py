@@ -560,174 +560,70 @@ def profile_settings(request):
         if request.user.account_type == 'Individual':
             data = json.loads(s=request.body.decode('utf-8'))
 
-            firstname, lastname, gender, phone = [data[key][0] for key in data]
-            firstname_field, lastname_field, gender_field, phone_field = [data[key][1] for key in data]
-            firstname_label, lastname_label, gender_label, phone_label = [data[key][2] for key in data]
+            first_name, last_name, gender, phone_number = [data[key][0] for key in data]
+            first_name_field, last_name_field, gender_field, phone_number_field = [data[key][1] for key in data]
+            first_name_label, last_name_label, gender_label, phone_number_label = [data[key][2] for key in data]
 
             response = [
                 {
                     "valid":
-                        True if not firstname else
+                        True if not first_name else
                         True,
-                    "field": firstname_field,
-                    "value": firstname,
+                    "field": first_name_field,
+                    "value": first_name,
                     "message":
-                        "" if not firstname else
-                        f"The {firstname_label} has been changed successfully.",
+                        "" if not first_name else
+                        f"The {first_name_label} has been changed successfully.",
                 },
                 {
                     "valid":
-                        True if not lastname else
+                        True if not last_name else
                         True,
-                    "field": lastname_field,
-                    "value": lastname,
+                    "field": last_name_field,
+                    "value": last_name,
                     "message":
-                        "" if not lastname else
-                        f"The {lastname_label} has been changed successfully."
+                        "" if not last_name else
+                        f"The {last_name_label} has been changed successfully."
                 },
                 {
                     "valid":
-                        True if gender == 'male' else
-                        True if gender == 'female' else
+                        True if gender == 'Male' else
+                        True if gender == 'Female' else
                         True,
                     "field": gender_field,
                     "value": gender,
                     "message":
-                        f"The {gender_label} has been changed successfully." if gender == 'male' else
-                        f"The {gender_label} has been changed successfully." if gender == 'female' else
+                        f"The {gender_label} has been changed successfully." if gender == 'Male' else
+                        f"The {gender_label} has been changed successfully." if gender == 'Female' else
                         ""
                 },
                 {
                     "valid":
-                        True if not phone else
-                        False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$", string=phone) else
+                        True if not phone_number else
+                        False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$", string=phone_number) else
                         True,
-                    "field": phone_field,
-                    "value": phone,
+                    "field": phone_number_field,
+                    "value": phone_number,
                     "message":
-                        "" if not phone else
-                        f"Invalid {phone_label} number format." if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
-                                                                                string=phone) else
-                        f"The {phone_label} number has been changed successfully.",
+                        "" if not phone_number else
+                        f"Invalid {phone_number_label} number format." if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
+                                                                                       string=phone_number) else
+                        f"The {phone_number_label} number has been changed successfully.",
                 }
             ]
 
-            validation = [data['valid'] for data in response]
+            ret = {}
 
-            if all(validation):
-                if len(firstname) != 0 and sum([len(lastname), len(gender), len(phone)]) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.save()
+            for k, v in data.items():
+                if v[0] != '':
+                    ret[k] = v[0]
 
-                    return JsonResponse(data=response, safe=False)
+            for k, v in ret.items():
+                setattr(request.user.individual, k, v)
 
-                elif len(lastname) != 0 and sum([len(firstname), len(gender), len(phone)]) == 0:
-                    request.user.individual.last_name = lastname
-                    request.user.individual.save()
+            request.user.individual.save()
 
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(gender) != 0 and sum([len(firstname), len(lastname), len(phone)]) == 0:
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(phone) != 0 and sum([len(firstname), len(lastname), len(gender)]) == 0:
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(lastname) != 0 and sum([len(gender), len(phone)]) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.last_name = lastname
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(lastname) != 0 and len(gender) != 0 and sum([len(firstname), len(phone)]) == 0:
-                    request.user.individual.last_name = lastname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(gender) != 0 and len(phone) != 0 and sum([len(firstname), len(lastname)]) == 0:
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(gender) != 0 and sum([len(lastname), len(phone)]) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(lastname) != 0 and len(phone) != 0 and sum([len(firstname), len(gender)]) == 0:
-                    request.user.individual.last_name = lastname
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(phone) != 0 and sum([len(lastname), len(gender)]) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-
-                elif len(firstname) != 0 and len(lastname) != 0 and len(gender) != 0 and len(phone) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.last_name = lastname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(lastname) != 0 and len(gender) != 0 and len(phone) != 0 and len(firstname) == 0:
-                    request.user.individual.last_name = lastname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(lastname) != 0 and len(phone) != 0 and len(gender) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.last_name = lastname
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(gender) != 0 and len(phone) != 0 and len(lastname) == 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(firstname) != 0 and len(lastname) != 0 and len(gender) != 0 and len(phone) != 0:
-                    request.user.individual.first_name = firstname
-                    request.user.individual.last_name = lastname
-                    request.user.individual.gender = gender.capitalize()
-                    request.user.individual.phone_number = phone
-                    request.user.individual.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                else:
-                    return JsonResponse(data=response, safe=False)
-
-            else:
-                return JsonResponse(data=response, safe=False)
+            return JsonResponse(data=response, safe=False)
 
         else:
             data = json.loads(s=request.body.decode('utf-8'))
@@ -772,58 +668,18 @@ def profile_settings(request):
                 }
             ]
 
-            validation = [data['valid'] for data in response]
+            ret = {}
 
-            if all(validation):
-                if len(company_name) != 0 and sum([len(company_id), len(phone)]) == 0:
-                    request.user.business.company_name = company_name
-                    request.user.business.save()
+            for k, v in data.items():
+                if v[0] != '':
+                    ret[k] = v[0]
 
-                    return JsonResponse(data=response, safe=False)
+            for k, v in ret.items():
+                setattr(request.user.business, k, v)
 
-                elif len(company_id) != 0 and sum([len(company_name), len(phone)]) == 0:
-                    request.user.business.company_id = company_id
-                    request.user.business.save()
+            request.user.business.save()
 
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(phone) != 0 and sum([len(company_name), len(company_id)]) == 0:
-                    request.user.business.phone_number = phone
-                    request.user.business.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(company_name) != 0 and len(company_id) != 0 and len(phone) == 0:
-                    request.user.business.company_name = company_name
-                    request.user.business.company_id = company_id
-                    request.user.business.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(company_id) != 0 and len(phone) != 0 and len(company_name) == 0:
-                    request.user.business.company_id = company_id
-                    request.user.business.phone_number = phone
-                    request.user.business.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(company_name) != 0 and len(phone) != 0 and len(company_id) == 0:
-                    request.user.business.company_name = company_name
-                    request.user.business.phone_number = phone
-                    request.user.business.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                elif len(company_name) != 0 and len(company_id) != 0 and len(phone) != 0:
-                    request.user.business.company_name = company_name
-                    request.user.business.company_id = company_id
-                    request.user.business.phone_number = phone
-                    request.user.business.save()
-
-                    return JsonResponse(data=response, safe=False)
-
-                else:
-                    return JsonResponse(data=response, safe=False)
+            return JsonResponse(data=response, safe=False)
 
 
 def localization_settings(request):
