@@ -48,14 +48,7 @@ class Tag(models.Model):
     """
     Creating Tag model instance.
     """
-    tag = models.CharField(max_length=50, choices=[
-        ('Apartment', 'Apartment'),
-        ('Business', 'Business'),
-        ('Real Estate', 'Real Estate'),
-        ('Popular', 'Popular'),
-        ('Luxury Villa', 'Luxury Villa'),
-        ('Design', 'Design')
-    ])
+    name = models.CharField(max_length=50)
 
     class Meta:
         verbose_name = 'Tag'

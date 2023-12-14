@@ -52,37 +52,16 @@
     <div class="aside__module">
         <div class="h4 aside__title">Popular tags</div>
 
+        {% if popular_tags|length > 0 %}
         <ul class="aside__tags">
+            {% for tag in popular_tags %}
             <li class="aside__tags-item">
                 <a href="#" class="aside__tags-link">
-                    Apartament
+                    {{ tag }}
                 </a>
             </li>
-            <li class="aside__tags-item">
-                <a href="#" class="aside__tags-link">
-                    Business
-                </a>
-            </li>
-            <li class="aside__tags-item">
-                <a href="#" class="aside__tags-link">
-                    Real estate
-                </a>
-            </li>
-            <li class="aside__tags-item">
-                <a href="#" class="aside__tags-link">
-                    popular
-                </a>
-            </li>
-            <li class="aside__tags-item">
-                <a href="#" class="aside__tags-link">
-                    luxury villa
-                </a>
-            </li>
-            <li class="aside__tags-item">
-                <a href="#" class="aside__tags-link">
-                    design
-                </a>
-            </li>
+            {% endfor %}
         </ul>
+        {% endif %}
     </div>
 </aside>

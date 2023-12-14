@@ -1,4 +1,4 @@
-from .models import Category, Article
+from .models import Category, Article, Tag
 
 
 def get_category_info(request) -> dict:
@@ -39,4 +39,26 @@ def categories(request) -> dict:
     """
     return {
         'categories': Category.objects.all(),
+    }
+
+
+def popular_tags(request):
+    articles = Article.objects.all()
+
+    result = []
+
+    for article in articles:
+        for obj in article.tags.all():
+            result.append(obj.name)
+
+    tags_dict = {}
+
+    for tag in result:
+        if tag not in tags_dict.keys():
+            tags_dict[tag] = 1
+        else:
+            tags_dict[tag] += 1
+
+    return {
+        'popular_tags': list(dict(sorted(tags_dict.items(), key=lambda x: x[1], reverse=True)).keys())[:6]
     }

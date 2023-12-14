@@ -88,6 +88,7 @@ TEMPLATES = [
                 "blog.context_processors.get_category_info",
                 "blog.context_processors.newest_articles",
                 "blog.context_processors.categories",
+                "blog.context_processors.popular_tags",
             ],
         },
     },
@@ -155,5 +156,4 @@ DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL")
 PASSWORD_RESET_TIMEOUT = int(os.environ.get("PASSWORD_RESET_TIMEOUT"))
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 105242880
-# DATA_UPLOAD_MAX_NUMBER_FIELDS = 10240
 DATA_UPLOAD_MAX_NUMBER_FIELDS = None

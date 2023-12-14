@@ -9,7 +9,7 @@
         <div class="row blog__row">
             <div class="cards__column">
                 <div class="blog__results-details">
-                    The number of search results for the phrase <strong class="blog__results-details-phrase">"blah blah"</strong> is <span class="blog__results-details-counter">3</span>
+                    The number of search results for the phrase <strong class="blog__results-details-phrase">{{ request.GET.search }}</strong> is <span class="blog__results-details-counter">{{ pages|length }}</span>
                 </div>
 
                 <div class="row blog-cards_row-results">
