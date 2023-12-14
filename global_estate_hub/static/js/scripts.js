@@ -269,7 +269,9 @@ const clearFormValues = (form) => {
 
   if ( allInputs.length ) {
     allInputs.forEach(input => {
-      input.value = ''
+      if ( input.type !== 'checkbox' && input.type !== 'radio' ) {
+        input.value = ''
+      }
     });
   }
 }
@@ -1030,7 +1032,7 @@ if ($accountSettings){
 
       if ( field === 'data-username' ) {
         if ( value.length < 8 ) {
-          showInfo(false, `The ${data.userName[2]} should contain at least 8 characters.`, form, field)
+          showInfo(false, `The ${data.username[2]} should contain at least 8 characters.`, form, field)
           isAllValid = false
         } else {
           removeInfo(form, field)

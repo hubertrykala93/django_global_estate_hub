@@ -1922,6 +1922,30 @@ section.blog .blog__row .sidebar__column {
   color: var(--clr-secondary);
 }
 
+.aside__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.aside__tags .aside__tags-item {
+  line-height: normal;
+}
+
+.aside__tags .aside__tags-link {
+  display: inline-block;
+  padding: 1rem 1.8rem;
+  border-radius: var(--br-400);
+  border: 1px solid #dfdfdf;
+  text-transform: capitalize;
+  transition: color .4s;
+}
+
+.aside__tags .aside__tags-link:hover,
+.aside__tags .aside__tags-link:focus-visible {
+  color: var(--clr-secondary);
+}
+
 
 /**
   * Blog blocks
@@ -2034,6 +2058,32 @@ section.blog .blog-card__column{
 
 .blog-card__read-more img {
   margin-left: 1rem;
+}
+
+/**
+  * Blog search resulst
+   */
+
+.blog__results-details {
+  margin-bottom: 2.4rem;
+}
+
+.blog__results-details .blog__results-details-phrase {
+  font-weight: 700;
+  color: var(--clr-primary);
+}
+
+.blog__results-details .blog__results-details-counter {
+  padding: .5rem 1rem;
+  display: inline-block;
+  line-height: normal;
+  border-radius: var(--br-300);
+  background-color: var(--clr-primary);
+  color: var(--clr-white);
+}
+
+section.blog .blog-cards_row-results .blog-card__wrapper {
+  margin-bottom: 2.4rem;
 }
 
 

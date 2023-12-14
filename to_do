@@ -62,10 +62,20 @@ if user.is_authenticated:
     endif
 endif
 
-1. po registerze czyście się value typu konta - poprawić
 2. article-details.html,
 3. article-details.html ajax form,
 5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
+
+0. zmień zakładkę Blogs na Blog to nie chcę zepsuć jeśli to jest w kilku miejscach do zmiany
+1. podpięcie wyszukanego słowa i ilości wyników wyszukiwania w blog-results.html
+2. tagi w artykułach na zapleczu
+3. w aside bloga pętla generująca tagi od najpopularniejszego (max 6-8) w ul.aside__tags
+ul ma być zależne od obecności [są || nie ma] tagów - jeśli nie ma tagów to w ogóle niech ul się nie renderuje
+4. ustaw to konto co jest założone na maila szymon.levy123@gmail.com jako admin a to drugie co źle się zapisało w bazie usuń
+
+
+
+
 cache busting

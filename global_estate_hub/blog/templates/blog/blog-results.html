@@ -8,16 +8,13 @@
 
         <div class="row blog__row">
             <div class="cards__column">
-                <div class="row blog-cards_row">
-                    {% for page in pages %}
-                    <div class="blog-card__column">
-                        <div class="blog-card__wrapper">
-                            <a class="blog-card__category"
-                               href="{{ page.category.get_absolute_url }}">{{ page.category }}</a>
-                            <div class="blog-card__image">
-                                <img src="{{ page.image.url }}">
-                            </div>
+                <div class="blog__results-details">
+                    The number of search results for the phrase <strong class="blog__results-details-phrase">"blah blah"</strong> is <span class="blog__results-details-counter">3</span>
+                </div>
 
+                <div class="row blog-cards_row-results">
+                    {% for page in pages %}
+                        <div class="blog-card__wrapper">
                             <div class="blog-card__content">
                                 <div class="blog-card__info">
                                     <div class="blog-card__info__item">
@@ -47,7 +44,6 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
                 {% include 'blog/pagination.html' %}
