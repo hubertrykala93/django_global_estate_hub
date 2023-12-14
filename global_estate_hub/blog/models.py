@@ -140,6 +140,10 @@ class Comment(models.Model):
     email = models.EmailField(max_length=100)
     date_posted = models.DateTimeField(default=now)
     content = models.TextField(max_length=1000)
+    likes = models.PositiveIntegerField(default=0)
+    dislikes = models.PositiveIntegerField(default=0)
+    parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True, related_name='comment_parent')
+    active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Comment'

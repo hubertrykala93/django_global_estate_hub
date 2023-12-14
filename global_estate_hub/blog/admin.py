@@ -32,7 +32,7 @@ class AdminArticle(admin.ModelAdmin):
 
 @admin.register(Comment)
 class AdminComment(admin.ModelAdmin):
-    list_display = ['user', 'full_name', 'email', 'date_posted', 'content']
-    list_filter = ['user', 'full_name', 'email', 'date_posted']
-    list_editable = ['full_name', 'email', 'content']
+    list_display = ['user', 'full_name', 'email', 'date_posted', 'content', 'likes', 'dislikes', 'active']
+    list_filter = ['user', 'full_name', 'email', 'date_posted', 'active']
+    list_editable = ['full_name', 'email', 'content', 'active']
     list_display_links = ['user']
