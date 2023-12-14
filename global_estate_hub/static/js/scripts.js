@@ -1286,6 +1286,57 @@ if ($accountSettings){
   let currentInstagramUrl = $socialMediaForm.querySelector('[data-instagram-url]').value
   let currentLinkedinUrl = $socialMediaForm.querySelector('[data-linkedin-url]').value
 
+  const localizationSocialMediaSettingsServerResponse = (response, form)=> {
+    response.forEach(field => {
+      if ( field.message === '' ) { 
+        removeInfo(form, field.field) 
+      }else {
+        showInfo(field.valid, field.message, form, field.field)
+        
+        if ( field.valid ) {
+          if ( field.field === 'data-country') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentCountry = field.value
+          }
+          if ( field.field === 'data-province') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentProvince = field.value
+          }
+          if ( field.field === 'data-city') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentCity = field.value
+          }
+          if ( field.field === 'data-street') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentStreet = field.value
+          }
+          if ( field.field === 'data-postal-code') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentPostalCode = field.value
+          }
+
+
+          if ( field.field === 'data-website-url') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentWebsiteUrl = field.value
+          }
+          if ( field.field === 'data-facebook-url') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentFacebookUrl = field.value
+          }
+          if ( field.field === 'data-instagram-url') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentInstagramUrl = field.value
+          }
+          if ( field.field === 'data-linkedin-url') {
+            form.querySelector(`[${field.field}]`).value = field.value
+            currentLinkedinUrl = field.value
+          }
+        }
+      }
+    })
+  }
+
   const localizationSocialMediaSettingsClientValidation = (data, form)=>{
     let isAllValid = true
     let isAllEmpty = true
@@ -1310,14 +1361,12 @@ if ($accountSettings){
     xhr.setRequestHeader('X-CSRFToken', getToken($localizationSettingsForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('wysłane dane', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odpowiedź', response)
-          // localizationSettingsServerResponse(response)
+          localizationSocialMediaSettingsServerResponse(response, $localizationSettingsForm)
       }
     }
   }
@@ -1329,14 +1378,12 @@ if ($accountSettings){
     xhr.setRequestHeader('X-CSRFToken', getToken($socialMediaForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('wysłane dane', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odpowiedź', response)
-          // socialMediaSettingsServerResponse(response)
+          localizationSocialMediaSettingsServerResponse(response, $socialMediaForm)
       }
     }
   }
@@ -1371,10 +1418,9 @@ if ($accountSettings){
       "postal_code": [postalCodeValue, "data-postal-code", postalCodeLabel],
     }
 
-    localizationSettingsAjaxRequest(data)
-    // if ( localizationSocialMediaSettingsClientValidation(data, $localizationSettingsForm) ) {
-    //   localizationSettingsAjaxRequest(data)
-    // }
+    if ( localizationSocialMediaSettingsClientValidation(data, $localizationSettingsForm) ) {
+      localizationSettingsAjaxRequest(data)
+    }
     
   })
 
@@ -1403,10 +1449,9 @@ if ($accountSettings){
       "linkedin_url": [linkedinUrlValue, "data-linkedin-url", linkedinUrlLabel],
     }
 
-    socialMediaSettingsAjaxRequest(data)
-    // if ( localizationSocialMediaSettingsClientValidation(data, $socialMediaForm) ) {
-    //   socialMediaSettingsAjaxRequest(data)
-    // }
+    if ( localizationSocialMediaSettingsClientValidation(data, $socialMediaForm) ) {
+      socialMediaSettingsAjaxRequest(data)
+    }
     
   })
 

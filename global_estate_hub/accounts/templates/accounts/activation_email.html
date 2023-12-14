@@ -1,5 +1,35 @@
-<h1 style="color: red;">Congratulations on registering with Global Estate Hub.</h1> Click on the link below to activate your account:
+<div class="title" style="
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #18201B;
+  margin: 10px 0;
+">Congratulations on registering with Global Estate Hub.</div> 
 
-http://{{ domain }}{% url 'activate' uidb64=uid token=token %}
+<p class="text" style="
+margin: 10px 0;
+">Click on the link below to activate your account:</p> 
 
-Please note that the activation link is valid for 5 minutes. If you do not activate your account within this time, you will need to register again.
+<div class="box" style="
+  display: inline-block;
+  margin: 10px 0;
+  background-color: #375844;
+  padding: 8px 15px;
+  border-radius: .5rem;
+  font-weight: 700;
+">
+  <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}" style="
+    color: white;
+    text-decoration: unset;
+  ">Click here!</a>
+</div>
+
+<p class="info" style="
+  background-color: #EFF5F2;
+  border-radius: 1rem;
+  padding: 15px;
+  margin: 15px 0;
+  color: black;
+">Please note that the activation link is valid for 5 minutes. If you do not activate your account within this time, you will need to register again.</p>
+
+<!-- http://{{ domain }}{% url 'activate' uidb64=uid token=token %} -->
+

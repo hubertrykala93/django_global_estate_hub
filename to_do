@@ -62,12 +62,14 @@ if user.is_authenticated:
     endif
 endif
 
-
+1. po registerze czyście się value typu konta - poprawić
 2. article-details.html,
 3. article-details.html ajax form,
-4. stylizacja -> accounts/templates/accounts/activation_email.html, password_reset_email.html i core/templates/core/newsletter_mail.html
 5. stylizacja core/templates/core/messages.html,
 
 @hubertrykala93
+1. dodać atrybut parent do modelu comment
+2. dodać atrybuty likes i dislikes do modelu comment
+
 
 cache busting
