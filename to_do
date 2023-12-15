@@ -68,6 +68,8 @@ endif
 
 @hubertrykala93
 
+1. dodanie generowania tagów w szczegółach artykułu - jeśli nie ma tagów dla artykułu to ma się nie renderować część htmla - zaznaczone komentarzami od - do
+2. dodanie nawigowania do następnego i poprzedniego artykułu w szczegółach artykułu - jeśli nie ma następnego lub poprzedniego to cały element 'a' ma się nie renderować - zaznaczone komentarzami
 3. w aside bloga pętla generująca tagi od najpopularniejszego (max 6-8) w ul.aside__tags
 ul ma być zależne od obecności [są || nie ma] tagów - jeśli nie ma tagów to w ogóle niech ul się nie renderuje
 
