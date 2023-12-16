@@ -19,7 +19,7 @@ class Category(models.Model):
         ('Buys', 'Buys'),
     ])
 
-    slug = models.SlugField(max_length=50, null=True)
+    slug = models.SlugField(max_length=100, null=True)
 
     class Meta:
         verbose_name = 'Category'
@@ -48,7 +48,8 @@ class Tag(models.Model):
     """
     Creating Tag model instance.
     """
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, null=True)
 
     class Meta:
         verbose_name = 'Tag'
@@ -60,7 +61,17 @@ class Tag(models.Model):
 
         return: str
         """
-        return self.tag
+        return self.name
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given tag.
+
+        return HttpsResponseRedirect
+        """
+        return reverse(viewname='article-tags', kwargs={
+            'tag_slug': self.slug,
+        })
 
 
 class Article(models.Model):

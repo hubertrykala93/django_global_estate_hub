@@ -15,13 +15,15 @@ class AdminCategory(admin.ModelAdmin):
 
 @admin.register(Tag)
 class AdminTag(admin.ModelAdmin):
-    list_display = ['name']
+    list_display = ['name', 'slug']
     list_filter = ['name']
     list_display_links = ['name']
+    prepopulated_fields = {'slug': ['name']}
 
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
+    ordering = ['date_posted']
     fields = ['user', 'title', 'category', 'image', 'date_posted', 'content', 'slug', 'tags']
     list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug']
     list_filter = ['user', 'category', 'date_posted', 'tags']

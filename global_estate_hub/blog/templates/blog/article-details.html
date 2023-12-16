@@ -14,7 +14,8 @@
 
                     <div class="article__meta">
                         <div class="article__meta__author">
-                            <img class="article__meta__author__image" src="{{ article.user.image.url }}" alt="author avatar">
+                            <img class="article__meta__author__image" src="{{ article.user.image.url }}"
+                                 alt="author avatar">
                             <span class="article__meta__author__by">
                                 By
                                 <a href="#">{{ article.user.username }}</a>
@@ -29,39 +30,55 @@
 
                     <div class="article__body">
                         <p>
-                            Lorem ipsum dolor sit amet consectetur, adipiscing elit sed do   eiusmod tempor incididunt, ut labore corpori
-                            magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex occaecat
-                            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat to 
-                            pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id.
+                            Lorem ipsum dolor sit amet consectetur, adipiscing elit sed do eiusmod tempor incididunt, ut
+                            labore corpori
+                            magna aliqua. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut
+                            aliquip ex occaecat
+                            commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                            dolore eu fugiat to
+                            pariatur. Excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt
+                            mollit anim id.
                         </p>
 
                         <p>
-                            Sed ut perspiciatis unde omnis iste natus, error sit voluptatem accusantium, doloremque laudantium eaque
-                            rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt veritatis
-                            Nemo enim ipsam voluptatem, quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni 
-                            dolores eos qui, ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum nostrum 
-                            sit amet, consectetur, adipisci velit, sed quia non numquam eius modi, tempora incidunt ut labore et dolore
+                            Sed ut perspiciatis unde omnis iste natus, error sit voluptatem accusantium, doloremque
+                            laudantium eaque
+                            rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae
+                            dicta sunt veritatis
+                            Nemo enim ipsam voluptatem, quia voluptas sit aspernatur aut odit aut fugit, sed quia
+                            consequuntur magni
+                            dolores eos qui, ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem
+                            ipsum nostrum
+                            sit amet, consectetur, adipisci velit, sed quia non numquam eius modi, tempora incidunt ut
+                            labore et dolore
                             magnam aliquam quaerat voluptatem.
                         </p>
 
                         <div class="images__grid">
                             <div class="images__grid__img-wrapper">
-                                <img src="/media/article_images/pexels-max-rahubovskiy-6284229.jpg" alt="article image 1">
+                                <img src="/media/article_images/pexels-max-rahubovskiy-6284229.jpg"
+                                     alt="article image 1">
                             </div>
-                            
+
                             <div class="images__grid__img-wrapper">
-                                <img src="/media/article_images/pexels-designecologist-1046639.jpg" alt="article image 2">
+                                <img src="/media/article_images/pexels-designecologist-1046639.jpg"
+                                     alt="article image 2">
                             </div>
                         </div>
 
                         <h3 class="h2">Buying A Home In The Perfect Neighborhood</h3>
 
                         <p>
-                            At vero eos et accusamus et, iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti
-                            atque corrupti quos dolores et, quas molestias excepturi sint occaecati cupiditate non provident asperiores
-                            sunt in culpa qui, officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem doloribus
-                            facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque occaecat
-                            impedit quo minus id quod maxime placeat facere possimus omnis, voluptas assumenda est omnis dolor to
+                            At vero eos et accusamus et, iusto odio dignissimos ducimus qui blanditiis praesentium
+                            voluptatum deleniti
+                            atque corrupti quos dolores et, quas molestias excepturi sint occaecati cupiditate non
+                            provident asperiores
+                            sunt in culpa qui, officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum
+                            quidem doloribus
+                            facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio
+                            cumque occaecat
+                            impedit quo minus id quod maxime placeat facere possimus omnis, voluptas assumenda est omnis
+                            dolor to
                             repellendus. Temporibus autem quibusdam et aut officiis.
                         </p>
 
@@ -78,32 +95,33 @@
                         </div>
 
                         <p>
-                            But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and
-                            I will give you a complete account of the system and expound the actual teachings of the great explorer of
-                            the truth, the master-builder of human happiness. No one rejects dislikes or avoids pleasure itself because
-                            it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequen
-                            that are extremely painful. Nor again is there anyone who loves, or pursues or desires to obtain pain of self 
+                            But I must explain to you how all this mistaken idea of denouncing pleasure and praising
+                            pain was born and
+                            I will give you a complete account of the system and expound the actual teachings of the
+                            great explorer of
+                            the truth, the master-builder of human happiness. No one rejects dislikes or avoids pleasure
+                            itself because
+                            it is pleasure, but because those who do not know how to pursue pleasure rationally
+                            encounter consequen
+                            that are extremely painful. Nor again is there anyone who loves, or pursues or desires to
+                            obtain pain of self
                             because it is pain, but because occasionally circumstances
                         </p>
                     </div>
 
                     <div class="article__footer">
                         <div class="article__footer__tags">
-                            <!-- if tags.lenght > 0 -->
+                            {% if article_tags|length > 0 %}
                             <span>Tags:</span>
 
                             <ul class="article__footer__tags__list">
+                                {% for tag in article_tags %}
                                 <li>
-                                    <a href="#">House</a>
+                                    <a href="{{ tag.get_absolute_url }}">{{ tag }}</a>
                                 </li>
-                                <li>
-                                    <a href="#">Property</a>
-                                </li>
-                                <li>
-                                    <a href="#">Residence</a>
-                                </li>
+                                {% endfor %}
                             </ul>
-                            <!-- if tags.lenght > 0 -->
+                            {% endif %}
                         </div>
 
                         <ul class="article__footer__social-share">
@@ -132,27 +150,23 @@
 
                     <div class="article__navigation">
                         <div class="article__navigation__button article__navigation__button--left">
-                            <!-- if prev article exists -->
-                            <a href="#">
+                            {% if previous_article %}
+                            <a href="{{ previous_article.get_absolute_url }}">
                                 <img src="/media/icons/article-navigation-left.svg" alt="previous article">
                                 Previous
                             </a>
-                            <!-- if prev article exists -->
+                            {% endif %}
                         </div>
 
                         <div class="article__navigation__button article__navigation__button--right">
-                            <!-- if next article exists -->
-                            <a href="#">
+                            {% if next_article %}
+                            <a href="{{ next_article.get_absolute_url }}">
                                 Next
                                 <img src="/media/icons/article-navigation-right.svg" alt="next article">
                             </a>
-                            <!-- if next article exists -->
+                            {% endif %}
                         </div>
                     </div>
-
-                    <!-- {{ article.content|safe }} -->
-
-
                 </article>
             </div>
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Article, Category
+from .models import Article, Category, Tag
 from django.core.paginator import Paginator
 
 
@@ -29,7 +29,7 @@ def blog(request):
 
 def article_categories(request, category_slug):
     """
-    Returns an HttpResponse with the article-categories template along with pagination.
+    Returns an HttpResponse with the article categories template along with pagination.
 
     return: HttpResponse
     """
@@ -54,19 +54,52 @@ def article_categories(request, category_slug):
     })
 
 
+def article_tags(request, tag_slug):
+    """
+    Returns an HttpResponse with the article tags template along with pagination.
+
+    return: HttpResponse
+    """
+    tag = get_object_or_404(klass=Tag, slug=tag_slug)
+
+    paginator = Paginator(object_list=Article.objects.filter(tags=tag).order_by('date_posted'), per_page=8)
+    page = request.GET.get('page')
+
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
+    return render(request=request, template_name='blog/article-categories.html', context={
+        'title': tag,
+        'pages': pages,
+    })
+
+
 def article_details(request, category_slug, article_slug):
     """
     Returns an HttpResponse with the article-details template.
 
     return: HttpResponse
     """
-    category = get_object_or_404(klass=Category, slug=category_slug)
-    article = get_object_or_404(klass=Article, category=category, slug=article_slug)
+
+    category = Category.objects.get(slug=category_slug)
+    article = Article.objects.get(slug=article_slug)
+
+    next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
+    previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
 
     return render(request=request, template_name='blog/article-details.html', context={
         'title': article.title,
         'category': category,
         'article': article,
+        'article_tags': article.tags.all(),
+        'previous_article': previous_article,
+        'next_article': next_article,
     })
 
 

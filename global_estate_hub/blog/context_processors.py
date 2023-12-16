@@ -1,4 +1,5 @@
 from .models import Category, Article, Tag
+from django.db.models import Q
 
 
 def get_category_info(request) -> dict:
@@ -46,6 +47,7 @@ def popular_tags(request):
     articles = Article.objects.all()
 
     result = []
+    tags_queryset = []
 
     for article in articles:
         for obj in article.tags.all():
@@ -60,5 +62,6 @@ def popular_tags(request):
             tags_dict[tag] += 1
 
     return {
-        'popular_tags': list(dict(sorted(tags_dict.items(), key=lambda x: x[1], reverse=True)).keys())[:6]
+        'popular_tags': Tag.objects.filter(
+            name__in=list(dict(sorted(tags_dict.items(), key=lambda x: x[1], reverse=True)).keys())[:6])
     }
