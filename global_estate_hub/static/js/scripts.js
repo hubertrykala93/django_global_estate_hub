@@ -836,6 +836,55 @@ if ($contactUsForm) {
 }
 
 
+/**
+  * Article add comment form
+   */
+
+const $addCommentInArticleForm = document.querySelector('[data-article-comment-form]')
+
+if ($addCommentInArticleForm) {
+
+  const ajaxRequest = (data)=>{
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'add-comment', true)
+    xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('wysłane dane', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odebrane dane', response)
+      }
+    }
+  }
+  
+  $addCommentInArticleForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    const $nameInput = this.querySelector('[data-name]')
+    const $emailInput = this.querySelector('[data-email]')
+    const $commentInput = this.querySelector('[data-comment]')
+    const $urlInput = this.querySelector('[name="url"]')
+
+    const data = {
+      "name": [$nameInput.value.trim(), "data-name", "name"],
+      "email": [$emailInput.value.trim(), "data-email", "email"],
+      "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+      "url": $urlInput.value
+    }
+
+    ajaxRequest(data)
+
+    // if ( clientValidation($addCommentInArticleForm, data) ) {
+    //   ajaxRequest(data)
+    // }
+
+  })
+}
+
+
 /*----------------------------------*\
   #ACCOUNT SETTINGS
 \*----------------------------------*/
