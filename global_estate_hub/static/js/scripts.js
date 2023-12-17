@@ -844,9 +844,12 @@ const $addCommentInArticleForm = document.querySelector('[data-article-comment-f
 
 if ($addCommentInArticleForm) {
 
+  let url = window.location.pathname
+  url = url.slice(url.lastIndexOf('/') + 1)
+
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'add-comment', true)
+    xhr.open('POST', url, true)
     xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -864,13 +867,11 @@ if ($addCommentInArticleForm) {
   $addCommentInArticleForm.addEventListener('submit', function (e) {
     e.preventDefault()
     const $nameInput = this.querySelector('[data-name]')
-    const $emailInput = this.querySelector('[data-email]')
     const $commentInput = this.querySelector('[data-comment]')
     const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
-      "name": [$nameInput.value.trim(), "data-name", "name"],
-      "email": [$emailInput.value.trim(), "data-email", "email"],
+      "full_name": [$nameInput.value.trim(), "data-name", "name"],
       "comment": [$commentInput.value.trim(), "data-comment", "comment"],
       "url": $urlInput.value
     }

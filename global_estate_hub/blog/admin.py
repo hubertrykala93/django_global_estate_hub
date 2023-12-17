@@ -1,5 +1,7 @@
 from django.contrib import admin
 from .models import Category, Tag, Article, Comment
+from django.utils.translation import ngettext
+from django.contrib import messages
 
 
 @admin.register(Category)
@@ -34,7 +36,18 @@ class AdminArticle(admin.ModelAdmin):
 
 @admin.register(Comment)
 class AdminComment(admin.ModelAdmin):
-    list_display = ['user', 'full_name', 'email', 'date_posted', 'content', 'likes', 'dislikes', 'active']
-    list_filter = ['user', 'full_name', 'email', 'date_posted', 'active']
-    list_editable = ['full_name', 'email', 'content', 'active']
+    list_display = ['user', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active']
+    list_filter = ['user', 'full_name', 'date_posted', 'active']
+    list_editable = ['active']
     list_display_links = ['user']
+    actions = ['approve_comment']
+
+    @admin.action(description='Approve selected Comments')
+    def approve_comment(self, request, queryset):
+        updated = queryset.update(active=True)
+
+        self.message_user(request=request,
+                          message=ngettext(singular=f'{updated} comment has been approved successfully.',
+                                           plural=f'{updated} comments have been approved successfully.',
+                                           number=updated),
+                          level=messages.SUCCESS)

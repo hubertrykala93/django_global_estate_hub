@@ -1,7 +1,7 @@
 @Szymon-Levy
+1. CRUD do komentarzy, CR już jest, musisz zrobić edycję i delete komentarza. Dodatkowo dodaj jeszcze likes i dislikes i to też trzeba zrobić xd
 2. article-details.html,
 3. article-details.html ajax form,
 
 @hubertrykala93
-1. generowanie jakiegoś identyfikatora dla komentarza i wrzucenie go w data-id elementu .article__comment
 2. cache busting

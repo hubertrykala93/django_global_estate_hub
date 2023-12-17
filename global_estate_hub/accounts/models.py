@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now, timedelta
 from PIL import Image
-import os
 
 
 class CustomUserManager(UserManager):
@@ -45,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     Creating custom User model instance.
     """
     username = models.CharField(max_length=50, unique=True)
-    email = models.EmailField(max_length=100, unique=True)
+    email = models.EmailField(max_length=100, unique=True, null=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
     account_type = models.CharField(max_length=100, choices=(
         ('Individual', 'Individual'),

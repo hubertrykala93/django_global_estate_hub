@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load honeypot %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -169,132 +170,93 @@
                     </div>
 
                     <div class="article__comments">
+                        {% if comments.count == 0 %}
                         <div class="article__comments__count">
-                            3 Comments avilable
+                            {{ comments.count }} Comments available
                         </div>
+                        {% elif comments.count == 1 %}
+                        <div class="article__comments__count">
+                            {{ comments.count }} Comment available
+                        </div>
+                        {% else %}
+                        <div class="article__comments__count">
+                            {{ comments.count }} Comments available
+                        </div>
+                        {% endif %}
 
+                        {% if comments %}
                         <div class="article__comments__wrapper">
-                            <div class="article__comment" data-id="">
-                                <div class="article__comment__body">
-                                    <div class="article__comment__avatar">
-                                        <img src="/media/profile_images/8a41ae68-1857-498b-b42b-d036ce2df2ab.jpg" alt="comment's author avatar">
+                            {% for comment in comments %}
+                            {% if comment.active %}
+                                <div class="article__comment" data-id="{{ comment.id }}">
+                                    <div class="article__comment__body">
+                                        <div class="article__comment__avatar">
+                                            <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}" alt="comment's author avatar">
+                                        </div>
+
+                                        <div class="article__comment__content">
+                                            <div class="article__comment__name">
+                                                {% if comment.user.username %}
+                                                {{ comment.user.username }}
+                                                {% else %}
+                                                {{ comment.full_name }}
+                                                {% endif %}
+                                            </div>
+
+                                            <div class="article__comment__message">
+                                                {{ comment.comment }}
+                                            </div>
+
+                                            <div class="article__comment__foter">
+                                                <div class="article__comment__date">{{ comment.date_posted }}</div>
+                                                <button class="article__comment__reply-btn">
+                                                    <img src="/media/icons/article-comment-reply.svg"
+                                                         alt="reply to comment icon">
+                                                    Reply
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
-    
-                                    <div class="article__comment__content">
-                                        <div class="article__comment__name">
-                                            Lina Purchaser
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <div class="article__comments__form">
+                                <div class="article__comments__form__title">Add Your Comment</div>
+
+                                <form data-article-comment-form class="theme-form">
+                                    <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+                                    {% render_honeypot_field 'url' %}
+
+                                    <div class="form__row">
+                                        <div class="form__field">
+                                            <div class="form__input-wrap">
+                                                <input data-name data-input type="text" value="{% if user.is_authenticated %}{{ user.username }}{% endif %}" placeholder="Name" {% if user.is_authenticated %}disabled{% endif %}>
+                                            </div>
                                         </div>
-    
-                                        <div class="article__comment__message">
-                                            Before choosing a real estate agent I conducted a lot of research to see who would be the best choice based on the investment they make into selling the property. 
+                                    </div>
+
+                                    <div class="form__row">
+                                        <div class="form__field">
+                                            <div class="form__input-wrap">
+                                                <textarea data-comment data-input
+                                                          placeholder="Write your comment here..."></textarea>
+                                            </div>
                                         </div>
-    
-                                        <div class="article__comment__foter">
-                                            <div class="article__comment__date">March 14, 2023</div>
-                                            <button class="article__comment__reply-btn">
-                                                <img src="/media/icons/article-comment-reply.svg" alt="reply to comment icon">
-                                                Reply
+                                    </div>
+
+                                    <div class="form__row submit-row">
+                                        <div class="form__field form__submit">
+                                            <button class="btn secondary-btn btn--auto-width" type="submit">Make a
+                                                comment
                                             </button>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-    
-                            <div class="article__comment" data-id="">
-                                <div class="article__comment__body">
-                                    <div class="article__comment__avatar">
-                                        <img src="/media/profile_images/2868ae21-725f-4aa2-a594-53a516fee5b6.jpg" alt="comment's author avatar">
-                                    </div>
-    
-                                    <div class="article__comment__content">
-                                        <div class="article__comment__name">
-                                            Lina Purchaser
-                                        </div>
-    
-                                        <div class="article__comment__message">
-                                            Before choosing a real estate agent I conducted a lot of research to see who would be the best choice based on the investment they make into selling the property. 
-                                        </div>
-    
-                                        <div class="article__comment__foter">
-                                            <div class="article__comment__date">March 14, 2023</div>
-                                            <button class="article__comment__reply-btn">
-                                                <img src="/media/icons/article-comment-reply.svg" alt="reply to comment icon">
-                                                Reply
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-    
-                            <div class="article__comment" data-id="">
-                                <div class="article__comment__body">
-                                    <div class="article__comment__avatar">
-                                        <img src="/media/profile_images/ef3e9a2c-641d-4183-8821-166dada99d23.jpg" alt="comment's author avatar">
-                                    </div>
-    
-                                    <div class="article__comment__content">
-                                        <div class="article__comment__name">
-                                            Lina Purchaser
-                                        </div>
-    
-                                        <div class="article__comment__message">
-                                            Before choosing a real estate agent I conducted a lot of research to see who would be the best choice based on the investment they make into selling the property. 
-                                        </div>
-    
-                                        <div class="article__comment__foter">
-                                            <div class="article__comment__date">March 14, 2023</div>
-                                            <button class="article__comment__reply-btn">
-                                                <img src="/media/icons/article-comment-reply.svg" alt="reply to comment icon">
-                                                Reply
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                </form>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="article__comments__form">
-                        <div class="article__comments__form__title">Add Your Comment</div>
-
-                        <form data-article-comment-form class="theme-form">
-                            <!-- <input type="hidden" name="csrftoken" value="{{ csrf_token }}"> -->
-        
-                            <!-- honeypot -->
-                            <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
-                                <label>leave this field blank to prove your humanity
-                                    <input type="text" name="url" value="" autocomplete="off">
-                                </label>
-                            </div>
-        
-                            <div class="form__row">
-                                <div class="form__field">
-                                    <div class="form__input-wrap">
-                                        <input data-name data-input type="text" placeholder="Name">
-                                    </div>
-                                </div>
-
-                                <div class="form__field">
-                                    <div class="form__input-wrap">
-                                        <input data-email data-input type="text" placeholder="Your email address...">
-                                    </div>
-                                </div>
-                            </div>
-        
-                            <div class="form__row">
-                                <div class="form__field">
-                                    <div class="form__input-wrap">
-                                        <textarea data-comment data-input placeholder="Write your comment here..."></textarea>
-                                    </div>
-                                </div>
-                            </div>
-        
-                            <div class="form__row submit-row">
-                                <div class="form__field form__submit">
-                                    <button class="btn secondary-btn btn--auto-width" type="submit">Make a comment</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </article>
             </div>

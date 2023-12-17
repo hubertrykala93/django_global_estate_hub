@@ -138,15 +138,15 @@ class Comment(models.Model):
     """
     Creating Comment model instance.
     """
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True)
-    full_name = models.CharField(max_length=200)
-    email = models.EmailField(max_length=100)
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True)
+    article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
+    full_name = models.CharField(max_length=200, blank=True, null=True)
     date_posted = models.DateTimeField(default=now)
-    content = models.TextField(max_length=1000)
+    comment = models.TextField(max_length=1000)
     likes = models.PositiveIntegerField(default=0)
     dislikes = models.PositiveIntegerField(default=0)
-    parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True, related_name='comment_parent')
+    parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True, related_name='comment_parent',
+                               blank=True)
     active = models.BooleanField(default=False)
 
     class Meta:
