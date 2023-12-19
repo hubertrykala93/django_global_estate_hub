@@ -836,6 +836,84 @@ if ($contactUsForm) {
 }
 
 
+/*----------------------------------*\
+  #ARTICLES COMMENTS CRUD
+\*----------------------------------*/
+
+const $articlesCommentsWrapper = document.querySelector('[data-article-comments]')
+
+if ( $articlesCommentsWrapper ) {
+  const $commentsCounter = $articlesCommentsWrapper.querySelector('[data-comments-counter]')
+
+  const likesHandler = (btn)=>{
+    const counter = btn.closest('[data-comment-rating-wrapper]')
+    const commentId = btn.closest('[data-article-comment]').dataset.id
+
+    const data = {
+      commentId
+    }
+    
+    console.log(data)
+    
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'article-like', true)
+    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
+      }
+    }
+
+
+
+  }
+
+  const dislikesHandler = (btn)=>{
+    const counter = btn.closest('[data-comment-rating-wrapper]')
+    const commentId = btn.closest('[data-article-comment]').dataset.id
+
+    const data = {
+      commentId
+    }
+    
+    console.log(data)
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'article-dislike', true)
+    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log(response)
+      }
+    }
+
+
+
+  }
+
+  $articlesCommentsWrapper.addEventListener('click', (e) => {
+    //likes
+    if (e.target.matches('[data-comment-like-btn], [data-comment-like-btn] *')) {
+      likesHandler(e.target)
+    }
+    //dislikes
+    else if (e.target.matches('[data-comment-dislike-btn], [data-comment-dislike-btn] *')) {
+      dislikesHandler(e.target)
+    }
+  })
+}
+
+
 /**
   * Article add comment form
    */
@@ -846,6 +924,32 @@ if ($addCommentInArticleForm) {
 
   let url = window.location.pathname
   url = url.slice(url.lastIndexOf('/') + 1)
+
+  const serverResponse = (response)=> {
+    if ( response.valid === null ) {
+      return false
+    } else if ( response.valid === true ) {
+
+      $addCommentInArticleForm.querySelectorAll('[data-input]').forEach(input =>{
+        if (  !input.disabled ) {
+          input.value = ''
+        }
+
+        const $messageNode = input.closest('.form__field').querySelector('.info')
+        if ($messageNode) { $messageNode.remove() }
+      })
+
+      successfullySentMessage($addCommentInArticleForm, response.message, true)
+    } else {
+      response.forEach(item => {
+        if ( !item.valid ) {
+          showInfo(item.valid, item.message, $addCommentInArticleForm, item.field)
+        } else {
+          removeInfo($addCommentInArticleForm, item.field)
+        }
+      })
+    }
+  }
 
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
@@ -860,6 +964,7 @@ if ($addCommentInArticleForm) {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('odebrane dane', response)
+          serverResponse(response)
       }
     }
   }
@@ -884,6 +989,8 @@ if ($addCommentInArticleForm) {
 
   })
 }
+
+
 
 
 /*----------------------------------*\

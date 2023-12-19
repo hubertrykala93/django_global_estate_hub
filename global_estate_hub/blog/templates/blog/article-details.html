@@ -169,17 +169,17 @@
                         </div>
                     </div>
 
-                    <div class="article__comments">
+                    <div class="article__comments" data-article-comments>
                         {% if comments.count == 0 %}
-                        <div class="article__comments__count">
+                        <div class="article__comments__count" data-comments-counter>
                             {{ comments.count }} Comments available
                         </div>
                         {% elif comments.count == 1 %}
-                        <div class="article__comments__count">
+                        <div class="article__comments__count" data-comments-counter>
                             {{ comments.count }} Comment available
                         </div>
                         {% else %}
-                        <div class="article__comments__count">
+                        <div class="article__comments__count" data-comments-counter>
                             {{ comments.count }} Comments available
                         </div>
                         {% endif %}
@@ -188,75 +188,105 @@
                         <div class="article__comments__wrapper">
                             {% for comment in comments %}
                             {% if comment.active %}
-                                <div class="article__comment" data-id="{{ comment.id }}">
-                                    <div class="article__comment__body">
-                                        <div class="article__comment__avatar">
-                                            <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}" alt="comment's author avatar">
+                            <div class="article__comment" data-id="{{ comment.id }}" data-article-comment>
+                                <div class="article__comment__body">
+                                    <div class="article__comment__avatar">
+                                        <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}" alt="comment's author avatar">
+                                    </div>
+
+                                    <div class="article__comment__content">
+                                        <div class="article__comment__name">
+                                            {% if comment.user.username %}
+                                            {{ comment.user.username }}
+                                            {% else %}
+                                            {{ comment.full_name }}
+                                            {% endif %}
                                         </div>
 
-                                        <div class="article__comment__content">
-                                            <div class="article__comment__name">
-                                                {% if comment.user.username %}
-                                                {{ comment.user.username }}
-                                                {% else %}
-                                                {{ comment.full_name }}
-                                                {% endif %}
-                                            </div>
+                                        <div class="article__comment__message">
+                                            {{ comment.comment }}
+                                        </div>
 
-                                            <div class="article__comment__message">
-                                                {{ comment.comment }}
-                                            </div>
+                                        <div class="article__comment__foter">
+                                            <div class="article__comment__date">{{ comment.date_posted }}</div>
+                                            <div class="article__comment__controls">
+                                                <button data-comment-edit class="article__comment__btn article__comment__btn--edit">
+                                                    <span class="material-symbols-outlined">rate_review</span>
+                                                    Edit
+                                                </button>
 
-                                            <div class="article__comment__foter">
-                                                <div class="article__comment__date">{{ comment.date_posted }}</div>
-                                                <button class="article__comment__reply-btn">
-                                                    <img src="/media/icons/article-comment-reply.svg"
-                                                         alt="reply to comment icon">
+                                                <button data-comment-delete class="article__comment__btn article__comment__btn--delete">
+                                                    <span class="material-symbols-outlined">chat_error</span>
+                                                    Delete
+                                                </button>
+
+                                                <button data-comment-reply class="article__comment__btn article__comment__btn--reply">
+                                                    <span class="material-symbols-outlined">forum</span>
                                                     Reply
                                                 </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {% endif %}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-
-                            <div class="article__comments__form">
-                                <div class="article__comments__form__title">Add Your Comment</div>
-
-                                <form data-article-comment-form class="theme-form">
-                                    <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
-                                    {% render_honeypot_field 'url' %}
-
-                                    <div class="form__row">
-                                        <div class="form__field">
-                                            <div class="form__input-wrap">
-                                                <input data-name data-input type="text" value="{% if user.is_authenticated %}{{ user.username }}{% endif %}" placeholder="Name" {% if user.is_authenticated %}disabled{% endif %}>
+                                            
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="form__row">
-                                        <div class="form__field">
-                                            <div class="form__input-wrap">
-                                                <textarea data-comment data-input
-                                                          placeholder="Write your comment here..."></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form__row submit-row">
-                                        <div class="form__field form__submit">
-                                            <button class="btn secondary-btn btn--auto-width" type="submit">Make a
-                                                comment
+                                    <div class="article__comment__rating">
+                                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper" data-comment-rating-wrapper>
+                                            <button class="article__comment__rating__btn" data-comment-like-btn>
+                                                <span class="material-symbols-outlined">thumb_up</span>
                                             </button>
+
+                                            <span class="article__comment__rating__counter" data-comment-counter>0</span>
+                                        </div>
+
+                                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper" data-comment-rating-wrapper>
+                                            <button class="article__comment__rating__btn" data-comment-dislike-btn>
+                                                <span class="material-symbols-outlined">thumb_down</span>
+                                            </button>
+
+                                            <span class="article__comment__rating__counter" data-comment-counter>0</span>
                                         </div>
                                     </div>
-                                </form>
+                                </div>
                             </div>
+                            {% endif %}
+                            {% endfor %}
                         </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="article__comments__form">
+                        <div class="article__comments__form__title">Add Your Comment</div>
+
+                        <form data-article-comment-form class="theme-form">
+                            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
+
+                            {% render_honeypot_field 'url' %}
+
+                            <div class="form__row">
+                                <div class="form__field">
+                                    <div class="form__input-wrap">
+                                        <input data-name data-input type="text" value="{% if user.is_authenticated %}{{ user.username }}{% endif %}" placeholder="Name" {% if user.is_authenticated %}disabled{% endif %}>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form__row">
+                                <div class="form__field">
+                                    <div class="form__input-wrap">
+                                        <textarea data-comment data-input
+                                                  placeholder="Write your comment here..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form__row submit-row">
+                                <div class="form__field form__submit">
+                                    <button class="btn secondary-btn btn--auto-width" type="submit">Make a
+                                        comment
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </article>
             </div>

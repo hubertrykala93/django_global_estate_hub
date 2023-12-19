@@ -500,6 +500,10 @@ form .form__field.form__form{
   padding: 0 1.8rem;
 }
 
+.theme-form input[disabled]{
+  opacity: .4;
+}
+
 .theme-form textarea {
   padding: 1.8rem;
   min-height: 150px;
@@ -2306,6 +2310,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   margin-top: 3rem;
   padding-bottom: 3rem;
   border-bottom: 1px solid #dfdfdf;
+  position: relative;
 }
 
 .article .article__comments .article__comment:first-child{
@@ -2336,28 +2341,93 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 }
 
 .article .article__comment .article__comment__foter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-top: 1.8rem;
 }
 
-.article .article__comment .article__comment__foter .article__comment__reply-btn{
-  display: inline-flex;
+.article .article__comment .article__comment__foter .article__comment__controls{
+  display: flex;
   align-items: center;
-  font-size: var(--fs-body-400);
-  color: var(--clr-body-text);
+  margin-top: 1rem;
+}
+
+.article .article__comment .article__comment__foter .article__comment__btn{
+  display: inline-flex;
+  margin-left: 1rem;
+  align-items: center;
+  font-size: var(--fs-body-300);
+  color: #afafaf;
   transition: color .4s;
 }
 
-.article .article__comment .article__comment__foter .article__comment__reply-btn:hover,
-.article .article__comment .article__comment__foter .article__comment__reply-btn:focus-visible{
+.article .article__comment .article__comment__foter .article__comment__btn:first-child{
+  margin-left: 0;
+}
+
+.article .article__comment .article__comment__foter .article__comment__btn--edit{
+  color: var(--clr-primary);
+}
+
+.article .article__comment .article__comment__foter .article__comment__btn--delete{
+  color: var(--clr-error);
+}
+
+.article .article__comment .article__comment__foter .article__comment__btn span{
+  margin-right: .4rem;
+  font-size: 1.8rem;
+}
+
+.article .article__comment .article__comment__foter .article__comment__btn:hover,
+.article .article__comment .article__comment__foter .article__comment__btn:focus-visible{
   color: var(--clr-secondary);
 }
 
-.article .article__comment .article__comment__foter .article__comment__reply-btn img{
-  margin-right: .7rem;
+.article .article__comment .article__comment__rating {
+  display: flex;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
+
+.article .article__comment .article__comment__rating .article__comment__rating__wrapper {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__wrapper:first-child {
+  margin-left: 0;
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__btn {
+  transition: transform .3s;
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__btn span{
+  font-size: 2rem;
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__btn:hover,
+.article .article__comment .article__comment__rating .article__comment__rating__btn:focus-visible {
+  transform: scale(1.1);
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__like-wrapper,
+.article .article__comment .article__comment__rating .article__comment__rating__like-wrapper .article__comment__rating__btn {
+  color: rgb(13, 152, 13);
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__dislike-wrapper,
+.article .article__comment .article__comment__rating .article__comment__rating__dislike-wrapper .article__comment__rating__btn {
+  color: rgb(152, 13, 15);
+}
+
+.article .article__comment .article__comment__rating .article__comment__rating__counter {
+  font-size: var(--fs-body-300);
+  margin-left: .3rem;
+}
+
+
+
 
 .article .article__comments__form {
   margin-top: 3rem;
@@ -2373,6 +2443,8 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   color: var(--clr-dark);
   line-height: normal;
 }
+
+
 
 
 
@@ -3354,6 +3426,16 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 
     .article .article__comment .article__comment__content {
       flex-grow: 1;
+    }
+
+    .article .article__comment .article__comment__foter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .article .article__comment .article__comment__foter .article__comment__controls {
+      margin-top: 0;
     }
 
     .article .article__comments__form {
