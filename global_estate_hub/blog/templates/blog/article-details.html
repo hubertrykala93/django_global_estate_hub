@@ -226,7 +226,7 @@
                                     <div class="article__comment__rating">
                                         <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper" data-comment-rating-wrapper>
                                             <button class="article__comment__rating__btn" data-comment-like-btn>
-                                                <i class="{% if comment.likes > 0 %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"></i>
+                                                <i class="{% if request.user == like.user and comment.comment == like.comment %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"></i>
                                             </button>
 
                                             <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>

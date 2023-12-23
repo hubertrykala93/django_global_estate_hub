@@ -95,6 +95,8 @@ def article_details(request, category_slug, article_slug):
     article = Article.objects.get(slug=article_slug)
     comments = Comment.objects.filter(article=article)
     active_comments = article.comments.filter(active=True)
+    next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
+    previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
 
     if request.method == 'POST':
         if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
@@ -191,6 +193,58 @@ def article_details(request, category_slug, article_slug):
                 else:
                     return JsonResponse(data=response, safe=False)
 
+        elif 'edit-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
+            data = json.loads(s=request.body.decode('utf-8'))
+
+            comment_id = data['commentId']
+            comment_content = [data[key] for key in list(data.keys())][2][0]
+
+            response = {
+                "valid":
+                    False if not comment_content else
+                    True,
+                "commentId": comment_id,
+                "newContent": comment_content,
+                "message":
+                    "You cannot add an empty comment." if not comment_content else
+                    "",
+            }
+
+            if response['valid']:
+                comment = Comment.objects.get(id=comment_id)
+
+                comment.comment = comment_content
+                comment.save()
+
+                return JsonResponse(data=response)
+
+            else:
+                return JsonResponse(data=response)
+
+        elif 'delete-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
+            data = json.loads(s=request.body.decode('utf-8'))
+
+            comment_id = data['commentId']
+
+            response = {
+                "valid":
+                    False if not Comment.objects.filter(id=comment_id).exists() else
+                    True,
+                "commentId": comment_id,
+                "message":
+                    "The comment does not exist." if not Comment.objects.filter(id=comment_id).exists() else
+                    "Your comment has been deleted.",
+            }
+
+            if response['valid']:
+                comment = Comment.objects.get(id=comment_id)
+                comment.delete()
+
+                return JsonResponse(data=response)
+
+            else:
+                return JsonResponse(data=response)
+
         elif 'likes' in json.loads(s=request.body.decode('utf-8')).values():
             data = json.loads(s=request.body.decode('utf-8'))
             comment_id = int(data['commentId'])
@@ -273,9 +327,6 @@ def article_details(request, category_slug, article_slug):
                 })
 
     else:
-        next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
-        previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
-
         return render(request=request, template_name='blog/article-details.html', context={
             'title': article.title,
             'category': category,

@@ -138,7 +138,7 @@ class Comment(models.Model):
     """
     Creating Comment model instance.
     """
-    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
     full_name = models.CharField(max_length=200, blank=True, null=True)
     date_posted = models.DateTimeField(default=now)
@@ -158,7 +158,7 @@ class Comment(models.Model):
 
 
 class CommentLike(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='user_like')
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_like')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_like')
 
     class Meta:
@@ -170,7 +170,7 @@ class CommentLike(models.Model):
 
 
 class CommentDislike(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='user_dislike')
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_dislike')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_dislike')
 
     class Meta:
