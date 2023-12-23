@@ -2354,6 +2354,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   display: inline-flex;
   margin-left: 1rem;
   align-items: center;
+  line-height: 1;
   font-size: var(--fs-body-300);
   color: #afafaf;
   transition: color .4s;
@@ -2371,7 +2372,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   color: var(--clr-error);
 }
 
-.article .article__comment .article__comment__foter .article__comment__btn span{
+.article .article__comment .article__comment__foter .article__comment__btn i{
   margin-right: .4rem;
   font-size: 1.8rem;
 }
@@ -2394,20 +2395,13 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   margin-left: 1rem;
 }
 
-.article .article__comment .article__comment__rating .article__comment__rating__wrapper.featured {
-    text-decoration: underline;
-}
-
 .article .article__comment .article__comment__rating .article__comment__rating__wrapper:first-child {
   margin-left: 0;
 }
 
 .article .article__comment .article__comment__rating .article__comment__rating__btn {
-  transition: transform .3s;
-}
-
-.article .article__comment .article__comment__rating .article__comment__rating__btn span{
   font-size: 2rem;
+  transition: transform .3s;
 }
 
 .article .article__comment .article__comment__rating .article__comment__rating__btn:hover,
@@ -2430,7 +2424,9 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   margin-left: .3rem;
 }
 
-
+.article .article__comment .article__comment__edit__form {
+  margin-top: 2.4rem;
+}
 
 
 .article .article__comments__form {
@@ -2447,6 +2443,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   color: var(--clr-dark);
   line-height: normal;
 }
+
 
 
 

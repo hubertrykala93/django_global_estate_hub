@@ -1,8 +1,24 @@
 @Szymon-Levy
 1. CRUD do komentarzy, CR już jest, musisz zrobić edycję i delete komentarza. Dodatkowo dodaj jeszcze likes i dislikes i to też trzeba zrobić xd
 3. article-details.html ajax form,
-4. wygeneruj favicon.
 5. zmiana biblioteki ikon na posiadajaca wypelnione ikony
+6. wyrzucenie material icons
+7. sociale w stopce na remixicons
 
 @hubertrykala93
+1. poprawienie warunku przy nadawaniu klasy do wyróżnionego/niewyróżnionego lika i dislika
+2. response w delete comment:
+{
+  valid: x,
+  commentId: id
+}
+3. response w edit comment:
+{
+  valid: x,
+  commentId: id,
+  newContent: text
+}
+
+
+
 cache busting

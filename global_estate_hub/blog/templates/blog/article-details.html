@@ -170,7 +170,7 @@
                     </div>
 
                     <div class="article__comments" data-article-comments>
-                        <div class="article__comments__count" data-comments-counter>
+                        <div class="article__comments__count">
                             {% if active_comments.count == 0 %}{{ active_comments.count }} Comments available{% elif active_comments.count == 1 %}{{ active_comments.count }} Comment available{% else %}{{ active_comments.count }} Comments available{% endif %}
                         </div>
 
@@ -178,7 +178,7 @@
                         <div class="article__comments__wrapper">
                             {% for comment in comments %}
                             {% if comment.active %}
-                            <div class="article__comment" data-id="{{ comment.id }}" data-article-comment>
+                            <div class="article__comment" data-comment-id="{{ comment.id }}" data-article-comment>
                                 <div class="article__comment__body">
                                     <div class="article__comment__avatar">
                                         <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}" alt="comment's author avatar">
@@ -193,7 +193,7 @@
                                             {% endif %}
                                         </div>
 
-                                        <div class="article__comment__message">
+                                        <div class="article__comment__content__body" data-comment-content-body>
                                             {{ comment.comment }}
                                         </div>
 
@@ -202,19 +202,19 @@
                                             <div class="article__comment__controls">
 
                                                 {% if request.user == comment.user %}
-                                                <button data-comment-edit class="article__comment__btn article__comment__btn--edit">
-                                                    <span class="material-symbols-outlined">rate_review</span>
+                                                <button data-comment-edit-btn class="article__comment__btn article__comment__btn--edit">
+                                                    <i class="ri-message-2-line"></i>
                                                     Edit
                                                 </button>
 
-                                                <button data-comment-delete class="article__comment__btn article__comment__btn--delete">
-                                                    <span class="material-symbols-outlined">chat_error</span>
+                                                <button data-comment-delete-btn class="article__comment__btn article__comment__btn--delete">
+                                                    <i class="ri-chat-delete-line"></i>
                                                     Delete
                                                 </button>
                                                 {% endif %}
 
-                                                <button data-comment-reply class="article__comment__btn article__comment__btn--reply">
-                                                    <span class="material-symbols-outlined">forum</span>
+                                                <button data-comment-reply-btn class="article__comment__btn article__comment__btn--reply">
+                                                    <i class="ri-reply-line"></i>
                                                     Reply
                                                 </button>
 
@@ -224,17 +224,17 @@
 
                                     {% if user.is_authenticated %}
                                     <div class="article__comment__rating">
-                                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper {% if comment.likes > 0 %}featured{% endif %}" data-comment-rating-wrapper>
+                                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper" data-comment-rating-wrapper>
                                             <button class="article__comment__rating__btn" data-comment-like-btn>
-                                                <span class="material-symbols-outlined">thumb_up</span>
+                                                <i class="{% if comment.likes > 0 %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"></i>
                                             </button>
 
                                             <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>
                                         </div>
 
-                                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper {% if comment.dislikes > 0 %}featured{% endif %}" data-comment-rating-wrapper>
+                                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper" data-comment-rating-wrapper>
                                             <button class="article__comment__rating__btn" data-comment-dislike-btn>
-                                                <span class="material-symbols-outlined">thumb_down</span>
+                                                <i class="{% if comment.dislikes > 0 %}ri-thumb-down-fill{% else %}ri-thumb-down-line{% endif %}"></i>
                                             </button>
 
                                             <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>

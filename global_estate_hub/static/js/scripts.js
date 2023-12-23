@@ -843,57 +843,51 @@ if ($contactUsForm) {
 const $articlesCommentsWrapper = document.querySelector('[data-article-comments]')
 
 if ( $articlesCommentsWrapper ) {
-  const $commentsCounter = $articlesCommentsWrapper.querySelector('[data-comments-counter]')
 
   let url = window.location.pathname
   url = url.slice(url.lastIndexOf('/') + 1)
 
   const updateLikesAndDislikes = (action, response)=> {
+    const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${response.commentId}"]`)
+    const $likesCounter = $comment.querySelector('[data-comment-likes-counter]')
+    const $dislikesCounter = $comment.querySelector('[data-comment-dislikes-counter]')
+    const $likesIcon = $comment.querySelector('[data-comment-like-btn] i')
+    const $dislikesIcon = $comment.querySelector('[data-comment-dislike-btn] i')
 
-    const $comments = $articlesCommentsWrapper.querySelectorAll('[data-article-comment]')
-    if ( $comments.length ) {
-        $comments.forEach(comment => {
-            if ( comment.dataset.id == response.commentId ) {
-                const $likesCounter = comment.querySelector('[data-comment-likes-counter]')
-                const $dislikesCounter = comment.querySelector('[data-comment-dislikes-counter]')
-                    if ( action === 'like') {
-                        if ( response.valid === true ) {
-                            $likesCounter.parentElement.classList.add('featured')
-                            $dislikesCounter.parentElement.classList.remove('featured')
-                        } else {
-                            $likesCounter.parentElement.classList.remove('featured')
-                        }
-                    } else if ( action === 'dislike' ) {
-                        if ( response.valid === true ) {
-                            $dislikesCounter.parentElement.classList.add('featured')
-                            $likesCounter.parentElement.classList.remove('featured')
-                        } else {
-                            $likesCounter.parentElement.classList.remove('featured')
-                            $dislikesCounter.parentElement.classList.remove('featured')
-                        }
-                    }
-                    console.log(response)
-                    $likesCounter.textContent = response.likes
-                    $dislikesCounter.textContent = response.dislikes
-            }
-        })
-    }
+    if ( action === 'like') {
+      $dislikesIcon.classList.add('ri-thumb-down-line')
+      $dislikesIcon.classList.remove('ri-thumb-down-fill')
+      if ( response.valid === true ) {
+        $likesIcon.classList.remove('ri-thumb-up-line')
+        $likesIcon.classList.add('ri-thumb-up-fill')
+      } else {
+        $likesIcon.classList.add('ri-thumb-up-line')
+        $likesIcon.classList.remove('ri-thumb-up-fill')
+      }
+    } else if ( action === 'dislike' ) {
+        $likesIcon.classList.add('ri-thumb-up-line')
+        $likesIcon.classList.remove('ri-thumb-up-fill')
+        if ( response.valid === true ) {
+          $dislikesIcon.classList.remove('ri-thumb-down-line')
+          $dislikesIcon.classList.add('ri-thumb-down-fill')
+        } else {
+          $dislikesIcon.classList.add('ri-thumb-down-line')
+          $dislikesIcon.classList.remove('ri-thumb-down-fill')
+        }
+      }
 
-
-
+    $likesCounter.textContent = response.likes
+    $dislikesCounter.textContent = response.dislikes
 
   }
 
   const likesHandler = (btn)=>{
-    const counter = btn.closest('[data-comment-rating-wrapper]')
-    const commentId = btn.closest('[data-article-comment]').dataset.id
+    const commentId = btn.closest('[data-article-comment]').dataset.commentId
 
     const data = {
       "action": "likes",
       commentId
     }
-    
-    console.log(data)
     
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
@@ -904,28 +898,18 @@ if ( $articlesCommentsWrapper ) {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
           updateLikesAndDislikes('like', response)
       }
     }
-
-
-
   }
 
   const dislikesHandler = (btn)=>{
-    const counter = btn.closest('[data-comment-rating-wrapper]')
-    const commentId = btn.closest('[data-article-comment]').dataset.id
-
-    let url = window.location.pathname
-    url = url.slice(url.lastIndexOf('/') + 1)
+    const commentId = btn.closest('[data-article-comment]').dataset.commentId
 
     const data = {
       "action": "dislikes",
       commentId
     }
-    
-    console.log(data)
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
@@ -937,12 +921,112 @@ if ( $articlesCommentsWrapper ) {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response)
           updateLikesAndDislikes('dislike', response)
       }
     }
+  }
 
+  const deleteComment = (response) => {
+    if ( response.valid ) {
+      const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${response.commentId}"]`)
+      $comment.remove()
+    }
+  }
 
+  const deleteHandler = (btn) => {
+    const commentId = btn.closest('[data-article-comment]').dataset.commentId
+    
+    const data = {
+      "action": "delete-parent-comment",
+      commentId
+    }
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', url, true)
+    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('wysłane dane', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odebrane dane', response)
+          deleteComment(response)
+      }
+    }
+  }
+
+  const editHandler = (btn) => {
+    const commentId = btn.closest('[data-article-comment]').dataset.commentId
+    const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${commentId}"]`)
+    const oldContent = $comment.querySelector('[data-comment-content-body]').textContent.trim()
+
+    if ( !$comment.querySelector('.article__comment__edit__form') ) {
+      let editForm = document.createElement('div')
+      editForm.classList.add('article__comment__edit__form')
+      editForm.innerHTML = `
+      <form data-article-comment-edit class="theme-form">
+  
+        <div class="form__row">
+            <div class="form__field">
+                <div class="form__input-wrap">
+                    <textarea data-comment data-input placeholder="Write new content here...">${oldContent}</textarea>
+                </div>
+            </div>
+        </div>
+  
+        <div class="form__row submit-row">
+            <div class="form__field form__submit">
+                <button class="btn secondary-btn btn--auto-width" type="submit">Apply changes</button>
+            </div>
+        </div>
+      </form>
+      `
+      $comment.append(editForm)
+    }
+
+    const $editForm = $comment.querySelector('[data-article-comment-edit]')
+
+    const ajaxRequest = (data)=>{
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', url, true)
+      // xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+      console.log('wysłane dane', data)
+      xhr.send(JSON.stringify(data))
+  
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+            console.log('odebrane dane', response)
+            // serverResponse(response)
+        }
+      }
+    }
+    
+    $editForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const $commentInput = this.querySelector('[data-comment]')
+  
+      const data = {
+        "action": "edit-parent-comment",
+        "commentId": commentId,
+        "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+      }
+
+      if ( $commentInput.value.trim() !== oldContent ) {
+        ajaxRequest(data)
+        
+        // if ( clientValidation($editForm, data) ) {
+        //   ajaxRequest(data)
+        // }
+      }
+  
+  
+    })
 
   }
 
@@ -954,6 +1038,14 @@ if ( $articlesCommentsWrapper ) {
     //dislikes
     else if (e.target.matches('[data-comment-dislike-btn], [data-comment-dislike-btn] *')) {
       dislikesHandler(e.target)
+    }
+    //delete
+    else if (e.target.matches('[data-comment-delete-btn], [data-comment-delete-btn] *')) {
+      deleteHandler(e.target)
+    }
+    //edit
+    else if (e.target.matches('[data-comment-edit-btn], [data-comment-edit-btn] *')) {
+      editHandler(e.target)
     }
   })
 }
@@ -1027,11 +1119,9 @@ if ($addCommentInArticleForm) {
       "url": $urlInput.value
     }
 
-    ajaxRequest(data)
-
-    // if ( clientValidation($addCommentInArticleForm, data) ) {
-    //   ajaxRequest(data)
-    // }
+    if ( clientValidation($addCommentInArticleForm, data) ) {
+      ajaxRequest(data)
+    }
 
   })
 }
