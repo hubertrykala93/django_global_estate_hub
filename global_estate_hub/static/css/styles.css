@@ -2394,6 +2394,10 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   margin-left: 1rem;
 }
 
+.article .article__comment .article__comment__rating .article__comment__rating__wrapper.featured {
+    text-decoration: underline;
+}
+
 .article .article__comment .article__comment__rating .article__comment__rating__wrapper:first-child {
   margin-left: 0;
 }

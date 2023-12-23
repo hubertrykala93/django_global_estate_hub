@@ -1,14 +1,8 @@
 @Szymon-Levy
 1. CRUD do komentarzy, CR już jest, musisz zrobić edycję i delete komentarza. Dodatkowo dodaj jeszcze likes i dislikes i to też trzeba zrobić xd
-2. article-details.html,
 3. article-details.html ajax form,
+4. wygeneruj favicon.
+5. zmiana biblioteki ikon na posiadajaca wypelnione ikony
 
 @hubertrykala93
-1. licznik komentarzy aktualnie liczy też nieaktywne
-2. warunki pokazujące i ukrywające buttony z edycją i usuwaniem komentarza (tylko autor komentarza ma mieć elementy modyfikacji)
-3. popraw warunek żeby element .article__comments__count nie był deklarowany 3 razy tylko raz a content żeby był warunkowo wstrzykiwany do środka
-4. 2 buttony .article__comment__rating__btn mają być renderowane tylko dla zalogowanego
-
-
-
 cache busting

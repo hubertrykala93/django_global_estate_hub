@@ -845,19 +845,58 @@ const $articlesCommentsWrapper = document.querySelector('[data-article-comments]
 if ( $articlesCommentsWrapper ) {
   const $commentsCounter = $articlesCommentsWrapper.querySelector('[data-comments-counter]')
 
+  let url = window.location.pathname
+  url = url.slice(url.lastIndexOf('/') + 1)
+
+  const updateLikesAndDislikes = (action, response)=> {
+
+    const $comments = $articlesCommentsWrapper.querySelectorAll('[data-article-comment]')
+    if ( $comments.length ) {
+        $comments.forEach(comment => {
+            if ( comment.dataset.id == response.commentId ) {
+                const $likesCounter = comment.querySelector('[data-comment-likes-counter]')
+                const $dislikesCounter = comment.querySelector('[data-comment-dislikes-counter]')
+                    if ( action === 'like') {
+                        if ( response.valid === true ) {
+                            $likesCounter.parentElement.classList.add('featured')
+                            $dislikesCounter.parentElement.classList.remove('featured')
+                        } else {
+                            $likesCounter.parentElement.classList.remove('featured')
+                        }
+                    } else if ( action === 'dislike' ) {
+                        if ( response.valid === true ) {
+                            $dislikesCounter.parentElement.classList.add('featured')
+                            $likesCounter.parentElement.classList.remove('featured')
+                        } else {
+                            $likesCounter.parentElement.classList.remove('featured')
+                            $dislikesCounter.parentElement.classList.remove('featured')
+                        }
+                    }
+                    console.log(response)
+                    $likesCounter.textContent = response.likes
+                    $dislikesCounter.textContent = response.dislikes
+            }
+        })
+    }
+
+
+
+
+  }
+
   const likesHandler = (btn)=>{
     const counter = btn.closest('[data-comment-rating-wrapper]')
     const commentId = btn.closest('[data-article-comment]').dataset.id
 
     const data = {
+      "action": "likes",
       commentId
     }
     
     console.log(data)
     
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'article-like', true)
-    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
+    xhr.open('POST', url, true)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -866,6 +905,7 @@ if ( $articlesCommentsWrapper ) {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log(response)
+          updateLikesAndDislikes('like', response)
       }
     }
 
@@ -877,14 +917,18 @@ if ( $articlesCommentsWrapper ) {
     const counter = btn.closest('[data-comment-rating-wrapper]')
     const commentId = btn.closest('[data-article-comment]').dataset.id
 
+    let url = window.location.pathname
+    url = url.slice(url.lastIndexOf('/') + 1)
+
     const data = {
+      "action": "dislikes",
       commentId
     }
     
     console.log(data)
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'article-dislike', true)
+    xhr.open('POST', url, true)
     // xhr.setRequestHeader('X-CSRFToken', getToken($form))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -894,6 +938,7 @@ if ( $articlesCommentsWrapper ) {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log(response)
+          updateLikesAndDislikes('dislike', response)
       }
     }
 
@@ -976,6 +1021,7 @@ if ($addCommentInArticleForm) {
     const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
+      "action": "add-parent-comment",
       "full_name": [$nameInput.value.trim(), "data-name", "name"],
       "comment": [$commentInput.value.trim(), "data-comment", "comment"],
       "url": $urlInput.value

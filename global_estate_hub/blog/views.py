@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Article, Category, Tag, Comment
+from .models import Article, Category, Tag, Comment, CommentLike, CommentDislike
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
-import uuid
+from django.views.decorators.csrf import csrf_exempt
 from accounts.models import User
 
 
@@ -84,6 +84,7 @@ def article_tags(request, tag_slug):
     })
 
 
+@csrf_exempt
 def article_details(request, category_slug, article_slug):
     """
     Returns an HttpResponse with the article-details template.
@@ -93,102 +94,185 @@ def article_details(request, category_slug, article_slug):
     category = Category.objects.get(slug=category_slug)
     article = Article.objects.get(slug=article_slug)
     comments = Comment.objects.filter(article=article)
+    active_comments = article.comments.filter(active=True)
 
     if request.method == 'POST':
-        if request.user.is_authenticated:
+        if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
+            if request.user.is_authenticated:
+                data = json.loads(s=request.body.decode('utf-8'))
+
+                _, comment = [data[key][0] for key in list(data.keys())[1:-1]]
+                spam_verification = [data[key] for key in data][-1]
+                _, comment_field = [data[key][1] for key in list(data.keys())[1:-1]]
+                _, comment_label = [data[key][2] for key in list(data.keys())[1:-1]]
+
+                if len(spam_verification) != 0:
+                    return JsonResponse(data={
+                        "valid": None,
+                    }, safe=False)
+
+                response = [
+                    {
+                        "valid":
+                            False if not comment else
+                            True,
+                        "field": comment_field,
+                        "message":
+                            f"The {comment_label} field cannot be empty." if not comment else
+                            "",
+                    }
+                ]
+
+                validation = [data['valid'] for data in response]
+
+                if all(validation):
+                    user = User.objects.get(username=request.user)
+                    comment = Comment(user=user, article=article,
+                                      comment=comment)
+                    comment.save()
+
+                    return JsonResponse(data={
+                        "valid": True,
+                        "message": "The comment has been submitted for approval by the administrator.",
+                    }, safe=False)
+                else:
+                    return JsonResponse(data=response, safe=False)
+
+            elif request.user.is_anonymous:
+                data = json.loads(s=request.body.decode('utf-8'))
+
+                full_name, comment = [data[key][0] for key in list(data.keys())[1:-1]]
+                spam_verification = [data[key] for key in data][-1]
+                full_name_field, comment_field = [data[key][1] for key in list(data.keys())[1:-1]]
+                full_name_label, comment_label = [data[key][2] for key in list(data.keys())[1:-1]]
+
+                if len(spam_verification) != 0:
+                    return JsonResponse(data={
+                        "valid": None,
+                    }, safe=False)
+
+                response = [
+                    {
+                        "valid":
+                            False if not full_name else
+                            True,
+                        "field": full_name_field,
+                        "message":
+                            f"The {full_name_label} field cannot be empty." if not full_name else
+                            "",
+                    },
+                    {
+                        "valid":
+                            False if not comment else
+                            True,
+                        "field": comment_field,
+                        "message":
+                            f"The {comment_label} field cannot be empty." if not full_name else
+                            "",
+                    }
+                ]
+
+                validation = list(set([data['valid'] for data in response]))
+
+                if all(validation):
+                    user = User()
+                    user.save()
+
+                    comment = Comment(user=user, article=article, full_name=full_name, comment=comment)
+                    comment.save()
+
+                    user.delete()
+
+                    return JsonResponse(data={
+                        "valid": True,
+                        "message": "The comment has been submitted for approval by the administrator.",
+                    }, safe=False)
+
+                else:
+                    return JsonResponse(data=response, safe=False)
+
+        elif 'likes' in json.loads(s=request.body.decode('utf-8')).values():
             data = json.loads(s=request.body.decode('utf-8'))
+            comment_id = int(data['commentId'])
 
-            _, comment = [data[key][0] for key in list(data.keys())[:-1]]
-            spam_verification = [data[key] for key in data][-1]
-            _, comment_field = [data[key][1] for key in list(data.keys())[:-1]]
-            _, comment_label = [data[key][2] for key in list(data.keys())[:-1]]
+            comment = Comment.objects.get(id=comment_id)
 
-            if len(spam_verification) != 0:
+            user = User.objects.get(username=request.user)
+
+            like = CommentLike(user=user, comment=comment)
+
+            if CommentDislike.objects.filter(user=user, comment=comment).exists():
+                CommentDislike.objects.filter(user=user, comment=comment).delete()
+
+                comment.dislikes -= 1
+                comment.save()
+
+            if CommentLike.objects.filter(user=user, comment=comment).exists():
+                CommentLike.objects.filter(user=user, comment=comment).delete()
+                comment.likes -= 1
+                comment.save()
+
                 return JsonResponse(data={
-                    "valid": None,
-                }, safe=False)
+                    "valid": False,
+                    "commentId": comment_id,
+                    "likes": comment.likes,
+                    "dislikes": comment.dislikes,
+                })
 
-            response = [
-                {
-                    "valid":
-                        False if not comment else
-                        True,
-                    "field": comment_field,
-                    "message":
-                        f"The {comment_label} field cannot be empty." if not comment else
-                        "",
-                }
-            ]
+            else:
+                like.save()
 
-            validation = [data['valid'] for data in response]
-
-            if all(validation):
-                comment = Comment(user_id=request.user.id, article=article,
-                                  comment=comment)
+                comment.likes += 1
                 comment.save()
 
                 return JsonResponse(data={
                     "valid": True,
-                    "message": "The comment has been submitted for approval by the administrator.",
-                }, safe=False)
-            else:
-                return JsonResponse(data=response, safe=False)
+                    "commentId": comment_id,
+                    "likes": comment.likes,
+                    "dislikes": comment.dislikes,
+                })
 
-        elif request.user.is_anonymous:
+        elif 'dislikes' in json.loads(s=request.body.decode('utf-8')).values():
             data = json.loads(s=request.body.decode('utf-8'))
+            comment_id = int(data['commentId'])
 
-            full_name, comment = [data[key][0] for key in list(data.keys())[:-1]]
-            spam_verification = [data[key] for key in data][-1]
-            full_name_field, comment_field = [data[key][1] for key in list(data.keys())[:-1]]
-            full_name_label, comment_label = [data[key][2] for key in list(data.keys())[:-1]]
+            comment = Comment.objects.get(id=comment_id)
+            user = User.objects.get(username=request.user)
 
-            if len(spam_verification) != 0:
-                return JsonResponse(data={
-                    "valid": None,
-                }, safe=False)
+            dislike = CommentDislike(user=user, comment=comment)
 
-            response = [
-                {
-                    "valid":
-                        False if not full_name else
-                        True,
-                    "field": full_name_field,
-                    "message":
-                        f"The {full_name_label} field cannot be empty." if not full_name else
-                        "",
-                },
-                {
-                    "valid":
-                        False if not comment else
-                        True,
-                    "field": comment_field,
-                    "message":
-                        f"The {comment_label} field cannot be empty." if not full_name else
-                        "",
-                }
-            ]
+            if CommentLike.objects.filter(user=user, comment=comment).exists():
+                CommentLike.objects.filter(user=user, comment=comment).delete()
 
-            validation = list(set([data['valid'] for data in response]))
-
-            if all(validation):
-                user = User()
-                user.save()
-
-                comment = Comment(user=user, article=article, full_name=full_name, comment=comment)
+                comment.likes -= 1
                 comment.save()
 
-                user.delete()
+            if CommentDislike.objects.filter(user=user, comment=comment).exists():
+                CommentDislike.objects.filter(user=user, comment=comment).delete()
+                comment.dislikes -= 1
+                comment.save()
+
+                return JsonResponse(data={
+                    "valid": False,
+                    "commentId": comment_id,
+                    "likes": comment.likes,
+                    "dislikes": comment.dislikes,
+                })
+
+            else:
+                dislike.save()
+
+                comment.dislikes += 1
+                comment.save()
 
                 return JsonResponse(data={
                     "valid": True,
-                    "message": "The comment has been submitted for approval by the administrator.",
-                }, safe=False)
-
-            else:
-                return JsonResponse(data=response, safe=False)
+                    "commentId": comment_id,
+                    "likes": comment.likes,
+                    "dislikes": comment.dislikes,
+                })
 
     else:
-
         next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
         previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
 
@@ -197,6 +281,7 @@ def article_details(request, category_slug, article_slug):
             'category': category,
             'article': article,
             'comments': comments,
+            'active_comments': active_comments,
             'article_tags': article.tags.all(),
             'previous_article': previous_article,
             'next_article': next_article,

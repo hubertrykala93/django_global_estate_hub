@@ -143,8 +143,8 @@ class Comment(models.Model):
     full_name = models.CharField(max_length=200, blank=True, null=True)
     date_posted = models.DateTimeField(default=now)
     comment = models.TextField(max_length=1000)
-    likes = models.PositiveIntegerField(default=0)
-    dislikes = models.PositiveIntegerField(default=0)
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
     parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True, related_name='comment_parent',
                                blank=True)
     active = models.BooleanField(default=False)
@@ -153,11 +153,29 @@ class Comment(models.Model):
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
 
-    def __str__(self):
-        """
-        Returns the string representation of the fullname of the user who commented on a given article
-        and displays it in the administrator panel.
+    # def __str__(self):
+    #     return self.comment
 
-        return: str
-        """
-        return f'{self.full_name} comment.'
+
+class CommentLike(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='user_like')
+    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_like')
+
+    class Meta:
+        verbose_name = 'Comment Like'
+        verbose_name_plural = 'Comment Likes'
+
+    def __str__(self):
+        return f'{self.user}, {self.comment}'
+
+
+class CommentDislike(models.Model):
+    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='user_dislike')
+    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_dislike')
+
+    class Meta:
+        verbose_name = 'Comment Dislike'
+        verbose_name_plural = 'Comment Dislikes'
+
+    def __str__(self):
+        return f'{self.user}, {self.comment}'

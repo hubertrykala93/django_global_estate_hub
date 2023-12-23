@@ -170,19 +170,9 @@
                     </div>
 
                     <div class="article__comments" data-article-comments>
-                        {% if comments.count == 0 %}
                         <div class="article__comments__count" data-comments-counter>
-                            {{ comments.count }} Comments available
+                            {% if active_comments.count == 0 %}{{ active_comments.count }} Comments available{% elif active_comments.count == 1 %}{{ active_comments.count }} Comment available{% else %}{{ active_comments.count }} Comments available{% endif %}
                         </div>
-                        {% elif comments.count == 1 %}
-                        <div class="article__comments__count" data-comments-counter>
-                            {{ comments.count }} Comment available
-                        </div>
-                        {% else %}
-                        <div class="article__comments__count" data-comments-counter>
-                            {{ comments.count }} Comments available
-                        </div>
-                        {% endif %}
 
                         {% if comments %}
                         <div class="article__comments__wrapper">
@@ -210,6 +200,8 @@
                                         <div class="article__comment__foter">
                                             <div class="article__comment__date">{{ comment.date_posted }}</div>
                                             <div class="article__comment__controls">
+
+                                                {% if request.user == comment.user %}
                                                 <button data-comment-edit class="article__comment__btn article__comment__btn--edit">
                                                     <span class="material-symbols-outlined">rate_review</span>
                                                     Edit
@@ -219,33 +211,36 @@
                                                     <span class="material-symbols-outlined">chat_error</span>
                                                     Delete
                                                 </button>
+                                                {% endif %}
 
                                                 <button data-comment-reply class="article__comment__btn article__comment__btn--reply">
                                                     <span class="material-symbols-outlined">forum</span>
                                                     Reply
                                                 </button>
-                                            
+
                                             </div>
                                         </div>
                                     </div>
 
+                                    {% if user.is_authenticated %}
                                     <div class="article__comment__rating">
-                                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper" data-comment-rating-wrapper>
+                                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper {% if comment.likes > 0 %}featured{% endif %}" data-comment-rating-wrapper>
                                             <button class="article__comment__rating__btn" data-comment-like-btn>
                                                 <span class="material-symbols-outlined">thumb_up</span>
                                             </button>
 
-                                            <span class="article__comment__rating__counter" data-comment-counter>0</span>
+                                            <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>
                                         </div>
 
-                                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper" data-comment-rating-wrapper>
+                                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper {% if comment.dislikes > 0 %}featured{% endif %}" data-comment-rating-wrapper>
                                             <button class="article__comment__rating__btn" data-comment-dislike-btn>
                                                 <span class="material-symbols-outlined">thumb_down</span>
                                             </button>
 
-                                            <span class="article__comment__rating__counter" data-comment-counter>0</span>
+                                            <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>
                                         </div>
                                     </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             {% endif %}
