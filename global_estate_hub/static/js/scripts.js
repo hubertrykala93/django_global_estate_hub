@@ -410,8 +410,12 @@ if($eyeIcons.length){
     eye.addEventListener('click', ()=>{
       if ( $input.type === 'password' ){
         $input.type = 'text'
+        eye.classList.add('ri-eye-line')
+        eye.classList.remove('ri-eye-off-line')
       } else{
         $input.type = 'password'
+        eye.classList.add('ri-eye-off-line')
+        eye.classList.remove('ri-eye-line')
       }
     })
   });
@@ -913,7 +917,6 @@ if ( $articlesCommentsWrapper ) {
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
-    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -927,9 +930,19 @@ if ( $articlesCommentsWrapper ) {
   }
 
   const deleteComment = (response) => {
+    const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${response.commentId}"]`)
     if ( response.valid ) {
-      const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${response.commentId}"]`)
       $comment.remove()
+    } else {
+      const $error = $comment.querySelector('.article__comment__error')
+      if($error) {
+        $error.textContent = response.message
+      } else {
+        const newError = document.createElement('div')
+        newError.classList.add('article__comment__error')
+        newError.textContent = response.message
+        $comment.appendChild(newError)
+      }
     }
   }
 
@@ -943,16 +956,13 @@ if ( $articlesCommentsWrapper ) {
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url, true)
-    // xhr.setRequestHeader('X-CSRFToken', getToken($form))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('wysłane dane', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odebrane dane', response)
           deleteComment(response)
       }
     }
@@ -961,7 +971,7 @@ if ( $articlesCommentsWrapper ) {
   const editHandler = (btn) => {
     const commentId = btn.closest('[data-article-comment]').dataset.commentId
     const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${commentId}"]`)
-    const oldContent = $comment.querySelector('[data-comment-content-body]').textContent.trim()
+    let oldContent = $comment.querySelector('[data-comment-content-body]').textContent.trim()
 
     if ( !$comment.querySelector('.article__comment__edit__form') ) {
       let editForm = document.createElement('div')
@@ -988,6 +998,18 @@ if ( $articlesCommentsWrapper ) {
     }
 
     const $editForm = $comment.querySelector('[data-article-comment-edit]')
+    
+    const serverResponse = (response) => {
+      console.log('odebrane dane', response)
+      if ( response.valid ) {
+        const $commentContent = $comment.querySelector('[data-comment-content-body]')
+        $commentContent.innerHTML = response.newContent
+        $comment.querySelector('.article__comment__edit__form').remove()
+      } else {
+        showInfo(false, response.message, $editForm, 'data-comment')
+      }
+
+    }
 
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
@@ -1001,8 +1023,7 @@ if ( $articlesCommentsWrapper ) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-            console.log('odebrane dane', response)
-            // serverResponse(response)
+            serverResponse(response)
         }
       }
     }
@@ -1016,14 +1037,14 @@ if ( $articlesCommentsWrapper ) {
         "commentId": commentId,
         "comment": [$commentInput.value.trim(), "data-comment", "comment"],
       }
+      
+      ajaxRequest(data)
 
-      if ( $commentInput.value.trim() !== oldContent ) {
-        ajaxRequest(data)
-        
-        // if ( clientValidation($editForm, data) ) {
-        //   ajaxRequest(data)
-        // }
-      }
+      // if ( $commentInput.value.trim() !== oldContent ) {
+      //   if ( clientValidation($editForm, data) ) {
+      //     ajaxRequest(data)
+      //   }
+      // }
   
   
     })
@@ -1046,6 +1067,10 @@ if ( $articlesCommentsWrapper ) {
     //edit
     else if (e.target.matches('[data-comment-edit-btn], [data-comment-edit-btn] *')) {
       editHandler(e.target)
+    }
+    //reply
+    else if (e.target.matches('[data-comment-reply-btn], [data-comment-reply-btn] *')) {
+      // replyHandler(e.target)
     }
   })
 }
@@ -1094,13 +1119,12 @@ if ($addCommentInArticleForm) {
     xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('wysłane dane', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odebrane dane', response)
+          console.log(response);
           serverResponse(response)
       }
     }

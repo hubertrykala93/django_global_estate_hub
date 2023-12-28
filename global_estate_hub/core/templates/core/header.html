@@ -3,7 +3,8 @@
         <div class="row">
             <div class="header-logo">
                 <a href="{% url 'index' %}">
-                    <img src="/media/logo/logo-color.svg" alt="Global Estate Hub logo">
+                    <img src="/media/logo/logo-color.svg" alt="Global Estate Hub go to home page logo" aria-hidden="true">
+                    <span class="visually-hidden">Global Estate Hub go to home page logo</span>
                 </a>
             </div>
 
@@ -28,28 +29,28 @@
                 <div class="user-dropdown" data-user-dropdown>
                     <div class="user-greeting">
                         Hello
-                        <a href="{% url 'account-settings' %}">{{ user.username }}</a>
+                        <a href="{% url 'account-settings' %}" aria-label="user settings">{{ user.username }}</a>
                     </div>
 
-                    <button class="show-user-nav" data-show-user-nav>
+                    <button class="show-user-nav" data-show-user-nav aria-label="show user navigation dropdown">
                         <div class="user-avatar">
-                            <img src={{ user.image.url }} alt="user picture">
+                            <img src={{ user.image.url }} alt="user avatar">
                         </div>
 
-                        <span class="material-symbols-outlined">expand_more</span>
+                        <i class="ri-arrow-down-s-line" aria-hidden="true"></i>
                     </button>
 
                     <div class="user-dropdown-nav" data-user-dropdown-nav>
                         <ul class="nav-list">
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'account-settings' %}">
-                                    <span class="material-symbols-outlined">manage_accounts</span>
+                                    <i class="ri-user-settings-line" aria-hidden="true"></i>
                                     Settings
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'logout' %}">
-                                    <span class="material-symbols-outlined">logout</span>
+                                    <i class="ri-logout-box-r-line" aria-hidden="true"></i>
                                     Logout
                                 </a>
                             </li>
@@ -60,9 +61,8 @@
             </div>
 
             <button id="offcanvas-toggler" data-open-offcanvas>
-                <span class="material-symbols-outlined">
-                    menu
-                </span>
+                <i class="ri-menu-3-line" aria-hidden="true"></i>
+                <span class="visually-hidden">Show mobile menu</span>
             </button>
         </div>
     </div>

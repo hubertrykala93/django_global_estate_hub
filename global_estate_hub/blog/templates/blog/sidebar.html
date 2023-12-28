@@ -4,10 +4,11 @@
         <div class="form__row">
             <div class="form__field">
                 <div class="form__input-wrap">
-                    <input type="text" placeholder="Search by keyword" name="search">
+                    <input type="text" placeholder="Search by keyword" name="search" aria-label="type a keyword to search by">
                 </div>
                 <button type="submit">
-                    <img class="form__search-icon" src="/media/icons/blog-search.svg" alt="search icon">
+                    <i class="ri-search-line" aria-hidden="true"></i>
+                    <span class="visually-hidden">Search</span>
                 </button>
             </div>
         </div>
@@ -19,8 +20,7 @@
         <ul class="aside__categories">
             {% for slug, url, name, number in get_category_info %}
             <li class="aside__categories__item">
-                <a class="aside__categories__link {% if slug in request.path %}active{% endif %}"
-                   href="{{ url }}">
+                <a class="aside__categories__link {% if slug in request.path %}active{% endif %}" href="{{ url }}" aria-label="go to {{ name }} category">
                     {{ name }}
                     <span class="aside__categories__count">({{ number }})</span>
                 </a>
@@ -56,7 +56,7 @@
         <ul class="aside__tags">
             {% for tag in popular_tags %}
             <li class="aside__tags-item">
-                <a href="{{ tag.get_absolute_url }}" class="aside__tags-link">
+                <a href="{{ tag.get_absolute_url }}" class="aside__tags-link" aria-label="go to {{ tag }} tag">
                     {{ tag }}
                 </a>
             </li>

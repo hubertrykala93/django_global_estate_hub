@@ -10,21 +10,12 @@
       - favicon
     -->
     <link rel="icon" type="image/x-icon" href="/media/logo/favicon.png">
-
-    <!--
-      - material icons
-    -->
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>
-
     
     <!--
       - remix icons
     -->
     <link
-    href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css"
-    rel="stylesheet"
-/>
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet"/>
 
     <!--
       - swiper js
@@ -108,6 +99,13 @@
   - #ANIMATIONS
 -->
 <script src="{% static 'js/animations.js' %}"></script>
+
+<!--
+  - #CSRF TOKEN GENERATE
+-->
+<script>
+  const csrfToken = '{{ csrf_token }}'
+</script>
 
 <!--
   - #CUSTOM JAVASCRIPT

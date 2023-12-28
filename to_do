@@ -1,24 +1,20 @@
 @Szymon-Levy
 1. CRUD do komentarzy, CR już jest, musisz zrobić edycję i delete komentarza. Dodatkowo dodaj jeszcze likes i dislikes i to też trzeba zrobić xd
 3. article-details.html ajax form,
-5. zmiana biblioteki ikon na posiadajaca wypelnione ikony
-6. wyrzucenie material icons
-7. sociale w stopce na remixicons
+7. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
+8. accessible accordion
+9. custom honey pot
+10. csrf token zamiana na prostszą wersję wszędzie i dodanie wszędzie gdzie jest ajax
+11. if z returnem false w funkcji submit jeśli honeypot jest wypełniony
+12. edit comment odkomentowanie walidacji jak będzie wszystko ok
 
 @hubertrykala93
 1. poprawienie warunku przy nadawaniu klasy do wyróżnionego/niewyróżnionego lika i dislika
-2. response w delete comment:
-{
-  valid: x,
-  commentId: id
-}
-3. response w edit comment:
-{
-  valid: x,
-  commentId: id,
-  newContent: text
-}
-
+2. edit comment:
+w walidacji sprawdzenie czy nie jest próba nadpisania tej samej treści i błąd o treści że aktualnie taka treść komentarza już jest i valid: false
+3. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
+4. pętla generująca zagnieżdżone komentarze - 4 zagdzieżdzenia są zrobione na sztywno na razie - dodane komentarze z levelem żeby było wiadomo które to, użyj funkcji zwijania bloku kodu żeby się w tym połapać - .article__comment to główny element komentarza - powielany niżej, poprawnie zwinięte bloki kodu tak że widać o co chodzi są w /media/article-details.jpg
+5. w article-details.html na samym dole w skrypcie dodaj w klamrach {{ }} waunek który zwraca true/false w zależności czy jest zalogowany user czy nie
 
 
 cache busting

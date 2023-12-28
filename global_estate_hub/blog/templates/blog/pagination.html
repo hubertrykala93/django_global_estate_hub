@@ -4,12 +4,12 @@
     <ul class="pagination__list">
         {% if pages.has_previous %}
         <li class="pagination__item">
-            <a href="?{% url_replace request 'page' 1 %}">First</a>
+            <a href="?{% url_replace request 'page' 1 %}" aria-label="the fist page">First</a>
         </li>
 
         <li class="pagination__item pagination__item--with-icon pagination__item--icon-left">
-            <a href="?{% url_replace request 'page' pages.previous_page_number %}">
-                <img src="/media/icons/pagination-left-arrow.svg" alt="previous pages">
+            <a href="?{% url_replace request 'page' pages.previous_page_number %}" aria-label="previous page">
+                <i class="ri-arrow-left-line" aria-hidden="true"></i>
                 Previous
             </a>
         </li>
@@ -18,25 +18,25 @@
         {% for i in pages.paginator.page_range %}
         {% if pages.number == i %}
         <li class="pagination__item">
-            <a href="?{% url_replace request 'page' i %}">{{ i }}</a>
+            <a href="?{% url_replace request 'page' i %}" aria-label="page number {{ i }}">{{ i }}</a>
         </li>
         {% elif i > pages.number|add:'-2' and i < pages.number|add:'2' %}
         <li class="pagination__item">
-            <a href="?{% url_replace request 'page' i %}">{{ i }}</a>
+            <a href="?{% url_replace request 'page' i %}" aria-label="page number {{ i }}">{{ i }}</a>
         </li>
         {% endif %}
         {% endfor %}
 
         {% if pages.has_next %}
         <li class="pagination__item pagination__item--with-icon pagination__item--icon-right">
-            <a href="?{% url_replace request 'page' pages.next_page_number %}">
+            <a href="?{% url_replace request 'page' pages.next_page_number %}" aria-label="next page">
                 Next
-                <img src="/media/icons/pagination-right-arrow.svg" alt="next pages">
+                <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>
         </li>
 
         <li class="pagination__item">
-            <a href="?{% url_replace request 'page' pages.paginator.num_pages %}">Last</a>
+            <a href="?{% url_replace request 'page' pages.paginator.num_pages %}" aria-label="the last page">Last</a>
         </li>
         {% endif %}
     </ul>

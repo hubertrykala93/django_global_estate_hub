@@ -36,7 +36,7 @@
                         <div class="user-avatar">
                             <div class="user-avatar__image">
                                 <div class="user-avatar__loader" data-avatar-loader>
-                                    <span class="material-symbols-outlined">autorenew</span>
+                                    <i class="ri-refresh-line"></i>
                                 </div>
                                 <img src={{ user.image.url }} alt="user avatar" data-avatar-image>
                             </div>
@@ -76,9 +76,7 @@
                                 <div class="form__input-wrap">
                                     <input data-password1 data-input type="password" id="password1"
                                            placeholder="New password">
-                                    <img data-password-eye class="form__eye-icon"
-                                         src="/media/icons/form-see-password.svg"
-                                         alt="see password icon">
+                                    <i data-password-eye class="form__eye-icon ri-eye-off-line" aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>
@@ -89,9 +87,7 @@
                                 <div class="form__input-wrap">
                                     <input data-password2 data-input type="password" id="password2"
                                            placeholder="Confirm password">
-                                    <img data-password-eye class="form__eye-icon"
-                                         src="/media/icons/form-see-password.svg"
-                                         alt="see password icon">
+                                    <i data-password-eye class="form__eye-icon ri-eye-off-line" aria-hidden="true"></i>
                                 </div>
                             </div>
                         </div>

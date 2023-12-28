@@ -36,7 +36,7 @@
 
                 <a href="#" class="btn secondary-btn">
                     Find out more
-                    <img class="btn-icon right" src="/media/icons/btn-arrow-right.svg" alt="arrow">
+                    <i class="btn-icon right ri-arrow-right-s-line" aria-hidden="true"></i>
                 </a>
             </div>
 
@@ -338,10 +338,10 @@
 
             <div class="testimonials__arrows">
                 <div class="button-prev theme-arrow" data-left>
-                    <span class="material-symbols-outlined">arrow_left_alt</span>
+                    <i class="ri-arrow-left-line" aria-hidden="true"></i>
                 </div>
                 <div class="button-next theme-arrow" data-right>
-                    <span class="material-symbols-outlined">arrow_right_alt</span>
+                    <i class="ri-arrow-right-line" aria-hidden="true"></i>
                 </div>
             </div>
         </div>
@@ -372,7 +372,7 @@
                     <a class="blog-card__category"
                        href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
                     <div class="blog-card__image">
-                        <img src="{{ article.image.url }}">
+                        <img src="{{ article.image.url }}" alt="article intro image">
                     </div>
 
                     <div class="blog-card__content">
@@ -398,9 +398,9 @@
                             <h3><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h3>
                         </div>
 
-                        <a class="blog-card__read-more" href="{{ article.get_absolute_url }}">
+                        <a class="blog-card__read-more" href="{{ article.get_absolute_url }}" aria-label="Read more about {{ article.title }}">
                             Read more
-                            <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
+                            <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
                         </a>
                     </div>
                 </div>
@@ -426,25 +426,34 @@
             <div class="logo-carousel swiper" data-partners-carousel>
                 <div class="swiper-wrapper">
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/airbnb.png" alt=""></a>
+                        <a href="https://www.airbnb.pl/" target="_blank" aria-label="link to airbnb website">
+                            <img src="/media/our_partners/airbnb.png" alt="airbnb logo" aria-hidden="true">
+                        </a>
                     </div>
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/amazon.svg" alt=""></a>
+                        <a href="https://www.amazon.pl/" target="_blank" aria-label="link to amazon website">
+                            <img src="/media/our_partners/amazon.svg" alt="amazon logo" aria-hidden="true">
+                        </a>
                     </div>
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/google.png" alt=""></a>
+                        <a href="https://www.google.com/" target="_blank" aria-label="link to google website">
+                            <img src="/media/our_partners/google.png" alt="google logo" aria-hidden="true">
+                        </a>
                     </div>
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/logitech.svg" alt=""></a>
+                        <a href="https://www.paypal.com/pl/home" target="_blank" aria-label="link to paypal website">
+                            <img src="/media/our_partners/paypal.png" alt="paypal logo" aria-hidden="true">
+                        </a>
                     </div>
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/paypal.png" alt=""></a>
+                        <a href="https://www.microsoft.com/pl-pl" target="_blank" aria-label="link to microsoft website">
+                            <img src="/media/our_partners/microsoft.png" alt="microsoft logo" aria-hidden="true">
+                        </a>
                     </div>
                     <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/microsoft.png" alt=""></a>
-                    </div>
-                    <div class="logo-carousel__partner swiper-slide">
-                        <a href="#"><img src="/media/our_partners/yahoo.png" alt=""></a>
+                        <a href="https://www.yahoo.com/" target="_blank" aria-label="link to yahoo website">
+                            <img src="/media/our_partners/yahoo.png" alt="yahoo logo" aria-hidden="true">
+                        </a>
                     </div>
                 </div>
             </div>

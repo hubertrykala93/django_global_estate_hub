@@ -13,14 +13,14 @@
                         <div class="blog-card__wrapper">
                             <a class="blog-card__category" href="{{ article.category.get_absolute_url }}">{{ page.category }}</a>
                             <div class="blog-card__image">
-                                <img src="{{ page.image.url }}">
+                                <img src="{{ page.image.url }}" alt="article intro image">
                             </div>
         
                             <div class="blog-card__content">
                                 <div class="blog-card__info">
                                     <div class="blog-card__info__item">
                                         <div class="blog-card__info__icon">
-                                            <img src="/media/icons/blog-card-author.svg">
+                                            <img src="/media/icons/blog-card-author.svg" alt="author icon" aria-hidden="true">
                                         </div>
         
                                         <div class="blog-card__info__title">{{ page.user.username }}</div>
@@ -28,7 +28,7 @@
         
                                     <div class="blog-card__info__item">
                                         <div class="blog-card__info__icon">
-                                            <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon">
+                                            <img src="/media/icons/blog-card-calendar.svg" alt="calendar icon" aria-hidden="true">
                                         </div>
         
                                         <div class="blog-card__info__title">{{ page.date_posted }}</div>
@@ -39,9 +39,9 @@
                                     <h3><a href="{{ page.get_absolute_url }}">{{ page.title }}</a></h3>
                                 </div>
         
-                                <a class="blog-card__read-more" href="{{ page.get_absolute_url }}">
+                                <a class="blog-card__read-more" href="{{ page.get_absolute_url }}" aria-label="Read more about {{ page.title }}">
                                     Read more
-                                    <img src="/media/icons/blog-card-read-more.svg" alt="read more icon">
+                                    <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
                                 </a>
                             </div>
                         </div>

@@ -57,7 +57,7 @@
                             <div class="form__field">
                                 <label for="login-email" class="form__label">email</label>
                                 <div class="form__input-wrap">
-                                    <img class="form__hint-icon" src="/media/icons/form-email.svg" alt="email icon">
+                                    <i class="form__hint-icon ri-mail-line" aria-hidden="true"></i>
                                     <input data-email data-input type="text" id="login-email" placeholder="Your Email">
                                 </div>
                             </div>
@@ -67,12 +67,9 @@
                             <div class="form__field">
                                 <label for="password" class="form__label">password</label>
                                 <div class="form__input-wrap">
-                                    <img class="form__hint-icon" src="/media/icons/form-password.svg"
-                                         alt="password icon">
+                                    <i class="form__hint-icon ri-lock-line" aria-hidden="true"></i>
                                     <input data-password data-input type="password" id="password" placeholder="Your Password">
-                                    <img data-password-eye class="form__eye-icon"
-                                         src="/media/icons/form-see-password.svg"
-                                         alt="see password icon">
+                                    <i data-password-eye class="form__eye-icon ri-eye-off-line" aria-hidden="true"></i>
                                 </div>
                                 <a class="forgot-password" href="{% url 'forget-password' %}">Forgot Password?</a>
                             </div>
