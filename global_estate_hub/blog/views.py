@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article, Category, Tag, Comment, CommentLike, CommentDislike
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models import User
 
@@ -93,10 +93,16 @@ def article_details(request, category_slug, article_slug):
     """
     category = Category.objects.get(slug=category_slug)
     article = Article.objects.get(slug=article_slug)
-    comments = Comment.objects.filter(article=article)
+    comments = Comment.objects.filter(article=article, active=True)
     active_comments = article.comments.filter(active=True)
     next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
     previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
+    user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user)]
+    user_dislikes = [obj.comment for obj in CommentDislike.objects.filter(user=request.user)]
+
+    for comment in comments:
+        if comment.parent:
+            print(comment.parent)
 
     if request.method == 'POST':
         if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
@@ -202,11 +208,14 @@ def article_details(request, category_slug, article_slug):
             response = {
                 "valid":
                     False if not comment_content else
+                    False if comment_content == Comment.objects.get(id=comment_id).comment else
                     True,
                 "commentId": comment_id,
                 "newContent": comment_content,
                 "message":
                     "You cannot add an empty comment." if not comment_content else
+                    "The comment was not edited correctly because its content did not change." if comment_content == Comment.objects.get(
+                        id=comment_id).comment else
                     "",
             }
 
@@ -336,6 +345,8 @@ def article_details(request, category_slug, article_slug):
             'article_tags': article.tags.all(),
             'previous_article': previous_article,
             'next_article': next_article,
+            'user_likes': user_likes,
+            'user_dislikes': user_dislikes,
         })
 
 

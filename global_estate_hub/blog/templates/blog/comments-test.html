@@ -1,0 +1,330 @@
+<div class="article__comments" data-article-comments>
+    <div class="article__comments__count">
+        {% if active_comments.count == 0 %}{{ active_comments.count }} Comments available{% elif active_comments.count == 1 %}{{ active_comments.count }} Comment available{% else %}{{ active_comments.count }} Comments available{% endif %}
+    </div>
+
+    {% if comments %}
+    <div class="article__comments__wrapper">
+        {% for comment in comments %}
+        {% if comment.active %}
+        <!-- 1 głowny komentarz -->
+        <div class="article__comment" data-comment-id="{{ comment.id }}" data-article-comment>
+            <div class="article__comment__body" data-article-comment-body>
+                <div class="article__comment__avatar">
+                    <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
+                         alt="comment author's avatar">
+                </div>
+
+                <div class="article__comment__content">
+                    <div class="article__comment__name">
+                        {% if comment.user.username %}
+                        {{ comment.user.username }}
+                        {% else %}
+                        {{ comment.full_name }}
+                        {% endif %}
+                    </div>
+
+                    <div class="article__comment__content__body" data-comment-content-body>
+                        {{ comment.comment }}
+                    </div>
+
+                    <div class="article__comment__foter">
+                        <div class="article__comment__date">{{ comment.date_posted }}</div>
+                        <div class="article__comment__controls">
+
+                            {% if request.user == comment.user %}
+                            <button data-comment-edit-btn class="article__comment__btn article__comment__btn--edit"
+                                    aria-label="Edit comment">
+                                <i class="ri-message-2-line" aria-hidden="true"></i>
+                                Edit
+                            </button>
+
+                            <button data-comment-delete-btn class="article__comment__btn article__comment__btn--delete"
+                                    aria-label="Delete comment">
+                                <i class="ri-chat-delete-line" aria-hidden="true"></i>
+                                Delete
+                            </button>
+                            {% endif %}
+
+                            <button data-comment-reply-btn class="article__comment__btn article__comment__btn--reply"
+                                    aria-label="Reply to comment">
+                                <i class="ri-reply-line" aria-hidden="true"></i>
+                                Reply
+                            </button>
+
+                        </div>
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                <div class="article__comment__rating">
+                    <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper"
+                         data-comment-rating-wrapper>
+                        <button class="article__comment__rating__btn" data-comment-like-btn>
+                            <i class="{% if comment in user_likes %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"
+                               aria-hidden="true"></i>
+                            <span class="visually-hidden">Like comment</span>
+                        </button>
+
+                        <span class="article__comment__rating__counter"
+                              data-comment-likes-counter>{{ comment.likes }}</span>
+                    </div>
+
+                    <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper"
+                         data-comment-rating-wrapper>
+                        <button class="article__comment__rating__btn" data-comment-dislike-btn>
+                            <i class="{% if comment in user_dislikes %}ri-thumb-down-fill{% else %}ri-thumb-down-line{% endif %}"
+                               aria-hidden="true"></i>
+                            <span class="visually-hidden">Disike comment</span>
+                        </button>
+
+                        <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 2 level -->
+            <div class="article__comment" data-comment-id="{{ comment.id }}" data-article-comment>
+                <div class="article__comment__body" data-article-comment-body>
+                    <div class="article__comment__avatar">
+                        <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
+                             alt="comment author's avatar">
+                    </div>
+
+                    <div class="article__comment__content">
+                        <div class="article__comment__name">
+                            {% if comment.user.username %}
+                            {{ comment.user.username }}
+                            {% else %}
+                            {{ comment.full_name }}
+                            {% endif %}
+                        </div>
+
+                        <div class="article__comment__content__body" data-comment-content-body>
+                            {{ comment.comment }}
+                        </div>
+
+                        <div class="article__comment__foter">
+                            <div class="article__comment__date">{{ comment.date_posted }}</div>
+                            <div class="article__comment__controls">
+
+                                {% if request.user == comment.user %}
+                                <button data-comment-edit-btn class="article__comment__btn article__comment__btn--edit"
+                                        aria-label="Edit comment">
+                                    <i class="ri-message-2-line" aria-hidden="true"></i>
+                                    Edit
+                                </button>
+
+                                <button data-comment-delete-btn
+                                        class="article__comment__btn article__comment__btn--delete"
+                                        aria-label="Delete comment">
+                                    <i class="ri-chat-delete-line" aria-hidden="true"></i>
+                                    Delete
+                                </button>
+                                {% endif %}
+
+                                <button data-comment-reply-btn
+                                        class="article__comment__btn article__comment__btn--reply"
+                                        aria-label="Reply to comment">
+                                    <i class="ri-reply-line" aria-hidden="true"></i>
+                                    Reply
+                                </button>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated %}
+                    <div class="article__comment__rating">
+                        <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper"
+                             data-comment-rating-wrapper>
+                            <button class="article__comment__rating__btn" data-comment-like-btn>
+                                <i class="{% if request.user == like.user and comment.comment == like.comment %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"
+                                   aria-hidden="true"></i>
+                                <span class="visually-hidden">Like comment</span>
+                            </button>
+
+                            <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>
+                        </div>
+
+                        <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper"
+                             data-comment-rating-wrapper>
+                            <button class="article__comment__rating__btn" data-comment-dislike-btn>
+                                <i class="{% if comment.dislikes > 0 %}ri-thumb-down-fill{% else %}ri-thumb-down-line{% endif %}"
+                                   aria-hidden="true"></i>
+                                <span class="visually-hidden">Disike comment</span>
+                            </button>
+
+                            <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- 3 level -->
+                <div class="article__comment" data-comment-id="{{ comment.id }}" data-article-comment>
+                    <div class="article__comment__body" data-article-comment-body>
+                        <div class="article__comment__avatar">
+                            <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
+                                 alt="comment author's avatar">
+                        </div>
+
+                        <div class="article__comment__content">
+                            <div class="article__comment__name">
+                                {% if comment.user.username %}
+                                {{ comment.user.username }}
+                                {% else %}
+                                {{ comment.full_name }}
+                                {% endif %}
+                            </div>
+
+                            <div class="article__comment__content__body" data-comment-content-body>
+                                {{ comment.comment }}
+                            </div>
+
+                            <div class="article__comment__foter">
+                                <div class="article__comment__date">{{ comment.date_posted }}</div>
+                                <div class="article__comment__controls">
+
+                                    {% if request.user == comment.user %}
+                                    <button data-comment-edit-btn
+                                            class="article__comment__btn article__comment__btn--edit"
+                                            aria-label="Edit comment">
+                                        <i class="ri-message-2-line" aria-hidden="true"></i>
+                                        Edit
+                                    </button>
+
+                                    <button data-comment-delete-btn
+                                            class="article__comment__btn article__comment__btn--delete"
+                                            aria-label="Delete comment">
+                                        <i class="ri-chat-delete-line" aria-hidden="true"></i>
+                                        Delete
+                                    </button>
+                                    {% endif %}
+
+                                    <button data-comment-reply-btn
+                                            class="article__comment__btn article__comment__btn--reply"
+                                            aria-label="Reply to comment">
+                                        <i class="ri-reply-line" aria-hidden="true"></i>
+                                        Reply
+                                    </button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if user.is_authenticated %}
+                        <div class="article__comment__rating">
+                            <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper"
+                                 data-comment-rating-wrapper>
+                                <button class="article__comment__rating__btn" data-comment-like-btn>
+                                    <i class="{% if request.user == like.user and comment.comment == like.comment %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"
+                                       aria-hidden="true"></i>
+                                    <span class="visually-hidden">Like comment</span>
+                                </button>
+
+                                <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>
+                            </div>
+
+                            <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper"
+                                 data-comment-rating-wrapper>
+                                <button class="article__comment__rating__btn" data-comment-dislike-btn>
+                                    <i class="{% if comment.dislikes > 0 %}ri-thumb-down-fill{% else %}ri-thumb-down-line{% endif %}"
+                                       aria-hidden="true"></i>
+                                    <span class="visually-hidden">Disike comment</span>
+                                </button>
+
+                                <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- 4 level -->
+                    <div class="article__comment" data-comment-id="{{ comment.id }}" data-article-comment>
+                        <div class="article__comment__body" data-article-comment-body>
+                            <div class="article__comment__avatar">
+                                <img src="{% if comment.user.username %}{{ comment.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
+                                     alt="comment author's avatar">
+                            </div>
+
+                            <div class="article__comment__content">
+                                <div class="article__comment__name">
+                                    {% if comment.user.username %}
+                                    {{ comment.user.username }}
+                                    {% else %}
+                                    {{ comment.full_name }}
+                                    {% endif %}
+                                </div>
+
+                                <div class="article__comment__content__body" data-comment-content-body>
+                                    {{ comment.comment }}
+                                </div>
+
+                                <div class="article__comment__foter">
+                                    <div class="article__comment__date">{{ comment.date_posted }}</div>
+                                    <div class="article__comment__controls">
+
+                                        {% if request.user == comment.user %}
+                                        <button data-comment-edit-btn
+                                                class="article__comment__btn article__comment__btn--edit"
+                                                aria-label="Edit comment">
+                                            <i class="ri-message-2-line" aria-hidden="true"></i>
+                                            Edit
+                                        </button>
+
+                                        <button data-comment-delete-btn
+                                                class="article__comment__btn article__comment__btn--delete"
+                                                aria-label="Delete comment">
+                                            <i class="ri-chat-delete-line" aria-hidden="true"></i>
+                                            Delete
+                                        </button>
+                                        {% endif %}
+
+                                        <button data-comment-reply-btn
+                                                class="article__comment__btn article__comment__btn--reply"
+                                                aria-label="Reply to comment">
+                                            <i class="ri-reply-line" aria-hidden="true"></i>
+                                            Reply
+                                        </button>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% if user.is_authenticated %}
+                            <div class="article__comment__rating">
+                                <div class="article__comment__rating__wrapper article__comment__rating__like-wrapper"
+                                     data-comment-rating-wrapper>
+                                    <button class="article__comment__rating__btn" data-comment-like-btn>
+                                        <i class="{% if request.user == like.user and comment.comment == like.comment %}ri-thumb-up-fill{% else %}ri-thumb-up-line{% endif %}"
+                                           aria-hidden="true"></i>
+                                        <span class="visually-hidden">Like comment</span>
+                                    </button>
+
+                                    <span class="article__comment__rating__counter" data-comment-likes-counter>{{ comment.likes }}</span>
+                                </div>
+
+                                <div class="article__comment__rating__wrapper article__comment__rating__dislike-wrapper"
+                                     data-comment-rating-wrapper>
+                                    <button class="article__comment__rating__btn" data-comment-dislike-btn>
+                                        <i class="{% if comment.dislikes > 0 %}ri-thumb-down-fill{% else %}ri-thumb-down-line{% endif %}"
+                                           aria-hidden="true"></i>
+                                        <span class="visually-hidden">Disike comment</span>
+                                    </button>
+
+                                    <span class="article__comment__rating__counter" data-comment-dislikes-counter>{{ comment.dislikes }}</span>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>

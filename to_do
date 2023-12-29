@@ -9,12 +9,8 @@
 12. edit comment odkomentowanie walidacji jak będzie wszystko ok
 
 @hubertrykala93
-1. poprawienie warunku przy nadawaniu klasy do wyróżnionego/niewyróżnionego lika i dislika
-2. edit comment:
-w walidacji sprawdzenie czy nie jest próba nadpisania tej samej treści i błąd o treści że aktualnie taka treść komentarza już jest i valid: false
 3. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
 4. pętla generująca zagnieżdżone komentarze - 4 zagdzieżdzenia są zrobione na sztywno na razie - dodane komentarze z levelem żeby było wiadomo które to, użyj funkcji zwijania bloku kodu żeby się w tym połapać - .article__comment to główny element komentarza - powielany niżej, poprawnie zwinięte bloki kodu tak że widać o co chodzi są w /media/article-details.jpg
-5. w article-details.html na samym dole w skrypcie dodaj w klamrach {{ }} waunek który zwraca true/false w zależności czy jest zalogowany user czy nie
 
 
 cache busting

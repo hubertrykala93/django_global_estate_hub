@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from django.shortcuts import reverse
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
+from mptt.models import TreeForeignKey, MPTTModel
 
 
 class Category(models.Model):
@@ -134,7 +135,7 @@ class Article(models.Model):
         img.save(fp=self.image.path)
 
 
-class Comment(models.Model):
+class Comment(MPTTModel):
     """
     Creating Comment model instance.
     """
@@ -145,16 +146,18 @@ class Comment(models.Model):
     comment = models.TextField(max_length=1000)
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
-    parent = models.ForeignKey(to='self', on_delete=models.CASCADE, null=True, related_name='comment_parent',
-                               blank=True)
+    parent = TreeForeignKey(to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
 
-    # def __str__(self):
-    #     return self.comment
+    class MPTTMeta:
+        order_insertion_by = ['date_posted']
+
+    def __str__(self):
+        return f'Comment by {self.user}.'
 
 
 class CommentLike(models.Model):
