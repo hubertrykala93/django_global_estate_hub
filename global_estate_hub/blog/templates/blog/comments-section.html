@@ -6,8 +6,8 @@
     </div>
 
     {% if comments %}
-    {% recursetree comments %}
     <div class="article__comments__wrapper">
+        {% recursetree comments %}
         {% if node.active %}
         <div class="article__comment" data-comment-id="{{ node.id }}" data-article-comment>
             <div class="article__comment__body" data-article-comment-body>
@@ -84,14 +84,14 @@
                 </div>
                 {% endif %}
             </div>
+            {% if not node.is_leaf_node %}
+                <div class="children">{{ children }}</div>
+            {% endif %}
         </div>
 
-        {% if not node.is_leaf_node %}
-        <div class="children">{{ children }}</div>
-        {% endif %}
         {% endif %}
 
+        {% endrecursetree %}
     </div>
-    {% endrecursetree %}
     {% endif %}
 </div>

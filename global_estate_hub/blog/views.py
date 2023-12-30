@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article, Category, Tag, Comment, CommentLike, CommentDislike
 from django.core.paginator import Paginator
 import json
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from accounts.models import User
 
@@ -98,6 +98,9 @@ def article_details(request, category_slug, article_slug):
     previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
     user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user.id)]
     user_dislikes = [obj.comment for obj in CommentDislike.objects.filter(user=request.user.id)]
+
+    for comment in comments:
+        print(comment.parent)
 
     if request.method == 'POST':
         if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
