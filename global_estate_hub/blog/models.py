@@ -159,6 +159,9 @@ class Comment(MPTTModel):
     def __str__(self):
         return f'Comment by {self.user}.'
 
+    def get_active_comments(self):
+        return self.objects.filter(active=True)
+
 
 class CommentLike(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_like')

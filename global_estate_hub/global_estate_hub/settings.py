@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "ckeditor",
     "ckeditor_uploader",
     "honeypot",
+    "mptt",
     "core",
     "accounts",
     "blog",

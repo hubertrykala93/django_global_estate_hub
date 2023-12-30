@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Category, Tag, Article, Comment, CommentLike, CommentDislike
 from django.utils.translation import ngettext
 from django.contrib import messages
+from mptt.admin import MPTTModelAdmin
 
 
 @admin.register(Category)
@@ -35,7 +36,7 @@ class AdminArticle(admin.ModelAdmin):
 
 
 @admin.register(Comment)
-class AdminComment(admin.ModelAdmin):
+class AdminComment(MPTTModelAdmin):
     list_display = ['user', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active']
     list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
     list_editable = ['likes', 'dislikes', 'active']

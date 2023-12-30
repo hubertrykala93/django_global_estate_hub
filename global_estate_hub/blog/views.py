@@ -94,15 +94,10 @@ def article_details(request, category_slug, article_slug):
     category = Category.objects.get(slug=category_slug)
     article = Article.objects.get(slug=article_slug)
     comments = Comment.objects.filter(article=article, active=True)
-    active_comments = article.comments.filter(active=True)
     next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
     previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
-    user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user)]
-    user_dislikes = [obj.comment for obj in CommentDislike.objects.filter(user=request.user)]
-
-    for comment in comments:
-        if comment.parent:
-            print(comment.parent)
+    user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user.id)]
+    user_dislikes = [obj.comment for obj in CommentDislike.objects.filter(user=request.user.id)]
 
     if request.method == 'POST':
         if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
@@ -341,7 +336,6 @@ def article_details(request, category_slug, article_slug):
             'category': category,
             'article': article,
             'comments': comments,
-            'active_comments': active_comments,
             'article_tags': article.tags.all(),
             'previous_article': previous_article,
             'next_article': next_article,
