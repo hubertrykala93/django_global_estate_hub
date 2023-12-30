@@ -99,9 +99,6 @@ def article_details(request, category_slug, article_slug):
     user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user.id)]
     user_dislikes = [obj.comment for obj in CommentDislike.objects.filter(user=request.user.id)]
 
-    for comment in comments:
-        print(comment.parent)
-
     if request.method == 'POST':
         if 'add-parent-comment' in json.loads(s=request.body.decode('utf-8')).values():
             if request.user.is_authenticated:
