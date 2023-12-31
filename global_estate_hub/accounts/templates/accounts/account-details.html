@@ -1,0 +1,91 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+{% if user.account_type == 'Individual' %}
+<section class="user-details">
+  <div class="container">
+    <div class="row">
+      <div class="nav-column">
+        <div class="user__avatar">
+          <img src="/media/default_profile_image.jpg" alt="user avatar">
+        </div>
+
+        <div class="user__name">
+          Date Joined: {{ user.date_joined }}<br>
+          Username: {{ user.username }}
+        </div>
+      </div>
+
+      <div class="details-column">
+        E-mail Address: {{ user.email }}<br>
+
+        <h3>Profile Informations:</h3>
+        First Name: {% if user.individual.first_name %}{{ user.individual.first_name }}{% else %}No information provided{% endif %}<br>
+        Last Name: {% if user.individual.last_name %}{{ user.individual.last_name }}{% else %}No information provided{% endif %}<br>
+        Gender: {% if user.individual.gender %}{{ user.individual.gender }}{% else %}No information provided{% endif %}<br>
+        Phone Number: {% if user.individual.phone_number %}{{ user.individual.phone_number }}{% else %}No information provided{% endif %}
+
+        <h3>Localization Informations:</h3>
+        Country: {% if user.individual.country %}{{ user.individual.country }}{% else %}No information provided{% endif %}<br>
+        Province: {% if user.individual.province %}{{ user.individual.province }}{% else %}No information provided{% endif %}<br>
+        City: {% if user.individual.city %}{{ user.individual.city }}{% else %}No information provided{% endif %}<br>
+        Street: {% if user.individual.street %}{{ user.individual.street }}{% else %}No information provided{% endif %}<br>
+        Postal Code: {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}No information provided{% endif %}
+
+        <h3>Social Media Informations:</h3>
+        Website: <a href="{% if user.individual.website_url %}{{ user.individual.website_url }}{% endif %}" target="_blank">{% if user.individual.website_url %}{{ user.individual.website_url }}{% else %}No information provided{% endif %}</a><br>
+        Facebook: <a href="{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% endif %}" target="_blank">{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% else %}No information provided{% endif %}</a><br>
+        Instagram: <a href="{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% endif %}" target="_blank">{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% else %}No information provided{% endif %}</a><br>
+        LinkedIn: <a href="{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% endif %}" target="_blank">{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% else %}No information provided{% endif %}</a>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% else %}
+<section class="user-details">
+  <div class="container">
+    <div class="row">
+      <div class="nav-column">
+        <div class="user__avatar">
+          <img src="/media/default_profile_image.jpg" alt="user avatar">
+        </div>
+
+        <div class="user__name">
+          Date Joined: {{ user.date_joined }}<br>
+          Username: {{ user.username }}
+        </div>
+      </div>
+
+      <div class="details-column">
+        E-mail Address: {{ user.email }}<br>
+
+        <h3>Profile Informations:</h3>
+        Company Id: {% if user.business.company_id %}{{ user.business.company_id }}{% else %}No information provided{% endif %}<br>
+        Company Name: {% if user.business.company_name %}{{ user.business.company_name }}{% else %}No information provided{% endif %}<br>
+        Phone Number: {% if user.business.phone_number %}{{ user.business.phone_number }}{% else %}No information provided{% endif %}
+
+        <h3>Localization Informations:</h3>
+        Country: {% if user.business.country %}{{ user.business.country }}{% else %}No information provided{% endif %}<br>
+        Province: {% if user.business.province %}{{ user.business.province }}{% else %}No information provided{% endif %}<br>
+        City: {% if user.business.city %}{{ user.business.city }}{% else %}No information provided{% endif %}<br>
+        Street: {% if user.business.street %}{{ user.business.street }}{% else %}No information provided{% endif %}<br>
+        Postal Code: {% if user.business.postal_code %}{{ user.business.postal_code }}{% else %}No information provided{% endif %}
+
+        <h3>Social Media Informations:</h3>
+        Website: <a href="{% if user.business.website_url %}{{ user.business.website_url }}{% endif %}" target="_blank">{% if user.business.website_url %}{{ user.business.website_url }}{% else %}No information provided{% endif %}</a><br>
+        Facebook: <a href="{% if user.business.facebook_url %}{{ user.business.facebook_url }}{% endif %}" target="_blank">{% if user.business.facebook_url %}{{ user.business.facebook_url }}{% else %}No information provided{% endif %}</a><br>
+        Instagram: <a href="{% if user.business.instagram_url %}{{ user.business.instagram_url }}{% endif %}" target="_blank">{% if user.business.instagram_url %}{{ user.business.instagram_url }}{% else %}No information provided{% endif %}</a><br>
+        LinkedIn: <a href="{% if user.business.linkedin_url %}{{ user.business.linkedin_url }}{% endif %}" target="_blank">{% if user.business.linkedin_url %}{{ user.business.linkedin_url }}{% else %}No information provided{% endif %}</a>
+
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

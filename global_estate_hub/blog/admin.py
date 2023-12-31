@@ -14,6 +14,24 @@ class AdminCategory(admin.ModelAdmin):
         'slug': ['name']
     }
     list_display_links = ['name']
+    search_fields = ['name']
+    ordering = ['name']
+    fieldsets = [
+        [
+            'Category Name:', {
+            'fields': [
+                'name',
+            ]
+        }
+        ],
+        [
+            'Category Alias:', {
+            'fields': [
+                'slug',
+            ]
+        }
+        ]
+    ]
 
 
 @admin.register(Tag)
@@ -22,26 +40,151 @@ class AdminTag(admin.ModelAdmin):
     list_filter = ['name']
     list_display_links = ['name']
     prepopulated_fields = {'slug': ['name']}
+    search_fields = ['name']
+    ordering = ['name']
+    fieldsets = [
+        [
+            'Tag Name:', {
+            'fields': [
+                'name',
+            ]
+        }
+        ],
+        [
+            'Tag Alias:', {
+            'fields': [
+                'slug',
+            ]
+        }
+        ]
+    ]
 
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    ordering = ['date_posted']
-    fields = ['user', 'title', 'category', 'image', 'date_posted', 'content', 'slug', 'tags']
     list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug']
     list_filter = ['user', 'category', 'date_posted', 'tags']
     list_editable = ['user', 'image', 'category']
     list_display_links = ['title']
     prepopulated_fields = {'slug': ['title']}
+    search_fields = ['title']
+    ordering = ['date_posted']
+    fieldsets = [
+        [
+            'Creator:', {
+            'fields': [
+                'user',
+            ]
+        }
+        ],
+        [
+            'Image:', {
+            'fields': [
+                'image',
+            ]
+        }
+        ],
+        [
+            'Date Posted:', {
+            'fields': [
+                'date_posted',
+            ]
+        }
+        ],
+        [
+            'Content:', {
+            'fields': [
+                'title',
+                'content',
+            ]
+        }
+        ],
+        [
+            'Alias:', {
+            'fields': [
+                'slug',
+            ]
+        }
+        ],
+        [
+            'Category:', {
+            'fields': [
+                'category',
+            ]
+        }
+        ],
+        [
+            'Tags:', {
+            'fields': [
+                'tags',
+            ]
+        }
+        ]
+    ]
 
 
 @admin.register(Comment)
 class AdminComment(MPTTModelAdmin):
-    list_display = ['user', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active']
+    list_display = ['user', 'article', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active', 'parent']
     list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
     list_editable = ['likes', 'dislikes', 'active']
     list_display_links = ['user']
     actions = ['approve_comment']
+    search_fields = ['user', 'comment']
+    ordering = ['date_posted']
+    fieldsets = [
+        [
+            'Creator:', {
+            'fields': [
+                'user',
+                'full_name',
+            ]
+        }
+        ],
+        [
+            'Date:', {
+            'fields': [
+                'date_posted',
+            ]
+        }
+        ],
+        [
+            'Related to:', {
+            'fields': [
+                'article',
+            ]
+        }
+        ],
+        [
+            'Status:', {
+            'fields': [
+                'active',
+            ]
+        }
+        ],
+        [
+            'Content', {
+            'fields': [
+                'comment',
+            ]
+        }
+        ],
+        [
+            'Rates:', {
+            'fields': [
+                'likes',
+                'dislikes',
+            ]
+        }
+        ],
+        [
+            'Parent to:', {
+            'fields': [
+                'parent',
+            ]
+        }
+        ]
+    ]
 
     @admin.action(description='Approve selected Comments')
     def approve_comment(self, request, queryset):
@@ -59,6 +202,24 @@ class AdminCommentLike(admin.ModelAdmin):
     list_display = ['user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['user']
+    search_fields = ['user', 'comment']
+    ordering = ['user']
+    fieldsets = [
+        [
+            'User:', {
+            'fields': [
+                'user',
+            ]
+        }
+        ],
+        [
+            'Comment:', {
+            'fields': [
+                'comment',
+            ]
+        }
+        ]
+    ]
 
 
 @admin.register(CommentDislike)
@@ -66,3 +227,21 @@ class AdminCommentDislike(admin.ModelAdmin):
     list_display = ['user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['user']
+    search_fields = ['user', 'comment']
+    ordering = ['user']
+    fieldsets = [
+        [
+            'User:', {
+            'fields': [
+                'user',
+            ]
+        }
+        ],
+        [
+            'Comment:', {
+            'fields': [
+                'comment',
+            ]
+        }
+        ]
+    ]

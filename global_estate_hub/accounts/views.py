@@ -1,5 +1,5 @@
 import os
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
@@ -817,6 +817,16 @@ def social_media_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
+@login_required(login_url='login')
+def account_details(request, username):
+    user = get_object_or_404(klass=User, username=username)
+
+    return render(request=request, template_name='accounts/account-details.html', context={
+        'title': 'Account Details',
+        'user': user,
+    })
+
+
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
 def forget_password(request):
     """
@@ -1039,9 +1049,3 @@ def set_password(request):
 
         else:
             return JsonResponse(data=response, safe=False)
-
-
-def user_details(request):
-    return render(request=request, template_name='accounts/user-details.html', context={
-        'title': 'User Details',
-    })
