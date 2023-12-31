@@ -30,7 +30,7 @@ class AdminArticle(admin.ModelAdmin):
     fields = ['user', 'title', 'category', 'image', 'date_posted', 'content', 'slug', 'tags']
     list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug']
     list_filter = ['user', 'category', 'date_posted', 'tags']
-    list_editable = ['image', 'category']
+    list_editable = ['user', 'image', 'category']
     list_display_links = ['title']
     prepopulated_fields = {'slug': ['title']}
 
