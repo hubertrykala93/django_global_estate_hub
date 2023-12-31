@@ -1039,3 +1039,9 @@ def set_password(request):
 
         else:
             return JsonResponse(data=response, safe=False)
+
+
+def user_details(request):
+    return render(request=request, template_name='accounts/user-details.html', context={
+        'title': 'User Details',
+    })
