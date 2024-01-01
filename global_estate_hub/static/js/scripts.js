@@ -889,12 +889,11 @@ if ( $articlesCommentsWrapper ) {
     const commentId = btn.closest('[data-article-comment]').dataset.commentId
 
     const data = {
-      "action": "likes",
       commentId
     }
     
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url, true)
+    xhr.open('POST', url + '/give-like', true)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -911,12 +910,11 @@ if ( $articlesCommentsWrapper ) {
     const commentId = btn.closest('[data-article-comment]').dataset.commentId
 
     const data = {
-      "action": "dislikes",
       commentId
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url, true)
+    xhr.open('POST', url + '/give-dislike', true)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -950,12 +948,11 @@ if ( $articlesCommentsWrapper ) {
     const commentId = btn.closest('[data-article-comment]').dataset.commentId
     
     const data = {
-      "action": "delete-parent-comment",
       commentId
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url, true)
+    xhr.open('POST', url + '/delete-comment', true)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -1013,8 +1010,8 @@ if ( $articlesCommentsWrapper ) {
 
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', url, true)
-      // xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
+      xhr.open('POST', url + '/edit-comment', true)
+//      xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
       console.log('wysłane dane', data)
@@ -1033,7 +1030,6 @@ if ( $articlesCommentsWrapper ) {
       const $commentInput = this.querySelector('[data-comment]')
   
       const data = {
-        "action": "edit-parent-comment",
         "commentId": commentId,
         "comment": [$commentInput.value.trim(), "data-comment", "comment"],
       }
@@ -1115,11 +1111,12 @@ if ($addCommentInArticleForm) {
 
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url, true)
+    xhr.open('POST', url + '/add-comment', true)
     xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
+    console.log(url)
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -1137,7 +1134,6 @@ if ($addCommentInArticleForm) {
     const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
-      "action": "add-parent-comment",
       "full_name": [$nameInput.value.trim(), "data-name", "name"],
       "comment": [$commentInput.value.trim(), "data-comment", "comment"],
       "url": $urlInput.value

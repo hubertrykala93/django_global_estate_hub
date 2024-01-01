@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "core",
     "accounts",
     "blog",
+    "properties",
 ]
 
 AUTH_USER_MODEL = "accounts.User"
