@@ -12,8 +12,10 @@
 15. aktualizacja licznika komentarzy przy usuwaniu komentarza
 
 @hubertrykala93
+2. przerzucić render blog/ do aplikacji core i naprawić urls.
 3. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
 4. pętla generująca zagnieżdżone komentarze - 4 zagdzieżdzenia są zrobione na sztywno na razie - dodane komentarze z levelem żeby było wiadomo które to, użyj funkcji zwijania bloku kodu żeby się w tym połapać - .article__comment to główny element komentarza - powielany niżej, poprawnie zwinięte bloki kodu tak że widać o co chodzi są w /media/article-details.jpg
 5. zaktualizowac licznik komentarze o główne komentarze
+6. dać linki do account-details.html
 
 cache busting
