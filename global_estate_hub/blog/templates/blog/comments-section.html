@@ -2,7 +2,7 @@
 
 <div class="article__comments" data-article-comments>
     <div class="article__comments__count">
-        {% if comments.count == 0 %}{{ comments.count }} Comments available{% elif comments.count == 1 %}{{ comments.count }} Comment available{% else %}{{ comments.count }} Comments available{% endif %}
+        {% if comments_counter == 0 %}{{ comments_counter }} Comments available{% elif comments_counter == 1 %}{{ comments_counter }} Comment available{% else %}{{ comments_counter }} Comments available{% endif %}
     </div>
 
     {% if comments %}
@@ -12,14 +12,14 @@
         <div class="article__comment" data-comment-id="{{ node.id }}" data-article-comment>
             <div class="article__comment__body" data-article-comment-body>
                 <div class="article__comment__avatar">
-                    <img src="{% if node.user.username %}{{ node.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
-                         alt="comment author's avatar">
+                    <a href="{% url 'account-details' node.user.username %}"><img src="{% if node.user.username %}{{ node.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
+                         alt="comment author's avatar"></a>
                 </div>
 
                 <div class="article__comment__content">
                     <div class="article__comment__name">
                         {% if node.user.username %}
-                        {{ node.user.username }}
+                        <a href="{% url 'account-details' node.user.username %}">{{ node.user.username }}</a>
                         {% else %}
                         {{ node.full_name }}
                         {% endif %}

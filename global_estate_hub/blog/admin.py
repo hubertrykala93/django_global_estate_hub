@@ -62,7 +62,7 @@ class AdminTag(admin.ModelAdmin):
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug']
+    list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug', 'get_tags']
     list_filter = ['user', 'category', 'date_posted', 'tags']
     list_editable = ['user', 'image', 'category']
     list_display_links = ['title']
@@ -121,6 +121,10 @@ class AdminArticle(admin.ModelAdmin):
         }
         ]
     ]
+
+    @admin.display(description='Tags')
+    def get_tags(self, obj):
+        return '\n'.join([tag.name for tag in obj.tags.all()])
 
 
 @admin.register(Comment)

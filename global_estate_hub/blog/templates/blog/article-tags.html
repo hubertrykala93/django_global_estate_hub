@@ -23,7 +23,7 @@
                                             <img src="/media/icons/blog-card-author.svg">
                                         </div>
 
-                                        <div class="blog-card__info__title">{{ page.user.username }}</div>
+                                        <a href="{% url 'account-details' page.user.username %}"><div class="blog-card__info__title">{{ page.user.username }}</div></a>
                                     </div>
 
                                     <div class="blog-card__info__item">
