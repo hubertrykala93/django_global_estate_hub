@@ -3,7 +3,6 @@ beautifulsoup4==4.12.2
 cssutils==2.9.0
 Django==4.2.7
 django-ckeditor==6.7.0
-django-honeypot==1.0.4
 django-js-asset==2.1.0
 django-mptt==0.15.0
 djangorestframework==3.14.0

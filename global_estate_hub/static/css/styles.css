@@ -284,15 +284,17 @@ main {
   height: 100%;
   padding: 4rem;
   position: fixed;
-  left: 0;
+  left: 100%;
   top: 0;
-  transform: translateX(100%);
+  transform: translateX(0%);
   transition: .4s ease;
   z-index: 10;
+  visibility: hidden;
 }
 
 #page-offcanvas.active{
-  transform: translateX(0);
+  transform: translateX(-100%);
+  visibility: visible;
 }
 
 #page-offcanvas .offcanvas-logo{
@@ -1628,6 +1630,117 @@ form .form__field.form__form{
 
 
 /*----------------------------------*\
+  #ACCOUNT DETAILS PAGE
+\*----------------------------------*/
+
+section.account-details {
+    padding: var(--section-block-space-400) 0 var(--section-block-space-500);
+}
+
+.account-details .row {
+    margin: 0 -1.5rem;
+}
+
+.account-details .row > div {
+    padding: 0 1.5rem;
+}
+
+.account-details .account-details__block {
+    margin-bottom: 2.4rem;
+    padding: 2rem;
+    border-radius: var(--br-500);
+    box-shadow: 0 5px 30px rgb(199, 199, 199, .3);
+}
+
+.account-details .account-details__avatar {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.account-details .account-details__avatar img {
+    width: 100%;
+    height: 100%;
+}
+
+.account-details .account-details__block--basic {
+    text-align: center;
+}
+
+.account-details .account-details__basic-info {
+    margin-top: 2.4rem;
+}
+
+.account-details .account-details__basic-info__name {
+    margin-bottom: 1rem;
+    color: var(--clr-dark);
+}
+
+.account-details .account-details__block--links ul li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: .5rem 0;
+    border-bottom: 1px solid #DFDFDF;
+}
+
+.account-details .account-details__block--links ul li:last-child {
+    border-bottom: 0;
+}
+
+.account-details .account-details__block--links ul li i {
+    font-size: 2rem;
+    margin-right: .5rem;
+}
+
+.account-details .account-details__block--links ul li i.website{
+    color: var(--clr-primary);
+}
+
+.account-details .account-details__block--links ul li i.fb{
+    color: #4267B2;
+}
+
+.account-details .account-details__block--links ul li i.instagram{
+    color: #E1306C;
+}
+
+.account-details .account-details__block--links ul li i.linkedin{
+    color: #0a66c2;
+}
+
+.account-details .account-details__block--links ul li a {
+    transition: color .4s;
+}
+
+.account-details .account-details__block--links ul li a:hover,
+.account-details .account-details__block--links ul li a:focus-visible {
+    color: var(--clr-secondary);
+}
+
+.account-details .account-details__block--info ul li{
+    display: flex;
+    align-items: center;
+    padding: .5rem 0;
+    border-bottom: 1px solid #DFDFDF;
+}
+
+.account-details .account-details__block--info ul li:last-child{
+    border-bottom: 0;
+}
+
+.account-details .account-details__block--info ul li span {
+    display: block;
+    margin-right: 1rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--clr-dark);
+}
+
+
+/*----------------------------------*\
   #FORGOT PASSWORD SLIDER
 \*----------------------------------*/
 
@@ -2399,9 +2512,9 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   color: var(--clr-black);
 }
 
-/* .article .article__comment .article__comment__content__body{
+.article .article__comment .article__comment__content__body{
   white-space: pre-line;
-} */
+}
 
 .article .article__comment .article__comment__foter {
   margin-top: 1.8rem;
@@ -2487,7 +2600,8 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
   margin-left: .3rem;
 }
 
-.article .article__comment .article__comment__edit__form {
+.article .article__comment .article__comment__edit__form,
+ .article .article__comment .article__comment__reply__form {
   margin-top: 2.4rem;
 }
 
@@ -3420,6 +3534,15 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
     .account-settings .upload-avatar__form .user-avatar .user-avatar__image {
       width: 150px;
       height: 150px;
+    }
+
+    /*----------------------------------*\
+      #ACCOUNT DETAILS PAGE
+    \*----------------------------------*/
+
+    .account-details .row {
+        display: grid;
+        grid-template-columns: 30% auto;
     }
 
 

@@ -101,11 +101,10 @@
 <script src="{% static 'js/animations.js' %}"></script>
 
 <!--
-  - #CSRF TOKEN GENERATE
+  - #GENERATE CSRF TOKEN
 -->
-<script>
-  const csrfToken = '{{ csrf_token }}'
-</script>
+
+<script>const csrfToken = '{{ csrf_token }}'</script>
 
 <!--
   - #CUSTOM JAVASCRIPT

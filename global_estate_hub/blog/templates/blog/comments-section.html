@@ -2,7 +2,7 @@
 
 <div class="article__comments" data-article-comments>
     <div class="article__comments__count">
-        {% if comments_counter == 0 %}{{ comments_counter }} Comments available{% elif comments_counter == 1 %}{{ comments_counter }} Comment available{% else %}{{ comments_counter }} Comments available{% endif %}
+        {% if comments_counter == 0 %}<span data-comments-counter>{{ comments_counter }}</span> Comments available{% elif comments_counter == 1 %}<span data-comments-counter>{{ comments_counter }}</span> Comment available{% else %} <span data-comments-counter>{{ comments_counter }}</span> Comments available{% endif %}
     </div>
 
     {% if comments %}

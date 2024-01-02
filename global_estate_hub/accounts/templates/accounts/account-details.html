@@ -4,88 +4,123 @@
 
 {% block content %}
 
-{% if user.account_type == 'Individual' %}
-<section class="user-details">
+<section class="account-details">
   <div class="container">
     <div class="row">
-      <div class="nav-column">
-        <div class="user__avatar">
-          <img src="/media/default_profile_image.jpg" alt="user avatar">
+      <div class="left-column">
+        <div class="account-details__block account-details__block--basic">
+          <div class="account-details__avatar">
+            <img src="{{ user.image.url }}" alt="user avatar">
+          </div>
+
+          <div class="account-details__basic-info">
+            <p class="account-details__basic-info__name h3">{{ user.username }}</p>
+            <p>{{ user.date_joined }}</p>
+            <p>{{ user.email }}</p>
+          </div>
+
         </div>
 
-        <div class="user__name">
-          Date Joined: {{ user.date_joined }}<br>
-          Username: {{ user.username }}
+        <div class="account-details__block account-details__block--links">
+          <ul>
+            <li>
+              <span>
+                <i class="website ri-window-line" aria-hidden="true"></i>
+                Website
+              </span>
+
+              <a href="{% if user.individual.website_url %}{{ user.individual.website_url }}{% endif %}" target="_blank">{% if user.individual.website_url %}{{ user.individual.website_url }}{% else %}Not provided{% endif %}</a>
+            </li>
+
+            <li>
+              <span>
+                <i class="fb ri-facebook-fill" aria-hidden="true"></i>
+                Facebook
+              </span>
+
+              <a href="{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% endif %}" target="_blank">{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% else %}Not provided{% endif %}</a>
+            </li>
+
+            <li>
+              <span>
+                <i class="instagram ri-instagram-fill" aria-hidden="true"></i>
+                Instagram
+              </span>
+
+              <a href="{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% endif %}" target="_blank">{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% else %}Not provided{% endif %}</a>
+            </li>
+
+            <li>
+              <span>
+                <i class="linkedin ri-linkedin-fill" aria-hidden="true"></i>
+                LinkedIn
+              </span>
+
+              <a href="{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% endif %}" target="_blank">{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% else %}Not provided{% endif %}</a>
+            </li>
+          </ul>
         </div>
       </div>
 
-      <div class="details-column">
-        E-mail Address: {{ user.email }}<br>
+      <div class="right-column">
+        <div class="account-details__block account-details__block--info">
+          <ul>
+            <li>
+              <span>First Name:</span>
+              {% if user.individual.first_name %}{{ user.individual.first_name }}{% else %}Not provided{% endif %}
+            </li>
 
-        <h3>Profile Informations:</h3>
-        First Name: {% if user.individual.first_name %}{{ user.individual.first_name }}{% else %}No information provided{% endif %}<br>
-        Last Name: {% if user.individual.last_name %}{{ user.individual.last_name }}{% else %}No information provided{% endif %}<br>
-        Gender: {% if user.individual.gender %}{{ user.individual.gender }}{% else %}No information provided{% endif %}<br>
-        Phone Number: {% if user.individual.phone_number %}{{ user.individual.phone_number }}{% else %}No information provided{% endif %}
+            <li>
+              <span>Last Name:</span>
+              {% if user.individual.last_name %}{{ user.individual.last_name }}{% else %}Not provided{% endif %}
+            </li>
 
-        <h3>Localization Informations:</h3>
-        Country: {% if user.individual.country %}{{ user.individual.country }}{% else %}No information provided{% endif %}<br>
-        Province: {% if user.individual.province %}{{ user.individual.province }}{% else %}No information provided{% endif %}<br>
-        City: {% if user.individual.city %}{{ user.individual.city }}{% else %}No information provided{% endif %}<br>
-        Street: {% if user.individual.street %}{{ user.individual.street }}{% else %}No information provided{% endif %}<br>
-        Postal Code: {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}No information provided{% endif %}
+            <li>
+              <span>Gender:</span>
+              {% if user.individual.gender %}{{ user.individual.gender }}{% else %}Not provided{% endif %}
+            </li>
 
-        <h3>Social Media Informations:</h3>
-        Website: <a href="{% if user.individual.website_url %}{{ user.individual.website_url }}{% endif %}" target="_blank">{% if user.individual.website_url %}{{ user.individual.website_url }}{% else %}No information provided{% endif %}</a><br>
-        Facebook: <a href="{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% endif %}" target="_blank">{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% else %}No information provided{% endif %}</a><br>
-        Instagram: <a href="{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% endif %}" target="_blank">{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% else %}No information provided{% endif %}</a><br>
-        LinkedIn: <a href="{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% endif %}" target="_blank">{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% else %}No information provided{% endif %}</a>
+            <li>
+              <span>Phone Number:</span>
+              {% if user.individual.phone_number %}{{ user.individual.phone_number }}{% else %}Not provided{% endif %}
+            </li>
+          </ul>
+        </div>
+
+        <div class="account-details__block account-details__block--info">
+          <ul>
+            <li>
+              <span>Country:</span>
+              {% if user.individual.country %}{{ user.individual.country }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>Province:</span>
+              {% if user.individual.province %}{{ user.individual.province }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>City:</span>
+              {% if user.individual.city %}{{ user.individual.city }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>Street:</span>
+              {% if user.individual.street %}{{ user.individual.street }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>Postal Code:</span>
+              {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}Not provided{% endif %}
+            </li>
+          </ul>
+        </div>
+
+
 
       </div>
     </div>
   </div>
 </section>
-
-{% else %}
-<section class="user-details">
-  <div class="container">
-    <div class="row">
-      <div class="nav-column">
-        <div class="user__avatar">
-          <img src="/media/default_profile_image.jpg" alt="user avatar">
-        </div>
-
-        <div class="user__name">
-          Date Joined: {{ user.date_joined }}<br>
-          Username: {{ user.username }}
-        </div>
-      </div>
-
-      <div class="details-column">
-        E-mail Address: {{ user.email }}<br>
-
-        <h3>Profile Informations:</h3>
-        Company Id: {% if user.business.company_id %}{{ user.business.company_id }}{% else %}No information provided{% endif %}<br>
-        Company Name: {% if user.business.company_name %}{{ user.business.company_name }}{% else %}No information provided{% endif %}<br>
-        Phone Number: {% if user.business.phone_number %}{{ user.business.phone_number }}{% else %}No information provided{% endif %}
-
-        <h3>Localization Informations:</h3>
-        Country: {% if user.business.country %}{{ user.business.country }}{% else %}No information provided{% endif %}<br>
-        Province: {% if user.business.province %}{{ user.business.province }}{% else %}No information provided{% endif %}<br>
-        City: {% if user.business.city %}{{ user.business.city }}{% else %}No information provided{% endif %}<br>
-        Street: {% if user.business.street %}{{ user.business.street }}{% else %}No information provided{% endif %}<br>
-        Postal Code: {% if user.business.postal_code %}{{ user.business.postal_code }}{% else %}No information provided{% endif %}
-
-        <h3>Social Media Informations:</h3>
-        Website: <a href="{% if user.business.website_url %}{{ user.business.website_url }}{% endif %}" target="_blank">{% if user.business.website_url %}{{ user.business.website_url }}{% else %}No information provided{% endif %}</a><br>
-        Facebook: <a href="{% if user.business.facebook_url %}{{ user.business.facebook_url }}{% endif %}" target="_blank">{% if user.business.facebook_url %}{{ user.business.facebook_url }}{% else %}No information provided{% endif %}</a><br>
-        Instagram: <a href="{% if user.business.instagram_url %}{{ user.business.instagram_url }}{% endif %}" target="_blank">{% if user.business.instagram_url %}{{ user.business.instagram_url }}{% else %}No information provided{% endif %}</a><br>
-        LinkedIn: <a href="{% if user.business.linkedin_url %}{{ user.business.linkedin_url }}{% endif %}" target="_blank">{% if user.business.linkedin_url %}{{ user.business.linkedin_url }}{% else %}No information provided{% endif %}</a>
-
-      </div>
-    </div>
-  </div>
-</section>
-{% endif %}
 
 {% endblock %}

@@ -289,10 +289,6 @@ const successfullySentMessage = (form, message, hide)=>{
   }
 }
 
-const getToken = (form) => {
-  return form.querySelector('[name="csrftoken"]').value
-}
-
 const getRadioValue = (form, radioDataAttr) => {
   const radios = form.querySelectorAll(`[${radioDataAttr}]`)
 
@@ -372,7 +368,7 @@ if ($newsletterForm){
   const ajaxRequest = (data) => {
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'newsletter', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($newsletterForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -453,7 +449,7 @@ if ($signUpForm){
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'create-user', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($signUpForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -526,7 +522,7 @@ if ($loginForm){
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'authorization', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($loginForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -598,7 +594,7 @@ if ($forgotPasswordWrapper){
   const firstStepAjaxRequest = (data, form) =>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'send-password', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -623,7 +619,7 @@ if ($forgotPasswordWrapper){
   const secondStepAjaxRequest = (data, form) =>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'validate-password', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -658,7 +654,7 @@ if ($forgotPasswordWrapper){
   const thirdStepAjaxRequest = (data, form) =>{
     const xhr = new XMLHttpRequest()
     xhr.open('PATCH', 'set-password', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken(form))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -780,7 +776,7 @@ if ($contactUsForm) {
     const xhr = new XMLHttpRequest()
 
     xhr.open('POST', 'send-message', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($contactUsForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -847,7 +843,7 @@ if ($contactUsForm) {
 const $articlesCommentsWrapper = document.querySelector('[data-article-comments]')
 
 if ( $articlesCommentsWrapper ) {
-
+  const $commentsCounter = $articlesCommentsWrapper.querySelector('[data-comments-counter]')
   let url = window.location.pathname
   url = url.slice(url.lastIndexOf('/') + 1)
 
@@ -894,6 +890,7 @@ if ( $articlesCommentsWrapper ) {
     
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url + '/give-like', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -915,6 +912,7 @@ if ( $articlesCommentsWrapper ) {
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url + '/give-dislike', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -931,6 +929,7 @@ if ( $articlesCommentsWrapper ) {
     const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${response.commentId}"]`)
     if ( response.valid ) {
       $comment.remove()
+      $commentsCounter.textContent = response.commentsCounter
     } else {
       const $error = $comment.querySelector('.article__comment__error')
       if($error) {
@@ -953,6 +952,7 @@ if ( $articlesCommentsWrapper ) {
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url + '/delete-comment', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -969,12 +969,20 @@ if ( $articlesCommentsWrapper ) {
     const commentId = btn.closest('[data-article-comment]').dataset.commentId
     const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${commentId}"]`)
     let oldContent = $comment.querySelector('[data-comment-content-body]').textContent.trim()
+    const $replyForm = $articlesCommentsWrapper.querySelector('.article__comment__reply__form')
+    if ($replyForm ) { $replyForm.remove() }
 
     if ( !$comment.querySelector('.article__comment__edit__form') ) {
       let editForm = document.createElement('div')
       editForm.classList.add('article__comment__edit__form')
       editForm.innerHTML = `
       <form data-article-comment-edit class="theme-form">
+
+      <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+        <label>leave this field blank to prove your humanity
+            <input type="text" name="url" value="" autocomplete="off">
+        </label>
+      </div>
   
         <div class="form__row">
             <div class="form__field">
@@ -997,7 +1005,6 @@ if ( $articlesCommentsWrapper ) {
     const $editForm = $comment.querySelector('[data-article-comment-edit]')
     
     const serverResponse = (response) => {
-      console.log('odebrane dane', response)
       if ( response.valid ) {
         const $commentContent = $comment.querySelector('[data-comment-content-body]')
         $commentContent.innerHTML = response.newContent
@@ -1011,10 +1018,9 @@ if ( $articlesCommentsWrapper ) {
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
       xhr.open('POST', url + '/edit-comment', true)
-//      xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
+      xhr.setRequestHeader('X-CSRFToken', csrfToken)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-      console.log('wysłane dane', data)
       xhr.send(JSON.stringify(data))
   
       xhr.onreadystatechange = function () {
@@ -1028,12 +1034,101 @@ if ( $articlesCommentsWrapper ) {
     $editForm.addEventListener('submit', function (e) {
       e.preventDefault()
       const $commentInput = this.querySelector('[data-comment]')
+      const $urlInput = this.querySelector('[name="url"]')
   
       const data = {
         "commentId": commentId,
         "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+        "url": $urlInput.value,
       }
-      
+
+       if ( $commentInput.value.trim() !== oldContent ) {
+         if ( clientValidation($editForm, data) ) {
+           ajaxRequest(data)
+         }
+       }
+  
+  
+    })
+
+  }
+
+  const replyHandler = (btn) => {
+    const commentId = btn.closest('[data-article-comment]').dataset.commentId
+    const $comment = $articlesCommentsWrapper.querySelector(`[data-comment-id="${commentId}"]`)
+    const $editForm = $articlesCommentsWrapper.querySelector('.article__comment__edit__form')
+    if ($editForm ) { $editForm.remove() }
+
+    if ( !$comment.querySelector('.article__comment__reply__form') ) {
+      let replyForm = document.createElement('div')
+      replyForm.classList.add('article__comment__reply__form')
+      let nameInputHtml = ''
+      if ( loggedIn ) {
+        nameInputHtml = `<input data-name data-input type="text" value="${userName}" placeholder="Name" disabled aria-hidden="true">`
+      } else {
+        nameInputHtml = `<input data-name data-input type="text" placeholder="Name">`
+      }
+      replyForm.innerHTML = `
+      <form data-article-comment-reply class="theme-form">
+
+      <div class="form__row">
+        <div class="form__field">
+            <div class="form__input-wrap">
+                ${nameInputHtml}
+            </div>
+        </div>
+      </div>
+
+      <div class="form__row">
+        <div class="form__field">
+            <div class="form__input-wrap">
+                <textarea data-comment data-input placeholder="Write your comment here..." aria-label="Write your comment here"></textarea>
+            </div>
+        </div>
+      </div>
+
+        <div class="form__row submit-row">
+            <div class="form__field form__submit">
+                <button class="btn secondary-btn btn--auto-width" type="submit">Reply for comment</button>
+            </div>
+        </div>
+      </form>
+      `
+      $comment.append(replyForm)
+    }
+
+    const $replyForm = $comment.querySelector('[data-article-comment-reply]')
+
+    const ajaxRequest = (data)=>{
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', url + '/reply-comment', true)
+      xhr.setRequestHeader('X-CSRFToken', csrfToken)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+      console.log('wysłane dane', data)
+      xhr.send(JSON.stringify(data))
+
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+//            serverResponse(response)
+            console.log(response)
+        }
+      }
+    }
+
+    $replyForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const $nameInput = this.querySelector('[data-name]')
+      const $commentInput = this.querySelector('[data-comment]')
+//      const $urlInput = this.querySelector('[name="url"]')
+
+      const data = {
+      "comment_id": commentId,
+        "full_name": [$nameInput.value.trim(), "data-name", "name"],
+        "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+      }
+
       ajaxRequest(data)
 
       // if ( $commentInput.value.trim() !== oldContent ) {
@@ -1041,8 +1136,8 @@ if ( $articlesCommentsWrapper ) {
       //     ajaxRequest(data)
       //   }
       // }
-  
-  
+
+
     })
 
   }
@@ -1066,7 +1161,7 @@ if ( $articlesCommentsWrapper ) {
     }
     //reply
     else if (e.target.matches('[data-comment-reply-btn], [data-comment-reply-btn] *')) {
-      // replyHandler(e.target)
+      replyHandler(e.target)
     }
   })
 }
@@ -1112,16 +1207,14 @@ if ($addCommentInArticleForm) {
   const ajaxRequest = (data)=>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', url + '/add-comment', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($addCommentInArticleForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
-    console.log(url)
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log(response);
           serverResponse(response)
       }
     }
@@ -1251,7 +1344,7 @@ if ($accountSettings){
     const xhr = new XMLHttpRequest()
   
     xhr.open('POST', 'upload-avatar', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($avatarForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(data)
 
@@ -1322,7 +1415,7 @@ if ($accountSettings){
     const xhr = new XMLHttpRequest()
 
     xhr.open('PATCH', 'user-settings', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($userSettingsForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -1493,7 +1586,7 @@ if ($accountSettings){
     const xhr = new XMLHttpRequest()
 
     xhr.open('PATCH', 'profile-settings', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($profileSettingsForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -1673,7 +1766,7 @@ if ($accountSettings){
     const xhr = new XMLHttpRequest()
 
     xhr.open('PATCH', 'localization-settings', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($localizationSettingsForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
@@ -1690,7 +1783,7 @@ if ($accountSettings){
     const xhr = new XMLHttpRequest()
 
     xhr.open('PATCH', 'social-media-settings', true)
-    xhr.setRequestHeader('X-CSRFToken', getToken($socialMediaForm))
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))

@@ -78,7 +78,7 @@ def article_tags(request, tag_slug):
         if page not in list(str(i) for i in pages.paginator.page_range):
             return redirect(to='error')
 
-    return render(request=request, template_name='blog/article-categories.html', context={
+    return render(request=request, template_name='blog/article-tags.html', context={
         'title': tag,
         'pages': pages,
     })
@@ -94,7 +94,7 @@ def article_details(request, category_slug, article_slug):
     article = Article.objects.get(slug=article_slug)
     comments = Comment.objects.filter(article=article, active=True)
     comments_counter = len(comments) - len(
-        [obj.parent for obj in Comment.objects.filter(article=article, active=True) if obj.parent is None])
+        [obj.parent for obj in Comment.objects.filter(article=article, active=True) if obj.parent is not None])
     next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
     previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
     user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user.id)]
@@ -315,6 +315,11 @@ def edit_comment(request, category_slug, article_slug):
 
 @csrf_exempt
 def delete_comment(request, category_slug, article_slug):
+    category = Category.objects.get(slug=category_slug)
+    article = Article.objects.get(category=category, slug=article_slug)
+    comments_counter = len(Comment.objects.filter(article=article, active=True)) - len(
+        [obj.parent for obj in Comment.objects.filter(article=article, active=True) if obj.parent is not None])
+
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -325,6 +330,7 @@ def delete_comment(request, category_slug, article_slug):
                 False if not Comment.objects.filter(id=comment_id).exists() else
                 True,
             "commentId": comment_id,
+            "commentsCounter": comments_counter,
             "message":
                 "The comment does not exist." if not Comment.objects.filter(id=comment_id).exists() else
                 "Your comment has been deleted.",

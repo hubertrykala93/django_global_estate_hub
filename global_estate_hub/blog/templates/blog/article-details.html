@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-{% load honeypot %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -19,7 +18,7 @@
                                  alt="author avatar">
                             <span class="article__meta__author__by">
                                 By
-                                <a href="#">{{ article.user.username }}</a>
+                                <a href="{% url 'account-details' article.user.username %}">{{ article.user.username }}</a>
                             </span>
                         </div>
                         <div class="article__meta__date">
@@ -179,9 +178,12 @@
                         <div class="article__comments__form__title">Add Your Comment</div>
 
                         <form data-article-comment-form class="theme-form">
-                            <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-                            {% render_honeypot_field 'url' %}
+                            <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+                                <label>leave this field blank to prove your humanity
+                                    <input type="text" name="url" value="" autocomplete="off">
+                                </label>
+                            </div>
 
                             <div class="form__row">
                                 <div class="form__field">
@@ -221,6 +223,7 @@
 
 {% block page_scripts %}
 <script>
-    // {% if user.is_authenticated %}const loggedIn = false{% else %}const loggedIn = true{% endif %}
+    {% if user.is_authenticated %}const loggedIn = true{% else %}const loggedIn = false{% endif %}
+    {% if user.is_authenticated %}const userName = '{{ request.user.username }}'{% endif %}
 </script>
 {% endblock %}

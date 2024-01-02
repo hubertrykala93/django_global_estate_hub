@@ -29,8 +29,6 @@
 
                     <form data-upload-avatar-form class="theme-form upload-avatar__form">
 
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
                         <input data-avatar type="file" hidden="hidden">
 
                         <div class="user-avatar">
@@ -46,8 +44,6 @@
                     </form>
 
                     <form data-user-settings-form class="theme-form account-settings__form">
-
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         <div class="form__row">
                             <div class="form__field">
@@ -106,8 +102,6 @@
                     </div>
 
                     <form data-profile-settings-form class="theme-form profile-settings__form">
-
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         {% if user.account_type == 'Individual' %}
 
@@ -198,8 +192,6 @@
 
                     <form data-localization-settings-form class="theme-form localization-settings__form">
 
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
                         <div class="form__row">
                             <div class="form__field">
                                 <label for="user-country" class="form__label">country</label>
@@ -264,8 +256,6 @@
                     </div>
 
                     <form data-social-media-settings-form class="theme-form social-media-settings__form">
-
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
                         <div class="form__row">
                             <div class="form__field">

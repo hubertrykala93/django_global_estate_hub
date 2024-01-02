@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-{% load honeypot %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -49,9 +48,12 @@
 
                 <div class="login-form">
                     <form data-login-form class="theme-form">
-                        <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
 
-                        {% render_honeypot_field 'url' %}
+                        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+                            <label>leave this field blank to prove your humanity
+                                <input type="text" name="url" value="" autocomplete="off">
+                            </label>
+                        </div>
 
                         <div class="form__row">
                             <div class="form__field">

@@ -1,5 +1,4 @@
 {% extends 'core/base.html' %}
-{% load honeypot %}
 
 {% block page_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -42,9 +41,11 @@
                 <form data-contact-form class="theme-form contact__form">
                     <div class="form__title">Have Questions? Get in touch!</div>
 
-                    <input type="hidden" name="csrftoken" value="{{ csrf_token }}">
-
-                    {% render_honeypot_field 'url' %}
+                    <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+                        <label>leave this field blank to prove your humanity
+                            <input type="text" name="url" value="" autocomplete="off">
+                        </label>
+                    </div>
 
                     <div class="form__row">
                         <div class="form__field">
@@ -127,9 +128,9 @@
         </div>
     </div>
 </section>
+{% endblock %}
 
 {% block page_scripts %}
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-{% endblock %}
 {% endblock %}
