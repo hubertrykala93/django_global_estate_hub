@@ -95,8 +95,6 @@ def article_details(request, category_slug, article_slug):
     comments = Comment.objects.filter(article=article, active=True)
     comments_counter = len(comments) - len(
         [obj.parent for obj in Comment.objects.filter(article=article, active=True) if obj.parent is None])
-    print(len(comments))
-    print(comments_counter)
     next_article = Article.objects.filter(date_posted__gt=article.date_posted).order_by('date_posted').first()
     previous_article = Article.objects.filter(date_posted__lt=article.date_posted).order_by('-date_posted').first()
     user_likes = [obj.comment for obj in CommentLike.objects.filter(user=request.user.id)]
