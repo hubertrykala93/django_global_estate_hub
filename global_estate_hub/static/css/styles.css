@@ -1678,6 +1678,14 @@ section.account-details {
     color: var(--clr-dark);
 }
 
+.account-details .account-details__block__title {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: normal;
+  color: var(--clr-secondary);
+}
+
 .account-details .account-details__block--links ul li {
     display: flex;
     justify-content: space-between;
@@ -2201,7 +2209,7 @@ section.blog .blog-card__column{
 }
 
 .blog-card__article-title a {
-  font-size: var(--fs-body-500);
+  font-size: var(--fs-body-400);
   color: var(--clr-dark);
   font-weight: 500;
   transition: color .4s;
@@ -3542,7 +3550,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 
     .account-details .row {
         display: grid;
-        grid-template-columns: 30% auto;
+        grid-template-columns: repeat(2, 1fr);
     }
 
 
@@ -3809,6 +3817,15 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 
     section.blog .blog-cards_row {
       grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    /*----------------------------------*\
+      #ACCOUNT DETAILS PAGE
+    \*----------------------------------*/
+
+    .account-details .row {
+      grid-template-columns: 35% auto;
     }
 
 

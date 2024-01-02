@@ -1,15 +1,20 @@
 @Szymon-Levy
-1. reply form ajax
-3. accessible accordion
-4. if z returnem false w funkcji submit jeśli honeypot jest wypełniony
-6. sprawdzic zmienna var(--fs-body-500)
+1. reply form server response
+
+
+***********
+1. accessible accordion
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
-
 @hubertrykala93
+1. jak nie jest się zalogowanym to nie pokazuje account-details.html
+2. w account-details.html w social mediach zmodyfikuj linki:
+ a) jak ktoś nie podał linka to niech nie będzie w ogóle atrybutu href
+ b) jak ktoś podał to href jest i w treści tagu "a" niech będzie słowo Visit lub Visit site a nie url
 1. obsługa formularza reply
 2. dokonczenie account-details.html
 3. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
 15. aktualizacja licznika komentarzy przy usuwaniu komentarza
 
-cache busting
+***********
+1. cache busting

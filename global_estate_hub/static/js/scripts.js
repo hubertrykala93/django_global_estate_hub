@@ -350,10 +350,7 @@ if ($newsletterForm){
   const clientValidation = (data) => {
     const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
-    if ( data.url !== '' ) {
-      removeInfo()
-    }
-    else if ( data.email == '' ) {
+    if ( data.email == '' ) {
       showInfo(false, 'The email field cannot be empty.')
     }
     else if ( !data.email.match(emailRegex) ) {
@@ -381,13 +378,15 @@ if ($newsletterForm){
     }
   }
 
-  $newsletterForm.addEventListener('submit', e =>{
+  $newsletterForm.addEventListener('submit', function(e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $emailInput = $newsletterForm.querySelector('[data-email]')
-    const $urlInput = $newsletterForm.querySelector('[name="url"]')
     const data = {
       "email": $emailInput.value.trim(),
-      "url": $urlInput.value
+      "url": urlValue
     }
     clientValidation(data)
   })
@@ -464,6 +463,9 @@ if ($signUpForm){
 
   $signUpForm.addEventListener('submit', function (e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $userNameInput = this.querySelector('[data-username]')
     const userNameLabel = $userNameInput.parentElement.parentElement.querySelector('label').textContent
     const $emailInput = this.querySelector('[data-email]')
@@ -473,7 +475,6 @@ if ($signUpForm){
     const $password2Input = this.querySelector('[data-password2]')
     const password2Label = $password2Input.parentElement.parentElement.querySelector('label').textContent
     const $termsInput = this.querySelector('[data-checkbox]')
-    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
       "userName": [$userNameInput.value.trim(), "data-username", userNameLabel],
@@ -482,7 +483,7 @@ if ($signUpForm){
       "password2": [$password2Input.value.trim(), "data-password2", password2Label],
       "terms": [$termsInput.checked, "data-checkbox", 'terms'],
       "accountType": [getRadioValue($signUpForm, 'data-account-type'), "data-account-type", 'account type'],
-      "url": $urlInput.value,
+      "url": urlValue,
     }
     
     if ( clientValidation($signUpForm, data) ) {
@@ -537,16 +538,18 @@ if ($loginForm){
 
   $loginForm.addEventListener('submit', function (e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $emailInput = this.querySelector('[data-email]')
     const emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
     const $passwordInput = this.querySelector('[data-password]')
     const passwordLabel = $passwordInput.parentElement.parentElement.querySelector('label').textContent
-    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
       "email": [$emailInput.value.trim(), "data-email", emailLabel],
       "password": [$passwordInput.value.trim(), "data-password", passwordLabel],
-      "url": $urlInput.value
+      "url": urlValue
     }
 
     if ( clientValidation($loginForm, data) ) {
@@ -673,13 +676,15 @@ if ($forgotPasswordWrapper){
 
   $forgotPasswordForm.addEventListener('submit', function (e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $emailInput = this.querySelector('[data-email]')
     const emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
-    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
       "email": [$emailInput.value.trim(), 'data-email', emailLabel],
-      "url": $urlInput.value
+      "url": urlValue
     }
     
     if ( clientValidation($forgotPasswordForm, data) ) {
@@ -710,6 +715,9 @@ if ($forgotPasswordWrapper){
 
     $verificationForm.addEventListener('submit', function (e) {
       e.preventDefault()
+      const urlValue = this.querySelector('[name="url"]').value
+      if ( !urlValue == '' ) { return false }
+
       const $codeInputs = this.querySelectorAll('[data-code]')
       let filledInputs = 0
       let typedCode = ""
@@ -723,12 +731,11 @@ if ($forgotPasswordWrapper){
       if ( filledInputs !== $codeInputs.length ) {
         showInfo(false, 'Fill all inputs.', $verificationForm, 'data-code')
       } else {
-        const $urlInput = this.querySelector('[name="url"]')
 
         const data = {
           "code": typedCode,
           "email": sessionStorage.getItem('verifyingEmail'),
-          "url": $urlInput.value
+          "url": urlValue
         }
 
         if ( data.url === '' ) { secondStepAjaxRequest(data, $verificationForm) }
@@ -742,17 +749,19 @@ if ($forgotPasswordWrapper){
 
     $newPasswordForm.addEventListener('submit', function (e) {
       e.preventDefault()
+      const urlValue = this.querySelector('[name="url"]').value
+      if ( !urlValue == '' ) { return false }
+
       const $password1Input = this.querySelector('[data-password1]')
       const password1Label = $password1Input.parentElement.parentElement.querySelector('label').textContent
       const $password2Input = this.querySelector('[data-password2]')
       const password2Label = $password2Input.parentElement.parentElement.querySelector('label').textContent
-      const $urlInput = this.querySelector('[name="url"]')
 
       const data = {
         "password1": [$password1Input.value, "data-password1", password1Label],
         "password2": [$password2Input.value, "data-password2", password2Label],
         "email": sessionStorage.getItem('verifyingEmail'),
-        "url": $urlInput.value
+        "url": urlValue
       }
 
       if ( clientValidation($newPasswordForm, data) ) {
@@ -811,6 +820,9 @@ if ($contactUsForm) {
 
   $contactUsForm.addEventListener('submit', function(e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $fullNameInput = this.querySelector('[data-fullname]')
     const $fullNameLabel = $fullNameInput.parentElement.parentElement.querySelector('label').textContent
     const $phoneInput = this.querySelector('[data-phone]')
@@ -819,14 +831,13 @@ if ($contactUsForm) {
     const $emailLabel = $emailInput.parentElement.parentElement.querySelector('label').textContent
     const $contentInput = this.querySelector('[data-content]')
     const $contentLabel = $contentInput.parentElement.parentElement.querySelector('label').textContent
-    const $urlInput = $contactUsForm.querySelector('[name="url"]')
 
     const data = {
       "fullName": [$fullNameInput.value.trim(), 'data-fullname', $fullNameLabel],
       "phone": [$phoneInput.value.trim(), 'data-phone', $phoneLabel],
       "email": [$emailInput.value.trim(), 'data-email', $emailLabel],
       "content": [$contentInput.value.trim(), 'data-content', $contentLabel],
-      "url": $urlInput.value,
+      "url": urlValue,
     }
     
     if( clientValidation($contactUsForm, data) ) {
@@ -1047,8 +1058,6 @@ if ( $articlesCommentsWrapper ) {
            ajaxRequest(data)
          }
        }
-  
-  
     })
 
   }
@@ -1070,6 +1079,12 @@ if ( $articlesCommentsWrapper ) {
       }
       replyForm.innerHTML = `
       <form data-article-comment-reply class="theme-form">
+
+      <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+          <label>leave this field blank to prove your humanity
+              <input type="text" name="url" value="" autocomplete="off" tabindex="-1">
+          </label>
+      </div>
 
       <div class="form__row">
         <div class="form__field">
@@ -1119,14 +1134,18 @@ if ( $articlesCommentsWrapper ) {
 
     $replyForm.addEventListener('submit', function (e) {
       e.preventDefault()
+      const urlValue = this.querySelector('[name="url"]').value
+      if ( !urlValue == '' ) { return false }
+
       const $nameInput = this.querySelector('[data-name]')
       const $commentInput = this.querySelector('[data-comment]')
 //      const $urlInput = this.querySelector('[name="url"]')
 
       const data = {
-      "comment_id": commentId,
+        "comment_id": commentId,
         "full_name": [$nameInput.value.trim(), "data-name", "name"],
         "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+        "url": urlValue,
       }
 
       ajaxRequest(data)
@@ -1222,14 +1241,16 @@ if ($addCommentInArticleForm) {
   
   $addCommentInArticleForm.addEventListener('submit', function (e) {
     e.preventDefault()
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { return false }
+
     const $nameInput = this.querySelector('[data-name]')
     const $commentInput = this.querySelector('[data-comment]')
-    const $urlInput = this.querySelector('[name="url"]')
 
     const data = {
       "full_name": [$nameInput.value.trim(), "data-name", "name"],
       "comment": [$commentInput.value.trim(), "data-comment", "comment"],
-      "url": $urlInput.value
+      "url": urlValue
     }
 
     if ( clientValidation($addCommentInArticleForm, data) ) {
