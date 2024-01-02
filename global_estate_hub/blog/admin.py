@@ -7,7 +7,7 @@ from mptt.admin import MPTTModelAdmin
 
 @admin.register(Category)
 class AdminCategory(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
     prepopulated_fields = {
@@ -36,7 +36,7 @@ class AdminCategory(admin.ModelAdmin):
 
 @admin.register(Tag)
 class AdminTag(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['id', 'name', 'slug']
     list_filter = ['name']
     list_display_links = ['name']
     prepopulated_fields = {'slug': ['name']}
@@ -62,7 +62,7 @@ class AdminTag(admin.ModelAdmin):
 
 @admin.register(Article)
 class AdminArticle(admin.ModelAdmin):
-    list_display = ['user', 'title', 'category', 'image', 'date_posted', 'slug', 'get_tags']
+    list_display = ['id', 'user', 'title', 'category', 'image', 'date_posted', 'slug', 'get_tags']
     list_filter = ['user', 'category', 'date_posted', 'tags']
     list_editable = ['user', 'image', 'category']
     list_display_links = ['title']
@@ -129,7 +129,8 @@ class AdminArticle(admin.ModelAdmin):
 
 @admin.register(Comment)
 class AdminComment(MPTTModelAdmin):
-    list_display = ['user', 'article', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active', 'parent']
+    list_display = ['id', 'user', 'article', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active',
+                    'parent']
     list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
     list_editable = ['likes', 'dislikes', 'active']
     list_display_links = ['user']
@@ -203,7 +204,7 @@ class AdminComment(MPTTModelAdmin):
 
 @admin.register(CommentLike)
 class AdminCommentLike(admin.ModelAdmin):
-    list_display = ['user', 'comment']
+    list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['user']
     search_fields = ['user', 'comment']
@@ -228,7 +229,7 @@ class AdminCommentLike(admin.ModelAdmin):
 
 @admin.register(CommentDislike)
 class AdminCommentDislike(admin.ModelAdmin):
-    list_display = ['user', 'comment']
+    list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['user']
     search_fields = ['user', 'comment']

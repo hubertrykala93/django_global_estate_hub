@@ -43,6 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Creating custom User model instance.
     """
+    id = models.AutoField(primary_key=True)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True, null=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
@@ -135,6 +136,7 @@ class Individual(models.Model):
     """
     Creating IndividualProfile model instance.
     """
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
@@ -170,6 +172,7 @@ class Business(models.Model):
     """
     Creating BusinessProfile model instance.
     """
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=100, null=True)
     company_id = models.IntegerField(null=True)

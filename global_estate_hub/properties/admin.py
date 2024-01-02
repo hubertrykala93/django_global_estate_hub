@@ -6,7 +6,7 @@ from django.contrib import messages
 
 @admin.register(ListingStatus)
 class AdminListingStatus(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
     list_display_links = ['name']
@@ -35,7 +35,7 @@ class AdminListingStatus(admin.ModelAdmin):
 
 @admin.register(PropertyType)
 class AdminPropertyType(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
     list_display_links = ['name']
@@ -64,7 +64,7 @@ class AdminPropertyType(admin.ModelAdmin):
 
 @admin.register(Amenities)
 class AdminAmenities(admin.ModelAdmin):
-    list_display = ['name', 'slug']
+    list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
     list_display_links = ['name']
@@ -93,7 +93,7 @@ class AdminAmenities(admin.ModelAdmin):
 
 @admin.register(Property)
 class AdminProperty(admin.ModelAdmin):
-    list_display = ['user', 'date_posted', 'image', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
+    list_display = ['id', 'user', 'date_posted', 'image', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                     'number_of_bathrooms', 'square_meters', 'parking_space', 'city', 'province', 'country', 'video',
                     'featured', 'favourite', 'slug', 'listing_status', 'get_property_types',
                     'get_amenities']

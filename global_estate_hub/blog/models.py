@@ -11,6 +11,7 @@ class Category(models.Model):
     """
     Creating Category model instance.
     """
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, choices=[
         ('Apartment', 'Apartment'),
         ('Family House', 'Family House'),
@@ -49,6 +50,7 @@ class Tag(models.Model):
     """
     Creating Tag model instance.
     """
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, null=True)
 
@@ -79,6 +81,7 @@ class Article(models.Model):
     """
     Creating Article model instance.
     """
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article_images')
     date_posted = models.DateTimeField(default=now)
@@ -139,6 +142,7 @@ class Comment(MPTTModel):
     """
     Creating Comment model instance.
     """
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
     full_name = models.CharField(max_length=200, blank=True, null=True)
@@ -161,6 +165,7 @@ class Comment(MPTTModel):
 
 
 class CommentLike(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_like')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_like')
 
@@ -173,6 +178,7 @@ class CommentLike(models.Model):
 
 
 class CommentDislike(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_dislike')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_dislike')
 

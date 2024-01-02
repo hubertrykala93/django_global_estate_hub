@@ -4,6 +4,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 
 
 class ListingStatus(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
 
@@ -16,6 +17,7 @@ class ListingStatus(models.Model):
 
 
 class PropertyType(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
 
@@ -28,6 +30,7 @@ class PropertyType(models.Model):
 
 
 class Amenities(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100)
 
@@ -40,6 +43,7 @@ class Amenities(models.Model):
 
 
 class Property(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='users')
     date_posted = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='property_images')
