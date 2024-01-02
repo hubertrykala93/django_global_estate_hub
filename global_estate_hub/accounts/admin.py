@@ -8,7 +8,7 @@ admin.site.unregister(Group)
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
     list_display = ['username', 'email', 'image', 'password', 'account_type', 'is_verified', 'is_staff',
-                    'is_active', 'is_superuser', 'date_joined']
+                    'is_active', 'is_superuser', 'date_joined', 'last_login']
     list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
     list_filter = ['username', 'email', 'account_type', 'date_joined']
     radio_fields = {'account_type': admin.VERTICAL}
@@ -56,6 +56,10 @@ class AdminUser(admin.ModelAdmin):
         }
         ]
     ]
+
+    @admin.display(description='Permissions')
+    def get_user_permissions(self, obj):
+        return '\n'.join([p.user_permissions for p in obj.user_permissions.all()])
 
 
 @admin.register(OneTimePassword)
