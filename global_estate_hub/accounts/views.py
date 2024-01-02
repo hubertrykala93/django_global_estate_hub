@@ -817,7 +817,6 @@ def social_media_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-@login_required(login_url='login')
 def account_details(request, username):
     user = get_object_or_404(klass=User, username=username)
 

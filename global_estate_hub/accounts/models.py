@@ -174,8 +174,8 @@ class Business(models.Model):
     """
     id = models.AutoField(primary_key=True)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=100, null=True)
-    company_id = models.IntegerField(null=True)
+    company_name = models.CharField(max_length=100, null=True, blank=True)
+    company_id = models.IntegerField(null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     province = models.CharField(max_length=100, null=True, blank=True)

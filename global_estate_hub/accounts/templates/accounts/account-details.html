@@ -31,7 +31,12 @@
                 Website
               </span>
 
-              <a href="{% if user.individual.website_url %}{{ user.individual.website_url }}{% endif %}" target="_blank">{% if user.individual.website_url %}{{ user.individual.website_url }}{% else %}Not provided{% endif %}</a>
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.website_url %}<a href="{{ user.individual.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% else %}
+                {% if user.business.website_url %}<a href="{{ user.business.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% endif %}
+
             </li>
 
             <li>
@@ -40,7 +45,12 @@
                 Facebook
               </span>
 
-              <a href="{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% endif %}" target="_blank">{% if user.individual.facebook_url %}{{ user.individual.facebook_url }}{% else %}Not provided{% endif %}</a>
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.facebook_url %}<a href="{{ user.individual.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% else %}
+                {% if user.business.facebook_url %}<a href="{{ user.business.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% endif %}
+
             </li>
 
             <li>
@@ -49,7 +59,12 @@
                 Instagram
               </span>
 
-              <a href="{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% endif %}" target="_blank">{% if user.individual.instagram_url %}{{ user.individual.instagram_url }}{% else %}Not provided{% endif %}</a>
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.instagram_url %}<a href="{{ user.individual.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% else %}
+                {% if user.business.instagram_url %}<a href="{{ user.business.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% endif %}
+
             </li>
 
             <li>
@@ -58,7 +73,12 @@
                 LinkedIn
               </span>
 
-              <a href="{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% endif %}" target="_blank">{% if user.individual.linkedin_url %}{{ user.individual.linkedin_url }}{% else %}Not provided{% endif %}</a>
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.linkedin_url %}<a href="{{ user.individual.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% else %}
+                {% if user.business.linkedin_url %}<a href="{{ user.business.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% endif %}
+
             </li>
           </ul>
         </div>
@@ -69,6 +89,8 @@
           <div class="account-details__block__title">Profile</div>
 
           <ul>
+
+              {% if user.account_type == 'Individual' %}
             <li>
               <span>First Name:</span>
               {% if user.individual.first_name %}{{ user.individual.first_name }}{% else %}Not provided{% endif %}
@@ -88,6 +110,24 @@
               <span>Phone Number:</span>
               {% if user.individual.phone_number %}{{ user.individual.phone_number }}{% else %}Not provided{% endif %}
             </li>
+
+              {% else %}
+
+            <li>
+              <span>Company ID:</span>
+              {% if user.business.company_id %}{{ user.business.company_id }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>Company Name:</span>
+              {% if user.business.company_name %}{{ user.business.company_name }}{% else %}Not provided{% endif %}
+            </li>
+
+            <li>
+              <span>Phone Number:</span>
+              {% if user.business.phone_number %}{{ user.business.phone_number }}{% else %}Not provided{% endif %}
+            </li>
+              {% endif %}
           </ul>
         </div>
 
@@ -97,27 +137,57 @@
           <ul>
             <li>
               <span>Country:</span>
-              {% if user.individual.country %}{{ user.individual.country }}{% else %}Not provided{% endif %}
+
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.country %}{{ user.individual.country }}{% else %}Not provided{% endif %}
+              {% else %}
+                {% if user.business.country %}{{ user.business.country }}{% else %}Not provided{% endif %}
+              {% endif %}
+
             </li>
 
             <li>
               <span>Province:</span>
-              {% if user.individual.province %}{{ user.individual.province }}{% else %}Not provided{% endif %}
+
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.province %}{{ user.individual.province }}{% else %}Not provided{% endif %}
+              {% else %}
+                {% if user.business.province %}{{ user.business.province }}{% else %}Not provided{% endif %}
+              {% endif %}
+
             </li>
 
             <li>
               <span>City:</span>
-              {% if user.individual.city %}{{ user.individual.city }}{% else %}Not provided{% endif %}
+
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.city %}{{ user.individual.city }}{% else %}Not provided{% endif %}
+              {% else %}
+                {% if user.business.city %}{{ user.business.city }}{% else %}Not provided{% endif %}
+              {% endif %}
+
             </li>
 
             <li>
               <span>Street:</span>
-              {% if user.individual.street %}{{ user.individual.street }}{% else %}Not provided{% endif %}
+
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.street %}{{ user.individual.street }}{% else %}Not provided{% endif %}
+              {% else %}
+                {% if user.business.street %}{{ user.business.street }}{% else %}Not provided{% endif %}
+              {% endif %}
+
             </li>
 
             <li>
               <span>Postal Code:</span>
-              {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}Not provided{% endif %}
+
+              {% if user.account_type == 'Individual' %}
+                {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}Not provided{% endif %}
+              {% else %}
+                {% if user.business.postal_code %}{{ user.business.postal_code }}{% else %}Not provided{% endif %}
+              {% endif %}
+
             </li>
           </ul>
         </div>

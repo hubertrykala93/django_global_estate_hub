@@ -115,6 +115,7 @@
                     <h3 class="h3">Quick Links</h3>
                 </div>
 
+                {% if user.is_anonymous %}
                 <ul class="footer-links">
                     <li class="footer-links__item">
                         <a class="footer-links__link" href="{% url 'index' %}">Home</a>
@@ -132,7 +133,7 @@
                         <a class="footer-links__link" href="{% url 'blog' %}">Blog</a>
                     </li>
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="{% url 'contact' %}">Contact us</a>
+                        <a class="footer-links__link" href="{% url 'contact' %}">Contact Us</a>
                     </li>
                     <li class="footer-links__item">
                         <a class="footer-links__link" href="{% url 'login' %}">Login</a>
@@ -141,6 +142,34 @@
                         <a class="footer-links__link" href="{% url 'register' %}">Sign Up</a>
                     </li>
                 </ul>
+                {% else %}
+                <ul class="footer-links">
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'index' %}">Home</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'about' %}">About Us</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'properties' %}">Properties</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'faq' %}">Faq</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'blog' %}">Blog</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'contact' %}">Contact Us</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'account-settings' %}">Account Settings</a>
+                    </li>
+                    <li class="footer-links__item">
+                        <a class="footer-links__link" href="{% url 'add-property' %}">Add Property</a>
+                    </li>
+                </ul>
+                {% endif %}
             </div>
 
             <div class="links-column links2">

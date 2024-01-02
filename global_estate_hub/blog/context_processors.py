@@ -1,5 +1,6 @@
 from .models import Category, Article, Tag
 from django.db.models import Q
+from accounts.models import User
 
 
 def get_category_info(request) -> dict:
@@ -64,4 +65,10 @@ def popular_tags(request):
     return {
         'popular_tags': Tag.objects.filter(
             name__in=list(dict(sorted(tags_dict.items(), key=lambda x: x[1], reverse=True)).keys())[:6])
+    }
+
+
+def users(request):
+    return {
+        'users': User.objects.all()
     }

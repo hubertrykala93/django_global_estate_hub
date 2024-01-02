@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def add_property(request):
+    return render(request=request, template_name='properties/add-property.html', context={
+        'title': 'Add Property',
+    })

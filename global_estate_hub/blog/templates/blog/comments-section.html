@@ -12,8 +12,12 @@
         <div class="article__comment" data-comment-id="{{ node.id }}" data-article-comment>
             <div class="article__comment__body" data-article-comment-body>
                 <div class="article__comment__avatar">
+                    {% if node.user in users %}
                     <a href="{% url 'account-details' node.user.username %}"><img src="{% if node.user.username %}{{ node.user.image.url }}{% else %}/media/default_profile_image.jpg{% endif %}"
                          alt="comment author's avatar"></a>
+                    {% else %}
+                    <a><img src="/media/default_profile_image.jpg" alt="comment author's avatar"></a>
+                    {% endif %}
                 </div>
 
                 <div class="article__comment__content">

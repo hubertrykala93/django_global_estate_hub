@@ -25,6 +25,7 @@ urlpatterns = [
     path(route='', view=include(arg='core.urls')),
     path(route='', view=include(arg='accounts.urls')),
     path(route='', view=include(arg='blog.urls')),
+    path(route='', view=include(arg='properties.urls')),
 ]
 
 if settings.DEBUG:

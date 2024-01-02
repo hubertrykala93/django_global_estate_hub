@@ -16,5 +16,7 @@ urlpatterns = [
     path(route='blog/<slug:category_slug>/<slug:article_slug>/give-like', view=blog_views.give_like, name='give-like'),
     path(route='blog/<slug:category_slug>/<slug:article_slug>/give-dislike', view=blog_views.give_dislike,
          name='give-dislike'),
+    path(route='blog/<slug:category_slug>/<slug:article_slug>/reply-comment', view=blog_views.reply_comment,
+         name='reply-comment'),
     path(route='blog-results', view=blog_views.blog_results, name='blog-results'),
 ]

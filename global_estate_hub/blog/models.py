@@ -166,7 +166,7 @@ class Comment(MPTTModel):
 
 class CommentLike(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_like')
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='comment_like')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_like')
 
     class Meta:
@@ -179,7 +179,7 @@ class CommentLike(models.Model):
 
 class CommentDislike(models.Model):
     id = models.AutoField(primary_key=True)
-    user = models.ForeignKey(to=User, on_delete=models.PROTECT, related_name='comment_dislike')
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='comment_dislike')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_dislike')
 
     class Meta:
