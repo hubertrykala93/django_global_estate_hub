@@ -2,4 +2,119 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<section class="properties">
+    <div class="container">
+        <div class="row properties__row">
+            <div class="results-column">
+                <div class="properties__results__top-bar">
+                    <div class="properties__results__counter">
+                        <span class="properties__results__counter__number">{{ properties|length }}</span> {% if properties|length == 0 %}Properties{% elif properties|length == 1 %}Property{% else %}Properties{% endif %}
+                    </div>
+
+                    <div class="properties__results__options">
+                        <div class="properties__results__ordering">
+                            Newest Properties
+                        </div>
+
+                        <div class="properties__results__view">
+                            <ul>
+                                <li>
+                                    <button>Grid</button>
+                                </li>
+
+                                <li>
+                                    <button>List</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row properties-cards__row">
+                    {% for property in properties %}
+                    <div class="property-card__column">
+                        <div class="property-card__wrapper">
+                            <div class="property-card__image">
+                                {% if property.is_featured %}<div class="property-card__badge--secondary">Featured</div>{% endif %}
+                                <img src="{{ property.main_image.url }}" alt="property title image">
+                            </div>
+
+                            <div class="property-card__content">
+                                <div class="property-card__favourite">
+                                    <button>
+                                        <i class="ri-heart-line" aria-hidden="true"></i>
+                                        <span class="visually-hidden">Add to favourites</span>
+                                    </button>
+                                </div>
+
+                                <div class="property-card__title">{{ property.title }}</div>
+
+                                <div class="property-card__localization">
+                                    <i class="ri-map-pin-line" aria-hidden="true"></i>
+                                    {{ property.postal_code }} {{ property.city }}, {{ property.province }}, {{ property.country }}
+                                </div>
+                                
+                                <ul class="property-card__info">
+                                    <li>
+                                        <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
+                                        <span>{% if property.number_of_bedrooms == 0 %}{{ property.number_of_bedrooms }} Bedrooms{% elif property.number_of_bedrooms == 1 %}{{ property.number_of_bedrooms }} Bedroom{% else %}{{ property.number_of_bedrooms }} Bedrooms{% endif %}</span>
+                                    </li>
+
+                                    <li>
+                                        <img src="/media/icons/properties/property-card-bathroom.svg" alt="bath icon" aria-hidden="true">
+                                        <span>{% if property.number_of_bathrooms == 0 %}{{ property.number_of_bathrooms }} Bathrooms{% elif property.number_of_bathrooms == 1 %}{{ property.number_of_bathrooms }} Bathroom{% else %}{{ property.number_of_bathrooms }} Bathrooms{% endif %}</span>
+                                    </li>
+
+                                    <li>
+                                        <img src="/media/icons/properties/property-card-area.svg" alt="area icon" aria-hidden="true">
+                                        <span>{{ property.square_meters }} Sqft</span>
+                                    </li>
+                                </ul>
+
+                                <div class="property-card__footer">
+                                    <div class="property-card__price">$ {{ property.price }}</div>
+
+                                    <div class="property-card__badge property-card__badge--primary">For {% if property.listing_status == 'Rent' %}Rent{% else %}Sale{% endif %}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="filters-column">
+                <div class="properties__filters">
+                    <div class="properties__filters__title">Find your home</div>
+                    <form data-properties-search-form class="properties__filters__search-form">
+
+                        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+                            <label>leave this field blank to prove your humanity
+                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                            </label>
+                        </div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <input data-keyword name="keyword" type="text" id="keyword" placeholder="Search..." aria-label="Search by keyword">
+                            </div>
+
+<!--                            <div class="form__submit">-->
+<!--                                <button type="submit" id="send-newsletter" aria-label="Subscribe newsletter">Subscribe</button>-->
+<!--                            </div>-->
+                        </div>
+
+                    </form>
+                    <div class="properties__filters__title">Listing status</div>
+                    <div class="properties__filters__title">Category</div>
+                    <div class="properties__filters__title">Price range</div>
+                    <div class="properties__filters__title">Rooms</div>
+                    <div class="properties__filters__title">Location</div>
+                    <div class="properties__filters__title">Square feet</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

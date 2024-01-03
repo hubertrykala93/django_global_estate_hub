@@ -72,7 +72,7 @@ class AdminAmenities(admin.ModelAdmin):
         'slug': ['name'],
     }
     search_fields = ['name']
-    ordering = ['name']
+    ordering = ['id']
     fieldsets = [
         [
             'Amenity Name:', {
@@ -93,83 +93,101 @@ class AdminAmenities(admin.ModelAdmin):
 
 @admin.register(Property)
 class AdminProperty(admin.ModelAdmin):
-    list_display = ['id', 'user', 'date_posted', 'image', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
-                    'number_of_bathrooms', 'square_meters', 'parking_space', 'city', 'province', 'country', 'video',
-                    'featured', 'favourite', 'slug', 'listing_status', 'get_property_types',
-                    'get_amenities']
+    list_display = ['id', 'user', 'title', 'date_posted', 'main_image', 'postal_code', 'province', 'country',
+                    'country_code',
+                    'latitude', 'longitude', 'video', 'is_featured', 'is_favourite', 'listing_status', 'image_files',
+                    'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
+                    'parking_space', 'city']
+    # list_display = ['id', 'user', 'date_posted', 'main_image', 'image_files', 'title', 'year_of_built', 'price',
+    #                 'number_of_bedrooms',
+    #                 'number_of_bathrooms', 'square_meters', 'parking_space', 'city', 'province', 'country',
+    #                 'country_code', 'latitude', 'longitude', 'video',
+    #                 'is_featured', 'is_favourite', 'slug', 'listing_status', 'get_property_types',
+    #                 'get_amenities']
     list_filter = ['user', 'date_posted', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
-                   'number_of_bathrooms', 'square_meters', 'parking_space', 'city', 'province', 'country', 'featured',
-                   'favourite', 'listing_status']
-    list_editable = ['image', 'title', 'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms',
-                     'square_meters', 'parking_space', 'city', 'province', 'country', 'video', 'featured', 'favourite',
+                   'number_of_bathrooms', 'square_meters', 'parking_space', 'postal_code', 'city', 'province',
+                   'country',
+                   'country_code', 'latitude', 'longitude', 'is_featured',
+                   'is_favourite', 'listing_status']
+    list_editable = ['main_image', 'image_files', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
+                     'number_of_bathrooms',
+                     'square_meters', 'parking_space', 'city', 'province', 'country', 'country_code', 'latitude',
+                     'longitude', 'video',
+                     'is_featured', 'is_favourite',
                      'listing_status']
     list_display_links = ['user']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user', 'title']
     ordering = ['date_posted']
     actions = ['make_featured', 'remove_featured']
-    fieldsets = [
-        [
-            'Creator:', {
-            'fields': [
-                'user',
-            ]
-        }
-        ],
-        [
-            'Base Informations:', {
-            'fields': [
-                'title',
-                'year_of_built',
-                'price',
-                'number_of_bedrooms',
-                'number_of_bathrooms',
-                'square_meters',
-                'parking_space',
-            ]
-        }
-        ],
-        [
-            'Localization:', {
-            'fields': [
-                'city',
-                'province',
-                'country',
-            ]
-        }
-        ],
-        [
-            'Video Presentation:', {
-            'fields': [
-                'video',
-            ]
-        }
-        ],
-        [
-            'Status:', {
-            'fields': [
-                'featured',
-                'favourite',
-            ]
-        }
-        ],
-        [
-            'Alias', {
-            'fields': [
-                'slug',
-            ]
-        }
-        ],
-        [
-            'Additionals:', {
-            'fields': [
-                'listing_status',
-                'property_type',
-                'amenities',
-            ]
-        }
-        ]
-    ]
+
+    # fieldsets = [
+    #     [
+    #         'Creator:', {
+    #         'fields': [
+    #             'user',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Base Informations:', {
+    #         'fields': [
+    #             'title',
+    #             'year_of_built',
+    #             'price',
+    #             'number_of_bedrooms',
+    #             'number_of_bathrooms',
+    #             'square_meters',
+    #             'parking_space',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Localization:', {
+    #         'fields': [
+    #             'city',
+    #             'province',
+    #             'country',
+    #             'country_code',
+    #             'latitude',
+    #             'longitude',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Video and Images:', {
+    #         'fields': [
+    #             'main_image',
+    #             'image_files'
+    #             'video',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Status:', {
+    #         'fields': [
+    #             'is_featured',
+    #             'is_favourite',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Alias', {
+    #         'fields': [
+    #             'slug',
+    #         ]
+    #     }
+    #     ],
+    #     [
+    #         'Additionals:', {
+    #         'fields': [
+    #             'listing_status',
+    #             'property_type',
+    #             'amenities',
+    #         ]
+    #     }
+    #     ]
+    # ]
 
     @admin.display(description='Property Types')
     def get_property_types(self, obj):

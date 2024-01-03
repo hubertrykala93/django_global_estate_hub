@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
 from django.utils.html import strip_tags
+from properties.models import Property
 
 load_dotenv()
 
@@ -114,6 +115,7 @@ def properties(request):
     """
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
+        'properties': Property.objects.all(),
     })
 
 

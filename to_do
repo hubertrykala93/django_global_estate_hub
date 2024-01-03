@@ -1,5 +1,4 @@
 @Szymon-Levy
-1. reply form server response
 
 
 ***********
@@ -7,6 +6,7 @@
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+2. dokonczyc account-details, naprawic w templatkach aby userzy mogli wyswietlac
 3. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
 
 ***********

@@ -1057,9 +1057,10 @@ if ( $articlesCommentsWrapper ) {
          if ( clientValidation($editForm, data) ) {
            ajaxRequest(data)
          }
+       } else {
+        showInfo(false, 'The comment was not edited correctly because its content did not change.', $editForm, 'data-comment')
        }
     })
-
   }
 
   const replyHandler = (btn) => {
@@ -1114,20 +1115,43 @@ if ( $articlesCommentsWrapper ) {
 
     const $replyForm = $comment.querySelector('[data-article-comment-reply]')
 
+    const serverResponse = (response)=> {
+    if ( response.valid === null ) {
+      return false
+    } else if ( response.valid === true ) {
+      $replyForm.querySelectorAll('[data-input]').forEach(input =>{
+        if (  !input.disabled ) {
+          input.value = ''
+        }
+
+        const $messageNode = input.closest('.form__field').querySelector('.info')
+        if ($messageNode) { $messageNode.remove() }
+      })
+
+      successfullySentMessage($replyForm, response.message, true)
+    } else {
+      response.forEach(item => {
+        if ( !item.valid ) {
+          showInfo(item.valid, item.message, $replyForm, item.field)
+        } else {
+          removeInfo($replyForm, item.field)
+        }
+      })
+    }
+  }
+
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
       xhr.open('POST', url + '/reply-comment', true)
       xhr.setRequestHeader('X-CSRFToken', csrfToken)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-      console.log('wysłane dane', data)
       xhr.send(JSON.stringify(data))
 
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-//            serverResponse(response)
-            console.log(response)
+            serverResponse(response)
         }
       }
     }
@@ -1139,7 +1163,6 @@ if ( $articlesCommentsWrapper ) {
 
       const $nameInput = this.querySelector('[data-name]')
       const $commentInput = this.querySelector('[data-comment]')
-//      const $urlInput = this.querySelector('[name="url"]')
 
       const data = {
         "comment_id": commentId,
@@ -1148,15 +1171,9 @@ if ( $articlesCommentsWrapper ) {
         "url": urlValue,
       }
 
-      ajaxRequest(data)
-
-      // if ( $commentInput.value.trim() !== oldContent ) {
-      //   if ( clientValidation($editForm, data) ) {
-      //     ajaxRequest(data)
-      //   }
-      // }
-
-
+      if ( clientValidation($replyForm, data) ) {
+         ajaxRequest(data)
+      }
     })
 
   }

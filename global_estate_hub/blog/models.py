@@ -151,7 +151,7 @@ class Comment(MPTTModel):
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     parent = TreeForeignKey(to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Comment'

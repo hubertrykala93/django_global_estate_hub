@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword
+from .models import User, OneTimePassword, Individual, Business
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -820,9 +820,19 @@ def social_media_settings(request):
 def account_details(request, username):
     user = get_object_or_404(klass=User, username=username)
 
+    if user.account_type == 'Individual':
+        profile = Individual.objects.get(user=user)
+    else:
+        profile = Business.objects.get(user=user)
+
+    print(profile.user.email)
+    print(profile.user.username)
+    print(profile.website_url)
+
     return render(request=request, template_name='accounts/account-details.html', context={
         'title': 'Account Details',
         'user': user,
+        'profile': profile,
     })
 
 

@@ -254,7 +254,7 @@ def add_comment(request, category_slug, article_slug):
                         True,
                     "field": comment_field,
                     "message":
-                        f"The {comment_label} field cannot be empty." if not full_name else
+                        f"The {comment_label} field cannot be empty." if not comment else
                         "",
                 }
             ]
@@ -442,7 +442,6 @@ def reply_comment(request, category_slug, article_slug):
 
             comment_id = int([data[key] for key in data.keys()][0])
             spam_verification = [data[key] for key in data.keys()][3]
-            full_name, full_name_field, full_name_label = [data[key] for key in data.keys()][1]
             comment, comment_field, comment_label = [data[key] for key in data.keys()][2]
 
             if len(spam_verification) != 0:
@@ -508,7 +507,7 @@ def reply_comment(request, category_slug, article_slug):
                         True,
                     "field": comment_field,
                     "message":
-                        f"The {comment_label} field cannot be empty." if not full_name else
+                        f"The {comment_label} field cannot be empty." if not comment else
                         "",
                 }
             ]
