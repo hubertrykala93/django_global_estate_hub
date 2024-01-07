@@ -3,7 +3,7 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<section class="properties">
+<section class="properties" data-properties>
     <div class="container">
         <div class="row properties__row">
             <div class="results-column">
@@ -14,41 +14,82 @@
 
                     <div class="properties__results__options">
                         <div class="properties__results__ordering">
-                            Newest Properties
+                            <form class="properties__results__ordering__form">
+                                <div class="custom__select" data-custom-select>
+                                    <button 
+                                        class="custom__select__button"
+                                        type="button"
+                                        role="combobox"
+                                        aria-labelledby="select button"
+                                        aria-haspopup="listbox"
+                                        aria-expanded="false"
+                                        aria-controls="select-order"
+                                        data-custom-select-btn>
+                                        <span class="custom__select__button__selected__wrapper">
+                                            <span class="custom__select__button__selected__value" data-custom-select-btn-value>Newest Properties</span>
+                                        </span>
+                                        <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                    </button>
+
+                                    <ul class="custom__select__dropdown" role="listbox" id="select-order">
+                                        <li role="option">
+                                            <input data-option type="radio" value="Newest Properties" id="newest" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="newest">Newest Properties</label>
+                                        </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Oldest Properties" id="oldest" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="oldest">Oldest Properties</label>
+                                        </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Alphabetically Ascending" id="alphabetically-ascending" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="alphabetically-ascending">Alphabetically Ascending</label>
+                                        </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Alphabetically Descending" id="alphabetically-descending" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="alphabetically-descending">Alphabetically Descending</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </form>
                         </div>
 
-                        <div class="properties__results__view">
+                        <div class="properties__results__change-view" data-change-view>
                             <ul>
                                 <li>
-                                    <button>Grid</button>
+                                    <button class="properties__results__change-view__btn" aria-label="change to grid view" data-grid-btn>Grid</button>
                                 </li>
 
                                 <li>
-                                    <button>List</button>
+                                    <button class="properties__results__change-view__btn" aria-label="change to list view" data-list-btn>List</button>
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                <div class="row properties-cards__row">
+                <div class="row properties-cards__row properties-cards__row--list" data-properties-row>
                     {% for property in properties %}
                     <div class="property-card__column">
                         <div class="property-card__wrapper">
                             <div class="property-card__image">
-                                {% if property.is_featured %}<div class="property-card__badge--secondary">Featured</div>{% endif %}
+                                {% if property.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
                                 <img src="{{ property.main_image.url }}" alt="property title image">
                             </div>
 
                             <div class="property-card__content">
+                                <div class="property-card__title h4">
+                                    <a href="#">{{ property.title }}</a>
+                                </div>
+
                                 <div class="property-card__favourite">
-                                    <button>
+                                    <button class="property-card__favourite__btn">
                                         <i class="ri-heart-line" aria-hidden="true"></i>
                                         <span class="visually-hidden">Add to favourites</span>
                                     </button>
                                 </div>
-
-                                <div class="property-card__title">{{ property.title }}</div>
 
                                 <div class="property-card__localization">
                                     <i class="ri-map-pin-line" aria-hidden="true"></i>
@@ -75,7 +116,7 @@
                                 <div class="property-card__footer">
                                     <div class="property-card__price">$ {{ property.price }}</div>
 
-                                    <div class="property-card__badge property-card__badge--primary">For {% if property.listing_status == 'Rent' %}Rent{% else %}Sale{% endif %}</div>
+                                    <span class="property-card__badge property-card__badge--primary">For {% if property.listing_status == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
                                 </div>
                             </div>
                         </div>
@@ -86,8 +127,8 @@
 
             <div class="filters-column">
                 <div class="properties__filters">
-                    <div class="properties__filters__title">Find your home</div>
-                    <form data-properties-search-form class="properties__filters__search-form">
+                    <div class="properties__filters__title h4">Find your home</div>
+                    <form data-properties-search-form class="properties__filters__search-form theme-form">
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
@@ -98,20 +139,453 @@
                         <div class="form__row">
                             <div class="form__field">
                                 <input data-keyword name="keyword" type="text" id="keyword" placeholder="Search..." aria-label="Search by keyword">
-                            </div>
 
-<!--                            <div class="form__submit">-->
-<!--                                <button type="submit" id="send-newsletter" aria-label="Subscribe newsletter">Subscribe</button>-->
-<!--                            </div>-->
+                                <button type="submit">
+                                    <i class="ri-search-line" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Search</span>
+                                </button>
+                            </div>
                         </div>
 
                     </form>
-                    <div class="properties__filters__title">Listing status</div>
-                    <div class="properties__filters__title">Category</div>
-                    <div class="properties__filters__title">Price range</div>
-                    <div class="properties__filters__title">Rooms</div>
-                    <div class="properties__filters__title">Location</div>
-                    <div class="properties__filters__title">Square feet</div>
+
+                    <form data-properties-filters-form class="properties__filters__filters-form theme-form">
+
+                        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+                            <label>leave this field blank to prove your humanity
+                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                            </label>
+                        </div>
+
+                        <div class="properties__filters__title h4">Listing status</div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__radio-wrapper">
+                                    <label>
+                                        <input data-status data-input type="radio" name="status" value="buy" checked>
+                                        <div class="radio__label">Buy</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-status data-input type="radio" name="status" value="rent">
+                                        <div class="radio__label">Rent</a></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="properties__filters__title h4">Category</div>
+
+                        <div class="form__row">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__checkbox-wrapper">
+                                    <label>
+                                        <input data-checkbox data-input type="checkbox" value="apartment">
+                                        <div class="checkbox__label">Apartment</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-checkbox data-input type="checkbox" value="houses">
+                                        <div class="checkbox__label">Houses</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-checkbox data-input type="checkbox" value="rooms">
+                                        <div class="checkbox__label">Rooms</a></div>
+                                    </label>
+
+                                    <label>
+                                        <input data-checkbox data-input type="checkbox" value="townhouses">
+                                        <div class="checkbox__label">Townhouses</a></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr>
+
+                        <div class="properties__filters__title h4">Price range</div>
+
+                        <hr>
+
+                        <div class="properties__filters__title h4">Rooms</div>
+
+                        <p class="properties__filters__room">Bedroom</p>
+
+                        <div class="form__row form__row__select-range">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-bedrooms1"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1">
+                                            <li role="option">
+                                                <input data-option type="radio" value="0" id="min-bedrooms-0" name="min-bedrooms" />
+                                                <label for="min-bedrooms-0">0</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="1" id="min-bedrooms-1" name="min-bedrooms" />
+                                                <label for="min-bedrooms-1">1</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="2" id="min-bedrooms-2" name="min-bedrooms" />
+                                                <label for="min-bedrooms-2">2</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="3" id="min-bedrooms-3" name="min-bedrooms" />
+                                                <label for="min-bedrooms-3">3</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="4" id="min-bedrooms-4" name="min-bedrooms" />
+                                                <label for="min-bedrooms-4">4</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="form__row__select-range__line"></span>
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-bedrooms2"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2">
+                                            <li role="option">
+                                                <input data-option type="radio" value="0" id="max-bedrooms-0" name="max-bedrooms" />
+                                                <label for="max-bedrooms-0">0</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="1" id="max-bedrooms-1" name="max-bedrooms" />
+                                                <label for="max-bedrooms-1">1</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="2" id="max-bedrooms-2" name="max-bedrooms" />
+                                                <label for="max-bedrooms-2">2</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="3" id="max-bedrooms-3" name="max-bedrooms" />
+                                                <label for="max-bedrooms-3">3</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="4" id="max-bedrooms-4" name="max-bedrooms" />
+                                                <label for="max-bedrooms-4">4</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="properties__filters__room">Bathroom</p>
+
+                        <div class="form__row form__row__select-range">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-bathrooms1"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1">
+                                            <li role="option">
+                                                <input data-option type="radio" value="0" id="min-bathrooms-0" name="min-bathrooms" />
+                                                <label for="min-bathrooms-0">0</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="1" id="min-bathrooms-1" name="min-bathrooms" />
+                                                <label for="min-bathrooms-1">1</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="2" id="min-bathrooms-2" name="min-bathrooms" />
+                                                <label for="min-bathrooms-2">2</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="3" id="min-bathrooms-3" name="min-bathrooms" />
+                                                <label for="min-bathrooms-3">3</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="4" id="min-bathrooms-4" name="min-bathrooms" />
+                                                <label for="min-bathrooms-4">4</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="form__row__select-range__line"></span>
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-bathrooms2"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2">
+                                            <li role="option">
+                                                <input data-option type="radio" value="0" id="max-bathrooms-0" name="max-bathrooms" />
+                                                <label for="max-bathrooms-0">0</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="1" id="max-bathrooms-1" name="max-bathrooms" />
+                                                <label for="max-bathrooms-1">1</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="2" id="max-bathrooms-2" name="max-bathrooms" />
+                                                <label for="max-bathrooms-2">2</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="3" id="max-bathrooms-3" name="max-bathrooms" />
+                                                <label for="max-bathrooms-3">3</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="4" id="max-bathrooms-4" name="max-bathrooms" />
+                                                <label for="max-bathrooms-4">4</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="properties__filters__title h4">Location</div>
+
+                        <div class="form__row form__row__select-range">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-location"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <i class="ri-map-pin-line" aria-hidden="true"></i>
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>City</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-location">
+                                            <li role="option">
+                                                <input data-option type="radio" value="Warsaw" id="warsaw" name="location" />
+                                                <label for="warsaw">Warsaw</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="Wrocław" id="wroclaw" name="location" />
+                                                <label for="wroclaw">Wrocław</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="Lublin" id="lublin" name="location" />
+                                                <label for="lublin">Lublin</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="Kraków" id="krakow" name="location" />
+                                                <label for="krakow">Kraków</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="Poznań" id="poznan" name="location" />
+                                                <label for="poznan">Poznań</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="properties__filters__title h4">Square feet</div> 
+
+                        <div class="form__row form__row__select-range">
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-square1"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-square">
+                                            <li role="option">
+                                                <input data-option type="radio" value="5" id="min-square-5" name="min-square1" />
+                                                <label for="min-square-5">5</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="15" id="min-square-15" name="min-square" />
+                                                <label for="min-square-15">15</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="30" id="min-square-30" name="min-square" />
+                                                <label for="min-square-30">30</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="60" id="min-square-60" name="min-square" />
+                                                <label for="min-square-60">60</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="90" id="min-square-90" name="min-square" />
+                                                <label for="min-square-90">90</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="form__row__select-range__line"></span>
+                            <div class="form__field">
+                                <div class="form__input-wrap form__select-wrapper">
+                                    <div class="custom__select" data-custom-select>
+                                        <button 
+                                            class="custom__select__button"
+                                            type="button"
+                                            role="combobox"
+                                            aria-labelledby="select button"
+                                            aria-haspopup="listbox"
+                                            aria-expanded="false"
+                                            aria-controls="select-square2"
+                                            data-custom-select-btn>
+                                            <span class="custom__select__button__selected__wrapper">
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                            </span>
+                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                                        </button>
+
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-square2">
+                                            <li role="option">
+                                                <input data-option type="radio" value="5" id="max-square-5" name="max-square" />
+                                                <label for="max-square-5">5</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="15" id="max-square-15" name="max-square" />
+                                                <label for="max-square-15">15</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="30" id="max-square-30" name="max-square" />
+                                                <label for="max-square-30">30</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="60" id="max-square-60" name="max-square" />
+                                                <label for="max-square-60">60</label>
+                                            </li>
+
+                                            <li role="option">
+                                                <input data-option type="radio" value="90" id="max-square-90" name="max-square" />
+                                                <label for="max-square-90">90</label>
+                                            </li>
+                                            
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form__row submit-row">
+                            <div class="form__field form__submit">
+                                <button class="btn primary-btn" type="submit">
+                                    <i class="btn-icon left ri-search-line" aria-hidden="true"></i>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                    
                 </div>
             </div>
         </div>

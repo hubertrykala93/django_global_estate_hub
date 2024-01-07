@@ -1979,3 +1979,114 @@ if ($contactMap) {
   });
   const marker = L.marker([-37.79347799465808, 144.97906345418576], {icon: mapMArker}).addTo(map);
 }
+
+
+/*----------------------------------*\
+  #PROPERTIES
+\*----------------------------------*/
+
+const $propertiesPage = document.querySelector('[data-properties]')
+
+if ( $propertiesPage ) {
+
+  /**
+   * Change view
+    */
+
+  const $propertiesRow = $propertiesPage.querySelector('[data-properties-row]')
+  const $changeView = $propertiesPage.querySelector('[data-change-view]')
+  const $gridBtn = $propertiesPage.querySelector('[data-grid-btn]')
+  const $listBtn = $propertiesPage.querySelector('[data-list-btn]')
+  const view = localStorage.getItem('view') || 'grid'
+
+  const changeView = (view) => {
+    if ( view === 'grid' ) {
+      $propertiesRow.classList.remove('properties-cards__row--list')
+      $propertiesRow.classList.add('properties-cards__row--grid')
+      $listBtn.classList.remove('active')
+      $gridBtn.classList.add('active')
+    } else if ( view === 'list' ) {
+      $propertiesRow.classList.remove('properties-cards__row--grid')
+      $propertiesRow.classList.add('properties-cards__row--list')
+      $gridBtn.classList.remove('active')
+      $listBtn.classList.add('active')
+    }
+  }
+  changeView(view)
+
+  $changeView.addEventListener('click', e => {
+    if ( e.target.dataset.hasOwnProperty('gridBtn') ) {
+      changeView('grid')
+      localStorage.setItem('view', 'grid')
+    } else if ( e.target.dataset.hasOwnProperty('listBtn') ) {
+      changeView('list')
+      localStorage.setItem('view', 'list')
+    }
+  })
+
+
+  // console.log(view)
+  
+}
+
+
+// custom select
+
+const $customSelects = document.querySelectorAll('[data-custom-select]')
+
+if ( $customSelects.length ) {
+  const toggleSelect = ($select, $btn) => {
+      $select.classList.toggle('active')
+
+      $btn.setAttribute(
+        'aria-expanded',
+        $btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+      )
+  }
+
+  const closeSelect = ($select, $btn) => {
+    $select.classList.remove('active')
+
+    $btn.setAttribute('aria-expanded', 'false')
+  }
+
+  const closeAllSelects = () => {
+    const $activeSelects = document.querySelectorAll('[data-custom-select].active')
+    if ( $activeSelects.length ) {
+      $activeSelects.forEach(select => {
+        const $selectBtn = select.querySelector('[data-custom-select-btn]')
+        closeSelect(select, $selectBtn)
+      })
+    }
+  }
+
+  $customSelects.forEach(select => {
+    const $selectBtn = select.querySelector('[data-custom-select-btn]')
+
+    $selectBtn.addEventListener('click', () => {
+      // closeAllSelects()
+
+      toggleSelect(select, $selectBtn)
+    })
+
+    select.addEventListener('click', e => {
+      if ( e.target.tagName === 'INPUT' ) {
+        const $btnValue = $selectBtn.querySelector('[data-custom-select-btn-value]')
+        closeSelect(select, $selectBtn)
+
+        $btnValue.textContent = e.target.value
+      }
+    })
+  })
+
+  // if esc key was not pressed in combination with ctrl or alt or shift
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const isNotCombinedKey = !(e.ctrlKey || e.altKey || e.shiftKey);
+        if (isNotCombinedKey) {
+          closeAllSelects()
+        }
+    }
+  })
+
+}
