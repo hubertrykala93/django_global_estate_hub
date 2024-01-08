@@ -16,15 +16,23 @@ def add_to_favourites(request):
         property = Property.objects.get(id=property_id)
 
         if request.user in property.favourites.all():
+            property.favourites.remove(request.user)
+
             return JsonResponse(data={
-                "valid": False
+                "valid": True,
+                "propertyId": property_id,
             })
 
-        else:
+        elif request.user not in property.favourites.all():
             property.favourites.add(request.user)
             property.save()
 
             return JsonResponse(data={
                 "valid": True,
                 "propertyId": property_id,
+            })
+
+        else:
+            return JsonResponse(data={
+                "valid": False,
             })

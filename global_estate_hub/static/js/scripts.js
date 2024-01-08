@@ -900,7 +900,7 @@ if ( $articlesCommentsWrapper ) {
     }
     
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url + '/give-like', true)
+    xhr.open('PUT', url + '/give-like', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -922,7 +922,7 @@ if ( $articlesCommentsWrapper ) {
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url + '/give-dislike', true)
+    xhr.open('PUT', url + '/give-dislike', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -962,7 +962,7 @@ if ( $articlesCommentsWrapper ) {
     }
 
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', url + '/delete-comment', true)
+    xhr.open('DELETE', url + '/delete-comment', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -1028,7 +1028,7 @@ if ( $articlesCommentsWrapper ) {
 
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', url + '/edit-comment', true)
+      xhr.open('PATCH', url + '/edit-comment', true)
       xhr.setRequestHeader('X-CSRFToken', csrfToken)
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
       xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")

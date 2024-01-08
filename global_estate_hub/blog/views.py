@@ -296,7 +296,7 @@ def edit_comment(request, category_slug, article_slug):
 
     returns: JsonResponse
     """
-    if request.method == 'POST':
+    if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
 
         comment_id = data['commentId']
@@ -336,7 +336,7 @@ def delete_comment(request, category_slug, article_slug):
 
     returns: JsonResponse
     """
-    if request.method == 'POST':
+    if request.method == 'DELETE':
         data = json.loads(s=request.body.decode('utf-8'))
 
         comment_id = data['commentId']
@@ -382,7 +382,7 @@ def give_like(request, category_slug, article_slug):
 
     return: JsonResponse
     """
-    if request.method == 'POST':
+    if request.method == 'PUT':
         data = json.loads(s=request.body.decode('utf-8'))
         comment_id = int(data['commentId'])
 
@@ -436,7 +436,7 @@ def give_dislike(request, category_slug, article_slug):
 
     return: JsonResponse
     """
-    if request.method == 'POST':
+    if request.method == 'PUT':
         data = json.loads(s=request.body.decode('utf-8'))
         comment_id = int(data['commentId'])
 

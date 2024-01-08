@@ -131,6 +131,7 @@ def properties(request):
             queryset = Property.objects.all().order_by('title')
 
     else:
+        request.session['sorted_type'] = 'Newest Properties'
         queryset = Property.objects.all().order_by('-date_posted')
 
     return render(request=request, template_name='core/properties.html', context={
