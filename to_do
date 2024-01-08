@@ -1,3 +1,7 @@
+Login Admin:
+Login: hubert.rykala@gmail.com
+Hasło: admin
+
 @Szymon-Levy
 css border color #dfdfdf
 
@@ -6,12 +10,6 @@ css border color #dfdfdf
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
-1. jak ktoś jest niezalogowany to ma się w ogóle nie renderować element i jego dzieci- .property-card__favourite
-2. operacja na użytkowniku zalogowanym- element .property-card__favourite__btn ma mieć dodaną klasę active jeśli renderując ten element ta nieruchomość jest dodana do ulubionych - teraz jest na sztywno dodana ta klasa active żebyś wiedział jak ma to wyglądać - ta pierwsza klasa jest obowiązkowa zawsze - ta druga active warunkowa (usuń to active z kodu jak zrozumiesz jej rolę)
-3. generowanie dla elementu .property-card__wrapper id tej nieruchomości
-4. response dodawania do ulubionych ma zwracać obiekt { valid: false } jeśli jest coś nie tak, 
-a jak jest pomyślnie to ma być { valid: true, propertyId: 23131 }
-5. napisz tu login i hasło do aktualnie działającego admina -
 6. element .custom__select__button__selected__value powinien trzymać tekst aktualnie wybranego sortowania - wychodzi na to że trzeba to trzymać w jakiejś pamięci
 
 6. dokonczyc account-details, naprawic w templatkach aby userzy mogli wyswietlac

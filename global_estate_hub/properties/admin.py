@@ -171,15 +171,15 @@ class AdminNearby(admin.ModelAdmin):
     """
     Admin options and functionalities for Plan model.
     """
-    list_display = ['id', 'name', 'icon', 'get_nearby_objects']
+    list_display = ['id', 'category', 'icon', 'get_nearby_objects']
     list_editable = ['icon']
-    list_filter = ['name']
-    list_display_links = ['name']
+    list_filter = ['category']
+    list_display_links = ['category']
     fieldsets = [
         [
             'Basic Informations:', {
             'fields': [
-                'name',
+                'category',
                 'icon',
                 'nearby_objects',
             ]
@@ -203,20 +203,19 @@ class AdminProperty(admin.ModelAdmin):
     Admin options and functionalities for Property model.
     """
     list_display = ['id', 'user', 'title', 'date_posted', 'main_image', 'postal_code', 'province', 'country',
-                    'country_code',
-                    'latitude', 'longitude', 'video', 'is_featured', 'is_favourite', 'listing_status', 'image_files',
+                    'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites', 'listing_status',
+                    'image_files',
                     'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
                     'parking_space', 'city', 'get_property_types', 'get_amenities', 'get_plans', 'nearby']
     list_filter = ['user', 'date_posted', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                    'number_of_bathrooms', 'square_meters', 'parking_space', 'postal_code', 'city', 'province',
                    'country',
-                   'country_code', 'latitude', 'longitude', 'is_featured',
-                   'is_favourite', 'listing_status']
+                   'country_code', 'latitude', 'longitude', 'is_featured', 'listing_status']
     list_editable = ['main_image', 'image_files', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                      'number_of_bathrooms',
                      'square_meters', 'parking_space', 'city', 'province', 'country', 'country_code', 'latitude',
                      'longitude', 'video',
-                     'is_featured', 'is_favourite',
+                     'is_featured',
                      'listing_status']
     list_display_links = ['user']
     prepopulated_fields = {'slug': ['title']}
@@ -279,7 +278,7 @@ class AdminProperty(admin.ModelAdmin):
             'Additionals:', {
             'fields': [
                 'is_featured',
-                'is_favourite',
+                'favourites',
             ]
         }
         ],
@@ -319,6 +318,15 @@ class AdminProperty(admin.ModelAdmin):
         }
         ]
     ]
+
+    @admin.display(description='Property Favourites')
+    def get_favourites(self, obj):
+        """
+        Display in the admin panel all users who have added this property to their favorites.
+
+        return: str
+        """
+        return '\n'.join([user.username for user in obj.favourites.all()])
 
     @admin.display(description='Property Plans')
     def get_plans(self, obj):

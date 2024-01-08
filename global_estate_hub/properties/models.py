@@ -117,7 +117,7 @@ class Nearby(models.Model):
     Creating Nearby model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    name = models.CharField(max_length=100, unique=True)
+    category = models.CharField(max_length=100, unique=True)
     icon = models.ImageField(upload_to='icons/properties')
     nearby_objects = models.ManyToManyField(to=NearbyObject, related_name='nearby_objects')
 
@@ -161,13 +161,13 @@ class Property(models.Model):
     description = RichTextUploadingField(max_length=10000, unique=True)
     video = models.FileField(upload_to='property_videos')
     is_featured = models.BooleanField(default=False)
-    is_favourite = models.BooleanField(default=False)
+    favourites = models.ManyToManyField(to=User, related_name='favourites', blank=True)
     slug = models.SlugField(max_length=300, unique=True, null=True)
     listing_status = models.ForeignKey(to=ListingStatus, on_delete=models.CASCADE, related_name='listing_statuses')
     property_type = models.ManyToManyField(to=PropertyType, related_name='property_types')
     amenities = models.ManyToManyField(to=Amenities, related_name='amenities')
-    plan = models.ManyToManyField(to=Plan, related_name='property_plan')
-    nearby = models.ForeignKey(to=Nearby, on_delete=models.CASCADE, null=True, related_name='nearby')
+    plan = models.ManyToManyField(to=Plan, related_name='property_plan', blank=True)
+    nearby = models.ForeignKey(to=Nearby, on_delete=models.CASCADE, null=True, related_name='nearby', blank=True)
 
     class Meta:
         verbose_name = 'Property'
