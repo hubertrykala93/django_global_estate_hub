@@ -118,7 +118,7 @@
                                 <div class="property-card__footer">
                                     <div class="property-card__price">$ {{ property.price }}</div>
 
-                                    <span class="property-card__badge property-card__badge--primary">For {% if property.listing_status == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
+                                    <span class="property-card__badge property-card__badge--primary">For {% if property.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
                                 </div>
                             </div>
                         </div>

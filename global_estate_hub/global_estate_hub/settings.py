@@ -68,8 +68,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-SESSION_SAVE_EVERY_REQUEST = True
-
 ROOT_URLCONF = "global_estate_hub.urls"
 
 TEMPLATES = [
