@@ -113,25 +113,25 @@ def properties(request):
 
     return: HttpResponse
     """
-    # print(request.GET)
-    # if 'Newest Properties' in request.GET.get('properties-order'):
-    #     queryset = Property.objects.all().order_by('-date_posted')
-    #
-    # elif 'Oldest Properties' in request.GET.get('properties-order'):
-    #     queryset = Property.objects.all().order_by('date_posted')
-    #
-    # elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-    #     queryset = Property.objects.all().order_by('title')
-    #
-    # elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-    #     queryset = Property.objects.all().order_by('-title')
-    #
-    # else:
-    #     queryset = Property.objects.all()
+    if request.GET:
+        if 'Newest Properties' in request.GET.get('properties-order'):
+            queryset = Property.objects.all().order_by('-date_posted')
+
+        elif 'Oldest Properties' in request.GET.get('properties-order'):
+            queryset = Property.objects.all().order_by('date_posted')
+
+        elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+            queryset = Property.objects.all().order_by('-title')
+
+        elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+            queryset = Property.objects.all().order_by('title')
+
+    else:
+        queryset = Property.objects.all().order_by('-date_posted')
 
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
-        'properties': Property.objects.all(),
+        'properties': queryset,
     })
 
 
