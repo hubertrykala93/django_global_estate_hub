@@ -1988,12 +1988,12 @@ if ($contactMap) {
 const $propertiesPage = document.querySelector('[data-properties]')
 
 if ( $propertiesPage ) {
+  const $propertiesRow = $propertiesPage.querySelector('[data-properties-row]')
 
   /**
    * Change view
     */
 
-  const $propertiesRow = $propertiesPage.querySelector('[data-properties-row]')
   const $changeView = $propertiesPage.querySelector('[data-change-view]')
   const $gridBtn = $propertiesPage.querySelector('[data-grid-btn]')
   const $listBtn = $propertiesPage.querySelector('[data-list-btn]')
@@ -2024,8 +2024,49 @@ if ( $propertiesPage ) {
     }
   })
 
+  /**
+   * Add to favourite
+    */
 
-  // console.log(view)
+  const addToFavouritesHandler = ($btn) => {
+    const propertyId = $btn.closest('.property-card__wrapper').dataset.id
+
+    const serverResponse = (response) => {
+      if ( response.valid ) {
+        const $favouritesBtn = $propertiesPage.querySelector(`[data-property-card][data-id="${response.propertyId}"]`).querySelector('[data-add-to-favourites]')
+        $favouritesBtn.classList.toggle('active')
+      }
+    }
+
+    const data = {
+      propertyId
+    }
+
+    const xhr = new XMLHttpRequest()
+  
+    xhr.open('PATCH', 'add-to-favourites', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('wysłane dane: ', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('odebrane dane: ', response)
+          serverResponse(response)
+      }
+    }
+
+
+  }
+
+  $propertiesRow.addEventListener('click', e=> {
+    if ( e.target.dataset.hasOwnProperty('addToFavourites') ) {
+      addToFavouritesHandler(e.target)
+    }
+  })
   
 }
 

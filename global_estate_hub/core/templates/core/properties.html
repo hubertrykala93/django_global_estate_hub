@@ -73,7 +73,7 @@
                 <div class="row properties-cards__row properties-cards__row--list" data-properties-row>
                     {% for property in properties %}
                     <div class="property-card__column">
-                        <div class="property-card__wrapper">
+                        <div class="property-card__wrapper" data-property-card data-id="99">
                             <div class="property-card__image">
                                 {% if property.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
                                 <img src="{{ property.main_image.url }}" alt="property title image">
@@ -85,7 +85,7 @@
                                 </div>
 
                                 <div class="property-card__favourite">
-                                    <button class="property-card__favourite__btn">
+                                    <button class="property-card__favourite__btn active" data-add-to-favourites>
                                         <i class="ri-heart-line" aria-hidden="true"></i>
                                         <span class="visually-hidden">Add to favourites</span>
                                     </button>

@@ -3014,6 +3014,14 @@ section.properties {
     transition: background-color .4s;
 }
 
+.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn.active{
+    background-color: #f14f4f;
+}
+
+.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn > * {
+    pointer-events: none;
+}
+
 .properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn:hover,
 .properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn:focus-visible{
     background-color: var(--clr-primary);
