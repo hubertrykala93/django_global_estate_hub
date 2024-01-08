@@ -113,21 +113,25 @@ def properties(request):
 
     return: HttpResponse
     """
-    if 'Newest Properties' in request.GET['properties-order']:
-        queryset = Property.objects.all().order_by('-date_posted')
-
-    elif 'Oldest Properties' in request.GET['properties-order']:
-        queryset = Property.objects.all().order_by('date_posted')
-
-    elif 'Alphabetically Ascending' in request.GET['properties-order']:
-        queryset = Property.objects.all().order_by('title')
-
-    elif 'Alphabetically Descending' in request.GET['properties-order']:
-        queryset = Property.objects.all().order_by('-title')
+    # print(request.GET)
+    # if 'Newest Properties' in request.GET.get('properties-order'):
+    #     queryset = Property.objects.all().order_by('-date_posted')
+    #
+    # elif 'Oldest Properties' in request.GET.get('properties-order'):
+    #     queryset = Property.objects.all().order_by('date_posted')
+    #
+    # elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+    #     queryset = Property.objects.all().order_by('title')
+    #
+    # elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+    #     queryset = Property.objects.all().order_by('-title')
+    #
+    # else:
+    #     queryset = Property.objects.all()
 
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
-        'properties': queryset,
+        'properties': Property.objects.all(),
     })
 
 
