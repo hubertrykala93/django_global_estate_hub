@@ -4,6 +4,9 @@ from .models import Newsletter, ContactMail
 
 @admin.register(Newsletter)
 class AdminNewsletter(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Newsletter model.
+    """
     list_display = ['id', 'email', 'subscribed_at']
     list_editable = ['email']
     list_display_links = None
@@ -29,6 +32,9 @@ class AdminNewsletter(admin.ModelAdmin):
 
 @admin.register(ContactMail)
 class AdminContactMail(admin.ModelAdmin):
+    """
+    Admin options and functionalities for ContactMail model.
+    """
     list_display = ['id', 'date_sent', 'full_name', 'phone_number', 'email', 'content']
     list_filter = ['date_sent', 'full_name', 'email']
     list_display_links = ['full_name']

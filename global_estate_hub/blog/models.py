@@ -11,7 +11,7 @@ class Category(models.Model):
     """
     Creating Category model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=50, choices=[
         ('Apartment', 'Apartment'),
         ('Family House', 'Family House'),
@@ -50,7 +50,7 @@ class Tag(models.Model):
     """
     Creating Tag model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, null=True)
 
@@ -81,10 +81,10 @@ class Article(models.Model):
     """
     Creating Article model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article_images')
-    date_posted = models.DateTimeField(default=now)
+    date_posted = models.DateTimeField(default=now, editable=False)
     title = models.CharField(max_length=200, unique=True)
     content = RichTextUploadingField(max_length=10000, unique=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
@@ -142,11 +142,11 @@ class Comment(MPTTModel):
     """
     Creating Comment model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
     full_name = models.CharField(max_length=200, blank=True, null=True)
-    date_posted = models.DateTimeField(default=now)
+    date_posted = models.DateTimeField(default=now, editable=False)
     comment = models.TextField(max_length=1000)
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
@@ -161,11 +161,19 @@ class Comment(MPTTModel):
         order_insertion_by = ['date_posted']
 
     def __str__(self):
+        """
+        Returns the string representation of the commenting user and displays it in the administrator panel.
+
+        return: str
+        """
         return f'Comment by {self.user}.'
 
 
 class CommentLike(models.Model):
-    id = models.AutoField(primary_key=True)
+    """
+    Creating CommentLike model instance.
+    """
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='comment_like')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_like')
 
@@ -174,11 +182,20 @@ class CommentLike(models.Model):
         verbose_name_plural = 'Comment Likes'
 
     def __str__(self):
+        """
+        Returns a string representation of the user giving a Like,
+        along with the comment content, and displays it in the administrator panel.
+
+        return: str
+        """
         return f'{self.user}, {self.comment}'
 
 
 class CommentDislike(models.Model):
-    id = models.AutoField(primary_key=True)
+    """
+    Creating CommentDislike model instance.
+    """
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='comment_dislike')
     comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE, related_name='comment_dislike')
 
@@ -187,4 +204,10 @@ class CommentDislike(models.Model):
         verbose_name_plural = 'Comment Dislikes'
 
     def __str__(self):
+        """
+        Returns a string representation of the user giving a Dislike,
+        along with the comment content, and displays it in the administrator panel.
+
+        return: str
+        """
         return f'{self.user}, {self.comment}'

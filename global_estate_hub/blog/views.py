@@ -179,6 +179,15 @@ def blog_results(request):
 
 
 def add_comment(request, category_slug, article_slug):
+    """
+    The function handles the comment submission form for a specific article by both logged-in and non-logged-in users.
+    If the comment is added by a non-logged-in user, they can enter their own name in the 'Name' field.
+    However, if the comment is added by a logged-in user, their username is automatically assigned.
+    The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is saved in the database.
+
+    return: JsonResponse
+    """
     category = Category.objects.get(slug=category_slug)
     article = get_object_or_404(klass=Article, slug=article_slug, category=category)
 
@@ -280,6 +289,13 @@ def add_comment(request, category_slug, article_slug):
 
 
 def edit_comment(request, category_slug, article_slug):
+    """
+    The function handles the comment editing form for a specific article by a logged-in user.
+    The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    returns: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -313,6 +329,13 @@ def edit_comment(request, category_slug, article_slug):
 
 
 def delete_comment(request, category_slug, article_slug):
+    """
+    The function handles the comment deletion form for a specific article by a logged-in user.
+    The function utilizes the DELETE method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    returns: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
 
@@ -348,6 +371,17 @@ def delete_comment(request, category_slug, article_slug):
 
 
 def give_like(request, category_slug, article_slug):
+    """
+    The function handles the like submission form for the current comment in a given article.
+    If the user has already liked the comment, the like is removed,
+    and the number of likes in the 'Comment' model is updated by -1. However,
+    if the user had previously disliked the comment and then liked it,
+    the number of dislikes in the 'Comment' model is updated.
+    The function utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
         comment_id = int(data['commentId'])
@@ -391,6 +425,17 @@ def give_like(request, category_slug, article_slug):
 
 
 def give_dislike(request, category_slug, article_slug):
+    """
+    The function handles the form for adding a dislike to the current comment in a given article.
+    If the comment has already been disliked by the user, the dislike is removed,
+    and the number of dislikes in the 'Comment' model is updated by -1. However,
+    if the user previously liked the comment and then gave it a dislike,
+    the number of likes in the 'Comment' model is updated.
+    The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
         comment_id = int(data['commentId'])
@@ -433,6 +478,16 @@ def give_dislike(request, category_slug, article_slug):
 
 
 def reply_comment(request, category_slug, article_slug):
+    """
+    The function handles the form for adding a reply to a comment in a given article
+    by both logged-in and non-logged-in users. If the reply is added by a non-logged-in user,
+    they can enter their own name in the 'Name' field. However, if the reply is added by a logged-in user,
+    their username is automatically assigned.
+    The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is saved in the database.
+
+    return: JsonResponse
+    """
     category = Category.objects.get(slug=category_slug)
     article = get_object_or_404(klass=Article, slug=article_slug, category=category)
 

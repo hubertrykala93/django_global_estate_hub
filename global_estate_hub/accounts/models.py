@@ -43,7 +43,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     Creating custom User model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True, null=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
@@ -93,6 +93,11 @@ class User(AbstractBaseUser, PermissionsMixin):
             img.save(fp=self.image.path)
 
     def get_username(self):
+        """
+        Returns the username for a given user.
+
+        returns: str
+        """
         return self.username
 
 
@@ -112,6 +117,7 @@ class OneTimePassword(models.Model):
     """
     Creating OneTimePassword model instance.
     """
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
     created_at = models.DateTimeField(default=now)
@@ -136,7 +142,7 @@ class Individual(models.Model):
     """
     Creating IndividualProfile model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
@@ -172,7 +178,7 @@ class Business(models.Model):
     """
     Creating BusinessProfile model instance.
     """
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True, editable=False)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=100, null=True, blank=True)
     company_id = models.IntegerField(null=True, blank=True)

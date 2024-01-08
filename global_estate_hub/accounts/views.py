@@ -817,23 +817,23 @@ def social_media_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-def account_details(request, username):
-    user = get_object_or_404(klass=User, username=username)
-
-    if user.account_type == 'Individual':
-        profile = Individual.objects.get(user=user)
-    else:
-        profile = Business.objects.get(user=user)
-
-    print(profile.user.email)
-    print(profile.user.username)
-    print(profile.website_url)
-
-    return render(request=request, template_name='accounts/account-details.html', context={
-        'title': 'Account Details',
-        'user': user,
-        'profile': profile,
-    })
+# def account_details(request, username):
+#     user = get_object_or_404(klass=User, username=username)
+#
+#     if user.account_type == 'Individual':
+#         profile = Individual.objects.get(user=user)
+#     else:
+#         profile = Business.objects.get(user=user)
+#
+#     print(profile.user.email)
+#     print(profile.user.username)
+#     print(profile.website_url)
+#
+#     return render(request=request, template_name='accounts/account-details.html', context={
+#         'title': 'Account Details',
+#         'user': user,
+#         'profile': profile,
+#     })
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')

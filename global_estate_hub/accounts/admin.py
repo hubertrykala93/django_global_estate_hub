@@ -7,6 +7,9 @@ admin.site.unregister(Group)
 
 @admin.register(User)
 class AdminUser(admin.ModelAdmin):
+    """
+    Admin options and functionalities for User model.
+    """
     list_display = ['id', 'username', 'email', 'image', 'password', 'account_type', 'is_verified', 'is_staff',
                     'is_active', 'is_superuser', 'date_joined', 'last_login']
     list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
@@ -57,13 +60,12 @@ class AdminUser(admin.ModelAdmin):
         ]
     ]
 
-    @admin.display(description='Permissions')
-    def get_user_permissions(self, obj):
-        return '\n'.join([p.user_permissions for p in obj.user_permissions.all()])
-
 
 @admin.register(OneTimePassword)
 class AdminOneTimePassword(admin.ModelAdmin):
+    """
+    Admin options and functionalities for OneTimePassword model.
+    """
     list_display = ['user', 'password', 'created_at', 'expires_in']
     fieldsets = [
         [
@@ -87,6 +89,9 @@ class AdminOneTimePassword(admin.ModelAdmin):
 
 @admin.register(Individual)
 class AdminIndividualProfile(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Individual model.
+    """
     list_display = ['id', 'user', 'first_name', 'last_name', 'gender', 'country', 'province', 'city',
                     'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                     'linkedin_url']
@@ -142,6 +147,9 @@ class AdminIndividualProfile(admin.ModelAdmin):
 
 @admin.register(Business)
 class AdminBusinessProfile(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Business model.
+    """
     list_display = ['id', 'user', 'company_name', 'company_id', 'country', 'province', 'city',
                     'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                     'linkedin_url']
