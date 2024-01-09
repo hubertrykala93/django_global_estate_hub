@@ -11,6 +11,15 @@ def add_property(request):
 
 
 def add_to_favourites(request):
+    """
+    The function handles the form for adding a property to favorites.
+    If the property was already added to favorites by the user, the liking is removed.
+    However, if the user adds the property to favorites for the first time, the liking is saved.
+    The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Upon successful form validation, the data is updated in the database.
+
+    return: JsonResponse
+    """
     if request.method == 'PATCH':
         property_id = int(json.loads(s=request.body.decode('utf-8'))['propertyId'])
         property = Property.objects.get(id=property_id)
