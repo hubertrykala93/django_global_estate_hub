@@ -3,7 +3,6 @@ from .models import Article, Category, Tag, Comment, CommentLike, CommentDislike
 from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 from accounts.models import User
 
 

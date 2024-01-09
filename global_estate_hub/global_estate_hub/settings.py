@@ -93,6 +93,8 @@ TEMPLATES = [
     },
 ]
 
+SESSION_SAVE_EVERY_REQUEST = True
+
 WSGI_APPLICATION = "global_estate_hub.wsgi.application"
 
 # Database
