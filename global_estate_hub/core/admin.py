@@ -9,7 +9,7 @@ class AdminNewsletter(admin.ModelAdmin):
     """
     list_display = ['id', 'email', 'subscribed_at']
     list_editable = ['email']
-    list_display_links = None
+    list_display_links = ['id']
     search_fields = ['email']
     ordering = ['subscribed_at']
     fieldsets = [
@@ -37,7 +37,7 @@ class AdminContactMail(admin.ModelAdmin):
     """
     list_display = ['id', 'date_sent', 'full_name', 'phone_number', 'email', 'content']
     list_filter = ['date_sent', 'full_name', 'email']
-    list_display_links = ['full_name']
+    list_display_links = ['id']
     search_fields = ['full_name', 'email']
     ordering = ['date_sent']
     fieldsets = [

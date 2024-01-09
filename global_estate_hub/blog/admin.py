@@ -16,9 +16,9 @@ class AdminCategory(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ['name']
     }
-    list_display_links = ['name']
+    list_display_links = ['id']
     search_fields = ['name']
-    ordering = ['name']
+    ordering = ['id']
     fieldsets = [
         [
             'Category Name:', {
@@ -44,10 +44,10 @@ class AdminTag(admin.ModelAdmin):
     """
     list_display = ['id', 'name', 'slug']
     list_filter = ['name']
-    list_display_links = ['name']
+    list_display_links = ['id']
     prepopulated_fields = {'slug': ['name']}
     search_fields = ['name']
-    ordering = ['name']
+    ordering = ['id']
     fieldsets = [
         [
             'Tag Name:', {
@@ -74,7 +74,7 @@ class AdminArticle(admin.ModelAdmin):
     list_display = ['id', 'user', 'title', 'category', 'image', 'date_posted', 'slug', 'get_tags']
     list_filter = ['user', 'category', 'date_posted', 'tags']
     list_editable = ['user', 'image', 'category']
-    list_display_links = ['title']
+    list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['title']
     ordering = ['date_posted']
@@ -150,7 +150,7 @@ class AdminComment(MPTTModelAdmin):
                     'parent']
     list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
     list_editable = ['likes', 'dislikes', 'active']
-    list_display_links = ['user']
+    list_display_links = ['id']
     actions = ['approve_comments']
     search_fields = ['user', 'comment']
     ordering = ['date_posted']
@@ -231,9 +231,9 @@ class AdminCommentLike(admin.ModelAdmin):
     """
     list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
-    list_display_links = ['user']
+    list_display_links = ['id']
     search_fields = ['user', 'comment']
-    ordering = ['user']
+    ordering = ['id']
     fieldsets = [
         [
             'User:', {
@@ -259,9 +259,9 @@ class AdminCommentDislike(admin.ModelAdmin):
     """
     list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
-    list_display_links = ['user']
+    list_display_links = ['id']
     search_fields = ['user', 'comment']
-    ordering = ['user']
+    ordering = ['id']
     fieldsets = [
         [
             'User:', {

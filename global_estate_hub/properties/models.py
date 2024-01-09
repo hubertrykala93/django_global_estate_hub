@@ -90,45 +90,88 @@ class Plan(models.Model):
         return self.name
 
 
-class NearbyObject(models.Model):
+class Education(models.Model):
     """
-    Creating NearbyCategory model instance.
+    Creating Education model instance.
     """
-    id = models.AutoField(primary_key=True, editable=False)
-    name = models.CharField(max_length=100)
-    distance = models.FloatField(max_length=8)
-    rate = models.IntegerField()
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    distance = models.FloatField()
+    rate = models.FloatField()
 
     class Meta:
-        verbose_name = 'Nearby Object'
-        verbose_name_plural = 'Nearby Objects'
+        verbose_name = 'Education'
+        verbose_name_plural = 'Educations'
 
     def __str__(self):
         """
-        Returns the string representation of the nearby object name and displays it in the administrator panel.
+        Returns the string representation of the education institution name and displays it in the administrator panel.
 
         return: str
         """
         return self.name
 
 
-class Nearby(models.Model):
+class Shopping(models.Model):
     """
-    Creating Nearby model instance.
+    Creating Shopping model instance.
     """
-    id = models.AutoField(primary_key=True, editable=False)
-    category = models.CharField(max_length=100, unique=True)
-    icon = models.ImageField(upload_to='icons/properties')
-    nearby_objects = models.ManyToManyField(to=NearbyObject, related_name='nearby_objects')
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    distance = models.FloatField()
+    rate = models.FloatField()
 
     class Meta:
-        verbose_name = 'Nearby'
-        verbose_name_plural = 'Nearby'
+        verbose_name = 'Shopping'
 
     def __str__(self):
         """
-        Returns the string representation of the object located near the property
+        Returns the string representation of the shopping places name and displays it in the administrator panel.
+
+        return: str
+        """
+        return self.name
+
+
+class HealthAndMedical(models.Model):
+    """
+    Creating HealthAndMedical model instance.
+    """
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    distance = models.FloatField()
+    rate = models.FloatField()
+
+    class Meta:
+        verbose_name = 'Health & Medical'
+        verbose_name_plural = 'Health & Medicals'
+
+    def __str__(self):
+        """
+        Returns the string representation of the health and medical institution name
         and displays it in the administrator panel.
+
+        return: str
+        """
+        return self.name
+
+
+class Transportation(models.Model):
+    """
+    Creating Transportation model instance.
+    """
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=200)
+    distance = models.FloatField()
+    rate = models.FloatField()
+
+    class Meta:
+        verbose_name = 'Transportation'
+        verbose_name_plural = 'Transportations'
+
+    def __str__(self):
+        """
+        Returns the string representation of the transportation name and displays it in the administrator panel.
 
         return: str
         """
@@ -167,7 +210,10 @@ class Property(models.Model):
     property_type = models.ManyToManyField(to=PropertyType, related_name='property_types')
     amenities = models.ManyToManyField(to=Amenities, related_name='amenities')
     plan = models.ManyToManyField(to=Plan, related_name='property_plan', blank=True)
-    nearby = models.ForeignKey(to=Nearby, on_delete=models.CASCADE, null=True, related_name='nearby', blank=True)
+    education = models.ManyToManyField(to=Education, blank=True)
+    health_and_medical = models.ManyToManyField(to=HealthAndMedical, blank=True)
+    transportation = models.ManyToManyField(to=Transportation, blank=True)
+    shopping = models.ManyToManyField(to=Shopping, blank=True)
 
     class Meta:
         verbose_name = 'Property'

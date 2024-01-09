@@ -15,9 +15,9 @@ class AdminUser(admin.ModelAdmin):
     list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
     list_filter = ['username', 'email', 'account_type', 'date_joined']
     radio_fields = {'account_type': admin.VERTICAL}
-    list_display_links = ['username']
+    list_display_links = ['id']
     search_fields = ['username']
-    ordering = ['username']
+    ordering = ['date_joined']
     fieldsets = [
         [
             'Basic Informations:', {
@@ -67,6 +67,7 @@ class AdminOneTimePassword(admin.ModelAdmin):
     Admin options and functionalities for OneTimePassword model.
     """
     list_display = ['user', 'password', 'created_at', 'expires_in']
+    ordering = ['created_at']
     fieldsets = [
         [
             'Basic Informations', {
@@ -99,9 +100,9 @@ class AdminIndividualProfile(admin.ModelAdmin):
                      'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                      'linkedin_url']
     list_filter = ['last_name', 'country', 'province', 'city', 'street', 'postal_code']
-    list_display_links = ['user']
+    list_display_links = ['id']
     search_fields = ['user']
-    ordering = ['user']
+    ordering = ['id']
     radio_fields = {'gender': admin.VERTICAL}
     fieldsets = [
         [
@@ -157,9 +158,9 @@ class AdminBusinessProfile(admin.ModelAdmin):
                      'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                      'linkedin_url']
     list_filter = ['company_name', 'country', 'province', 'city', 'street', 'postal_code']
-    list_display_links = ['user']
+    list_display_links = ['id']
     search_fields = ['user']
-    ordering = ['user']
+    ordering = ['id']
     fieldsets = [
         [
             'Basic Informations', {

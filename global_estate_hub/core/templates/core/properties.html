@@ -112,7 +112,7 @@
 
                                     <li>
                                         <img src="/media/icons/properties/property-card-area.svg" alt="area icon" aria-hidden="true">
-                                        <span>{{ property.square_meters }} Sqfts</span>
+                                        <span>{{ property.square_meters }} Sq M</span>
                                     </li>
                                 </ul>
 
@@ -444,39 +444,22 @@
                                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                                         </button>
 
+                                        {% if cities %}
                                         <ul class="custom__select__dropdown" role="listbox" id="select-location">
+                                            {% for city in cities %}
                                             <li role="option">
-                                                <input data-option type="radio" value="Warsaw" id="warsaw" name="location" />
-                                                <label for="warsaw">Warsaw</label>
+                                                <input data-option type="radio" value="{{ city }}" id="{{ city|unicode_filter|lower }}" name="location" />
+                                                <label for="{{ city|unicode_filter|lower }}">{{ city }}</label>
                                             </li>
-
-                                            <li role="option">
-                                                <input data-option type="radio" value="Wrocław" id="wroclaw" name="location" />
-                                                <label for="wroclaw">Wrocław</label>
-                                            </li>
-
-                                            <li role="option">
-                                                <input data-option type="radio" value="Lublin" id="lublin" name="location" />
-                                                <label for="lublin">Lublin</label>
-                                            </li>
-
-                                            <li role="option">
-                                                <input data-option type="radio" value="Kraków" id="krakow" name="location" />
-                                                <label for="krakow">Kraków</label>
-                                            </li>
-
-                                            <li role="option">
-                                                <input data-option type="radio" value="Poznań" id="poznan" name="location" />
-                                                <label for="poznan">Poznań</label>
-                                            </li>
-                                            
+                                            {% endfor %}
                                         </ul>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="properties__filters__title h4">Square Feets</div>
+                        <div class="properties__filters__title h4">Square Meters</div>
 
                         <div class="form__row form__row__select-range">
                             <div class="form__field">

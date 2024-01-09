@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import ListingStatus, PropertyType, Amenities, Plan, NearbyObject, Nearby, TourSchedule, OfferContact, \
-    Review, Property
+from .models import ListingStatus, PropertyType, Amenities, Plan, TourSchedule, OfferContact, \
+    Review, Education, HealthAndMedical, Transportation, Shopping, Property
 from django.utils.translation import ngettext
 from django.contrib import messages
 
@@ -13,12 +13,12 @@ class AdminListingStatus(admin.ModelAdmin):
     list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
-    list_display_links = ['name']
+    list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
     }
     search_fields = ['name']
-    ordering = ['name']
+    ordering = ['id']
     fieldsets = [
         [
             'Listing Status Name:', {
@@ -45,12 +45,12 @@ class AdminPropertyType(admin.ModelAdmin):
     list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
-    list_display_links = ['name']
+    list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
     }
     search_fields = ['name']
-    ordering = ['name']
+    ordering = ['id']
     fieldsets = [
         [
             'Property Type Name:', {
@@ -77,7 +77,7 @@ class AdminAmenities(admin.ModelAdmin):
     list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
     list_filter = ['name']
-    list_display_links = ['name']
+    list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
     }
@@ -109,7 +109,8 @@ class AdminPlan(admin.ModelAdmin):
     list_display = ['id', 'name', 'image', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
     list_editable = ['image', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
     list_filter = ['name', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
-    list_display_links = ['name']
+    list_display_links = ['id']
+    ordering = ['id']
     fieldsets = [
         [
             'Basic Informations:', {
@@ -131,33 +132,33 @@ class AdminPlan(admin.ModelAdmin):
     ]
 
 
-@admin.register(NearbyObject)
-class AdminNearbyObject(admin.ModelAdmin):
+@admin.register(Education)
+class AdminEducation(admin.ModelAdmin):
     """
-    Admin options and functionalities for NearbyCategory model.
+    Admin options and functionalities for Education model.
     """
     list_display = ['id', 'name', 'distance', 'rate']
     list_editable = ['name', 'distance', 'rate']
-    list_filter = ['name', 'distance', 'rate']
     list_display_links = ['id']
-
+    search_fields = ['name']
+    ordering = ['id']
     fieldsets = [
         [
-            'Name:', {
+            'Institution Name:', {
             'fields': [
                 'name',
             ]
         }
         ],
         [
-            'Distance:', {
+            'Institution Distance', {
             'fields': [
                 'distance',
             ]
         }
         ],
         [
-            'Rate:', {
+            'Institution Rate:', {
             'fields': [
                 'rate',
             ]
@@ -166,35 +167,112 @@ class AdminNearbyObject(admin.ModelAdmin):
     ]
 
 
-@admin.register(Nearby)
-class AdminNearby(admin.ModelAdmin):
+@admin.register(HealthAndMedical)
+class AdminHealthAndMedical(admin.ModelAdmin):
     """
-    Admin options and functionalities for Plan model.
+    Admin options and functionalities for HealthAndMedical model.
     """
-    list_display = ['id', 'category', 'icon', 'get_nearby_objects']
-    list_editable = ['icon']
-    list_filter = ['category']
-    list_display_links = ['category']
+    list_display = ['id', 'name', 'distance', 'rate']
+    list_editable = ['name', 'distance', 'rate']
+    list_display_links = ['id']
+    search_fields = ['name']
+    ordering = ['id']
     fieldsets = [
         [
-            'Basic Informations:', {
+            'Institution Name:', {
             'fields': [
-                'category',
-                'icon',
-                'nearby_objects',
+                'name',
             ]
         }
         ],
+        [
+            'Institution Distance', {
+            'fields': [
+                'distance',
+            ]
+        }
+        ],
+        [
+            'Institution Rate:', {
+            'fields': [
+                'rate',
+            ]
+        }
+        ]
     ]
 
-    @admin.display(description='Nearbies')
-    def get_nearby_objects(self, obj):
-        """
-        Displays in the admin panel all nearby objects assigned to a given nearby.
 
-        return: str
-        """
-        return '\n'.join([n.name for n in obj.nearby_objects.all()])
+@admin.register(Transportation)
+class AdminTransportation(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Transportation model.
+    """
+    list_display = ['id', 'name', 'distance', 'rate']
+    list_editable = ['name', 'distance', 'rate']
+    list_display_links = ['id']
+    search_fields = ['name']
+    ordering = ['id']
+    fieldsets = [
+        [
+            'Transportation Name:', {
+            'fields': [
+                'name',
+            ]
+        }
+        ],
+        [
+            'Transportation Distance', {
+            'fields': [
+                'distance',
+            ]
+        }
+        ],
+        [
+            'Transportation Rate:', {
+            'fields': [
+                'rate',
+            ]
+        }
+        ]
+    ]
+
+
+@admin.register(Shopping)
+class AdminShopping(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Shopping model.
+    """
+    """
+    Admin options and functionalities for Transportation model.
+    """
+    list_display = ['id', 'name', 'distance', 'rate']
+    list_editable = ['name', 'distance', 'rate']
+    list_display_links = ['id']
+    search_fields = ['name']
+    ordering = ['id']
+    fieldsets = [
+        [
+            'Shop Name:', {
+            'fields': [
+                'name',
+            ]
+        }
+        ],
+        [
+            'Shop Distance', {
+            'fields': [
+                'distance',
+            ]
+        }
+        ],
+        [
+            'Shop Rate:', {
+            'fields': [
+                'rate',
+            ]
+        }
+        ]
+    ]
 
 
 @admin.register(Property)
@@ -202,11 +280,14 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'user', 'title', 'date_posted', 'main_image', 'postal_code', 'province', 'country',
+    list_display = ['id', 'user', 'title', 'date_posted', 'main_image', 'postal_code',
+                    'province',
+                    'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites', 'listing_status',
                     'image_files',
                     'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
-                    'parking_space', 'city', 'get_property_types', 'get_amenities', 'get_plans', 'nearby']
+                    'parking_space', 'city', 'get_property_types', 'get_amenities', 'get_plans', 'get_educations',
+                    'get_health_and_medicals', 'get_transportations', 'get_shops']
     list_filter = ['user', 'date_posted', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                    'number_of_bathrooms', 'square_meters', 'parking_space', 'postal_code', 'city', 'province',
                    'country',
@@ -217,12 +298,11 @@ class AdminProperty(admin.ModelAdmin):
                      'longitude', 'video',
                      'is_featured',
                      'listing_status']
-    list_display_links = ['user']
+    list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user', 'title']
     ordering = ['date_posted']
     actions = ['make_featured', 'remove_featured']
-
     fieldsets = [
         [
             'Creator:', {
@@ -311,9 +391,12 @@ class AdminProperty(admin.ModelAdmin):
         }
         ],
         [
-            'Nearbies:', {
+            'Property Nearby:', {
             'fields': [
-                'nearby',
+                'education',
+                'health_and_medical',
+                'transportation',
+                'shopping',
             ]
         }
         ]
@@ -354,6 +437,42 @@ class AdminProperty(admin.ModelAdmin):
         return: str
         """
         return '\n'.join([a.name for a in obj.amenities.all()])
+
+    @admin.display(description='Educations')
+    def get_educations(self, obj):
+        """
+        Displays in the admin panel all education institutions assigned to a given property.
+
+        return: str
+        """
+        return '\n'.join([e.name for e in obj.education.all()])
+
+    @admin.display(description='Health & Medicals')
+    def get_health_and_medicals(self, obj):
+        """
+        Displays in the admin panel all health and medicals institutions assigned to a given property.
+
+        return: str
+        """
+        return '\n'.join([h.name for h in obj.health_and_medical.all()])
+
+    @admin.display(description='Transportations')
+    def get_transportations(self, obj):
+        """
+        Displays in the admin panel all transportations assigned to a given property.
+
+        return: str
+        """
+        return '\n'.join([t.name for t in obj.transportation.all()])
+
+    @admin.display(description='Shops')
+    def get_shops(self, obj):
+        """
+        Displays in the admin panel all shops assigned to a given property.
+
+        return: str
+        """
+        return '\n'.join([s.name for s in obj.shopping.all()])
 
     @admin.action(description='Highlight selected Properties')
     def make_featured(self, request, queryset):
