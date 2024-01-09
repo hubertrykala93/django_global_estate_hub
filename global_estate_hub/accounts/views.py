@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -321,6 +321,9 @@ def authorization(request):
             if validation[0]:
                 user = authenticate(request=request, email=email, password=password,
                                     backend='django.contrib.auth.backends.ModelBackend')
+                request.session['user'] = user.id
+                request.session.set_expiry(value=300)
+
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
 
                 return JsonResponse(data=response, safe=False)
@@ -338,6 +341,7 @@ def log_out(request):
 
     return: HttpResponseRedirect
     """
+    del request.session['user']
     logout(request=request)
 
     return redirect(to='login')

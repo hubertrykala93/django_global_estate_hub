@@ -115,22 +115,24 @@ def properties(request):
     """
     if request.GET:
         if 'Newest Properties' in request.GET.get('properties-order'):
+            request.session['sorted_type'] = request.GET.get('properties-order')
             queryset = Property.objects.all().order_by('-date_posted')
 
         elif 'Oldest Properties' in request.GET.get('properties-order'):
+            request.session['sorted_type'] = request.GET.get('properties-order')
             queryset = Property.objects.all().order_by('date_posted')
 
         elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+            request.session['sorted_type'] = request.GET.get('properties-order')
             queryset = Property.objects.all().order_by('-title')
 
         elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+            request.session['sorted_type'] = request.GET.get('properties-order')
             queryset = Property.objects.all().order_by('title')
 
     else:
+        request.session['sorted_type'] = 'Newest Properties'
         queryset = Property.objects.all().order_by('-date_posted')
-
-    request.session['sorted_type'] = request.GET.get('properties-order')
-    request.session.modified = True
 
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
