@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -19,6 +19,7 @@ from .tokens import token_generator
 from django.contrib import messages
 from dotenv import load_dotenv
 import uuid
+from django.contrib.sessions.models import Session
 
 load_dotenv()
 
@@ -321,6 +322,11 @@ def authorization(request):
             if validation[0]:
                 user = authenticate(request=request, email=email, password=password,
                                     backend='django.contrib.auth.backends.ModelBackend')
+
+                request.session['user'] = user.id
+                request.session['is_logged_in'] = True
+                request.session.save()
+
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
 
                 return JsonResponse(data=response, safe=False)
@@ -338,6 +344,9 @@ def log_out(request):
 
     return: HttpResponseRedirect
     """
+    session = Session.objects.filter(session_key=request.session.session_key)
+    session.delete()
+    
     logout(request=request)
 
     return redirect(to='login')
