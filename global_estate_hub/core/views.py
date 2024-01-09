@@ -134,10 +134,13 @@ def properties(request):
         request.session['sorted_type'] = 'Newest Properties'
         queryset = Property.objects.all().order_by('-date_posted')
 
+    cities = [p.city for p in Property.objects.all()]
+
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',
         'properties': queryset,
-        'sorted_type': request.session['sorted_type']
+        'sorted_type': request.session['sorted_type'],
+        'cities': cities,
     })
 
 

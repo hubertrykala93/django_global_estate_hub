@@ -322,15 +322,11 @@ def authorization(request):
             if validation[0]:
                 user = authenticate(request=request, email=email, password=password,
                                     backend='django.contrib.auth.backends.ModelBackend')
-<<<<<<< HEAD
 
                 request.session['user'] = user.id
                 request.session['is_logged_in'] = True
-                request.session.save()
-=======
-                request.session['user'] = user.id
                 request.session.set_expiry(value=300)
->>>>>>> 96a931f29dd95524f5a795b8392833b2f5f8f3f8
+                request.session.save()
 
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
 
@@ -349,13 +345,9 @@ def log_out(request):
 
     return: HttpResponseRedirect
     """
-<<<<<<< HEAD
     session = Session.objects.filter(session_key=request.session.session_key)
     session.delete()
-    
-=======
-    del request.session['user']
->>>>>>> 96a931f29dd95524f5a795b8392833b2f5f8f3f8
+
     logout(request=request)
 
     return redirect(to='login')
