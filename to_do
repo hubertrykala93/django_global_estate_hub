@@ -10,6 +10,7 @@ css border color #dfdfdf
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+1. wymienić wszystkie fieldy w search fields w panelu admina gdzie maja relacje foreign key lub many to many field
 1. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
 6. dokonczyc account-details, naprawic w templatkach aby userzy mogli wyswietlac
 7. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
