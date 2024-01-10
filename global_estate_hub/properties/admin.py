@@ -511,7 +511,7 @@ class AdminTourSchedule(admin.ModelAdmin):
     list_editable = ['date', 'property', 'name', 'email']
     list_filter = ['to', 'date_sent', 'date', 'name', 'email']
     list_display_links = ['id']
-    search_fields = ['to', 'name', 'email']
+    search_fields = ['to__username', 'name', 'email']
     ordering = ['date_sent']
     fieldsets = [
         [
@@ -561,6 +561,7 @@ class AdminOfferContact(admin.ModelAdmin):
     list_filter = ['first_name', 'last_name', 'email']
     list_display_links = ['first_name']
     ordering = ['date_sent']
+    search_fields = ['property__title', 'email']
     fieldsets = [
         [
             'Request Informations:', {
@@ -598,7 +599,7 @@ class AdminReview(admin.ModelAdmin):
     list_filter = ['user', 'date_posted', 'property', 'full_name', 'rate', 'active']
     list_editable = ['user', 'property', 'full_name', 'rate', 'active']
     list_display_links = ['id']
-    search_fields = ['user', 'property', 'full_name']
+    search_fields = ['user__username', 'property__title', 'full_name']
     ordering = ['date_posted']
     actions = ['approve_reviews']
     fieldsets = [

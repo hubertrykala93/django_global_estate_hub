@@ -76,7 +76,7 @@ class AdminArticle(admin.ModelAdmin):
     list_editable = ['user', 'image', 'category']
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
-    search_fields = ['title']
+    search_fields = ['user__username', 'title']
     ordering = ['date_posted']
     fieldsets = [
         [
@@ -152,7 +152,7 @@ class AdminComment(MPTTModelAdmin):
     list_editable = ['likes', 'dislikes', 'active']
     list_display_links = ['id']
     actions = ['approve_comments']
-    search_fields = ['user', 'comment']
+    search_fields = ['user__username', 'comment']
     ordering = ['date_posted']
     fieldsets = [
         [
@@ -232,7 +232,7 @@ class AdminCommentLike(admin.ModelAdmin):
     list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['id']
-    search_fields = ['user', 'comment']
+    search_fields = ['user__username', 'comment__comment']
     ordering = ['id']
     fieldsets = [
         [
@@ -260,7 +260,7 @@ class AdminCommentDislike(admin.ModelAdmin):
     list_display = ['id', 'user', 'comment']
     list_filter = ['user', 'comment']
     list_display_links = ['id']
-    search_fields = ['user', 'comment']
+    search_fields = ['user__username', 'comment__comment']
     ordering = ['id']
     fieldsets = [
         [

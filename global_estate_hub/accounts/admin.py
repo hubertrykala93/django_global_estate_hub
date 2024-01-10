@@ -101,7 +101,7 @@ class AdminIndividualProfile(admin.ModelAdmin):
                      'linkedin_url']
     list_filter = ['last_name', 'country', 'province', 'city', 'street', 'postal_code']
     list_display_links = ['id']
-    search_fields = ['user']
+    search_fields = ['user__username']
     ordering = ['id']
     radio_fields = {'gender': admin.VERTICAL}
     fieldsets = [
@@ -159,7 +159,7 @@ class AdminBusinessProfile(admin.ModelAdmin):
                      'linkedin_url']
     list_filter = ['company_name', 'country', 'province', 'city', 'street', 'postal_code']
     list_display_links = ['id']
-    search_fields = ['user']
+    search_fields = ['user__username']
     ordering = ['id']
     fieldsets = [
         [
