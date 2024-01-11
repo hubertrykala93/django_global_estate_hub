@@ -107,7 +107,7 @@
 
                                     <li>
                                         <img src="/media/icons/properties/property-card-bathroom.svg" alt="bath icon" aria-hidden="true">
-                                        <span>{% if property.number_of_bathrooms == 0 %}{{ property.number_of_bathrooms }} Bathrooms{% elif property.number_of_bathrooms == 1 %}{{ property.number_of_bathrooms }} Bathroom{% else %}{{ property.number_of_bathrooms }} Bathrooms{% endif %}</span>
+                                        <span>{% if property.number_of_bathrooms == 0 %}{{ property.number_of_bathrooms }} Baths{% elif property.number_of_bathrooms == 1 %}{{ property.number_of_bathrooms }} Bath{% else %}{{ property.number_of_bathrooms }} Baths{% endif %}</span>
                                     </li>
 
                                     <li>
@@ -211,6 +211,32 @@
                         <hr>
 
                         <div class="properties__filters__title h4">Price Range</div>
+
+                        <div class="form__row form__row__range-slider">
+                            <div class="form__field">
+                                <div class="form__input-wrap">
+                                    <div class="custom__range-slider" data-range-slider>
+                                        <div class="range-slider__inputs">
+                                            <span class="range-slider__track" data-range-slider-track></span>
+                                            <input type="range" name="min-value" class="range-slider__min-input" min="3200" max="6200" value="3200" data-range-min-input>
+                                            <input type="range" name="max-value" class="range-slider__max-input" min="3200" max="6200" value="6200" data-range-max-input>
+                                        </div>
+
+                                        <div class="range-slider__value-boxes">
+                                            <div class="range-slider__box">
+                                                <div class="range-slider__box__currency">$</div>
+                                                <div class="range-slider__box__value" data-range-min-box>3200</div>
+                                            </div>
+
+                                            <div class="range-slider__box">
+                                                <div class="range-slider__box__currency">$</div>
+                                                <div class="range-slider__box__value" data-range-max-box>6200</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <hr>
 

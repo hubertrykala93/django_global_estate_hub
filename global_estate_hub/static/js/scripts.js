@@ -300,6 +300,117 @@ const getRadioValue = (form, radioDataAttr) => {
   return ''
 }
 
+/**
+   * Custom select element
+    */
+
+const $customSelects = document.querySelectorAll('[data-custom-select]')
+
+if ( $customSelects.length ) {
+  const toggleSelect = ($select, $btn) => {
+      $select.classList.toggle('active')
+
+      $btn.setAttribute(
+        'aria-expanded',
+        $btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+      )
+  }
+
+  const closeSelect = ($select, $btn) => {
+    $select.classList.remove('active')
+
+    $btn.setAttribute('aria-expanded', 'false')
+  }
+
+  const closeAllSelects = () => {
+    const $activeSelects = document.querySelectorAll('[data-custom-select].active')
+    if ( $activeSelects.length ) {
+      $activeSelects.forEach(select => {
+        const $selectBtn = select.querySelector('[data-custom-select-btn]')
+        closeSelect(select, $selectBtn)
+      })
+    }
+  }
+
+  $customSelects.forEach(select => {
+    const $selectBtn = select.querySelector('[data-custom-select-btn]')
+
+    $selectBtn.addEventListener('click', () => {
+      // closeAllSelects()
+
+      toggleSelect(select, $selectBtn)
+    })
+
+    select.addEventListener('click', e => {
+      if ( e.target.tagName === 'INPUT' ) {
+        const $btnValue = $selectBtn.querySelector('[data-custom-select-btn-value]')
+        closeSelect(select, $selectBtn)
+
+        $btnValue.textContent = e.target.value
+      }
+    })
+  })
+
+  // if esc key was not pressed in combination with ctrl or alt or shift
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const isNotCombinedKey = !(e.ctrlKey || e.altKey || e.shiftKey);
+        if (isNotCombinedKey) {
+          closeAllSelects()
+        }
+    }
+  })
+
+}
+
+/**
+   * Custom range slider
+    */
+
+const $rangeSliderWrapper = document.querySelector('[data-range-slider]')
+
+if ( $rangeSliderWrapper ) {
+  const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+  const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+  const $minBox = $rangeSliderWrapper.querySelector('[data-range-min-box]')
+  const $maxBox = $rangeSliderWrapper.querySelector('[data-range-max-box]')
+  const $track = $rangeSliderWrapper.querySelector('[data-range-slider-track]')
+  const minGap = 0
+  const sliderMinValue = parseInt($minValue.min)
+  const sliderMaxValue = parseInt($minValue.max)
+
+  const slideMin = () => {
+    let gap = parseInt($maxValue.value) - parseInt($minValue.value)
+    if ( gap <= minGap ) {
+      $minValue.value = parseInt($maxValue.value) - minGap
+    }
+    $minBox.textContent = $minValue.value
+    setRangeSize()
+  }
+
+  const slideMax = () => {
+    let gap = parseInt($maxValue.value) - parseInt($minValue.value)
+    if ( gap <= minGap ) {
+      $maxValue.value = parseInt($minValue.value) - minGap
+    }
+    $maxBox.textContent = $maxValue.value
+    setRangeSize()
+  }
+
+  const setRangeSize = () => {
+    $track.style.left = `${($minValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue) * 100}%`
+    $track.style.right = `${100 - (($maxValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100}%`
+  }
+
+
+    slideMin()
+    slideMax()
+    setRangeSize()
+
+  $minValue.addEventListener('input', slideMin)
+  $maxValue.addEventListener('input', slideMax)
+}
+
 
 /**
    * Newsletter footer form
@@ -1278,8 +1389,6 @@ if ($addCommentInArticleForm) {
 }
 
 
-
-
 /*----------------------------------*\
   #ACCOUNT SETTINGS
 \*----------------------------------*/
@@ -2048,13 +2157,11 @@ if ( $propertiesPage ) {
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('wysłane dane: ', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('odebrane dane: ', response)
           serverResponse(response)
       }
     }
@@ -2063,71 +2170,24 @@ if ( $propertiesPage ) {
   }
 
   $propertiesRow.addEventListener('click', e=> {
+    // add to favourites
     if ( e.target.dataset.hasOwnProperty('addToFavourites') ) {
       addToFavouritesHandler(e.target)
     }
   })
+
+  /**
+   * Prevent filter forms submit when bot is sending
+    */
+
+  const $searchForm = $propertiesPage.querySelector('[data-properties-search-form]')
+  const $filtersForm = $propertiesPage.querySelector('[data-properties-filters-form]')
   
-}
-
-
-// custom select
-
-const $customSelects = document.querySelectorAll('[data-custom-select]')
-
-if ( $customSelects.length ) {
-  const toggleSelect = ($select, $btn) => {
-      $select.classList.toggle('active')
-
-      $btn.setAttribute(
-        'aria-expanded',
-        $btn.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
-      )
+  const stopSubmitingWhenBotSends = function (e) {
+    const urlValue = this.querySelector('[name="url"]').value
+    if ( !urlValue == '' ) { e.preventDefault() }
   }
 
-  const closeSelect = ($select, $btn) => {
-    $select.classList.remove('active')
-
-    $btn.setAttribute('aria-expanded', 'false')
-  }
-
-  const closeAllSelects = () => {
-    const $activeSelects = document.querySelectorAll('[data-custom-select].active')
-    if ( $activeSelects.length ) {
-      $activeSelects.forEach(select => {
-        const $selectBtn = select.querySelector('[data-custom-select-btn]')
-        closeSelect(select, $selectBtn)
-      })
-    }
-  }
-
-  $customSelects.forEach(select => {
-    const $selectBtn = select.querySelector('[data-custom-select-btn]')
-
-    $selectBtn.addEventListener('click', () => {
-      // closeAllSelects()
-
-      toggleSelect(select, $selectBtn)
-    })
-
-    select.addEventListener('click', e => {
-      if ( e.target.tagName === 'INPUT' ) {
-        const $btnValue = $selectBtn.querySelector('[data-custom-select-btn-value]')
-        closeSelect(select, $selectBtn)
-
-        $btnValue.textContent = e.target.value
-      }
-    })
-  })
-
-  // if esc key was not pressed in combination with ctrl or alt or shift
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const isNotCombinedKey = !(e.ctrlKey || e.altKey || e.shiftKey);
-        if (isNotCombinedKey) {
-          closeAllSelects()
-        }
-    }
-  })
-
+  $searchForm.addEventListener('submit', stopSubmitingWhenBotSends)
+  $filtersForm.addEventListener('submit', stopSubmitingWhenBotSends)
 }
