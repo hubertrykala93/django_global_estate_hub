@@ -12,7 +12,9 @@ css border color #dfdfdf
 
 @hubertrykala93
 1. w elemencie .property-card__title w poniższym a dodaj href z more info jeśli będzie już wygenerowana ścieżka
-2. do napisania funkcja obsługująca form .properties__filters__search-form (honeypot frontowo zabezpieczony przed wysyłką - jeszcze w backendzie to sprawdź na wszelki wypadek w czasie submita). Ma wyszukiwać po słowach użytych w tytułach
+2. w properties.html zaznaczone miejsce gdzie masz dodać paginację - ona jest dokładnie taka sama jak w blogu - pod względem nazw klas itp więc wizualnie będzie od razu wyglądać jak trzeba jeśli skopiujesz 1 do 1
+3. do napisania funkcja obsługująca form .properties__filters__search-form (honeypot frontowo zabezpieczony przed wysyłką - jeszcze w backendzie to sprawdź na wszelki wypadek w czasie submita). Ma wyszukiwać po słowach użytych w tytułach
+
 
 
 3. wymienić wszystkie fieldy w search fields w panelu admina gdzie maja relacje foreign key lub many to many field
