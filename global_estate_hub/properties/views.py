@@ -2,8 +2,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 import json
 from .models import Property
+from django.contrib.auth.decorators import login_required
 
 
+@login_required(login_url='login')
 def add_property(request):
     return render(request=request, template_name='properties/add-property.html', context={
         'title': 'Add Property',
@@ -45,3 +47,20 @@ def add_to_favourites(request):
             return JsonResponse(data={
                 "valid": False,
             })
+
+
+def property_details(request, property_slug):
+    property = Property.objects.get(slug=property_slug)
+
+    return render(request=request, template_name='properties/property-details.html', context={
+        'title': property.title,
+    })
+
+
+def property_results(request):
+    if 'keyword' in request.GET:
+        print(request.GET)
+
+    return render(request=request, template_name='properties/properties-results.html', context={
+        'title': 'Property Results',
+    })

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Newsletter, ContactMail
 import json
@@ -8,7 +8,7 @@ from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
 from django.utils.html import strip_tags
-from properties.models import Property
+from properties.models import Property, City
 
 load_dotenv()
 
@@ -113,28 +113,42 @@ def properties(request):
 
     return: HttpResponse
     """
-    if request.GET:
-        if 'Newest Properties' in request.GET.get('properties-order'):
-            request.session['sorted_type'] = request.GET.get('properties-order')
+    if request.method == 'GET':
+        if request.GET:
+            if 'properties-order' in request.GET:
+                if request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+
+                    if 'Oldest Properties' in request.GET.get('properties-order'):
+                        queryset = Property.objects.all().order_by('date_posted')
+
+                    elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+                        queryset = Property.objects.all().order_by('-title')
+
+                    elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                        queryset = Property.objects.all().order_by('title')
+
+                    else:
+                        queryset = Property.objects.all().order_by('-date_posted')
+
+            if 'keyword' in request.GET:
+                if len(request.GET.get('url')) == 0:
+                    if request.GET.get('keyword'):
+                        keyword = request.GET.get('keyword')
+
+                        queryset = Property.objects.filter(title__icontains=keyword).order_by('-date_posted')
+                        print(queryset)
+
+                        return render(request=request, template_name='properties/property-results.html', context={
+                            'title': 'Property Results',
+                            'properties': queryset,
+                        })
+
+        else:
+            request.session['sorted_type'] = 'Newest Properties'
             queryset = Property.objects.all().order_by('-date_posted')
 
-        elif 'Oldest Properties' in request.GET.get('properties-order'):
-            request.session['sorted_type'] = request.GET.get('properties-order')
-            queryset = Property.objects.all().order_by('date_posted')
-
-        elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-            request.session['sorted_type'] = request.GET.get('properties-order')
-            queryset = Property.objects.all().order_by('-title')
-
-        elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-            request.session['sorted_type'] = request.GET.get('properties-order')
-            queryset = Property.objects.all().order_by('title')
-
-    else:
-        request.session['sorted_type'] = 'Newest Properties'
-        queryset = Property.objects.all().order_by('-date_posted')
-
-    cities = sorted(list(set([p.city for p in Property.objects.all()])))
+    cities = sorted([city.name for city in City.objects.all()])
 
     return render(request=request, template_name='core/properties.html', context={
         'title': 'Properties',

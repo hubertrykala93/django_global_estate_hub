@@ -1,6 +1,6 @@
 from django.contrib import admin
-from .models import ListingStatus, PropertyType, Amenities, Plan, TourSchedule, OfferContact, \
-    Review, Education, HealthAndMedical, Transportation, Shopping, Property
+from .models import ListingStatus, Category, Amenities, Plan, TourSchedule, OfferContact, \
+    Review, Education, HealthAndMedical, Transportation, Shopping, City, Property
 from django.utils.translation import ngettext
 from django.contrib import messages
 
@@ -37,10 +37,10 @@ class AdminListingStatus(admin.ModelAdmin):
     ]
 
 
-@admin.register(PropertyType)
-class AdminPropertyType(admin.ModelAdmin):
+@admin.register(Category)
+class AdminCategory(admin.ModelAdmin):
     """
-    Admin options and functionalities for PropertyType model.
+    Admin options and functionalities for Category model.
     """
     list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
@@ -53,14 +53,14 @@ class AdminPropertyType(admin.ModelAdmin):
     ordering = ['id']
     fieldsets = [
         [
-            'Property Type Name:', {
+            'Category Name:', {
             'fields': [
                 'name',
             ]
         }
         ],
         [
-            'Property Type Alias', {
+            'Category Alias', {
             'fields': [
                 'slug',
             ]
@@ -275,18 +275,47 @@ class AdminShopping(admin.ModelAdmin):
     ]
 
 
+@admin.register(City)
+class AdminCity(admin.ModelAdmin):
+    """
+    Admin options and functionalities for City model.
+    """
+    list_display = ['id', 'name', 'slug']
+    list_filter = ['name']
+    list_editable = ['name', 'slug']
+    prepopulated_fields = {'slug': ['name']}
+    search_fields = ['name']
+    ordering = ['id']
+    fieldsets = [
+        [
+            'City Name:', {
+            'fields': [
+                'name',
+            ]
+        }
+        ],
+        [
+            'City Alias:', {
+            'fields': [
+                'slug',
+            ]
+        }
+        ]
+    ]
+
+
 @admin.register(Property)
 class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'user', 'title', 'date_posted', 'main_image', 'postal_code',
+    list_display = ['id', 'city', 'user', 'title', 'date_posted', 'main_image', 'postal_code',
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites', 'listing_status',
                     'image_files',
                     'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
-                    'parking_space', 'city', 'get_property_types', 'get_amenities', 'get_plans', 'get_educations',
+                    'parking_space', 'category', 'get_amenities', 'get_plans', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops']
     list_filter = ['user', 'date_posted', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                    'number_of_bathrooms', 'square_meters', 'parking_space', 'postal_code', 'city', 'province',
@@ -294,7 +323,8 @@ class AdminProperty(admin.ModelAdmin):
                    'country_code', 'latitude', 'longitude', 'is_featured', 'listing_status']
     list_editable = ['main_image', 'image_files', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
                      'number_of_bathrooms',
-                     'square_meters', 'parking_space', 'city', 'province', 'country', 'country_code', 'latitude',
+                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
+                     'latitude',
                      'longitude', 'video',
                      'is_featured',
                      'listing_status']
@@ -370,9 +400,9 @@ class AdminProperty(admin.ModelAdmin):
         }
         ],
         [
-            'Property Type:', {
+            'Property Category:', {
             'fields': [
-                'property_type',
+                'category',
             ]
         }
         ],
@@ -419,15 +449,6 @@ class AdminProperty(admin.ModelAdmin):
         return: str
         """
         return '\n'.join([p.name for p in obj.plan.all()])
-
-    @admin.display(description='Property Types')
-    def get_property_types(self, obj):
-        """
-        Displays in the admin panel all property types assigned to a given property.
-
-        return: str
-        """
-        return '\n'.join([t.name for t in obj.property_type.all()])
 
     @admin.display(description='Amenities')
     def get_amenities(self, obj):

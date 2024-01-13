@@ -1,6 +1,7 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from accounts.models import User
+from django.shortcuts import reverse
 
 
 class ListingStatus(models.Model):
@@ -24,25 +25,35 @@ class ListingStatus(models.Model):
         return self.name
 
 
-class PropertyType(models.Model):
+class Category(models.Model):
     """
-    Creating PropertyType model instance.
+    Creating Category model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
 
     class Meta:
-        verbose_name = 'Property Type'
-        verbose_name_plural = 'Property Types'
+        verbose_name = 'Category'
+        verbose_name_plural = 'Categories'
 
     def __str__(self):
         """
-        Returns the string representation of the property type name and displays it in the administrator panel.
+        Returns the string representation of the category name and displays it in the administrator panel.
 
         return: str
         """
         return self.name
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given category.
+
+        return HttpsResponseRedirect
+        """
+        return reverse(viewname='categories', kwargs={
+            'category_slug': self.slug,
+        })
 
 
 class Amenities(models.Model):
@@ -178,6 +189,37 @@ class Transportation(models.Model):
         return self.name
 
 
+class City(models.Model):
+    """
+    Creating City model instance.
+    """
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=100, null=True)
+    slug = models.SlugField(max_length=100, null=True)
+
+    class Meta:
+        verbose_name = 'City'
+        verbose_name_plural = 'Cities'
+
+    def __str__(self):
+        """
+        Returns the string representation of the city name and displays it in the administrator panel.
+
+        return: str
+        """
+        return self.name
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given city.
+
+        return HttpsResponseRedirect
+        """
+        return reverse(viewname='cities', kwargs={
+            'city_slug': self.slug,
+        })
+
+
 class Property(models.Model):
     """
     Creating Property model instance.
@@ -195,7 +237,7 @@ class Property(models.Model):
     square_meters = models.FloatField()
     parking_space = models.IntegerField()
     postal_code = models.CharField(max_length=20, null=True, blank=True)
-    city = models.CharField(max_length=100)
+    city = models.ForeignKey(to=City, on_delete=models.CASCADE, null=True, related_name='cities', blank=True)
     province = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100)
     country_code = models.CharField(max_length=5, null=True)
@@ -207,7 +249,7 @@ class Property(models.Model):
     favourites = models.ManyToManyField(to=User, related_name='favourites', blank=True)
     slug = models.SlugField(max_length=300, unique=True, null=True)
     listing_status = models.ForeignKey(to=ListingStatus, on_delete=models.CASCADE, related_name='listing_statuses')
-    property_type = models.ManyToManyField(to=PropertyType, related_name='property_types')
+    category = models.ForeignKey(to=Category, related_name='categories', null=True, on_delete=models.CASCADE)
     amenities = models.ManyToManyField(to=Amenities, related_name='amenities')
     plan = models.ManyToManyField(to=Plan, related_name='property_plan', blank=True)
     education = models.ManyToManyField(to=Education, blank=True)
@@ -227,6 +269,16 @@ class Property(models.Model):
         return: str
         """
         return self.title
+
+    def get_absolute_url(self):
+        """
+        Returns the absolute URL for a given property.
+
+        return HttpsResponseRedirect
+        """
+        return reverse(viewname='property-details', kwargs={
+            'property_slug': self.slug,
+        })
 
 
 class TourSchedule(models.Model):
