@@ -152,24 +152,7 @@ def blog_results(request):
             })
 
         else:
-            articles = Article.objects.all().order_by('-date_posted')
-
-            paginator = Paginator(object_list=articles, per_page=8)
-            page = request.GET.get('page')
-
-            pages = paginator.get_page(number=page)
-
-            if page is None:
-                pages = paginator.get_page(number=1)
-
-            else:
-                if page not in list(str(i) for i in pages.paginator.page_range):
-                    return redirect(to='error')
-
-            return render(request=request, template_name='blog/blog-results.html', context={
-                'title': 'Blog Results',
-                'pages': pages,
-            })
+            return redirect(to='blog')
 
     else:
         return render(request=request, template_name='blog/blog-results.html', context={

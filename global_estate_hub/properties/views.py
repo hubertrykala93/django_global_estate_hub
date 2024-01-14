@@ -1,8 +1,81 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 import json
-from .models import Property
+from .models import Property, City
 from django.contrib.auth.decorators import login_required
+
+
+def properties(request):
+    queryset = []
+    cities = sorted(list(set([city.name for city in City.objects.all()])))
+
+    if request.method == 'GET':
+        if request.GET:
+            if 'properties-order' in request.GET:
+                if request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+
+                    if 'Oldest Properties' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.all().order_by('date_posted'))
+
+                    elif 'Alphabetically Ascending' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.all().order_by('title'))
+
+                    elif 'Alphabetically Descending' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.all().order_by('-title'))
+
+                    else:
+                        queryset.extend(Property.objects.all().order_by('-date_posted'))
+
+        else:
+            request.session['sorted_type'] = 'Newest Properties'
+            queryset.extend(Property.objects.all().order_by('-date_posted'))
+
+    return render(request=request, template_name='properties/properties.html', context={
+        'title': 'Properties',
+        'properties': queryset,
+        'cities': cities,
+        'sorted_type': request.session['sorted_type'],
+    })
+
+
+def property_results(request):
+    queryset = []
+    cities = sorted(list(set([city.name for city in City.objects.all()])))
+
+    if 'keyword' in request.GET:
+        if request.GET.get('keyword'):
+            request.session['keyword'] = request.GET.get('keyword')
+            if 'properties-order' not in request.GET:
+                request.session['sorted_type'] = 'Newest Properties'
+                keyword = request.GET.get('keyword')
+
+                queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
+
+    else:
+        if 'properties-order' in request.GET:
+            if request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                if request.session['keyword']:
+                    keyword = request.session['keyword']
+                    if 'Oldest Properties' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('date_posted'))
+
+                    elif 'Alphabetically Ascending' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('title'))
+
+                    elif 'Alphabetically Descending' in request.session['sorted_type']:
+                        queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('-title'))
+
+                    else:
+                        queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
+
+    return render(request=request, template_name='properties/property-results.html', context={
+        'title': 'Property Results',
+        'properties': queryset,
+        'cities': cities,
+        'sorted_type': request.session['sorted_type']
+    })
 
 
 @login_required(login_url='login')
@@ -24,19 +97,19 @@ def add_to_favourites(request):
     """
     if request.method == 'PATCH':
         property_id = int(json.loads(s=request.body.decode('utf-8'))['propertyId'])
-        property = Property.objects.get(id=property_id)
+        property_obj = Property.objects.get(id=property_id)
 
-        if request.user in property.favourites.all():
-            property.favourites.remove(request.user)
+        if request.user in property_obj.favourites.all():
+            property_obj.favourites.remove(request.user)
 
             return JsonResponse(data={
                 "valid": True,
                 "propertyId": property_id,
             })
 
-        elif request.user not in property.favourites.all():
-            property.favourites.add(request.user)
-            property.save()
+        elif request.user not in property_obj.favourites.all():
+            property_obj.favourites.add(request.user)
+            property_obj.save()
 
             return JsonResponse(data={
                 "valid": True,
@@ -50,17 +123,8 @@ def add_to_favourites(request):
 
 
 def property_details(request, property_slug):
-    property = Property.objects.get(slug=property_slug)
+    property_obj = Property.objects.get(slug=property_slug)
 
     return render(request=request, template_name='properties/property-details.html', context={
-        'title': property.title,
-    })
-
-
-def property_results(request):
-    if 'keyword' in request.GET:
-        print(request.GET)
-
-    return render(request=request, template_name='properties/properties-results.html', context={
-        'title': 'Property Results',
+        'title': property_obj.title,
     })

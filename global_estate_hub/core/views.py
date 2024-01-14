@@ -107,57 +107,6 @@ def about(request):
     })
 
 
-def properties(request):
-    """
-    Returns an HttpResponse with the properties template.
-
-    return: HttpResponse
-    """
-    if request.method == 'GET':
-        if request.GET:
-            if 'properties-order' in request.GET:
-                if request.GET.get('properties-order'):
-                    request.session['sorted_type'] = request.GET.get('properties-order')
-
-                    if 'Oldest Properties' in request.GET.get('properties-order'):
-                        queryset = Property.objects.all().order_by('date_posted')
-
-                    elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-                        queryset = Property.objects.all().order_by('-title')
-
-                    elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-                        queryset = Property.objects.all().order_by('title')
-
-                    else:
-                        queryset = Property.objects.all().order_by('-date_posted')
-
-            if 'keyword' in request.GET:
-                if len(request.GET.get('url')) == 0:
-                    if request.GET.get('keyword'):
-                        keyword = request.GET.get('keyword')
-
-                        queryset = Property.objects.filter(title__icontains=keyword).order_by('-date_posted')
-                        print(queryset)
-
-                        return render(request=request, template_name='properties/property-results.html', context={
-                            'title': 'Property Results',
-                            'properties': queryset,
-                        })
-
-        else:
-            request.session['sorted_type'] = 'Newest Properties'
-            queryset = Property.objects.all().order_by('-date_posted')
-
-    cities = sorted([city.name for city in City.objects.all()])
-
-    return render(request=request, template_name='core/properties.html', context={
-        'title': 'Properties',
-        'properties': queryset,
-        'sorted_type': request.session['sorted_type'],
-        'cities': cities,
-    })
-
-
 def faq(request):
     """
     Returns an HttpResponse with the FAQ template.
