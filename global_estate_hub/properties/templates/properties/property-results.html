@@ -133,11 +133,11 @@
             <div class="filters-column">
                 <div class="properties__filters">
                     <div class="properties__filters__title h4">Find your home</div>
-                    <form data-properties-search-form class="properties__filters__search-form theme-form">
+                    <form data-properties-search-form class="properties__filters__search-form theme-form" action="{% url 'property-results' %}">
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
-                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                                <input type="text" class="url" autocomplete="off" tabindex="-1">
                             </label>
                         </div>
 
@@ -158,7 +158,7 @@
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
-                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                                <input type="text" class="url" autocomplete="off" tabindex="-1">
                             </label>
                         </div>
 

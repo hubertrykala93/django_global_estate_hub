@@ -137,7 +137,7 @@
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
-                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                                <input type="text" class="url" autocomplete="off" tabindex="-1">
                             </label>
                         </div>
 
@@ -158,59 +158,48 @@
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
-                                <input type="text" name="url" autocomplete="off" tabindex="-1">
+                                <input type="text" class="url" autocomplete="off" tabindex="-1">
                             </label>
                         </div>
 
+                        {% if listing_statuses %}
                         <div class="properties__filters__title h4">Listing Status</div>
 
                         <div class="form__row">
                             <div class="form__field">
                                 <div class="form__input-wrap form__radio-wrapper">
+                                    {% for status in listing_statuses %}
                                     <label>
-                                        <input data-status data-input type="radio" name="status" value="buy" checked>
-                                        <div class="radio__label">Buy</a></div>
+                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if listing_statuses.0|lower == status|lower %}checked{% endif %}>
+                                        <div class="radio__label">{{ status }}</div>
                                     </label>
-
-                                    <label>
-                                        <input data-status data-input type="radio" name="status" value="rent">
-                                        <div class="radio__label">Rent</a></div>
-                                    </label>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
 
                         <hr>
+                        {% endif %}
 
+                        {%  %}
+                        {% if categories %}
                         <div class="properties__filters__title h4">Category</div>
 
                         <div class="form__row">
                             <div class="form__field">
                                 <div class="form__input-wrap form__checkbox-wrapper">
+                                    {% for category in categories %}
                                     <label>
-                                        <input data-checkbox data-input type="checkbox" value="apartment">
-                                        <div class="checkbox__label">Apartment</a></div>
+                                        <input data-checkbox data-input type="checkbox" value="{{ category|lower }}">
+                                        <div class="checkbox__label">{{ category }}</div>
                                     </label>
-
-                                    <label>
-                                        <input data-checkbox data-input type="checkbox" value="houses">
-                                        <div class="checkbox__label">Houses</a></div>
-                                    </label>
-
-                                    <label>
-                                        <input data-checkbox data-input type="checkbox" value="rooms">
-                                        <div class="checkbox__label">Rooms</a></div>
-                                    </label>
-
-                                    <label>
-                                        <input data-checkbox data-input type="checkbox" value="townhouses">
-                                        <div class="checkbox__label">Townhouses</a></div>
-                                    </label>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
                         
                         <hr>
+                        {% endif %}
 
                         <div class="properties__filters__title h4">Price Range</div>
 

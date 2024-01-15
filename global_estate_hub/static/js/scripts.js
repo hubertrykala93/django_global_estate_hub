@@ -2184,7 +2184,7 @@ if ( $propertiesPage ) {
   const $filtersForm = $propertiesPage.querySelector('[data-properties-filters-form]')
   
   const stopSubmitingWhenBotSends = function (e) {
-    const urlValue = this.querySelector('[name="url"]').value
+    const urlValue = this.querySelector('.url').value
     if ( !urlValue == '' ) { e.preventDefault() }
   }
 
