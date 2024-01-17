@@ -2098,6 +2098,7 @@ const $propertiesPage = document.querySelector('[data-properties]')
 
 if ( $propertiesPage ) {
   const $propertiesRow = $propertiesPage.querySelector('[data-properties-row]')
+  const $filtersForm = $propertiesPage.querySelector('[data-properties-filters-form]')
 
   /**
    * Change view
@@ -2181,7 +2182,6 @@ if ( $propertiesPage ) {
     */
 
   const $searchForm = $propertiesPage.querySelector('[data-properties-search-form]')
-  const $filtersForm = $propertiesPage.querySelector('[data-properties-filters-form]')
   
   const stopSubmitingWhenBotSends = function (e) {
     const urlValue = this.querySelector('.url').value
@@ -2190,4 +2190,73 @@ if ( $propertiesPage ) {
 
   $searchForm.addEventListener('submit', stopSubmitingWhenBotSends)
   $filtersForm.addEventListener('submit', stopSubmitingWhenBotSends)
+
+  /**
+   * Updating filers form
+    */
+  const $statusesParent = $filtersForm.querySelector('[data-change-status]')
+  const $categoriesParent = $filtersForm.querySelector('[data-change-category]')
+  const serverResponse = (response, chosenCategories) => {
+    let newCategoriesList = ''
+    response.categories.forEach(item => {
+        if ( chosenCategories.includes(item[0]) ) {
+            newCategoriesList += `
+            <label>
+                <input data-checkbox data-input type="checkbox" value="${item[0]}" checked>
+                <div class="checkbox__label">${item[1]}</div>
+            </label>
+            `
+        } else {
+            newCategoriesList += `
+                <label>
+                    <input data-checkbox data-input type="checkbox" value="${item[0]}">
+                    <div class="checkbox__label">${item[1]}</div>
+                </label>
+            `
+        }
+    })
+    $categoriesParent.innerHTML = newCategoriesList
+  }
+
+  $filtersForm.addEventListener('change', (e) => {
+    const data = {}
+    //status
+    let chosenStatus = ''
+    const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
+    for (let i = 0; i < $statusesInputs.length; i++) {
+        if ( $statusesInputs[i].checked ) {
+            data.chosenStatus = $statusesInputs[i].value
+        }
+    }
+
+
+    //category
+    let chosenCategories = []
+    const $categoriesInputs = $categoriesParent.querySelectorAll('[data-input]')
+    for (let i = 0; i < $categoriesInputs.length; i++) {
+        if ( $categoriesInputs[i].checked ) {
+            chosenCategories.push($categoriesInputs[i].value)
+        }
+    }
+    data.chosenCategories = chosenCategories
+
+    const xhr = new XMLHttpRequest()
+
+    xhr.open('POST', 'update-filters', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('sent', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('received', response)
+          serverResponse(response, chosenCategories)
+      }
+    }
+
+  })
+
 }

@@ -3,27 +3,29 @@ from django.http import JsonResponse
 import json
 from .models import Property, City, ListingStatus, Category
 from django.contrib.auth.decorators import login_required
+import re
 
 
 def properties(request):
     queryset = []
-    cities = sorted(list(set([city.name for city in City.objects.all()])))
     listing_statuses = ListingStatus.objects.all()
-    categories = Category.objects.all().order_by('name')
+    rent_status_id = ListingStatus.objects.get(name='Rent').id
 
-    rent_properties = Property.objects.filter(
-        listing_status_id=[status.id for status in listing_statuses if status.name == 'Rent'][0])
-    buy_properties = Property.objects.filter(
-        listing_status_id=[status.id for status in listing_statuses if status.name == 'Sell'][0])
-
-    for rent_property in rent_properties:
-        print(f'Property title: {rent_property.title},'
-              f'Property category: {rent_property.category},'
-              f'Property price: {rent_property.price},'
-              f'Property number of bedrooms: {rent_property.number_of_bedrooms},'
-              f'Property number of bathrooms: {rent_property.number_of_bathrooms},'
-              f'Property location: {rent_property.city},'
-              f'Property square meters: {rent_property.square_meters}.')
+    categories = sorted(
+        list(set([obj.category.name for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
+    min_price = \
+        sorted([int(obj.price.replace('.', '')) for obj in Property.objects.filter(listing_status_id=rent_status_id)])[
+            0]
+    max_price = \
+        sorted([int(obj.price.replace('.', '')) for obj in Property.objects.filter(listing_status_id=rent_status_id)])[
+            -1]
+    number_of_bedrooms = sorted(
+        list(set([obj.number_of_bedrooms for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
+    number_of_bathrooms = sorted(
+        list(set([obj.number_of_bathrooms for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
+    cities = sorted(list(set(obj.city.name for obj in Property.objects.filter(listing_status_id=rent_status_id))))
+    square_meters = sorted(
+        list(set([int(obj.square_meters) for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
 
     if request.method == 'GET':
         if request.GET:
@@ -54,12 +56,18 @@ def properties(request):
         'sorted_type': request.session['sorted_type'],
         'listing_statuses': listing_statuses,
         'categories': categories,
+        'min_price': min_price,
+        'max_price': max_price,
+        'number_of_bedrooms': number_of_bedrooms,
+        'number_of_bathrooms': number_of_bathrooms,
+        'square_meters': square_meters,
     })
 
 
 def property_results(request):
     queryset = []
     cities = sorted(list(set([city.name for city in City.objects.all()])))
+    listing_statuses = ListingStatus.objects.all()
 
     if request.method == 'GET':
         if request.GET:
@@ -95,12 +103,26 @@ def property_results(request):
         'title': 'Property Results',
         'properties': queryset,
         'cities': cities,
+        'listing_statuses': listing_statuses,
         'sorted_type': request.session['sorted_type'],
     })
 
 
-def property_filters(request):
-    pass
+def update_filters(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        selected_status = data['chosenStatus']
+        selected_categories = data['chosenCategories']
+        status_id = ListingStatus.objects.get(name=selected_status.capitalize()).id
+
+        response = {}
+
+        categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
+                                      Property.objects.filter(listing_status_id=status_id)])))
+
+        response.update({'categories': categories})
+
+        return JsonResponse(data=response, safe=False)
 
 
 @login_required(login_url='login')
