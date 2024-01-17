@@ -3,7 +3,6 @@ from django.http import JsonResponse
 import json
 from .models import Property, City, ListingStatus, Category
 from django.contrib.auth.decorators import login_required
-import re
 
 
 def properties(request):
@@ -34,20 +33,22 @@ def properties(request):
                     request.session['sorted_type'] = request.GET.get('properties-order')
 
                     if 'Oldest Properties' in request.session['sorted_type']:
-                        queryset.extend(Property.objects.all().order_by('date_posted'))
+                        queryset.extend(
+                            Property.objects.filter(listing_status_id=rent_status_id).order_by('date_posted'))
 
                     elif 'Alphabetically Ascending' in request.session['sorted_type']:
-                        queryset.extend(Property.objects.all().order_by('title'))
+                        queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('title'))
 
                     elif 'Alphabetically Descending' in request.session['sorted_type']:
-                        queryset.extend(Property.objects.all().order_by('-title'))
+                        queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-title'))
 
                     else:
-                        queryset.extend(Property.objects.all().order_by('-date_posted'))
+                        queryset.extend(
+                            Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
 
         else:
             request.session['sorted_type'] = 'Newest Properties'
-            queryset.extend(Property.objects.all().order_by('-date_posted'))
+            queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
 
     return render(request=request, template_name='properties/properties.html', context={
         'title': 'Properties',
@@ -111,16 +112,58 @@ def property_results(request):
 def update_filters(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        selected_status = data['chosenStatus']
-        selected_categories = data['chosenCategories']
-        status_id = ListingStatus.objects.get(name=selected_status.capitalize()).id
 
         response = {}
 
-        categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
-                                      Property.objects.filter(listing_status_id=status_id)])))
+        # selected status name
+        selected_status = data['chosenStatus']
 
-        response.update({'categories': categories})
+        # selected status id
+        selected_status_id = ListingStatus.objects.get(name=selected_status.capitalize()).id
+
+        # queryset for selected status
+        selected_status_queryset = Property.objects.filter(
+            listing_status_id=selected_status_id)
+
+        # minimum & maximum price of selected status queryset
+        min_price_of_selected_status_queryset, max_price_of_selected_status_queryset = \
+            min([int(obj.price.replace('.', '')) for obj in selected_status_queryset]), \
+                max([int(obj.price.replace('.', '')) for obj in selected_status_queryset])
+
+        # selected categories names
+        selected_categories = [name.capitalize() for name in data['chosenCategories']]
+
+        # selected categories id's
+        selected_categories_ids = [Category.objects.get(name=category).id for category in selected_categories]
+
+        # sum of querysets for each category
+        selected_categories_queryset = []
+
+        for pk in selected_categories_ids:
+            selected_categories_queryset.extend(
+                Property.objects.filter(listing_status_id=selected_status_id, category_id=pk))
+
+        # category slug and category name in tuple for response
+        # -> [(category_slug, category_name), (category_slug, category_name), ...]
+        categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
+                                      Property.objects.filter(listing_status_id=selected_status_id)])))
+
+        # minimum & maximum price for filtering queryset by status and categories for response
+        min_price, max_price = \
+            min([int(obj.price.replace('.', '')) for obj in selected_categories_queryset]) if len(
+                [int(obj.price.replace('.', '')) for obj in
+                 selected_categories_queryset]) != 0 else min_price_of_selected_status_queryset, \
+                max(
+                    [int(obj.price.replace('.', '')) for obj in selected_categories_queryset]) if len(
+                    [int(obj.price.replace('.', '')) for obj in
+                     selected_categories_queryset]) != 0 else max_price_of_selected_status_queryset
+
+        response.update(
+            {
+                'categories': categories,
+                'price_range': [min_price, max_price],
+            }
+        )
 
         return JsonResponse(data=response, safe=False)
 
