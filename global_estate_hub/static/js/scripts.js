@@ -2216,8 +2216,6 @@ if ( $propertiesPage ) {
   const $maxBox = $filtersForm.querySelector('[data-range-max-box]')
 
   const updatePriceRange = () => {
-    const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
-    const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
     const $track = $rangeSliderWrapper.querySelector('[data-range-slider-track]')
     const sliderMinValue = parseInt($minValue.min)
     const sliderMaxValue = parseInt($minValue.max)
@@ -2270,7 +2268,6 @@ if ( $propertiesPage ) {
   $filtersForm.addEventListener('change', (e) => {
     const data = {}
     //status
-    let chosenStatus = ''
     const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
     for (let i = 0; i < $statusesInputs.length; i++) {
         if ( $statusesInputs[i].checked ) {
@@ -2288,6 +2285,9 @@ if ( $propertiesPage ) {
         }
     }
     data.chosenCategories = chosenCategories
+
+    //price range
+    data.priceRange = [$minValue.value, $maxValue.value]
 
     const xhr = new XMLHttpRequest()
 
