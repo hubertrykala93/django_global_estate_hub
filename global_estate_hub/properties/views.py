@@ -12,12 +12,9 @@ def properties(request):
 
     categories = sorted(
         list(set([obj.category.name for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
-    min_price = \
-        sorted([int(obj.price.replace('.', '')) for obj in Property.objects.filter(listing_status_id=rent_status_id)])[
-            0]
-    max_price = \
-        sorted([int(obj.price.replace('.', '')) for obj in Property.objects.filter(listing_status_id=rent_status_id)])[
-            -1]
+    min_price = min([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)])
+    max_price = max([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)])
+
     number_of_bedrooms = sorted(
         list(set([obj.number_of_bedrooms for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
     number_of_bathrooms = sorted(
@@ -122,13 +119,11 @@ def update_filters(request):
         selected_status_id = ListingStatus.objects.get(name=selected_status.capitalize()).id
 
         # queryset for selected status
-        selected_status_queryset = Property.objects.filter(
-            listing_status_id=selected_status_id)
+        selected_status_queryset = Property.objects.filter(listing_status_id=selected_status_id)
 
         # minimum & maximum price of selected status queryset
-        min_price_of_selected_status_queryset, max_price_of_selected_status_queryset = \
-            min([int(obj.price.replace('.', '')) for obj in selected_status_queryset]), \
-                max([int(obj.price.replace('.', '')) for obj in selected_status_queryset])
+        min_price_of_selected_queryset = min([obj.price for obj in selected_status_queryset])
+        max_price_of_selected_queryset = max([obj.price for obj in selected_status_queryset])
 
         # selected categories names
         selected_categories = [name.capitalize() for name in data['chosenCategories']]
@@ -145,27 +140,23 @@ def update_filters(request):
 
         # category slug and category name in tuple for response
         # -> [(category_slug, category_name), (category_slug, category_name), ...]
-        categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
-                                      Property.objects.filter(listing_status_id=selected_status_id)])))
+        selected_status_categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
+                                                      Property.objects.filter(listing_status_id=selected_status_id)])))
 
         # minimum & maximum price for filtering queryset by status and categories for response
-        min_price, max_price = \
-            min([int(obj.price.replace('.', '')) for obj in selected_categories_queryset]) if len(
-                [int(obj.price.replace('.', '')) for obj in
-                 selected_categories_queryset]) != 0 else min_price_of_selected_status_queryset, \
-                max(
-                    [int(obj.price.replace('.', '')) for obj in selected_categories_queryset]) if len(
-                    [int(obj.price.replace('.', '')) for obj in
-                     selected_categories_queryset]) != 0 else max_price_of_selected_status_queryset
+        min_price = min([obj.price for obj in selected_categories_queryset]) if len(
+            [obj.price for obj in selected_categories_queryset]) != 0 else min_price_of_selected_queryset
+        max_price = max([obj.price for obj in selected_categories_queryset]) if len(
+            [obj.price for obj in selected_categories_queryset]) != 0 else max_price_of_selected_queryset
 
         response.update(
             {
-                'categories': categories,
+                'categories': selected_status_categories,
                 'price_range': [min_price, max_price],
             }
         )
 
-        return JsonResponse(data=response, safe=False)
+        return JsonResponse(data=response)
 
 
 @login_required(login_url='login')

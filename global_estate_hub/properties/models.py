@@ -231,7 +231,7 @@ class Property(models.Model):
     main_image = models.ImageField(upload_to='property_images', null=True)
     image_files = models.FileField(upload_to=f'property_images/{title}', null=True, blank=True)
     year_of_built = models.IntegerField()
-    price = models.CharField(max_length=20)
+    price = models.FloatField(default=1, null=True)
     number_of_bedrooms = models.IntegerField()
     number_of_bathrooms = models.IntegerField()
     square_meters = models.FloatField()

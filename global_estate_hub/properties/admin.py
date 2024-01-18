@@ -309,19 +309,19 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'city', 'user', 'title', 'date_posted', 'main_image', 'postal_code',
+    list_display = ['id', 'city', 'user', 'title', 'price', 'listing_status', 'category', 'date_posted', 'main_image',
+                    'postal_code',
                     'province',
                     'country',
-                    'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites', 'listing_status',
+                    'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
                     'image_files',
-                    'year_of_built', 'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
-                    'parking_space', 'category', 'get_amenities', 'get_plans', 'get_educations',
+                    'year_of_built', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
+                    'parking_space', 'get_amenities', 'get_plans', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops']
-    list_filter = ['user', 'date_posted', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
-                   'number_of_bathrooms', 'square_meters', 'parking_space', 'postal_code', 'city', 'province',
-                   'country',
-                   'country_code', 'latitude', 'longitude', 'is_featured', 'listing_status']
-    list_editable = ['main_image', 'image_files', 'title', 'year_of_built', 'price', 'number_of_bedrooms',
+    list_filter = ['user', 'category', 'date_posted', 'year_of_built', 'number_of_bedrooms',
+                   'number_of_bathrooms', 'city', 'province',
+                   'country', 'is_featured', 'listing_status']
+    list_editable = ['main_image', 'image_files', 'title', 'price', 'year_of_built', 'number_of_bedrooms',
                      'number_of_bathrooms',
                      'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
                      'latitude',
