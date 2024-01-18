@@ -370,16 +370,13 @@ if ( $customSelects.length ) {
 const $rangeSliderWrapper = document.querySelector('[data-range-slider]')
 
 if ( $rangeSliderWrapper ) {
-  const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
-  const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
-  const $minBox = $rangeSliderWrapper.querySelector('[data-range-min-box]')
-  const $maxBox = $rangeSliderWrapper.querySelector('[data-range-max-box]')
-  const $track = $rangeSliderWrapper.querySelector('[data-range-slider-track]')
   const minGap = 0
-  const sliderMinValue = parseInt($minValue.min)
-  const sliderMaxValue = parseInt($minValue.max)
 
   const slideMin = () => {
+    const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+    const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+    const $minBox = $rangeSliderWrapper.querySelector('[data-range-min-box]')
+
     let gap = parseInt($maxValue.value) - parseInt($minValue.value)
     if ( gap <= minGap ) {
       $minValue.value = parseInt($maxValue.value) - minGap
@@ -389,6 +386,10 @@ if ( $rangeSliderWrapper ) {
   }
 
   const slideMax = () => {
+    const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+    const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+    const $maxBox = $rangeSliderWrapper.querySelector('[data-range-max-box]')
+
     let gap = parseInt($maxValue.value) - parseInt($minValue.value)
     if ( gap <= minGap ) {
       $maxValue.value = parseInt($minValue.value) - minGap
@@ -398,17 +399,29 @@ if ( $rangeSliderWrapper ) {
   }
 
   const setRangeSize = () => {
+    const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+    const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+    const $track = $rangeSliderWrapper.querySelector('[data-range-slider-track]')
+    const sliderMinValue = parseInt($minValue.min)
+    const sliderMaxValue = parseInt($minValue.max)
+
     $track.style.left = `${($minValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue) * 100}%`
     $track.style.right = `${100 - (($maxValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100}%`
   }
 
+  slideMin()
+  slideMax()
+  setRangeSize()
 
+  const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+  const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+
+  $minValue.addEventListener('input', () => {
     slideMin()
+  })
+  $maxValue.addEventListener('input', () => {
     slideMax()
-    setRangeSize()
-
-  $minValue.addEventListener('input', slideMin)
-  $maxValue.addEventListener('input', slideMax)
+  })
 }
 
 
@@ -2196,7 +2209,26 @@ if ( $propertiesPage ) {
     */
   const $statusesParent = $filtersForm.querySelector('[data-change-status]')
   const $categoriesParent = $filtersForm.querySelector('[data-change-category]')
+
+  const $minValue = $filtersForm.querySelector('[data-range-min-input]')
+  const $maxValue = $filtersForm.querySelector('[data-range-max-input]')
+  const $minBox = $filtersForm.querySelector('[data-range-min-box]')
+  const $maxBox = $filtersForm.querySelector('[data-range-max-box]')
+
+  const updatePriceRange = () => {
+    const $minValue = $rangeSliderWrapper.querySelector('[data-range-min-input]')
+    const $maxValue = $rangeSliderWrapper.querySelector('[data-range-max-input]')
+    const $track = $rangeSliderWrapper.querySelector('[data-range-slider-track]')
+    const sliderMinValue = parseInt($minValue.min)
+    const sliderMaxValue = parseInt($minValue.max)
+
+    $track.style.left = `${($minValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue) * 100}%`
+    $track.style.right = `${100 - (($maxValue.value - sliderMinValue) / (sliderMaxValue - sliderMinValue)) * 100}%`
+  }
+
+
   const serverResponse = (response, chosenCategories) => {
+    //update categories
     let newCategoriesList = ''
     response.categories.forEach(item => {
         if ( chosenCategories.includes(item[0]) ) {
@@ -2216,6 +2248,23 @@ if ( $propertiesPage ) {
         }
     })
     $categoriesParent.innerHTML = newCategoriesList
+
+    //update price range
+    $minValue.min = response.price_range[0]
+    $minValue.max = response.price_range[1]
+    $maxValue.min = response.price_range[0]
+    $maxValue.max = response.price_range[1]
+
+    if ( $minValue.value <= response.price_range[0] ||  $minValue.value >= response.price_range[1]) { 
+      $minValue.value = response.price_range[0]
+      $minBox.textContent = response.price_range[0]
+    }
+    if ( $maxValue.value <= response.price_range[0] ||  $maxValue.value >= response.price_range[1]) { 
+      $maxValue.value = response.price_range[1]
+      $maxBox.textContent = response.price_range[1]
+    }
+
+    updatePriceRange()
   }
 
   $filtersForm.addEventListener('change', (e) => {
