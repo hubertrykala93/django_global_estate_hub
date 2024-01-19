@@ -1,3 +1,4 @@
+{% load blog_pagination_tag %}
 <div class="pagination">
     <ul class="pagination__list">
         {% if pages.has_previous %}
@@ -27,7 +28,7 @@
 
         {% if pages.has_next %}
         <li class="pagination__item pagination__item--with-icon pagination__item--icon-right">
-            <a href="?page={{ pages.next_page_number }}" aria-label="next page">
+            <a href="{{ request.get_full_path }}?page={{ pages.next_page_number }}" aria-label="next page">
                 Next
                 <i class="ri-arrow-right-line" aria-hidden="true"></i>
             </a>

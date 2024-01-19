@@ -24,45 +24,43 @@ def properties(request):
     square_meters = sorted(
         list(set([int(obj.square_meters) for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
 
-    if request.method == 'GET':
-        if request.GET:
-            if 'properties-order' in request.GET:
-                if request.GET.get('properties-order'):
-                    request.session['sorted_type'] = request.GET.get('properties-order')
-
-                    if 'Oldest Properties' in request.session['sorted_type']:
-                        queryset.extend(
-                            Property.objects.filter(listing_status_id=rent_status_id).order_by('date_posted'))
-
-                    elif 'Alphabetically Ascending' in request.session['sorted_type']:
-                        queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('title'))
-
-                    elif 'Alphabetically Descending' in request.session['sorted_type']:
-                        queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-title'))
-
-                    else:
-                        queryset.extend(
-                            Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
-
-        else:
-            request.session['sorted_type'] = 'Newest Properties'
-            queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
-
-    paginator = Paginator(object_list=queryset, per_page=3)
-    page = request.GET.get('page')
-
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
-    else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
-
-    print(pages.paginator.get_page(number=2))
-    print(pages.paginator.page_range)
-    print(type(page))
+    # if request.method == 'GET':
+    #     if request.GET:
+    #         if 'properties-order' in request.GET:
+    #             if request.GET.get('properties-order'):
+    #                 request.session['sorted_type'] = request.GET.get('properties-order')
+    #
+    #                 if 'Oldest Properties' in request.session['sorted_type']:
+    #                     queryset.extend(
+    #                         Property.objects.filter(listing_status_id=rent_status_id).order_by('date_posted'))
+    #
+    #                 elif 'Alphabetically Ascending' in request.session['sorted_type']:
+    #                     queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('title'))
+    #
+    #                 elif 'Alphabetically Descending' in request.session['sorted_type']:
+    #                     queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-title'))
+    #
+    #                 else:
+    #                     queryset.extend(
+    #                         Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
+    #
+    #     else:
+    #         request.session['sorted_type'] = 'Newest Properties'
+    #         queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
+    #
+    # paginator = Paginator(object_list=queryset, per_page=3)
+    # page = request.GET.get('page')
+    #
+    # pages = paginator.get_page(number=page)
+    #
+    # if page is None:
+    #     pages = paginator.get_page(number=1)
+    #
+    # else:
+    #     if page not in list(str(i) for i in pages.paginator.page_range):
+    #         return redirect(to='error')
+    #
+    # print(request.session.items())
 
     return render(request=request, template_name='properties/properties.html', context={
         'title': 'Properties',
