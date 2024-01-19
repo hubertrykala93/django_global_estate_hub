@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
-from .models import Property, City, ListingStatus, Category
+from .models import Property, ListingStatus, Category
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def properties(request):
@@ -47,6 +48,18 @@ def properties(request):
             request.session['sorted_type'] = 'Newest Properties'
             queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
 
+    paginator = Paginator(object_list=queryset, per_page=2)
+    page = request.GET.get('page')
+
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
     return render(request=request, template_name='properties/properties.html', context={
         'title': 'Properties',
         'properties': queryset,
@@ -59,50 +72,7 @@ def properties(request):
         'number_of_bedrooms': number_of_bedrooms,
         'number_of_bathrooms': number_of_bathrooms,
         'square_meters': square_meters,
-    })
-
-
-def property_results(request):
-    queryset = []
-    cities = sorted(list(set([city.name for city in City.objects.all()])))
-    listing_statuses = ListingStatus.objects.all()
-
-    if request.method == 'GET':
-        if request.GET:
-            if 'properties-order' in request.GET:
-                if request.GET.get('properties-order'):
-                    request.session['sorted_type'] = request.GET.get('properties-order')
-                    if request.session['keyword']:
-                        keyword = request.session['keyword']
-                        if 'Oldest Properties' in request.session['sorted_type']:
-                            queryset.extend(
-                                Property.objects.filter(title__icontains=keyword).order_by('date_posted'))
-
-                        elif 'Alphabetically Ascending' in request.session['sorted_type']:
-                            queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('title'))
-
-                        elif 'Alphabetically Descending' in request.session['sorted_type']:
-                            queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('-title'))
-
-                        else:
-                            queryset.extend(
-                                Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
-
-            elif 'keyword' in request.GET:
-                if request.GET.get('keyword'):
-                    request.session['keyword'] = request.GET.get('keyword')
-                    if 'properties-order' not in request.GET:
-                        request.session['sorted_type'] = 'Newest Properties'
-                        keyword = request.GET.get('keyword')
-
-                        queryset.extend(Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
-
-    return render(request=request, template_name='properties/property-results.html', context={
-        'title': 'Property Results',
-        'properties': queryset,
-        'cities': cities,
-        'listing_statuses': listing_statuses,
-        'sorted_type': request.session['sorted_type'],
+        'pages': pages,
     })
 
 
