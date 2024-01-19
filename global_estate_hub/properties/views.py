@@ -48,7 +48,7 @@ def properties(request):
             request.session['sorted_type'] = 'Newest Properties'
             queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
 
-    paginator = Paginator(object_list=queryset, per_page=2)
+    paginator = Paginator(object_list=queryset, per_page=3)
     page = request.GET.get('page')
 
     pages = paginator.get_page(number=page)
@@ -59,6 +59,10 @@ def properties(request):
     else:
         if page not in list(str(i) for i in pages.paginator.page_range):
             return redirect(to='error')
+
+    print(pages.paginator.get_page(number=2))
+    print(pages.paginator.page_range)
+    print(type(page))
 
     return render(request=request, template_name='properties/properties.html', context={
         'title': 'Properties',
