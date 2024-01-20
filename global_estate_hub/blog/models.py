@@ -84,7 +84,7 @@ class Article(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='article_images')
-    date_posted = models.DateTimeField(default=now, editable=False)
+    date_posted = models.DateTimeField(default=now)
     title = models.CharField(max_length=200, unique=True)
     content = RichTextUploadingField(max_length=10000, unique=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)

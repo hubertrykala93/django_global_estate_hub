@@ -88,12 +88,14 @@ TEMPLATES = [
                 "blog.context_processors.newest_articles",
                 "blog.context_processors.categories",
                 "blog.context_processors.popular_tags",
+                "properties.context_processors.featured_properties",
             ],
         },
     },
 ]
 
 SESSION_SAVE_EVERY_REQUEST = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 WSGI_APPLICATION = "global_estate_hub.wsgi.application"
 

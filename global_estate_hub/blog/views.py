@@ -6,13 +6,8 @@ from django.http import JsonResponse
 from accounts.models import User
 
 
-def blog(request):
-    """
-    Returns an HttpResponse with the blog template along with pagination.
-
-    return: HttpResponse
-    """
-    paginator = Paginator(object_list=Article.objects.order_by('-date_posted'), per_page=8)
+def blog_pagination(request, object_list, per_page):
+    paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
 
     pages = paginator.get_page(number=page)
@@ -24,9 +19,18 @@ def blog(request):
         if page not in list(str(i) for i in pages.paginator.page_range):
             return redirect(to='error')
 
+    return pages
+
+
+def blog(request):
+    """
+    Returns an HttpResponse with the blog template along with pagination.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='blog/blog.html', context={
         'title': 'Blog',
-        'pages': pages,
+        'pages': blog_pagination(request=request, object_list=Article.objects.order_by('-date_posted'), per_page=8),
     })
 
 
@@ -38,22 +42,12 @@ def article_categories(request, category_slug):
     """
     category = get_object_or_404(klass=Category, slug=category_slug)
 
-    paginator = Paginator(object_list=Article.objects.filter(category=category).order_by('date_posted'), per_page=8)
-    page = request.GET.get('page')
-
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
-    else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
-
     return render(request=request, template_name='blog/article-categories.html', context={
         'title': category,
         'category': category,
-        'pages': pages,
+        'pages': blog_pagination(request=request,
+                                 object_list=Article.objects.filter(category=category).order_by('-date_posted'),
+                                 per_page=8),
     })
 
 
@@ -65,21 +59,10 @@ def article_tags(request, tag_slug):
     """
     tag = get_object_or_404(klass=Tag, slug=tag_slug)
 
-    paginator = Paginator(object_list=Article.objects.filter(tags=tag).order_by('date_posted'), per_page=8)
-    page = request.GET.get('page')
-
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
-    else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
-
     return render(request=request, template_name='blog/article-tags.html', context={
         'title': tag,
-        'pages': pages,
+        'pages': blog_pagination(request=request, object_list=Article.objects.filter(tags=tag).order_by('-date_posted'),
+                                 per_page=8),
     })
 
 
@@ -122,11 +105,11 @@ def blog_results(request):
 
     return: HttpResponse
     """
+    articles = []
+
     if 'search' in request.GET:
         if request.GET.get('search'):
             keywords = request.GET.get('search').split()
-
-            articles = []
 
             for keyword in keywords:
                 articles.extend(
@@ -134,30 +117,17 @@ def blog_results(request):
                     Article.objects.filter(content__icontains=keyword).order_by('-date_posted')
                 )
 
-            paginator = Paginator(object_list=articles, per_page=8)
-            page = request.GET.get('page')
-
-            pages = paginator.get_page(number=page)
-
-            if page is None:
-                pages = paginator.get_page(number=1)
-
-            else:
-                if page not in list(str(i) for i in pages.paginator.page_range):
-                    return redirect(to='error')
-
             return render(request=request, template_name='blog/blog-results.html', context={
                 'title': 'Blog Results',
-                'pages': pages,
+                'articles': articles,
+                'pages': blog_pagination(request=request, object_list=articles, per_page=8),
             })
 
         else:
             return redirect(to='blog')
 
     else:
-        return render(request=request, template_name='blog/blog-results.html', context={
-            'title': 'Blog Results',
-        })
+        return redirect(to='blog')
 
 
 def add_comment(request, category_slug, article_slug):

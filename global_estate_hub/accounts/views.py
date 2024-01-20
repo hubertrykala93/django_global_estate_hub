@@ -259,9 +259,9 @@ def log_in(request):
 
 def authorization(request):
     """
-    The function handling the user authentication form using
-    the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
-    Upon successful form validation, the user is logged in.
+    The function handles the user authentication form using the POST method with Asynchronous JavaScript
+    and XMLHttpRequest (AJAX) request. Upon successful form validation, the user is logged in,
+    and data such as the user's login status and their ID in the database are stored in the session.
 
     return: JsonResponse
     """
@@ -345,10 +345,9 @@ def log_out(request):
 
     return: HttpResponseRedirect
     """
-    session = Session.objects.filter(session_key=request.session.session_key)
-    session.delete()
-
     logout(request=request)
+
+    request.session.flush()
 
     return redirect(to='login')
 

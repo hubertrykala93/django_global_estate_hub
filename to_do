@@ -10,8 +10,9 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
-2. w properties.html zaznaczone miejsce gdzie masz dodać paginację - ona jest dokładnie taka sama jak w blogu - pod względem nazw klas itp więc wizualnie będzie od razu wyglądać jak trzeba jeśli skopiujesz 1 do 1
-
+1. Wyłączyć przyciski w paginacji jesli strona jest pierwsza, biezaca lub ostatnia.
+2. Dodać zakładki properties do strony głównej
+3. Zrobić API.
 
 4. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
 5. dokonczyc account-details, naprawic w templatkach aby userzy mogli wyswietlac

@@ -9,7 +9,7 @@
         <div class="row blog__row">
             <div class="cards__column">
                 <div class="blog__results-details">
-                    The number of search results for the phrase <strong class="blog__results-details-phrase">{{ request.GET.search }}</strong> is <span class="blog__results-details-counter">{{ pages|length }}</span>
+                    The number of search results for the phrase <strong class="blog__results-details-phrase">{{ request.GET.search }}</strong> is <span class="blog__results-details-counter">{{ articles|length }}</span>
                 </div>
 
                 <div class="row blog-cards_row-results">
@@ -46,7 +46,9 @@
                         </div>
                     {% endfor %}
                 </div>
+                {% if pages.paginator.num_pages > 1 %}
                 {% include 'blog/pagination.html' %}
+                {% endif %}
             </div>
 
             <div class="sidebar__column">

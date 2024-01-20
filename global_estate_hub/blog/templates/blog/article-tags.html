@@ -48,7 +48,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% if pages.paginator.num_pages > 1 %}
                 {% include 'blog/pagination.html' %}
+                {% endif %}
             </div>
 
             <div class="sidebar__column">

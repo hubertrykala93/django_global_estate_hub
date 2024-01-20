@@ -37,24 +37,42 @@ def property_context(obj: dict = None):
         return context
 
 
+def property_pagination(request, object_list, per_page):
+    paginator = Paginator(object_list=object_list, per_page=per_page)
+    page = request.GET.get('page')
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
+    return pages
+
+
 def properties(request):
     queryset = []
     rent_status_id = ListingStatus.objects.get(name='Rent').id
 
+    if request.session.get('sorted_type'):
+        request.session.pop('sorted_type')
+
+    if request.session.get('keyword'):
+        request.session.pop('keyword')
+
     if request.GET:
-        # print('Request GET.')
-        # if 'keyword' in request.GET:
-        #     print('Keyword in request GET.')
-        #     request.session['keyword'] = request.GET.get('keyword')
-        #     keyword = request.GET.get('keyword')
-        #     queryset.extend(Property.objects.filter(title__icontains=keyword, listing_status=rent_status_id))
+        print('Request GET.')
 
         if 'properties-order' in request.GET:
             print('Properties Order in request GET.')
+
             if 'Newest Properties' in request.GET.get('properties-order'):
                 print('Newest Properties.')
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-date_posted'))
+
             if 'Oldest Properties' in request.GET.get('properties-order'):
                 print('Oldest Properties.')
                 request.session['sorted_type'] = request.GET.get('properties-order')
@@ -66,6 +84,7 @@ def properties(request):
                 queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('title'))
 
             if 'Alphabetically Descending' in request.GET.get('properties-order'):
+                print(request.GET)
                 print('Alphabetically Descending.')
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-title'))
@@ -80,24 +99,11 @@ def properties(request):
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-date_posted'))
 
-    paginator = Paginator(object_list=queryset, per_page=3)
-
-    page = request.GET.get('page')
-
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
-    else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
-
     context = property_context(obj={
         'title': 'Properties',
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
-        'pages': pages,
+        'pages': property_pagination(request=request, object_list=queryset, per_page=6),
     })
 
     return render(request=request, template_name='properties/properties.html', context=context)
@@ -113,7 +119,6 @@ def property_results(request):
         request.session['keyword'] = request.GET.get('keyword')
         queryset.extend(
             Property.objects.filter(title__icontains=keyword, listing_status=rent_status_id).order_by('-date_posted'))
-        print(request.session.items())
 
     elif 'properties-order' in request.GET:
         print('Elif properties-order in request GET.')
@@ -128,7 +133,7 @@ def property_results(request):
             request.session['sorted_type'] = 'Oldest Properties'
             queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
                                                     listing_status=rent_status_id).order_by('date_posted'))
-            
+
         elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
             print('Alphabetically Ascending in request GET get properties-order.')
             request.session['sorted_type'] = 'Alphabetically Ascending'
@@ -142,24 +147,17 @@ def property_results(request):
             queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
                                                     listing_status=rent_status_id).order_by('-title'))
 
-    paginator = Paginator(object_list=queryset, per_page=3)
-
-    page = request.GET.get('page')
-
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
     else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
+        print('Else.')
+        request.session['sorted_type'] = 'Newest Properties'
+        queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
+                                                listing_status=rent_status_id).order_by('-date_posted'))
 
     context = property_context(obj={
         'title': 'Property Results',
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
-        'pages': pages,
+        'pages': property_pagination(request=request, object_list=queryset, per_page=6),
     })
 
     return render(request=request, template_name='properties/property-results.html', context=context)

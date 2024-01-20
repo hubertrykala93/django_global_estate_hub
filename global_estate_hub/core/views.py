@@ -8,7 +8,6 @@ from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
 from django.utils.html import strip_tags
-from properties.models import Property, City
 
 load_dotenv()
 
@@ -19,6 +18,7 @@ def index(request):
 
     return: HttpResponse
     """
+    print(request.session.items())
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
     })
