@@ -6,76 +6,163 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 
-def properties(request):
-    queryset = []
-    listing_statuses = ListingStatus.objects.all()
+def property_context(obj: dict = None):
     rent_status_id = ListingStatus.objects.get(name='Rent').id
 
-    categories = sorted(
-        list(set([obj.category.name for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
-    min_price = min([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)])
-    max_price = max([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)])
+    context = {
+        'listing_statuses': ListingStatus.objects.all(),
+        'categories': sorted(
+            list(set([obj.category.name for obj in Property.objects.filter(listing_status_id=rent_status_id)]))),
+        'min_price': min([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)]),
+        'max_price': max([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)]),
+        'number_of_bedrooms': sorted(
+            list(set([obj.number_of_bedrooms for obj in
+                      Property.objects.filter(listing_status_id=rent_status_id)]))),
+        'number_of_bathrooms': sorted(
+            list(set([obj.number_of_bathrooms for obj in
+                      Property.objects.filter(listing_status_id=rent_status_id)]))),
+        'cities': sorted(
+            list(set(obj.city.name for obj in Property.objects.filter(listing_status_id=rent_status_id)))),
+        'square_meters': sorted(
+            list(
+                set([int(obj.square_meters) for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
+    }
 
-    number_of_bedrooms = sorted(
-        list(set([obj.number_of_bedrooms for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
-    number_of_bathrooms = sorted(
-        list(set([obj.number_of_bathrooms for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
-    cities = sorted(list(set(obj.city.name for obj in Property.objects.filter(listing_status_id=rent_status_id))))
-    square_meters = sorted(
-        list(set([int(obj.square_meters) for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
+    if obj is None:
+        return context
 
-    # if request.method == 'GET':
-    #     if request.GET:
-    #         if 'properties-order' in request.GET:
-    #             if request.GET.get('properties-order'):
-    #                 request.session['sorted_type'] = request.GET.get('properties-order')
-    #
-    #                 if 'Oldest Properties' in request.session['sorted_type']:
-    #                     queryset.extend(
-    #                         Property.objects.filter(listing_status_id=rent_status_id).order_by('date_posted'))
-    #
-    #                 elif 'Alphabetically Ascending' in request.session['sorted_type']:
-    #                     queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('title'))
-    #
-    #                 elif 'Alphabetically Descending' in request.session['sorted_type']:
-    #                     queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-title'))
-    #
-    #                 else:
-    #                     queryset.extend(
-    #                         Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
-    #
-    #     else:
-    #         request.session['sorted_type'] = 'Newest Properties'
-    #         queryset.extend(Property.objects.filter(listing_status_id=rent_status_id).order_by('-date_posted'))
-    #
-    # paginator = Paginator(object_list=queryset, per_page=3)
-    # page = request.GET.get('page')
-    #
-    # pages = paginator.get_page(number=page)
-    #
-    # if page is None:
-    #     pages = paginator.get_page(number=1)
-    #
-    # else:
-    #     if page not in list(str(i) for i in pages.paginator.page_range):
-    #         return redirect(to='error')
-    #
-    # print(request.session.items())
+    else:
+        context.update(obj)
 
-    return render(request=request, template_name='properties/properties.html', context={
+        return context
+
+
+def properties(request):
+    queryset = []
+    rent_status_id = ListingStatus.objects.get(name='Rent').id
+
+    if request.GET:
+        # print('Request GET.')
+        # if 'keyword' in request.GET:
+        #     print('Keyword in request GET.')
+        #     request.session['keyword'] = request.GET.get('keyword')
+        #     keyword = request.GET.get('keyword')
+        #     queryset.extend(Property.objects.filter(title__icontains=keyword, listing_status=rent_status_id))
+
+        if 'properties-order' in request.GET:
+            print('Properties Order in request GET.')
+            if 'Newest Properties' in request.GET.get('properties-order'):
+                print('Newest Properties.')
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-date_posted'))
+            if 'Oldest Properties' in request.GET.get('properties-order'):
+                print('Oldest Properties.')
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('date_posted'))
+
+            if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                print('Alphabetically Ascending.')
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('title'))
+
+            if 'Alphabetically Descending' in request.GET.get('properties-order'):
+                print('Alphabetically Descending.')
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-title'))
+
+        else:
+            print('Properties Order not in request GET.')
+            request.session['sorted_type'] = 'Newest Properties'
+            queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-date_posted'))
+
+    else:
+        print('No request GET.')
+        request.session['sorted_type'] = 'Newest Properties'
+        queryset.extend(Property.objects.filter(listing_status=rent_status_id).order_by('-date_posted'))
+
+    paginator = Paginator(object_list=queryset, per_page=3)
+
+    page = request.GET.get('page')
+
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
+    context = property_context(obj={
         'title': 'Properties',
         'properties': queryset,
-        'cities': cities,
         'sorted_type': request.session['sorted_type'],
-        'listing_statuses': listing_statuses,
-        'categories': categories,
-        'min_price': min_price,
-        'max_price': max_price,
-        'number_of_bedrooms': number_of_bedrooms,
-        'number_of_bathrooms': number_of_bathrooms,
-        'square_meters': square_meters,
         'pages': pages,
     })
+
+    return render(request=request, template_name='properties/properties.html', context=context)
+
+
+def property_results(request):
+    queryset = []
+    rent_status_id = ListingStatus.objects.get(name='Rent').id
+
+    if 'keyword' in request.GET:
+        print('Keyword in request GET.')
+        keyword = request.GET.get('keyword')
+        request.session['keyword'] = request.GET.get('keyword')
+        queryset.extend(
+            Property.objects.filter(title__icontains=keyword, listing_status=rent_status_id).order_by('-date_posted'))
+        print(request.session.items())
+
+    elif 'properties-order' in request.GET:
+        print('Elif properties-order in request GET.')
+        if 'Newest Properties' in request.GET.get('properties-order'):
+            print('Newest Properties in request GET get properties-order')
+            request.session['sorted_type'] = 'Newest Properties'
+            queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
+                                                    listing_status=rent_status_id).order_by('-date_posted'))
+
+        elif 'Oldest Properties' in request.GET.get('properties-order'):
+            print('Oldest Properties in request GET get properties-order.')
+            request.session['sorted_type'] = 'Oldest Properties'
+            queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
+                                                    listing_status=rent_status_id).order_by('date_posted'))
+            
+        elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+            print('Alphabetically Ascending in request GET get properties-order.')
+            request.session['sorted_type'] = 'Alphabetically Ascending'
+            queryset.extend(
+                Property.objects.filter(title__icontains=request.session.get('keyword'),
+                                        listing_status=rent_status_id).order_by('title'))
+
+        elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+            print('Alphabetically Descending in request GET get properties-order.')
+            request.session['sorted_type'] = 'Alphabetically Descending'
+            queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword'),
+                                                    listing_status=rent_status_id).order_by('-title'))
+
+    paginator = Paginator(object_list=queryset, per_page=3)
+
+    page = request.GET.get('page')
+
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
+    context = property_context(obj={
+        'title': 'Property Results',
+        'properties': queryset,
+        'sorted_type': request.session['sorted_type'],
+        'pages': pages,
+    })
+
+    return render(request=request, template_name='properties/property-results.html', context=context)
 
 
 def update_filters(request):
