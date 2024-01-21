@@ -2209,6 +2209,10 @@ if ( $propertiesPage ) {
     */
   const $statusesParent = $filtersForm.querySelector('[data-change-status]')
   const $categoriesParent = $filtersForm.querySelector('[data-change-category]')
+  const $minBedroomsParent = $filtersForm.querySelector('[data-change-min-bedrooms]')
+  const $maxBedroomsParent = $filtersForm.querySelector('[data-change-max-bedrooms]')
+  const $minBathroomsParent = $filtersForm.querySelector('[data-change-min-bathrooms]')
+  const $maxBathroomsParent = $filtersForm.querySelector('[data-change-max-bathrooms]')
 
   const $minValue = $filtersForm.querySelector('[data-range-min-input]')
   const $maxValue = $filtersForm.querySelector('[data-range-max-input]')
@@ -2225,7 +2229,7 @@ if ( $propertiesPage ) {
   }
 
 
-  const serverResponse = (response, chosenCategories) => {
+  const serverResponse = (response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom) => {
     //update categories
     let newCategoriesList = ''
     response.categories.forEach(item => {
@@ -2263,6 +2267,90 @@ if ( $propertiesPage ) {
     }
 
     updatePriceRange()
+
+    //update min bedrooms
+    let newMinBedroomsList = ''
+    response.min_bedrooms.forEach(item => {
+        if ( chosenMinBedroom == item ) {
+            newMinBedroomsList += `
+            <li role="option">
+                <input data-option type="radio" value="${item}" id="min-bedrooms-${item}" name="min-bedrooms" checked>
+                <label for="min-bedrooms-${item}">${item}</label>
+            </li>
+            `
+        } else {
+            newMinBedroomsList += `
+                <li role="option">
+                    <input data-option type="radio" value="${item}" id="min-bedrooms-${item}" name="min-bedrooms" />
+                    <label for="min-bedrooms-${item}">${item}</label>
+                </li>
+            `
+        }
+    })
+    $minBedroomsParent.innerHTML = newMinBedroomsList
+
+    //update max bedrooms
+    let newMaxBedroomsList = ''
+    response.max_bedrooms.forEach(item => {
+        if ( chosenMaxBedroom == item ) {
+            newMaxBedroomsList += `
+            <li role="option">
+                <input data-option type="radio" value="${item}" id="max-bedrooms-${item}" name="max-bedrooms" checked>
+                <label for="max-bedrooms-${item}">${item}</label>
+            </li>
+            `
+        } else {
+            newMaxBedroomsList += `
+                <li role="option">
+                    <input data-option type="radio" value="${item}" id="max-bedrooms-${item}" name="max-bedrooms">
+                    <label for="max-bedrooms-${item}">${item}</label>
+                </li>
+            `
+        }
+    })
+    $maxBedroomsParent.innerHTML = newMaxBedroomsList
+
+    //update min bathrooms
+    let newMinBathroomsList = ''
+    response.min_bathrooms.forEach(item => {
+        if ( chosenMinBathroom == item ) {
+            newMinBathroomsList += `
+            <li role="option">
+                <input data-option type="radio" value="${item}" id="min-bathrooms-${item}" name="min-bathrooms" checked>
+                <label for="min-bathrooms-${item}">${item}</label>
+            </li>
+            `
+        } else {
+            newMinBathroomsList += `
+                <li role="option">
+                    <input data-option type="radio" value="${item}" id="min-bathrooms-${item}" name="min-bathrooms" />
+                    <label for="min-bathrooms-${item}">${item}</label>
+                </li>
+            `
+        }
+    })
+    $minBathroomsParent.innerHTML = newMinBathroomsList
+
+    //update max bathrooms
+    let newMaxBathroomsList = ''
+    response.max_bathrooms.forEach(item => {
+        if ( chosenMaxBathroom == item ) {
+            newMaxBathroomsList += `
+            <li role="option">
+                <input data-option type="radio" value="${item}" id="max-bathrooms-${item}" name="max-bathrooms" checked>
+                <label for="max-bathrooms-${item}">${item}</label>
+            </li>
+            `
+        } else {
+            newMaxBathroomsList += `
+                <li role="option">
+                    <input data-option type="radio" value="${item}" id="max-bathrooms-${item}" name="max-bathrooms">
+                    <label for="max-bathrooms-${item}">${item}</label>
+                </li>
+            `
+        }
+    })
+    $maxBathroomsParent.innerHTML = newMaxBathroomsList
   }
 
   $filtersForm.addEventListener('change', (e) => {
@@ -2289,6 +2377,46 @@ if ( $propertiesPage ) {
     //price range
     data.priceRange = [$minValue.value, $maxValue.value]
 
+    //min bedrooms
+    let chosenMinBedroom = ''
+    const $minBedroomsInputs = $minBedroomsParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $minBedroomsInputs.length; i++) {
+        if ( $minBedroomsInputs[i].checked ) {
+            chosenMinBedroom = $minBedroomsInputs[i].value
+        }
+    }
+    data.chosenMinBedrooms = chosenMinBedroom
+
+    //max bedrooms
+    let chosenMaxBedroom = ''
+    const $maxBedroomsInputs = $maxBedroomsParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $maxBedroomsInputs.length; i++) {
+        if ( $maxBedroomsInputs[i].checked ) {
+            chosenMaxBedroom = $maxBedroomsInputs[i].value
+        }
+    }
+    data.chosenMaxBedrooms = chosenMaxBedroom
+
+    //min bedrooms
+    let chosenMinBathroom = ''
+    const $minBathroomsInputs = $minBathroomsParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $minBathroomsInputs.length; i++) {
+        if ( $minBathroomsInputs[i].checked ) {
+            chosenMinBathroom = $minBathroomsInputs[i].value
+        }
+    }
+    data.chosenMinBathrooms = chosenMinBathroom
+
+    //max bathrooms
+    let chosenMaxBathroom = ''
+    const $maxBathroomsInputs = $maxBathroomsParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $maxBathroomsInputs.length; i++) {
+        if ( $maxBathroomsInputs[i].checked ) {
+            chosenMaxBathroom = $maxBathroomsInputs[i].value
+        }
+    }
+    data.chosenMaxBathrooms = chosenMaxBathroom
+
     const xhr = new XMLHttpRequest()
 
     xhr.open('POST', 'update-filters', true)
@@ -2302,7 +2430,7 @@ if ( $propertiesPage ) {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('received', response)
-          serverResponse(response, chosenCategories)
+          serverResponse(response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom)
       }
     }
 

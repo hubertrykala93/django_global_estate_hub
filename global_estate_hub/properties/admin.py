@@ -309,18 +309,18 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'city', 'user', 'title', 'price', 'listing_status', 'category', 'date_posted', 'main_image',
+    list_display = ['id', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms', 'user', 'city', 'date_posted', 'main_image',
                     'postal_code',
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
                     'image_files',
-                    'year_of_built', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
+                    'year_of_built', 'title', 'price', 'square_meters',
                     'parking_space', 'get_amenities', 'get_plans', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops']
-    list_filter = ['user', 'category', 'date_posted', 'year_of_built', 'number_of_bedrooms',
-                   'number_of_bathrooms', 'city', 'province',
-                   'country', 'is_featured', 'listing_status']
+    list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
+                   'year_of_built', 'city', 'province',
+                   'country', 'is_featured', 'date_posted']
     list_editable = ['main_image', 'image_files', 'title', 'price', 'year_of_built', 'number_of_bedrooms',
                      'number_of_bathrooms',
                      'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',

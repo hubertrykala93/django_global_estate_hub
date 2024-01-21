@@ -18,7 +18,6 @@ def index(request):
 
     return: HttpResponse
     """
-    print(request.session.items())
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
     })

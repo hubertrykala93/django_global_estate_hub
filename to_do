@@ -10,6 +10,7 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+1. Dodać kropki do cen w footerze.
 1. Wyłączyć przyciski w paginacji jesli strona jest pierwsza, biezaca lub ostatnia.
 2. Dodać zakładki properties do strony głównej
 3. Zrobić API.

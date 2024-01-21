@@ -35,11 +35,11 @@
 
                         <div class="form__row">
                             <div class="form__field">
-                                <div data-change-status class="form__input-wrap form__radio-wrapper">
+                                <div data-change-status class="form__input-wrap form__checkbox-wrapper">
                                     {% for status in listing_statuses %}
                                     <label>
-                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if listing_statuses.0|lower == status|lower %}checked{% endif %}>
-                                        <div class="radio__label">{{ status }}</div>
+                                        <input data-status data-input type="checkbox" name="status" value="{{ status|lower }}"{% if listing_statuses.0|lower == status|lower %}checked{% endif %}>
+                                        <div class="checkbox__label">{{ status }}</div>
                                     </label>
                                     {% endfor %}
                                 </div>
@@ -122,12 +122,12 @@
                                         </button>
 
                                         {% if number_of_bedrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1">
-                                            {% for number in number_of_bedrooms %}
-                                            <li role="option">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1" data-change-min-bedrooms>
+                                            {% for number in number_of_bedrooms %}<li role="option">
                                                 <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min-bedrooms" />
                                                 <label for="min-bedrooms-{{ number }}">{{ number }}</label>
                                             </li>
+
                                             {% endfor %}
                                         </ul>
                                         {% endif %}
@@ -154,7 +154,7 @@
                                         </button>
 
                                         {% if number_of_bedrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2" data-change-max-bedrooms>
                                             {% for number in number_of_bedrooms %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ number }}" id="max-bedrooms-{{ number }}" name="max-bedrooms" />
@@ -190,7 +190,7 @@
                                         </button>
 
                                         {% if number_of_bathrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1" data-change-min-bathrooms>
                                             {% for number in number_of_bathrooms %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ number }}" id="min-bathrooms-{{ number }}" name="min-bathrooms" />
@@ -222,7 +222,7 @@
                                         </button>
 
                                         {% if number_of_bathrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2" data-change-max-bathrooms>
                                             {% for number in number_of_bathrooms %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max-bathrooms" />
