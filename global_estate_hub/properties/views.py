@@ -55,14 +55,6 @@ def property_pagination(request, object_list, per_page):
 def properties(request):
     queryset = []
 
-    # if request.session.get('sorted_type'):
-    #     request.session.pop('sorted_type')
-    #
-    # if request.session.get('keyword'):
-    #     request.session.pop('keyword')
-
-    # print(f'Request session at the beginning -> {request.session.items()}')
-
     if request.GET:
         print('Request GET.')
 
@@ -97,6 +89,7 @@ def properties(request):
                         Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('-title'))
 
             elif 'status' in request.session:
+                print(request.GET)
                 print('If properties order in request GET and then elif status in request session.')
                 queryset.clear()
                 queryset.extend(Property.objects.filter(
@@ -173,17 +166,18 @@ def properties(request):
             queryset.extend(Property.objects.all().order_by('-date_posted'))
 
     else:
+        print('No request GET.')
+        if request.session.get('sorted_type'):
+            request.session.pop('sorted_type')
+
         if request.session.get('keyword'):
             request.session.pop('keyword')
 
+        if request.session.get('status'):
+            request.session.pop('status')
+
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
-
-    # print()
-    # print(f'Request session on the end -> {request.session.items()}')
-
-    print(request.session.items())
-    print(len(queryset))
 
     context = {
         'title': 'Properties',
