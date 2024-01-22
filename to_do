@@ -14,6 +14,7 @@ admin
 1. Wyłączyć przyciski w paginacji jesli strona jest pierwsza, biezaca lub ostatnia.
 2. Dodać zakładki properties do strony głównej
 3. Zrobić API.
+4. Na samym końcu odkomentować OneTimePasswordManager, odkomentować atrybuty w OneTimePassword modelu. Dodać expires_in do list display i fieldsets w interfejsie admina.
 
 4. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
 5. dokonczyc account-details, naprawic w templatkach aby userzy mogli wyswietlac

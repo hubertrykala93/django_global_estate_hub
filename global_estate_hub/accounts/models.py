@@ -102,16 +102,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
 
-class OneTimePasswordManager(models.Manager):
-    """
-    Creating OneTimePasswordManager model.
-    """
-
-    def get_queryset(self):
-        """
-        Automatically deletes the OneTimePassword after 5 minutes.
-        """
-        return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
+# class OneTimePasswordManager(models.Manager):
+#     """
+#     Creating OneTimePasswordManager model.
+#     """
+#
+#     def get_queryset(self):
+#         """
+#         Automatically deletes the OneTimePassword after 5 minutes.
+#         """
+#         return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
 
 
 class OneTimePassword(models.Model):
@@ -122,8 +122,8 @@ class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
     created_at = models.DateTimeField(default=now)
-    expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
-    objects = OneTimePasswordManager()
+    # expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
+    # objects = OneTimePasswordManager()
 
     class Meta:
         verbose_name = 'One Time Password'

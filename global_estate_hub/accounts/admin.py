@@ -11,6 +11,7 @@ admin.site.unregister(Group)
 class AdminSession(admin.ModelAdmin):
     list_display = ['get_user', 'session_key', '_session_data', 'expire_date']
     readonly_fields = ['_session_data']
+    ordering = ['-expire_date']
 
     @admin.display(description='user')
     def get_user(self, obj):
@@ -85,7 +86,7 @@ class AdminOneTimePassword(admin.ModelAdmin):
     """
     Admin options and functionalities for OneTimePassword model.
     """
-    list_display = ['user', 'password', 'created_at', 'expires_in']
+    list_display = ['user', 'password', 'created_at']
     ordering = ['created_at']
     fieldsets = [
         [
@@ -100,7 +101,6 @@ class AdminOneTimePassword(admin.ModelAdmin):
             'Dates', {
             'fields': [
                 'created_at',
-                'expires_in',
             ]
         }
         ]

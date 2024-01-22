@@ -324,7 +324,6 @@ def authorization(request):
 
                 request.session['user'] = user.id
                 request.session['is_logged_in'] = True
-                request.session.set_expiry(value=300)
                 request.session.save()
 
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
