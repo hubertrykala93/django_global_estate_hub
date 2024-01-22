@@ -331,7 +331,7 @@ class AdminProperty(admin.ModelAdmin):
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user__username', 'title']
-    ordering = ['date_posted']
+    ordering = ['-title']
     actions = ['make_featured', 'remove_featured']
     fieldsets = [
         [
