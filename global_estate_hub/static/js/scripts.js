@@ -2213,6 +2213,9 @@ if ( $propertiesPage ) {
   const $maxBedroomsParent = $filtersForm.querySelector('[data-change-max-bedrooms]')
   const $minBathroomsParent = $filtersForm.querySelector('[data-change-min-bathrooms]')
   const $maxBathroomsParent = $filtersForm.querySelector('[data-change-max-bathrooms]')
+  const $locationParent = $filtersForm.querySelector('[data-change-location]')
+  const $minMetersParent = $filtersForm.querySelector('[data-change-min-meters]')
+  const $maxMetersParent = $filtersForm.querySelector('[data-change-max-meters]')
 
   const $minValue = $filtersForm.querySelector('[data-range-min-input]')
   const $maxValue = $filtersForm.querySelector('[data-range-max-input]')
@@ -2356,12 +2359,14 @@ if ( $propertiesPage ) {
   $filtersForm.addEventListener('change', (e) => {
     const data = {}
     //status
+    let chosenStatus = ''
     const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
     for (let i = 0; i < $statusesInputs.length; i++) {
         if ( $statusesInputs[i].checked ) {
-            data.chosenStatus = $statusesInputs[i].value
+            chosenStatus = $statusesInputs[i].value
         }
     }
+    data.chosenStatus = chosenStatus
 
 
     //category
@@ -2416,6 +2421,36 @@ if ( $propertiesPage ) {
         }
     }
     data.chosenMaxBathrooms = chosenMaxBathroom
+
+    //location
+    let chosenLocation = ''
+    const $locationInputs = $locationParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $locationInputs.length; i++) {
+        if ( $locationInputs[i].checked ) {
+          chosenLocation = $locationInputs[i].value
+        }
+    }
+    data.chosenLocation = chosenLocation
+
+    //min meters
+    let chosenMinMeters = ''
+    const $minMetersInputs = $minMetersParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $minMetersInputs.length; i++) {
+        if ( $minMetersInputs[i].checked ) {
+          chosenMinMeters = $minMetersInputs[i].value
+        }
+    }
+    data.chosenMinMeters = chosenMinMeters
+
+    //max meters
+    let chosenMaxMeters = ''
+    const $maxMetersInputs = $maxMetersParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $maxMetersInputs.length; i++) {
+        if ( $maxMetersInputs[i].checked ) {
+          chosenMaxMeters = $maxMetersInputs[i].value
+        }
+    }
+    data.chosenMaxMeters = chosenMaxMeters
 
     const xhr = new XMLHttpRequest()
 

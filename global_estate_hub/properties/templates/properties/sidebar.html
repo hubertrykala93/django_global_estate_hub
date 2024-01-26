@@ -261,7 +261,7 @@
                                         </button>
 
                                         {% if cities %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-location">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-location" data-change-location>
                                             {% for city in cities %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ city }}" id="{{ city|unicode_filter|lower }}" name="location" />
@@ -297,7 +297,7 @@
                                         </button>
 
                                         {% if square_meters %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-square">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-square" data-change-min-meters>
                                             {% for sqm in square_meters %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ sqm }}" id="min-square-{{ sqm }}" name="min-square1" />
@@ -329,7 +329,7 @@
                                         </button>
 
                                         {% if square_meters %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-square2">
+                                        <ul class="custom__select__dropdown" role="listbox" id="select-square2" data-change-max-meters>
                                             {% for sqm in square_meters %}
                                             <li role="option">
                                                 <input data-option type="radio" value="{{ sqm }}" id="max-square-{{ sqm }}" name="max-square" />
