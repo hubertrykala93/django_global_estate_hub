@@ -6,37 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
 
-def property_context(obj: dict = None):
-    rent_status_id = ListingStatus.objects.get(name='Rent').id
-
-    context = {
-        'listing_statuses': ListingStatus.objects.all(),
-        'categories': sorted(
-            list(set([obj.category.name for obj in Property.objects.filter(listing_status_id=rent_status_id)]))),
-        'min_price': min([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)]),
-        'max_price': max([obj.price for obj in Property.objects.filter(listing_status_id=rent_status_id)]),
-        'number_of_bedrooms': sorted(
-            list(set([obj.number_of_bedrooms for obj in
-                      Property.objects.filter(listing_status_id=rent_status_id)]))),
-        'number_of_bathrooms': sorted(
-            list(set([obj.number_of_bathrooms for obj in
-                      Property.objects.filter(listing_status_id=rent_status_id)]))),
-        'cities': sorted(
-            list(set(obj.city.name for obj in Property.objects.filter(listing_status_id=rent_status_id)))),
-        'square_meters': sorted(
-            list(
-                set([int(obj.square_meters) for obj in Property.objects.filter(listing_status_id=rent_status_id)])))
-    }
-
-    if obj is None:
-        return context
-
-    else:
-        context.update(obj)
-
-        return context
-
-
 def property_pagination(request, object_list, per_page):
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
@@ -55,6 +24,7 @@ def property_pagination(request, object_list, per_page):
 def properties(request):
     queryset = []
     context_1 = {}
+    print(request.session.items())
 
     if request.GET:
         print('Request GET.')
@@ -71,11 +41,33 @@ def properties(request):
                     queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
                         '-date_posted'))
 
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
+
                 elif 'Oldest Properties' in request.GET.get('properties-order'):
                     print('Oldest Properties in Properties Order with Keyword in request session.')
                     request.session['sorted_type'] = 'Oldest Properties'
                     queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
                         'date_posted'))
+
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
 
                 elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
                     print('Alphabetically Ascending in Properties Order with Keyword in request session.')
@@ -83,18 +75,41 @@ def properties(request):
                     queryset.extend(
                         Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('title'))
 
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
+
                 elif 'Alphabetically Descending' in request.GET.get('properties-order'):
                     print('Alphabetically Descending in Properties Order with Keyword in request session.')
                     request.session['sorted_type'] = 'Alphabetically Descending'
                     queryset.extend(
                         Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('-title'))
 
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
+
             elif 'status' in request.session:
                 print(request.GET)
                 print('If properties order in request GET and then elif status in request session.')
                 queryset.clear()
                 queryset.extend(Property.objects.filter(
-                    listing_status_id=ListingStatus.objects.get(name=request.session.get('status').capitalize())))
+                    listing_status_id=ListingStatus.objects.get(
+                        name=request.session.get('status').capitalize())).order_by('-date_posted'))
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     print('Newest Properties in Properties Order with Status in request session.')
@@ -131,27 +146,96 @@ def properties(request):
             elif 'category' in request.session:
                 print('If properties order in request GET and then elif category in request session.')
                 queryset.clear()
-                queryset.extend(Property.objects.filter(
-                    listing_status_id=ListingStatus.objects.get(name=request.session.get('status').capitalize())))
 
+                for c in request.session['category']:
+                    queryset.extend(
+                        Property.objects.filter(category=Category.objects.get(name=c.capitalize())).order_by(
+                            '-date_posted'))
+
+                if 'Newest Properties' in request.GET.get('properties-order'):
+                    print('Newest Properties in Properties Order with Category in request session.')
+                    queryset.clear()
+                    request.session['sorted_type'] = 'Newest Properties'
+
+                    for c in request.session['category']:
+                        queryset.extend(
+                            Property.objects.filter(category=Category.objects.get(name=c.capitalize())).order_by(
+                                '-date_posted'))
+
+                elif 'Oldest Properties' in request.GET.get('properties-order'):
+                    print('Oldest Properties in Properties Order with Category in request session.')
+                    queryset.clear()
+                    request.session['sorted_type'] = 'Oldest Properties'
+
+                    for c in request.session['category']:
+                        queryset.extend(
+                            Property.objects.filter(category=Category.objects.get(name=c.capitalize())).order_by(
+                                'date_posted'))
+
+                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                    pass
 
             else:
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('-date_posted'))
 
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
+
                 if 'Oldest Properties' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('date_posted'))
+
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
 
                 if 'Alphabetically Ascending' in request.GET.get('properties-order'):
                     print(request.session.items())
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('title'))
 
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
+
                 if 'Alphabetically Descending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('-title'))
+
+                    context_1.update({
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': [obj.name for obj in Category.objects.all()],
+                        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+                    })
 
         elif 'keyword' in request.GET:
             print('Elif keyword in request GET.')
@@ -161,38 +245,34 @@ def properties(request):
             queryset.extend(
                 Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
 
-        elif 'status' in request.GET:
-            print('Elif status in request GET.')
-            request.session['sorted_type'] = 'Newest Properties'
-            status = request.GET.get('status')
-            request.session['status'] = request.GET.get('status')
-            queryset.extend(
-                Property.objects.filter(listing_status_id=ListingStatus.objects.get(name=status.capitalize())))
-
-        elif 'category' in request.GET:
-            print('Elif category in request GET.')
-            category = request.GET.get('category')
-            request.session['sorted_type'] = 'Newest Properties'
-
-            request.session['category'] = [category]
-            queryset.extend(Property.objects.filter(category_id=Category.objects.get(name=category.capitalize())))
-            print(category)
-            print(request.session.items())
-
-            # context_1.update({
-            #     'listing_statuses': [obj.listing_status.name for obj in
-            #                          Property.objects.filter(category=Category.objects.get(name=category)).id],
-            #     'categories': [obj.name for obj in Category.objects.all()],
-            #     'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
-            #     'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
-            #     'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
-            #     'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
-            #     'cities': sorted(set([obj.name for obj in City.objects.all()])),
-            #     'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+            context_1.update({
+                'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                'categories': [obj.name for obj in Category.objects.all()],
+                'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+            })
 
         else:
+            if request.session.get('sorted_type'):
+                request.session.pop('sorted_type')
+
             request.session['sorted_type'] = 'Newest Properties'
             queryset.extend(Property.objects.all().order_by('-date_posted'))
+
+            context_1.update({
+                'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                'categories': [obj.name for obj in Category.objects.all()],
+                'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+                'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+                'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+                'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+                'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+            })
 
     else:
         print('No request GET.')
@@ -202,26 +282,28 @@ def properties(request):
         if request.session.get('keyword'):
             request.session.pop('keyword')
 
-        if request.session.get('status'):
-            request.session.pop('status')
-
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
+
+        context_1.update({
+            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+            'categories': [obj.name for obj in Category.objects.all()],
+            'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
+            'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
+            'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+            'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+            'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+        })
 
     context_2 = {
         'title': 'Properties',
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
         'pages': property_pagination(request=request, object_list=queryset, per_page=6),
-        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-        'categories': [obj.name for obj in Category.objects.all()],
-        'min_price': min(list(set([obj.price for obj in Property.objects.all()]))),
-        'max_price': max(list(set([obj.price for obj in Property.objects.all()]))),
-        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
-        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
-        'cities': sorted(set([obj.name for obj in City.objects.all()])),
-        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
     }
+
+    context_2.update(context_1)
 
     return render(request=request, template_name='properties/properties.html', context=context_2)
 

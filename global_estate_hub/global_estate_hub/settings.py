@@ -86,7 +86,6 @@ TEMPLATES = [
                 "core.context_processors.latest_articles",
                 "blog.context_processors.get_category_info",
                 "blog.context_processors.newest_articles",
-                "blog.context_processors.categories",
                 "blog.context_processors.popular_tags",
                 "properties.context_processors.featured_properties",
             ],

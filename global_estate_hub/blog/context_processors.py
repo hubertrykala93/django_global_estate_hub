@@ -1,5 +1,4 @@
 from .models import Category, Article, Tag
-from django.db.models import Q
 from accounts.models import User
 
 
@@ -33,22 +32,10 @@ def newest_articles(request) -> dict:
     }
 
 
-def categories(request) -> dict:
-    """
-    Creates a query set for the database and returns all categories from the Blog application.
-
-    return: dict
-    """
-    return {
-        'categories': Category.objects.all(),
-    }
-
-
 def popular_tags(request):
     articles = Article.objects.all()
 
     result = []
-    tags_queryset = []
 
     for article in articles:
         for obj in article.tags.all():
