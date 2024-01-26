@@ -1,10 +1,9 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
 from .models import Property, ListingStatus, Category, City
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.views.decorators.csrf import csrf_exempt
 
 
 def property_pagination(request, object_list, per_page):
@@ -149,120 +148,54 @@ def update_filters(request):
         return JsonResponse(data=response)
 
 
-# def update_filters(request):
-#     if request.method == 'POST':
-#         data = json.loads(s=request.body.decode('utf-8'))
-#
-#         response = {}
-#
-#         # selected status name
-#         selected_status = data['chosenStatus']
-#
-#         # selected status id
-#         selected_status_id = ListingStatus.objects.get(name=selected_status.capitalize()).id
-#
-#         # queryset for selected status
-#         selected_status_queryset = Property.objects.filter(listing_status_id=selected_status_id)
-#
-#         # minimum & maximum price of selected status queryset
-#         min_price_of_selected_queryset = min([obj.price for obj in selected_status_queryset])
-#         max_price_of_selected_queryset = max([obj.price for obj in selected_status_queryset])
-#
-#         # selected categories names
-#         selected_categories = [name.capitalize() for name in data['chosenCategories']]
-#
-#         # selected categories id's
-#         selected_categories_ids = [Category.objects.get(name=category).id for category in selected_categories]
-#
-#         # sum of querysets for each category
-#         selected_categories_queryset = []
-#
-#         for pk in selected_categories_ids:
-#             selected_categories_queryset.extend(
-#                 Property.objects.filter(listing_status_id=selected_status_id, category_id=pk))
-#
-#         # category slug and category name in tuple for response
-#         # -> [(category_slug, category_name), (category_slug, category_name), ...]
-#         selected_status_categories = sorted(list(set([(obj.category.slug, obj.category.name) for obj in
-#                                                       Property.objects.filter(listing_status_id=selected_status_id)])))
-#
-#         # minimum & maximum price for filtering queryset by status and categories for response
-#         min_price = min([obj.price for obj in selected_categories_queryset]) if len(
-#             [obj.price for obj in selected_categories_queryset]) != 0 else min_price_of_selected_queryset
-#         max_price = max([obj.price for obj in selected_categories_queryset]) if len(
-#             [obj.price for obj in selected_categories_queryset]) != 0 else max_price_of_selected_queryset
-#
-#         # selected price ranges
-#         selected_min_price_range = data['priceRange'][0]
-#         selected_max_price_range = data['priceRange'][1]
-#
-#         # selected price ranges queryset
-#         selected_price_ranges_queryset = Property.objects.filter(
-#             pk__in={instance.id for instance in selected_categories_queryset},
-#             price__range=[selected_min_price_range, selected_max_price_range])
-#
-#         number_of_bedrooms_selected_price_ranges_queryset = list(set([obj.number_of_bedrooms for obj in
-#                                                                       selected_price_ranges_queryset]))
-#
-#         # selected minimum & maximum bedrooms
-#         selected_min_bedrooms = data['chosenMinBedrooms']
-#         max_bedrooms = []
-#
-#         if len(selected_min_bedrooms) != 0:
-#             queryset = Property.objects.filter(pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                                                number_of_bedrooms__gte=selected_min_bedrooms)
-#
-#             for obj in queryset:
-#                 max_bedrooms.append(obj.number_of_bedrooms)
-#
-#         selected_max_bedrooms = data['chosenMaxBedrooms']
-#
-#         # selected minimum & maximum bedrooms queryset
-#         selected_min_bedrooms_selected_queryset = []
-#         if len(selected_min_bedrooms) != 0 and len(selected_max_bedrooms) != 0:
-#             selected_min_bedrooms_selected_queryset.extend(Property.objects.filter(
-#                 pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                 number_of_bedrooms__gte=int(selected_min_bedrooms)) & Property.objects.filter(
-#                 pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                 number_of_bedrooms__lte=int(selected_max_bedrooms)))
-#
-#         number_of_bathrooms_selected_price_ranges_queryset = list(set([obj.number_of_bathrooms for obj in
-#                                                                        selected_price_ranges_queryset]))
-#
-#         selected_min_bathrooms = data['chosenMinBathrooms']
-#         max_bathrooms = []
-#
-#         if len(selected_min_bathrooms) != 0:
-#             queryset = Property.objects.filter(pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                                                number_of_bathrooms__gte=selected_min_bathrooms)
-#
-#             for obj in queryset:
-#                 max_bathrooms.append(obj.number_of_bathrooms)
-#
-#         selected_max_bathrooms = data['chosenMaxBathrooms']
-#
-#         # selected minimum & maximum bedrooms queryset
-#         if len(selected_min_bathrooms) != 0 and len(selected_max_bathrooms) != 0:
-#             selected_min_bedrooms_selected_queryset = []
-#             if len(selected_min_bedrooms) != 0 and len(selected_max_bedrooms) != 0:
-#                 selected_min_bedrooms_selected_queryset.extend(Property.objects.filter(
-#                     pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                     number_of_bedrooms__gte=int(selected_min_bedrooms)) & Property.objects.filter(
-#                     pk__in={instance.id for instance in selected_price_ranges_queryset},
-#                     number_of_bedrooms__lte=int(selected_max_bedrooms)))
-#
-#         response.update(
-#             {
-#                 'categories': selected_status_categories,
-#                 'price_range': [min_price, max_price],
-#                 'min_bedrooms': number_of_bedrooms_selected_price_ranges_queryset,
-#                 'max_bedrooms': list(set(max_bedrooms)),
-#                 'min_bathrooms': number_of_bathrooms_selected_price_ranges_queryset,
-#                 'max_bathrooms': list(set(max_bathrooms)),
-#             }
-#         )
-#
-#         return JsonResponse(data=response)
+def property_categories(request, category_slug):
+    category = get_object_or_404(klass=Category, slug=category_slug)
+
+    queryset = []
+
+    if request.GET:
+        if 'properties-order' in request.GET:
+
+            if 'Newest Properties' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
+
+            if 'Oldest Properties' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(category=category).order_by('date_posted'))
+
+            if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(category=category).order_by('title'))
+
+            if 'Alphabetically Descending' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(category=category).order_by('-title'))
+
+        else:
+            if request.session.get('sorted_type'):
+                request.session.pop('sorted_type')
+
+            request.session['sorted_type'] = 'Newest Properties'
+            queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
+
+    else:
+        if request.session.get('sorted_type'):
+            request.session.pop('sorted_type')
+
+        if request.session.get('keyword'):
+            request.session.pop('keyword')
+
+        request.session['sorted_type'] = 'Newest Properties'
+        queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
+
+    return render(request=request, template_name='properties/properties-category.html', context={
+        'title': category,
+        'category': category,
+        'properties': queryset,
+        'sorted_type': request.session['sorted_type'],
+        'pages': property_pagination(request=request, object_list=queryset, per_page=6)
+    })
 
 
 @login_required(login_url='login')

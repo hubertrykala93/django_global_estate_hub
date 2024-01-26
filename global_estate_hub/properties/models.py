@@ -52,7 +52,7 @@ class Category(models.Model):
 
         return HttpsResponseRedirect
         """
-        return reverse(viewname='categories', kwargs={
+        return reverse(viewname='property-categories', kwargs={
             'category_slug': self.slug,
         })
 
