@@ -309,14 +309,14 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'category', 'listing_status', 'title', 'number_of_bathrooms', 'user', 'city',
+    list_display = ['id', 'category', 'listing_status', 'price', 'number_of_bathrooms', 'user', 'city',
                     'date_posted', 'main_image',
                     'postal_code',
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
                     'image_files',
-                    'year_of_built', 'number_of_bedrooms', 'price', 'square_meters',
+                    'year_of_built', 'number_of_bedrooms', 'title', 'square_meters',
                     'parking_space', 'get_amenities', 'get_plans', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops']
     list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
@@ -332,7 +332,7 @@ class AdminProperty(admin.ModelAdmin):
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user__username', 'title']
-    ordering = ['-title']
+    ordering = ['-price']
     actions = ['make_featured', 'remove_featured']
     fieldsets = [
         [
