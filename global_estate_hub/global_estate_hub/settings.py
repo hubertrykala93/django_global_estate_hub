@@ -84,6 +84,7 @@ TEMPLATES = [
                 "core.context_processors.breadcrumbs_urls",
                 "core.context_processors.generate_token",
                 "core.context_processors.latest_articles",
+                "core.context_processors.properties_types",
                 "blog.context_processors.get_category_info",
                 "blog.context_processors.newest_articles",
                 "blog.context_processors.popular_tags",

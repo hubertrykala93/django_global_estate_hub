@@ -142,6 +142,9 @@ def update_filters(request):
             'max_bedrooms': [],
             'min_bathrooms': [],
             'max_bathrooms': [],
+            'location': [],
+            'min_meters': [],
+            'max_meters': [],
         }
         return JsonResponse(data=response)
 

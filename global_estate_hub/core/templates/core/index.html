@@ -8,17 +8,14 @@
   - #TYPY APARTAMENTÓW
 -->
 
-<!-- pętla generująca typy -->
-<!-- 
-    for {
-    <div class="name">nazwa typu</div>
-    <div class="count">ilość przypisanych (0 properties / 1 property / 2+ properties)</div>
-    <div class="img"><img src="ścieżka do 'avataru' danego typu" alt=""></div>
-    }
- -->
+    {% for name, image, length in get_category_properties_info %}
+    <div class="name">{{ name }}</div>
+    <div class="count">{{ length }} Properties</div>
+    <div class="img"><img src="{{ image }}" alt=""></div>
+    <a href="#"></a>
+    {% endfor %}
 
 
-<!--
   - #ABOUT US
 -->
 
@@ -116,7 +113,7 @@
                             <i class="ri-map-pin-line" aria-hidden="true"></i>
                             {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
                         </div>
-                        
+
                         <ul class="property-card__info">
                             <li>
                                 <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
@@ -167,7 +164,7 @@
                             <i class="ri-map-pin-line" aria-hidden="true"></i>
                             {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
                         </div>
-                        
+
                         <ul class="property-card__info">
                             <li>
                                 <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
@@ -218,7 +215,7 @@
                             <i class="ri-map-pin-line" aria-hidden="true"></i>
                             {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
                         </div>
-                        
+
                         <ul class="property-card__info">
                             <li>
                                 <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">

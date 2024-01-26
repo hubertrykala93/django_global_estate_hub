@@ -42,8 +42,8 @@ class AdminCategory(admin.ModelAdmin):
     """
     Admin options and functionalities for Category model.
     """
-    list_display = ['id', 'name', 'slug']
-    list_editable = ['slug']
+    list_display = ['id', 'name', 'slug', 'image']
+    list_editable = ['slug', 'image']
     list_filter = ['name']
     list_display_links = ['id']
     prepopulated_fields = {

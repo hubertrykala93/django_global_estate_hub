@@ -1,5 +1,6 @@
 from django.middleware.csrf import get_token
 from blog.models import Article
+from properties.models import Property, Category
 
 
 def breadcrumbs_urls(request) -> dict:
@@ -49,4 +50,17 @@ def latest_articles(request) -> dict:
     """
     return {
         'latest_articles': Article.objects.all().order_by('-date_posted')[:3]
+    }
+
+
+def properties_types(request):
+    return {
+        'get_category_properties_info': list(
+            zip(
+                [category.name for category in Category.objects.all().order_by('-name')],
+                [category.image.url for category in Category.objects.all().order_by('-name')],
+                [Property.objects.filter(category=category).count() for category in
+                 Category.objects.all().order_by('-name')]
+            )
+        ),
     }

@@ -30,6 +30,7 @@ class Category(models.Model):
     Creating Category model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
+    image = models.ImageField(upload_to='property_categories_images', null=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
 
