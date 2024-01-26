@@ -116,10 +116,7 @@ def update_filters(request):
                                             listing_status=ListingStatus.objects.get(name='Rent'))])) if data.get(
             'chosenStatus') == 'rent' else sorted(set([c.name for c in Category.objects.all()]))
 
-        # jeśli jest listing status i jest category
-        # jeśli jest listing status i nie ma category
-        # jeśli nie ma listing status a jest category
-        # jeśli nie ma listing statusa i nie ma category
+        print(chosen_categories)
 
         response = {
             'categories': sorted(set([(obj.category.slug, obj.category.name) for obj in Property.objects.filter(
@@ -127,10 +124,22 @@ def update_filters(request):
                     name=data.get('chosenStatus').capitalize()))])) if data.get('chosenStatus') else sorted(
                 set([(obj.category.slug, obj.category.name) for obj in Property.objects.all()])),
             'price_range': [
-                min([obj.price for obj in list(chain(*[Property.objects.filter(listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()), category_id=Category.objects.get(name=c.capitalize())) for c in data.get('chosenCategories')]))]) if data.get('chosenStatus') and data.get('chosenCategories') else
-                min([obj.price for obj in list(chain(*[Property.objects.filter(listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()), category_id=Category.objects.get(name=c.capitalize())) for c in chosen_categories]))]) if data.get('chosenStatus') and not data.get('chosenCategory') else
-                min([obj.price for obj in list(chain(*[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in data.get('chosenCategories')]))]) if data.get('chosenCategories') and not data.get('chosenStatus') else
-                min([obj.price for obj in list(chain(*[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in chosen_categories]))]),
+                min([obj.price for obj in list(chain(*[Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
+                    category_id=Category.objects.get(name=c.capitalize())) for c in
+                                                       data.get('chosenCategories')]))]) if data.get(
+                    'chosenStatus') and data.get('chosenCategories') else
+                min([obj.price for obj in list(chain(*[Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
+                    category_id=Category.objects.get(name=c)) for c in chosen_categories]))]) if data.get(
+                    'chosenStatus') and not data.get('chosenCategory') else
+                min([obj.price for obj in list(chain(
+                    *[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in
+                      data.get('chosenCategories')]))]) if data.get('chosenCategories') and not data.get(
+                    'chosenStatus') else
+                min([obj.price for obj in list(chain(
+                    *[Property.objects.filter(category_id=Category.objects.get(name=c)) for c in
+                      chosen_categories]))]),
 
                 max([obj.price for obj in list(chain(*[Property.objects.filter(
                     listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
@@ -139,14 +148,14 @@ def update_filters(request):
                     'chosenStatus') and data.get('chosenCategories') else
                 max([obj.price for obj in list(chain(*[Property.objects.filter(
                     listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
-                    category_id=Category.objects.get(name=c.capitalize())) for c in chosen_categories]))]) if data.get(
+                    category_id=Category.objects.get(name=c)) for c in chosen_categories]))]) if data.get(
                     'chosenStatus') and not data.get('chosenCategory') else
                 max([obj.price for obj in list(chain(
                     *[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in
                       data.get('chosenCategories')]))]) if data.get('chosenCategories') and not data.get(
                     'chosenStatus') else
                 max([obj.price for obj in list(chain(
-                    *[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in
+                    *[Property.objects.filter(category_id=Category.objects.get(name=c)) for c in
                       chosen_categories]))]),
             ],
             'min_bedrooms': [],
