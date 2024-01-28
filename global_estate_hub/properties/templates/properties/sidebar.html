@@ -22,7 +22,7 @@
 
                     </form>
 
-    <form data-properties-filters-form class="properties__filters__filters-form theme-form">
+    <form data-properties-filters-form class="properties__filters__filters-form theme-form" method="get" action="{% url 'properties' %}">
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
@@ -38,7 +38,7 @@
                                 <div data-change-status class="form__input-wrap form__radio-wrapper">
                                     {% for status in listing_statuses %}
                                     <label>
-                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}">
+                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.session.filters.listing_status %}checked{% endif %}>
                                         <div class="radio__label">{{ status }}</div>
                                     </label>
                                     {% endfor %}
@@ -57,7 +57,7 @@
                                 <div data-change-category class="form__input-wrap form__checkbox-wrapper">
                                     {% for category in categories %}
                                     <label>
-                                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}">
+                                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category in request.session.filters.category %}checked{% endif %}>
                                         <div class="checkbox__label">{{ category }}</div>
                                     </label>
                                     {% endfor %}
