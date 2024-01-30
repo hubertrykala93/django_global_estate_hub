@@ -4,7 +4,6 @@ import json
 from .models import Property, ListingStatus, Category, City
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from itertools import chain
 
 
 def property_pagination(request, object_list, per_page):
@@ -25,12 +24,6 @@ def property_pagination(request, object_list, per_page):
 def properties(request):
     queryset = []
     context = {}
-    listing_status = request.GET.get('status')
-    category = request.GET.get('category')
-    location = request.GET.get('location')
-    min_value = request.GET.get('min-value')
-    max_value = request.GET.get('max-value')
-    print(request.GET)
 
     if request.GET:
         print('Request GET.')
@@ -182,87 +175,6 @@ def properties(request):
     return render(request=request, template_name='properties/properties.html', context=context)
 
 
-# def update_filters(request):
-#     if request.method == 'POST':
-#         data = json.loads(s=request.body.decode('utf-8'))
-#
-#         # if status and category and price range
-#         # if status and category and not price range
-#         # if status and not category and not price range
-#         # if status and not category and price range
-#         # if not status and not category and price range
-#         # if not status and category and price range
-#         # if not status and not category and not price range
-#
-#         categories = sorted(set([(obj.category.slug, obj.category.name) for obj in Property.objects.filter(
-#             listing_status=ListingStatus.objects.get(
-#                 name=data.get('chosenStatus').capitalize()))])) if data.get('chosenStatus') else sorted(
-#             set([(obj.category.slug, obj.category.name) for obj in Property.objects.all()]))
-#
-#         price_range = [
-#             min([obj.price for obj in list(chain(*[Property.objects.filter(
-#                 listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
-#                 category_id=Category.objects.get(name=c.capitalize())) for c in
-#                 data.get('chosenCategories')]))]) if data.get(
-#                 'chosenStatus') and data.get('chosenCategories') else
-#             min([obj.price for obj in list(chain(*[Property.objects.filter(
-#                 listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
-#                 category_id=Category.objects.get(name=c)) for c in sorted(set([c.category.name for c in
-#                                                                                Property.objects.filter(
-#                                                                                    listing_status_id=ListingStatus.objects.get(
-#                                                                                        name=data.get(
-#                                                                                            'chosenStatus').capitalize()))]))]))]) if data.get(
-#                 'chosenStatus') and not data.get('chosenCategory') else
-#             min([obj.price for obj in list(chain(
-#                 *[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in
-#                   data.get('chosenCategories')]))]) if data.get('chosenCategories') and not data.get(
-#                 'chosenStatus') else
-#             min([obj.price for obj in list(chain(
-#                 *[Property.objects.filter(category_id=Category.objects.get(name=c)) for c in
-#                   sorted(set([c.category.name for c in Property.objects.filter(
-#                       listing_status_id=ListingStatus.objects.get(
-#                           name=data.get('chosenStatus').capitalize()))]))]))]),
-#
-#             max([obj.price for obj in list(chain(*[Property.objects.filter(
-#                 listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
-#                 category_id=Category.objects.get(name=c.capitalize())) for c in
-#                 data.get('chosenCategories')]))]) if data.get(
-#                 'chosenStatus') and data.get('chosenCategories') else
-#             max([obj.price for obj in list(chain(*[Property.objects.filter(
-#                 listing_status=ListingStatus.objects.get(name=data.get('chosenStatus').capitalize()),
-#                 category_id=Category.objects.get(name=c)) for c in sorted(set([c.category.name for c in
-#                                                                                Property.objects.filter(
-#                                                                                    listing_status_id=ListingStatus.objects.get(
-#                                                                                        name=data.get(
-#                                                                                            'chosenStatus').capitalize()))]))]))]) if data.get(
-#                 'chosenStatus') and not data.get('chosenCategory') else
-#             max([obj.price for obj in list(chain(
-#                 *[Property.objects.filter(category_id=Category.objects.get(name=c.capitalize())) for c in
-#                   data.get('chosenCategories')]))]) if data.get('chosenCategories') and not data.get(
-#                 'chosenStatus') else
-#             max([obj.price for obj in list(chain(
-#                 *[Property.objects.filter(category_id=Category.objects.get(name=c)) for c in
-#                   sorted(set([c.category.name for c in Property.objects.filter(
-#                       listing_status_id=ListingStatus.objects.get(
-#                           name=data.get('chosenStatus').capitalize()))]))]))]),
-#         ]
-#
-#         response = {
-#             'categories': categories,
-#             'price_range': price_range,
-#             'min_bedrooms': [],
-#             'max_bedrooms': [],
-#             'min_bathrooms': [],
-#             'max_bathrooms': [],
-#             'location': [],
-#             'min_meters': [],
-#             'max_meters': [],
-#         }
-#         print(data['priceRange'])
-#
-#         return JsonResponse(data=response)
-
-
 def property_categories(request, category_slug):
     category = get_object_or_404(klass=Category, slug=category_slug)
 
@@ -306,6 +218,55 @@ def property_categories(request, category_slug):
     return render(request=request, template_name='properties/properties-category.html', context={
         'title': category,
         'category': category,
+        'properties': queryset,
+        'sorted_type': request.session['sorted_type'],
+        'pages': property_pagination(request=request, object_list=queryset, per_page=6)
+    })
+
+
+def property_cities(request, city_slug):
+    city = get_object_or_404(klass=City, slug=city_slug)
+
+    queryset = []
+
+    if request.GET:
+        if 'properties-order' in request.GET:
+            if 'Newest Properties' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
+
+            if 'Oldest Properties' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(city=city).order_by('date_posted'))
+
+            if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(city=city).order_by('title'))
+
+            if 'Alphabetically Descending' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(city=city).order_by('-title'))
+
+        else:
+            if request.session.get('sorted_type'):
+                request.session.pop('sorted_type')
+
+            request.session['sorted_type'] = 'Newest Properties'
+            queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
+
+    else:
+        if request.session.get('sorted_type'):
+            request.session.pop('sorted_type')
+
+        if request.session.get('keyword'):
+            request.session.pop('keyword')
+
+        request.session['sorted_type'] = 'Newest Properties'
+        queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
+
+    return render(request=request, template_name='properties/properties-cities.html', context={
+        'title': city,
+        'city': city,
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
         'pages': property_pagination(request=request, object_list=queryset, per_page=6)
@@ -356,8 +317,9 @@ def add_to_favourites(request):
             })
 
 
-def property_details(request, property_slug):
-    property_obj = Property.objects.get(slug=property_slug)
+def property_details(request, category_slug, property_slug):
+    category = Category.objects.get(slug=category_slug)
+    property_obj = Property.objects.get(category=category, slug=property_slug)
 
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,

@@ -1,6 +1,6 @@
 from django.middleware.csrf import get_token
-from blog.models import Article
-from properties.models import Property, Category
+from properties.models import Property, Category, City
+from itertools import chain
 
 
 def breadcrumbs_urls(request) -> dict:
@@ -41,18 +41,6 @@ def generate_token(request) -> dict:
     }
 
 
-def latest_articles(request) -> dict:
-    """
-    Creates a query set for the database and returns the three most recent articles from the Blog application,
-    which are then rendered in the Blog section on the homepage.
-
-    return: dict
-    """
-    return {
-        'latest_articles': Article.objects.all().order_by('-date_posted')[:3]
-    }
-
-
 def properties_types(request):
     return {
         'get_category_properties_info': list(
@@ -67,7 +55,30 @@ def properties_types(request):
     }
 
 
-def latest_properties(request):
+def explore_cities(request):
+    print(list(
+            zip(
+                [city.name for city in City.objects.all().order_by('-name')],
+                [city.image.url for city in City.objects.all().order_by('-name')],
+                [city.get_absolute_url() for city in City.objects.all().order_by('-name')],
+                [Property.objects.filter(city=city).count() for city in
+                 City.objects.all().order_by('-name')]
+            )))
     return {
-        'latest_properties': Property.objects.all().order_by('-date_posted')[:3]
+        'get_cities_info': list(
+            zip(
+                [city.name for city in City.objects.all().order_by('-name')],
+                [city.image.url for city in City.objects.all().order_by('-name')],
+                [city.get_absolute_url() for city in City.objects.all().order_by('-name')],
+                [Property.objects.filter(city=city).count() for city in
+                 City.objects.all().order_by('-name')]
+            )
+        ),
+    }
+
+
+def discover_cities(request):
+    return {
+        'discover_cities': [p.city for p in
+                            list(chain(*[Property.objects.filter(city=c) for c in City.objects.all()]))][:8],
     }

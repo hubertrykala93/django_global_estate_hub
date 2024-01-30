@@ -31,12 +31,12 @@
         <div class="row carousel__row">
             <div class="categories__carousel swiper" data-home-categories-carousel>
                 <div class="swiper-wrapper">
-                    {% for name, image, length in get_category_properties_info %}
+                    {% for name, image, url, length in get_category_properties_info %}
                     <div class="swiper-slide">
                         <div class="category__wrapper">
                             <div class="category__image-wrapper">
                                 <img class="category__image-bg" src="{{ image }}" alt="image of category {{ name }}">
-                                <a href="#" class="category__image__overlay" target="_blank">
+                                <a href="{{ url }}" class="category__image__overlay" target="_blank">
                                     <i class="ri-external-link-line" aria-hidden="true"></i>
                                     <span class="visually-hidden">Go to category {{ name }}</span>
                                 </a>
@@ -140,23 +140,23 @@
         </div>
 
         <div class="row properties-cards__row">
-            {% for page in latest_properties %}
+            {% for property in latest_properties %}
 
             <div class="property-card__column">
-                <div class="property-card__wrapper" data-property-card data-id="{{ page.id }}">
+                <div class="property-card__wrapper" data-property-card data-id="{{ property.id }}">
                     <div class="property-card__image">
-                        {% if page.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
-                        <img src="{{ page.main_image.url }}" alt="property title image">
+                        {% if property.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
+                        <img src="{{ property.main_image.url }}" alt="property title image">
                     </div>
 
                     <div class="property-card__content">
                         <div class="property-card__title h4">
-                            <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+                            <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
                         </div>
 
                         {% if user.is_authenticated %}
                         <div class="property-card__favourite">
-                            <button class="property-card__favourite__btn {% if user in page.favourites.all %}active{% endif %}" data-add-to-favourites>
+                            <button class="property-card__favourite__btn {% if user in property.favourites.all %}active{% endif %}" data-add-to-favourites>
                                 <i class="ri-heart-line" aria-hidden="true"></i>
                                 <span class="visually-hidden">Add to favourites</span>
                             </button>
@@ -165,30 +165,30 @@
 
                         <div class="property-card__localization">
                             <i class="ri-map-pin-line" aria-hidden="true"></i>
-                            {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
+                            {% if property.postal_code %}{{ property.postal_code }}{% endif %} {{ property.city }}, {{ property.province }}, {{ property.country }}
                         </div>
 
                         <ul class="property-card__info">
                             <li>
                                 <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
-                                <span>{% if page.number_of_bedrooms == 0 %}{{ page.number_of_bedrooms }} Bedrooms{% elif page.number_of_bedrooms == 1 %}{{ page.number_of_bedrooms }} Bedroom{% else %}{{ page.number_of_bedrooms }} Bedrooms{% endif %}</span>
+                                <span>{% if property.number_of_bedrooms == 0 %}{{ property.number_of_bedrooms }} Bedrooms{% elif property.number_of_bedrooms == 1 %}{{ property.number_of_bedrooms }} Bedroom{% else %}{{ property.number_of_bedrooms }} Bedrooms{% endif %}</span>
                             </li>
 
                             <li>
                                 <img src="/media/icons/properties/property-card-bathroom.svg" alt="bath icon" aria-hidden="true">
-                                <span>{% if page.number_of_bathrooms == 0 %}{{ page.number_of_bathrooms }} Baths{% elif page.number_of_bathrooms == 1 %}{{ page.number_of_bathrooms }} Bath{% else %}{{ page.number_of_bathrooms }} Baths{% endif %}</span>
+                                <span>{% if property.number_of_bathrooms == 0 %}{{ property.number_of_bathrooms }} Baths{% elif property.number_of_bathrooms == 1 %}{{ property.number_of_bathrooms }} Bath{% else %}{{ property.number_of_bathrooms }} Baths{% endif %}</span>
                             </li>
 
                             <li>
                                 <img src="/media/icons/properties/property-card-area.svg" alt="area icon" aria-hidden="true">
-                                <span>{{ page.square_meters }} Sq M</span>
+                                <span>{{ property.square_meters }} Sq M</span>
                             </li>
                         </ul>
 
                         <div class="property-card__footer">
-                            <div class="property-card__price">$ {{ page.price }}</div>
+                            <div class="property-card__price">$ {{ property.price }}</div>
 
-                            <span class="property-card__badge property-card__badge--primary">For {% if page.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
+                            <span class="property-card__badge property-card__badge--primary">For {% if property.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
                         </div>
                     </div>
                 </div>
@@ -236,19 +236,20 @@
         <div class="row carousel__row">
             <div class="cities__carousel swiper" data-home-cities-carousel>
                 <div class="swiper-wrapper">
-                    <!-- for start -->
+
+                    {% for name, image, url, length in get_cities_info %}
                     <div class="swiper-slide">
                         <div class="city__wrapper">
-                            <img class="city__image-bg" src="/media/property_categories_images/commercial_category.jpg" alt="image of city {{ name }}">
+                            <img class="city__image-bg" src="{{ image }}" alt="image of city {{ name }}">
 
                             <div class="city__content">
                                 <div class="city__details">
-                                    <a class="city__name" href="#" target="_blank">
+                                    <a class="city__name" href="{{ url }}" target="_blank">
                                         <i class="ri-map-pin-line" aria-hidden="true"></i>
-                                        Warszawa
+                                        {{ name }}
                                     </a>
 
-                                    <div class="city__count">24 Properties</div>
+                                    <div class="city__count">{{ length }}</div>
                                 </div>
 
                                 <a href="#" class="city__arrow-btn">
@@ -259,7 +260,8 @@
 
                         </div>                   
                     </div>
-                    <!-- for end -->
+                    {% endfor %}
+
                 </div>
             </div>
         </div>

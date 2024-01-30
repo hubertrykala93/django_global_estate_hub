@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Newsletter, ContactMail
 import json
@@ -8,6 +8,8 @@ from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
 from django.utils.html import strip_tags
+from properties.models import Property, City
+from blog.models import Article
 
 load_dotenv()
 
@@ -18,8 +20,14 @@ def index(request):
 
     return: HttpResponse
     """
+    print([c.name for c in City.objects.all()])
+    latest_articles = Article.objects.all().order_by('-date_posted')[:3]
+    latest_properties = Property.objects.all().order_by('-date_posted')[:3]
+
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
+        'latest_articles': latest_articles,
+        'latest_properties': latest_properties,
     })
 
 

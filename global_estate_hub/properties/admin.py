@@ -280,13 +280,20 @@ class AdminCity(admin.ModelAdmin):
     """
     Admin options and functionalities for City model.
     """
-    list_display = ['id', 'name', 'slug']
+    list_display = ['id', 'image', 'name', 'slug']
     list_filter = ['name']
-    list_editable = ['name', 'slug']
+    list_editable = ['image', 'name', 'slug']
     prepopulated_fields = {'slug': ['name']}
     search_fields = ['name']
     ordering = ['id']
     fieldsets = [
+        [
+            'City Image:', {
+            'fields': [
+                'image',
+            ]
+        }
+        ],
         [
             'City Name:', {
             'fields': [

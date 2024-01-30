@@ -195,6 +195,7 @@ class City(models.Model):
     Creating City model instance.
     """
     id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to='property_cities_images', null=True)
     name = models.CharField(max_length=100, null=True)
     slug = models.SlugField(max_length=100, null=True)
 
@@ -216,7 +217,7 @@ class City(models.Model):
 
         return HttpsResponseRedirect
         """
-        return reverse(viewname='cities', kwargs={
+        return reverse(viewname='property-cities', kwargs={
             'city_slug': self.slug,
         })
 
@@ -278,6 +279,7 @@ class Property(models.Model):
         return HttpsResponseRedirect
         """
         return reverse(viewname='property-details', kwargs={
+            'category_slug': self.category.slug,
             'property_slug': self.slug,
         })
 

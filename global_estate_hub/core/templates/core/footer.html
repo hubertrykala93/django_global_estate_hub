@@ -82,7 +82,7 @@
                     {% for property in featured_properties %}
                     <div class="footer__property">
                         <div class="property__image">
-                            <img src="/media/placeholders/footer-property1.jpg" alt="Property name">
+                            <img src="{{ property.main_image.url }}" alt="Property name">
                         </div>
 
                         <div class="property__data">
@@ -163,23 +163,17 @@
                     <h3 class="h3">Discover</h3>
                 </div>
 
+                {% if discover_cities %}
                 <ul class="footer-links">
+
+                    {% for city in discover_cities %}
                     <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Miami</a>
+                        <a class="footer-links__link" href="{{ city.get_absolute_url }}">{{ city.name }}</a>
                     </li>
-                    <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Los Angeles</a>
-                    </li>
-                    <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">New York</a>
-                    </li>
-                    <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Florida</a>
-                    </li>
-                    <li class="footer-links__item">
-                        <a class="footer-links__link" href="#">Paris</a>
-                    </li>
+                    {% endfor %}
+
                 </ul>
+                {% endif %}
             </div>
         </div>
 
