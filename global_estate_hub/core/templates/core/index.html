@@ -8,7 +8,7 @@
   - #TYPY APARTAMENTÓW
 -->
 
-    {% for name, image, length in get_category_properties_info %}
+    {% for name, url, image, length in get_category_properties_info %}
     <div class="name">{{ name }}</div>
     <div class="count">{{ length }} Properties</div>
     <div class="img"><img src="{{ image }}" alt=""></div>

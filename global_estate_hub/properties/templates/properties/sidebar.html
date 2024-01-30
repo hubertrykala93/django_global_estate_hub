@@ -38,7 +38,7 @@
                                 <div data-change-status class="form__input-wrap form__radio-wrapper">
                                     {% for status in listing_statuses %}
                                     <label>
-                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.session.filters.listing_status %}checked{% endif %}>
+                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.GET.status %}checked{% endif %}>
                                         <div class="radio__label">{{ status }}</div>
                                     </label>
                                     {% endfor %}
@@ -57,7 +57,7 @@
                                 <div data-change-category class="form__input-wrap form__checkbox-wrapper">
                                     {% for category in categories %}
                                     <label>
-                                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category in request.session.filters.category %}checked{% endif %}>
+                                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category|lower in request.GET.category %}checked{% endif %}>
                                         <div class="checkbox__label">{{ category }}</div>
                                     </label>
                                     {% endfor %}
