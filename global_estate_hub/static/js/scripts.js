@@ -51,6 +51,70 @@ if ( $offcanvasToggler &&  $offcanvasWrapper && $offcanvasClose ){
 \*----------------------------------*/
 
 /**
+   * Categories carousel
+    */
+
+$categoriesSection = document.querySelector('[data-home-categories]')
+
+if ($categoriesSection) {
+  const $categoriesCarousel = $categoriesSection.querySelector('[data-home-categories-carousel]')
+
+  const swiper = new Swiper($categoriesCarousel, {
+    navigation: {
+      nextEl:  $categoriesSection.querySelector('[data-right]'),
+      prevEl: $categoriesSection.querySelector('[data-left]'),
+    },
+    draggable: true,
+    speed: 400,
+    slidesPerView: 1,
+    spaceBetween: 24,
+    breakpoints: {
+      640: {
+        slidesPerView: 2,
+      },
+      992: {
+        slidesPerView: 3,
+      },
+      1200: {
+        slidesPerView: 4,
+      }
+    },
+  })
+}
+
+/**
+   * Cities carousel
+    */
+
+$citiesSection = document.querySelector('[data-home-cities]')
+
+if ($citiesSection) {
+  const $citiesCarousel = $citiesSection.querySelector('[data-home-cities-carousel]')
+
+  const swiper = new Swiper($citiesCarousel, {
+    navigation: {
+      nextEl:  $citiesSection.querySelector('[data-right]'),
+      prevEl: $citiesSection.querySelector('[data-left]'),
+    },
+    draggable: true,
+    speed: 400,
+    slidesPerView: 1,
+    spaceBetween: 24,
+    breakpoints: {
+      640: {
+        slidesPerView: 2,
+      },
+      992: {
+        slidesPerView: 3,
+      },
+      1200: {
+        slidesPerView: 4,
+      }
+    },
+  })
+}
+
+/**
    * Testimonials carousel
     */
 

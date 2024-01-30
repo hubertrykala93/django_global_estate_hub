@@ -89,6 +89,7 @@ TEMPLATES = [
                 "blog.context_processors.newest_articles",
                 "blog.context_processors.popular_tags",
                 "properties.context_processors.featured_properties",
+                "core.context_processors.latest_properties",
             ],
         },
     },

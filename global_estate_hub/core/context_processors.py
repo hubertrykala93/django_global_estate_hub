@@ -64,3 +64,9 @@ def properties_types(request):
             )
         ),
     }
+
+
+def latest_properties(request):
+    return {
+        'latest_properties': Property.objects.all().order_by('-date_posted')[:3]
+    }

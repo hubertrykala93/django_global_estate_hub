@@ -5,20 +5,61 @@
 {% block page-title %}
 
 <!--
-  - #TYPY APARTAMENTÓW
+  - #CATEGORIES
 -->
+<section class="home__categories" data-home-categories>
+    <div class="container">
+        <div class="row title__row">
+            <div class="content">
+                <div class="section-title" data-sectiontitle-animation="">
+                    <div class="upper-title h4">Apartment</div>
+                    <h2 class="main-title h2"> Explore Apartment Types</h2>
+                </div>
+                <p>Get some inspirations from 1600+ skills</p>
+            </div>
 
-    {% for name, image, length in get_category_properties_info %}
-    <div class="name">{{ name }}</div>
-    <div class="count">{{ length }} Properties</div>
-    <div class="img"><img src="{{ image }}" alt=""></div>
-    <a href="#"></a>
-    {% endfor %}
+            <div class="categories__arrows">
+                <div class="button-prev theme-arrow" data-left>
+                    <i class="ri-arrow-left-line" aria-hidden="true"></i>
+                </div>
+                <div class="button-next theme-arrow" data-right>
+                    <i class="ri-arrow-right-line" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row carousel__row">
+            <div class="categories__carousel swiper" data-home-categories-carousel>
+                <div class="swiper-wrapper">
+                    {% for name, image, length in get_category_properties_info %}
+                    <div class="swiper-slide">
+                        <div class="category__wrapper">
+                            <div class="category__image-wrapper">
+                                <img class="category__image-bg" src="{{ image }}" alt="image of category {{ name }}">
+                                <a href="#" class="category__image__overlay" target="_blank">
+                                    <i class="ri-external-link-line" aria-hidden="true"></i>
+                                    <span class="visually-hidden">Go to category {{ name }}</span>
+                                </a>
+                            </div>
+
+                            <div class="category__title">
+                                <a href="#" target="_blank">{{ name }}</a>
+                            </div>
+
+                            <div class="category__count">{{ length }} Properties</div>
+                        </div>                   
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 
+<!--
   - #ABOUT US
 -->
-
 <section class="about" data-aboutsection-animation>
     <div class="container">
         <div class="row">
@@ -87,7 +128,20 @@
 -->
 <section class="last-properties">
     <div class="container">
-        <div class="row">
+        <div class="row title-row">
+            <div class="section-title" data-sectiontitle-animation>
+                <div class="upper-title h4">Properties</div>
+                <h2 class="main-title h2">Explore Latest Properties</h2>
+            </div>
+
+            <p>
+                At our real estate website, we have a wide range of properties to suit every need
+            </p>
+        </div>
+
+        <div class="row properties-cards__row">
+            {% for page in latest_properties %}
+
             <div class="property-card__column">
                 <div class="property-card__wrapper" data-property-card data-id="{{ page.id }}">
                     <div class="property-card__image">
@@ -139,108 +193,15 @@
                     </div>
                 </div>
             </div>
-            <div class="property-card__column">
-                <div class="property-card__wrapper" data-property-card data-id="{{ page.id }}">
-                    <div class="property-card__image">
-                        {% if page.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
-                        <img src="{{ page.main_image.url }}" alt="property title image">
-                    </div>
+            {% endfor %}
 
-                    <div class="property-card__content">
-                        <div class="property-card__title h4">
-                            <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
-                        </div>
+        </div>
 
-                        {% if user.is_authenticated %}
-                        <div class="property-card__favourite">
-                            <button class="property-card__favourite__btn {% if user in page.favourites.all %}active{% endif %}" data-add-to-favourites>
-                                <i class="ri-heart-line" aria-hidden="true"></i>
-                                <span class="visually-hidden">Add to favourites</span>
-                            </button>
-                        </div>
-                        {% endif %}
-
-                        <div class="property-card__localization">
-                            <i class="ri-map-pin-line" aria-hidden="true"></i>
-                            {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
-                        </div>
-
-                        <ul class="property-card__info">
-                            <li>
-                                <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
-                                <span>{% if page.number_of_bedrooms == 0 %}{{ page.number_of_bedrooms }} Bedrooms{% elif page.number_of_bedrooms == 1 %}{{ page.number_of_bedrooms }} Bedroom{% else %}{{ page.number_of_bedrooms }} Bedrooms{% endif %}</span>
-                            </li>
-
-                            <li>
-                                <img src="/media/icons/properties/property-card-bathroom.svg" alt="bath icon" aria-hidden="true">
-                                <span>{% if page.number_of_bathrooms == 0 %}{{ page.number_of_bathrooms }} Baths{% elif page.number_of_bathrooms == 1 %}{{ page.number_of_bathrooms }} Bath{% else %}{{ page.number_of_bathrooms }} Baths{% endif %}</span>
-                            </li>
-
-                            <li>
-                                <img src="/media/icons/properties/property-card-area.svg" alt="area icon" aria-hidden="true">
-                                <span>{{ page.square_meters }} Sq M</span>
-                            </li>
-                        </ul>
-
-                        <div class="property-card__footer">
-                            <div class="property-card__price">$ {{ page.price }}</div>
-
-                            <span class="property-card__badge property-card__badge--primary">For {% if page.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="property-card__column">
-                <div class="property-card__wrapper" data-property-card data-id="{{ page.id }}">
-                    <div class="property-card__image">
-                        {% if page.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
-                        <img src="{{ page.main_image.url }}" alt="property title image">
-                    </div>
-
-                    <div class="property-card__content">
-                        <div class="property-card__title h4">
-                            <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
-                        </div>
-
-                        {% if user.is_authenticated %}
-                        <div class="property-card__favourite">
-                            <button class="property-card__favourite__btn {% if user in page.favourites.all %}active{% endif %}" data-add-to-favourites>
-                                <i class="ri-heart-line" aria-hidden="true"></i>
-                                <span class="visually-hidden">Add to favourites</span>
-                            </button>
-                        </div>
-                        {% endif %}
-
-                        <div class="property-card__localization">
-                            <i class="ri-map-pin-line" aria-hidden="true"></i>
-                            {% if page.postal_code %}{{ page.postal_code }}{% endif %} {{ page.city }}, {{ page.province }}, {{ page.country }}
-                        </div>
-
-                        <ul class="property-card__info">
-                            <li>
-                                <img src="/media/icons/properties/property-card-bed.svg" alt="beds icon" aria-hidden="true">
-                                <span>{% if page.number_of_bedrooms == 0 %}{{ page.number_of_bedrooms }} Bedrooms{% elif page.number_of_bedrooms == 1 %}{{ page.number_of_bedrooms }} Bedroom{% else %}{{ page.number_of_bedrooms }} Bedrooms{% endif %}</span>
-                            </li>
-
-                            <li>
-                                <img src="/media/icons/properties/property-card-bathroom.svg" alt="bath icon" aria-hidden="true">
-                                <span>{% if page.number_of_bathrooms == 0 %}{{ page.number_of_bathrooms }} Baths{% elif page.number_of_bathrooms == 1 %}{{ page.number_of_bathrooms }} Bath{% else %}{{ page.number_of_bathrooms }} Baths{% endif %}</span>
-                            </li>
-
-                            <li>
-                                <img src="/media/icons/properties/property-card-area.svg" alt="area icon" aria-hidden="true">
-                                <span>{{ page.square_meters }} Sq M</span>
-                            </li>
-                        </ul>
-
-                        <div class="property-card__footer">
-                            <div class="property-card__price">$ {{ page.price }}</div>
-
-                            <span class="property-card__badge property-card__badge--primary">For {% if page.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="row button-row">
+            <a class="last-properties__more-btn" href="/properties">
+                See all properties
+                <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
+            </a>
         </div>
     </div>
 </section>
@@ -249,12 +210,57 @@
 <!--
   - #CITIES
 -->
-<section class="cities">
+
+
+<section class="home__cities" data-home-cities>
     <div class="container">
-        <div class="row">
-            <div class="section-title" data-sectiontitle-animation>
-                <div class="upper-title h4">Cities</div>
-                <h2 class="main-title h2"> Explore our cities</h2>
+        <div class="row title__row">
+            <div class="content">
+                <div class="section-title" data-sectiontitle-animation>
+                    <div class="upper-title h4">Cities</div>
+                    <h2 class="main-title h2"> Explore our cities</h2>
+                </div>
+                <p>We are proud to serve clients in a variety of cities and neighborhoods</p>
+            </div>
+
+            <div class="cities__arrows">
+                <div class="button-prev theme-arrow" data-left>
+                    <i class="ri-arrow-left-line" aria-hidden="true"></i>
+                </div>
+                <div class="button-next theme-arrow" data-right>
+                    <i class="ri-arrow-right-line" aria-hidden="true"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="row carousel__row">
+            <div class="cities__carousel swiper" data-home-cities-carousel>
+                <div class="swiper-wrapper">
+                    <!-- for start -->
+                    <div class="swiper-slide">
+                        <div class="city__wrapper">
+                            <img class="city__image-bg" src="/media/property_categories_images/commercial_category.jpg" alt="image of city {{ name }}">
+
+                            <div class="city__content">
+                                <div class="city__details">
+                                    <a class="city__name" href="#" target="_blank">
+                                        <i class="ri-map-pin-line" aria-hidden="true"></i>
+                                        Warszawa
+                                    </a>
+
+                                    <div class="city__count">24 Properties</div>
+                                </div>
+
+                                <a href="#" class="city__arrow-btn">
+                                    <i class="ri-arrow-right-up-line"></i>
+                                    <span class="visually-hidden">See properties from {{ name }}</span>
+                                </a>
+                            </div>
+
+                        </div>                   
+                    </div>
+                    <!-- for end -->
+                </div>
             </div>
         </div>
     </div>

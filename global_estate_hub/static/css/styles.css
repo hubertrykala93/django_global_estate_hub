@@ -1191,6 +1191,117 @@ form .form__field.form__form{
 \*----------------------------------*/
 
 /**
+  * Categories carousel section
+   */
+
+.home__categories {
+    padding-top: var(--section-block-space-500);
+}
+
+.home__categories .categories__arrows,
+.home__cities .cities__arrows {
+    margin-top: 3rem;
+    display: flex;
+}
+
+.home__categories .categories__arrows .theme-arrow,
+.home__cities .cities__arrows .theme-arrow {
+    margin-right: 1rem;
+}
+
+.home__categories .carousel__row,
+.home__cities .carousel__row {
+    margin-top: 4.5rem;
+}
+
+.home__categories .category__wrapper {
+    padding: 2.5rem;
+    margin-top: 3rem;
+    border-radius: 35% 35% var(--br-500) var(--br-500);
+    border: 1px solid var(--clr-carousel-border);
+    position: relative;
+    text-align: center;
+}
+
+.home__categories .category__wrapper .category__title {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.8rem;
+    font-weight: 500;
+    line-height: normal;
+}
+
+.home__categories .category__wrapper .category__title a {
+    color: var(--clr-dark);
+}
+
+.home__categories .category__wrapper .category__title a:hover,
+.home__categories .category__wrapper .category__title a:focus-visible{
+    color: var(--clr-secondary);
+}
+
+.home__categories .category__wrapper .category__count {
+    line-height: normal;
+}
+
+.home__categories .category__wrapper .category__image-wrapper {
+    margin-top: -5.5rem;
+    height: 190px;
+    position: relative;
+    border-radius: var(--br-500);
+    overflow: hidden;
+}
+
+.home__categories .category__wrapper .category__image-wrapper .category__image-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.2);
+    transition: transform .4s;
+}
+
+.home__categories .category__wrapper:hover .category__image-wrapper .category__image-bg {
+    transform: scale(1);
+}
+
+.home__categories .category__wrapper .category__image-wrapper .category__image__overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    inset: 1.6rem;
+    border-radius: var(--br-500);
+    overflow: hidden;
+    transform: scale(.8);
+    opacity: 0;
+    transition: transform .4s, opacity .4s;
+}
+
+.home__categories .category__wrapper:hover .category__image-wrapper .category__image__overlay,
+.home__categories .category__wrapper .category__image-wrapper .category__image__overlay:focus-visible {
+    transform: scale(1);
+    opacity: 1;
+}
+
+.home__categories .category__wrapper .category__image-wrapper .category__image__overlay::before{
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color: var(--clr-primary);
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: .8;
+}
+
+.home__categories .category__wrapper .category__image-wrapper .category__image__overlay i {
+    position: relative;
+    font-size: 3.6rem;
+    color: var(--clr-white);
+}
+
+
+/**
   * About us section
    */
 
@@ -1350,6 +1461,146 @@ form .form__field.form__form{
     100%{
         transform: rotate(15deg);
     }
+}
+
+
+/**
+  * Last properties section
+   */
+
+.last-properties {
+    padding-top: var(--section-block-space-500);
+}
+
+.last-properties .title-row {
+    text-align: center;
+}
+
+.last-properties .section-title {
+    align-items: center;
+}
+
+.last-properties .properties-cards__row {
+    padding: 4rem 0 3.6rem;
+}
+
+.last-properties .button-row {
+    display: flex;
+    justify-content: center;
+}
+
+.last-properties .last-properties__more-btn {
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: 500;
+    color: var(--clr-black);
+    text-transform: capitalize;
+}
+
+.last-properties .last-properties__more-btn i {
+    margin-left: .6rem;
+    font-size: 3rem;
+}
+
+.last-properties .last-properties__more-btn:hover,
+.last-properties .last-properties__more-btn:focus-visible {
+    color: var(--clr-secondary);
+}
+
+
+/**
+  * Our cities section
+   */
+
+.home__cities {
+    padding-top: var(--section-block-space-500);
+}
+
+.home__cities .city__wrapper {
+    display: flex;
+    align-items: flex-end;
+    height: 320px;
+    padding: 2rem;
+    position: relative;
+    border-radius: var(--br-500);
+    overflow: hidden;
+}
+
+.home__cities .city__wrapper::before{
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-image: linear-gradient(0deg, rgb(0 0 0 / 70%), rgba(255, 255, 255, 0));
+    z-index: 1;
+}
+
+.home__cities .city__wrapper .city__image-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.2);
+    transition: transform .4s;
+}
+
+.home__cities .city__wrapper:hover .city__image-bg {
+    transform: scale(1);
+}
+
+.home__cities .city__wrapper .city__content {
+    display: flex;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.home__cities .city__wrapper .city__details {
+    flex-grow: 1;
+}
+
+.home__cities .city__wrapper .city__name {
+    margin-bottom: .4rem;
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--clr-white);
+}
+
+.home__cities .city__wrapper .city__name:hover,
+.home__cities .city__wrapper .city__name:focus-visible {
+    color: var(--clr-secondary);
+}
+
+.home__cities .city__wrapper .city__name i {
+    font-size: 1.8rem;
+}
+
+.home__cities .city__wrapper .city__count {
+    font-size: var(--fs-body-300);
+    color: var(--clr-white);
+}
+
+.home__cities .city__wrapper .city__arrow-btn {
+    margin-top: 1rem;
+    font-size: 4rem;
+    color: var(--clr-white);
+    opacity: 0;
+    transition: opacity .4s;
+}
+
+.home__cities .city__wrapper:hover .city__arrow-btn,
+.home__cities .city__wrapper .city__arrow-btn:focus-visible {
+    opacity: 1;
+}
+
+.home__cities .city__wrapper .city__arrow-btn:hover,
+.home__cities .city__wrapper .city__arrow-btn:focus-visible {
+    color: var(--clr-secondary);
 }
 
 
@@ -2936,24 +3187,24 @@ section.properties {
     color: var(--clr-secondary);
 }
 
-.properties .row.properties-cards__row {
+.row.properties-cards__row {
     display: grid;
     margin: 0 -1.2rem;
 }
 
-.properties .row.properties-cards__row .property-card__column {
+.row.properties-cards__row .property-card__column {
     padding: 0 1.2rem;
     margin-bottom: 2.4rem;
 }
 
-.properties .property-card__wrapper {
+.property-card__wrapper {
     position: relative;
     border-radius: var(--br-500);
     overflow: hidden;
     box-shadow: 0 5px 30px rgb(199, 199, 199, .3);
 }
 
-.properties .property-card__wrapper .property-card__badge {
+.property-card__wrapper .property-card__badge {
     display: inline-block;
     padding: 0 1rem;
     line-height: 2.7rem;
@@ -2962,48 +3213,49 @@ section.properties {
     color: var(--clr-white);
 }
 
-.properties .property-card__wrapper .property-card__badge--primary {
+.property-card__wrapper .property-card__badge--primary {
     background-color: var(--clr-primary);
 }
 
-.properties .property-card__wrapper .property-card__badge--secondary {
+.property-card__wrapper .property-card__badge--secondary {
     position: absolute;
     left: 2rem;
     top: 2rem;
     background-color: var(--clr-secondary);
 }
 
-.properties .property-card__wrapper .property-card__content {
+.property-card__wrapper .property-card__content {
     padding: 2rem;
     position: relative;
 }
 
-.properties .property-card__wrapper .property-card__title {
+.property-card__wrapper .property-card__title {
     margin-bottom: 1.8rem;
+    line-height: 1.4;
 }
 
-.properties .property-card__wrapper .property-card__title a{
+.property-card__wrapper .property-card__title a{
     color: black;
 }
 
-.properties .property-card__wrapper .property-card__title a:hover,
-.properties .property-card__wrapper .property-card__title a:focus-visible {
+.property-card__wrapper .property-card__title a:hover,
+.property-card__wrapper .property-card__title a:focus-visible {
     color: var(--clr-secondary);
 }
 
-.properties .property-card__wrapper .property-card__localization {
+.property-card__wrapper .property-card__localization {
     display: flex;
     margin-bottom: 1.5rem;
     font-size: var(--fs-body-300);
 }
 
-.properties .property-card__wrapper .property-card__localization i {
+.property-card__wrapper .property-card__localization i {
     margin-right: .6rem;
     font-size: 1.6rem;
     color: var(--clr-dark);
 }
 
-.properties .property-card__wrapper .property-card__info {
+.property-card__wrapper .property-card__info {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
@@ -3013,7 +3265,7 @@ section.properties {
     border-bottom: 1px solid var(--clr-border);
 }
 
-.properties .property-card__wrapper .property-card__info li {
+.property-card__wrapper .property-card__info li {
     display: flex;
     align-items: center;
     padding-right: 1.5rem;
@@ -3023,7 +3275,7 @@ section.properties {
     position: relative;
 }
 
-.properties .property-card__wrapper .property-card__info li::after{
+.property-card__wrapper .property-card__info li::after{
     content: "";
     width: 1px;
     height: 100%;
@@ -3033,36 +3285,36 @@ section.properties {
     top: 0;
 }
 
-.properties .property-card__wrapper .property-card__info li:first-child{
+.property-card__wrapper .property-card__info li:first-child{
     padding-left: 0;
 }
 
-.properties .property-card__wrapper .property-card__info li:last-child:after{
+.property-card__wrapper .property-card__info li:last-child:after{
     display: none;
 }
 
-.properties .property-card__wrapper .property-card__info li:last-child{
+.property-card__wrapper .property-card__info li:last-child{
     padding-right: 0;
 }
 
-.properties .property-card__wrapper .property-card__info li img {
+.property-card__wrapper .property-card__info li img {
     margin-right: .5rem;
 }
 
-.properties .property-card__wrapper .property-card__footer {
+.property-card__wrapper .property-card__footer {
     display: flex;
     justify-content: space-between;
     margin-top: 2rem;
 }
 
-.properties .property-card__wrapper .property-card__price {
+.property-card__wrapper .property-card__price {
     font-size: 2rem;
     font-weight: 600;
     line-height: normal;
     color: var(--clr-secondary);
 }
 
-.properties .property-card__wrapper .property-card__favourite {
+.property-card__wrapper .property-card__favourite {
     padding: .5rem;
     position: absolute;
     top: 0;
@@ -3072,7 +3324,7 @@ section.properties {
     transform: translateY(-60%);
 }
 
-.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn {
+.property-card__wrapper .property-card__favourite .property-card__favourite__btn {
     width: 3.8rem;
     height: 3.8rem;
     color: var(--clr-white);
@@ -3083,16 +3335,16 @@ section.properties {
     transition: background-color .4s;
 }
 
-.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn.active{
+.property-card__wrapper .property-card__favourite .property-card__favourite__btn.active{
     background-color: #f14f4f;
 }
 
-.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn > * {
+.property-card__wrapper .property-card__favourite .property-card__favourite__btn > * {
     pointer-events: none;
 }
 
-.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn:hover,
-.properties .property-card__wrapper .property-card__favourite .property-card__favourite__btn:focus-visible{
+.property-card__wrapper .property-card__favourite .property-card__favourite__btn:hover,
+.property-card__wrapper .property-card__favourite .property-card__favourite__btn:focus-visible{
     background-color: var(--clr-primary);
 }
 
@@ -3730,6 +3982,24 @@ section.properties {
 
 
     /**
+     * Last properties section
+     */
+
+    .last-properties .properties-cards__row {
+        padding-top: 6rem;
+    }
+
+    .last-properties .properties-cards__row {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .last-properties .property-card__image img {
+        width: 100%;
+        height: 250px;
+    }
+
+
+    /**
      * Testimonials section
      */
 
@@ -3990,6 +4260,22 @@ section.properties {
     /*----------------------------------*\
       #HOME PAGE
     \*----------------------------------*/
+
+    /**
+     * Categories carousel section
+     */
+
+    .home__categories .title__row,
+    .home__cities .title__row {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+    }
+
+    .home__categories .carousel__row {
+        margin-top: 6rem;
+    }
+
 
     /**
       * Our partners carousel
@@ -4359,6 +4645,15 @@ section.properties {
         left: 0px;
         top: 10%;
     }
+
+    /**
+     * Last properties section
+     */
+
+    .last-properties .properties-cards__row {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
 
     /**
     * Home latest blog
