@@ -59,6 +59,7 @@ def properties_types(request):
             zip(
                 [category.name for category in Category.objects.all().order_by('-name')],
                 [category.image.url for category in Category.objects.all().order_by('-name')],
+                [category.get_absolute_url() for category in Category.objects.all().order_by('-name')],
                 [Property.objects.filter(category=category).count() for category in
                  Category.objects.all().order_by('-name')]
             )

@@ -4,6 +4,7 @@ admin
 
 
 @Szymon-Levy
+1. W sidebar jeśli bierzesz status Sell i wybierasz kategorię Commercial a potem chcesz zmienić z powrotem status na Rent to wywala błąd, bo żadna nieruchomość dla rent z kategorią sell nie istnieje, a kategorie przy zmienia statusu się nie zmieniają
 
 ************
 1. accessible accordion
