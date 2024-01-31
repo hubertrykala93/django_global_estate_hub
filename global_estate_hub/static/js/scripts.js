@@ -51,6 +51,88 @@ if ( $offcanvasToggler &&  $offcanvasWrapper && $offcanvasClose ){
 \*----------------------------------*/
 
 /**
+   * Hero filters form
+    */
+
+const $heroForm = document.querySelector('[data-hero-form]')
+
+if ($heroForm) {
+  const $statusesParent = $heroForm.querySelector('[data-change-status]')
+  const $locationParent = document.querySelector('[data-change-location]')
+  const $categoriesParent = document.querySelector('[data-change-category]')
+  const $yearsParent = document.querySelector('[data-change-year]')
+  
+  const stopSubmitingWhenBotSends = function (e) {
+    const urlValue = this.querySelector('.url').value
+    if ( !urlValue == '' ) { e.preventDefault() }
+  }
+
+  $heroForm.addEventListener('submit', stopSubmitingWhenBotSends)
+
+  $heroForm.addEventListener('change', (e) => {
+    const data = {}
+
+    //status
+    let chosenStatus = ''
+    const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
+    for (let i = 0; i < $statusesInputs.length; i++) {
+        if ( $statusesInputs[i].checked ) {
+            chosenStatus = $statusesInputs[i].value
+        }
+    }
+    data.chosenStatus = chosenStatus
+
+    //location
+    let chosenLocation = ''
+    const $locationInputs = $locationParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $locationInputs.length; i++) {
+        if ( $locationInputs[i].checked ) {
+          chosenLocation = $locationInputs[i].value
+        }
+    }
+    data.chosenLocation = chosenLocation
+
+    //category
+    let chosenCategory = ''
+    const $categoriesInputs = $categoriesParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $categoriesInputs.length; i++) {
+        if ( $categoriesInputs[i].checked ) {
+          chosenCategory = $categoriesInputs[i].value
+        }
+    }
+    data.chosenCategory = chosenCategory
+
+    //year
+    let chosenYear = ''
+    const $yearsInputs = $yearsParent.querySelectorAll('[data-option]')
+    for (let i = 0; i < $yearsInputs.length; i++) {
+        if ( $yearsInputs[i].checked ) {
+          chosenYear = $yearsInputs[i].value
+        }
+    }
+    data.chosenYear = chosenYear
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'update-home-filters', true)
+    xhr.setRequestHeader('X-CSRFToken', csrfToken)
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+    console.log('sent', data)
+    xhr.send(JSON.stringify(data))
+
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+          const response = JSON.parse(this.responseText)
+          console.log('received', response)
+      }
+    }
+  })
+}
+
+
+
+
+/**
    * Categories carousel
     */
 
@@ -2420,123 +2502,123 @@ if ( $propertiesPage ) {
     $maxBathroomsParent.innerHTML = newMaxBathroomsList
   }
 
-  $filtersForm.addEventListener('change', function(e) {
-    this.submit()
-  })
+  // $filtersForm.addEventListener('change', function(e) {
+  //   this.submit()
+  // })
 
-//  $filtersForm.addEventListener('change', (e) => {
-//    const data = {}
-//    //status
-//    let chosenStatus = ''
-//    const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
-//    for (let i = 0; i < $statusesInputs.length; i++) {
-//        if ( $statusesInputs[i].checked ) {
-//            chosenStatus = $statusesInputs[i].value
-//        }
-//    }
-//    data.chosenStatus = chosenStatus
-//
-//
-//    //category
-//    let chosenCategories = []
-//    const $categoriesInputs = $categoriesParent.querySelectorAll('[data-input]')
-//    for (let i = 0; i < $categoriesInputs.length; i++) {
-//        if ( $categoriesInputs[i].checked ) {
-//            chosenCategories.push($categoriesInputs[i].value)
-//        }
-//    }
-//    data.chosenCategories = chosenCategories
-//
-//    //price range
-//    data.priceRange = [$minValue.value, $maxValue.value]
-//
-//    //min bedrooms
-//    let chosenMinBedroom = ''
-//    const $minBedroomsInputs = $minBedroomsParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $minBedroomsInputs.length; i++) {
-//        if ( $minBedroomsInputs[i].checked ) {
-//            chosenMinBedroom = $minBedroomsInputs[i].value
-//        }
-//    }
-//    data.chosenMinBedrooms = chosenMinBedroom
-//
-//    //max bedrooms
-//    let chosenMaxBedroom = ''
-//    const $maxBedroomsInputs = $maxBedroomsParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $maxBedroomsInputs.length; i++) {
-//        if ( $maxBedroomsInputs[i].checked ) {
-//            chosenMaxBedroom = $maxBedroomsInputs[i].value
-//        }
-//    }
-//    data.chosenMaxBedrooms = chosenMaxBedroom
-//
-//    //min bedrooms
-//    let chosenMinBathroom = ''
-//    const $minBathroomsInputs = $minBathroomsParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $minBathroomsInputs.length; i++) {
-//        if ( $minBathroomsInputs[i].checked ) {
-//            chosenMinBathroom = $minBathroomsInputs[i].value
-//        }
-//    }
-//    data.chosenMinBathrooms = chosenMinBathroom
-//
-//    //max bathrooms
-//    let chosenMaxBathroom = ''
-//    const $maxBathroomsInputs = $maxBathroomsParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $maxBathroomsInputs.length; i++) {
-//        if ( $maxBathroomsInputs[i].checked ) {
-//            chosenMaxBathroom = $maxBathroomsInputs[i].value
-//        }
-//    }
-//    data.chosenMaxBathrooms = chosenMaxBathroom
-//
-//    //location
-//    let chosenLocation = ''
-//    const $locationInputs = $locationParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $locationInputs.length; i++) {
-//        if ( $locationInputs[i].checked ) {
-//          chosenLocation = $locationInputs[i].value
-//        }
-//    }
-//    data.chosenLocation = chosenLocation
-//
-//    //min meters
-//    let chosenMinMeters = ''
-//    const $minMetersInputs = $minMetersParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $minMetersInputs.length; i++) {
-//        if ( $minMetersInputs[i].checked ) {
-//          chosenMinMeters = $minMetersInputs[i].value
-//        }
-//    }
-//    data.chosenMinMeters = chosenMinMeters
-//
-//    //max meters
-//    let chosenMaxMeters = ''
-//    const $maxMetersInputs = $maxMetersParent.querySelectorAll('[data-option]')
-//    for (let i = 0; i < $maxMetersInputs.length; i++) {
-//        if ( $maxMetersInputs[i].checked ) {
-//          chosenMaxMeters = $maxMetersInputs[i].value
-//        }
-//    }
-//    data.chosenMaxMeters = chosenMaxMeters
-//
-//    const xhr = new XMLHttpRequest()
-//
-//    xhr.open('POST', 'update-filters', true)
-//    xhr.setRequestHeader('X-CSRFToken', csrfToken)
-//    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-//    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-//    console.log('sent', data)
-//    xhr.send(JSON.stringify(data))
-//
-//    xhr.onreadystatechange = function () {
-//      if (this.readyState == 4 && this.status == 200) {
-//          const response = JSON.parse(this.responseText)
-//          console.log('received', response)
-//          serverResponse(response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom)
-//      }
-//    }
-//
-//  })
+  // $filtersForm.addEventListener('change', (e) => {
+  //   const data = {}
+  //   //status
+  //   let chosenStatus = ''
+  //   const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
+  //   for (let i = 0; i < $statusesInputs.length; i++) {
+  //       if ( $statusesInputs[i].checked ) {
+  //           chosenStatus = $statusesInputs[i].value
+  //       }
+  //   }
+  //   data.chosenStatus = chosenStatus
+
+
+  //   //category
+  //   let chosenCategories = []
+  //   const $categoriesInputs = $categoriesParent.querySelectorAll('[data-input]')
+  //   for (let i = 0; i < $categoriesInputs.length; i++) {
+  //       if ( $categoriesInputs[i].checked ) {
+  //           chosenCategories.push($categoriesInputs[i].value)
+  //       }
+  //   }
+  //   data.chosenCategories = chosenCategories
+
+  //   //price range
+  //   data.priceRange = [$minValue.value, $maxValue.value]
+
+  //   //min bedrooms
+  //   let chosenMinBedroom = ''
+  //   const $minBedroomsInputs = $minBedroomsParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $minBedroomsInputs.length; i++) {
+  //       if ( $minBedroomsInputs[i].checked ) {
+  //           chosenMinBedroom = $minBedroomsInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMinBedrooms = chosenMinBedroom
+
+  //   //max bedrooms
+  //   let chosenMaxBedroom = ''
+  //   const $maxBedroomsInputs = $maxBedroomsParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $maxBedroomsInputs.length; i++) {
+  //       if ( $maxBedroomsInputs[i].checked ) {
+  //           chosenMaxBedroom = $maxBedroomsInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMaxBedrooms = chosenMaxBedroom
+
+  //   //min bedrooms
+  //   let chosenMinBathroom = ''
+  //   const $minBathroomsInputs = $minBathroomsParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $minBathroomsInputs.length; i++) {
+  //       if ( $minBathroomsInputs[i].checked ) {
+  //           chosenMinBathroom = $minBathroomsInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMinBathrooms = chosenMinBathroom
+
+  //   //max bathrooms
+  //   let chosenMaxBathroom = ''
+  //   const $maxBathroomsInputs = $maxBathroomsParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $maxBathroomsInputs.length; i++) {
+  //       if ( $maxBathroomsInputs[i].checked ) {
+  //           chosenMaxBathroom = $maxBathroomsInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMaxBathrooms = chosenMaxBathroom
+
+  //   //location
+  //   let chosenLocation = ''
+  //   const $locationInputs = $locationParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $locationInputs.length; i++) {
+  //       if ( $locationInputs[i].checked ) {
+  //         chosenLocation = $locationInputs[i].value
+  //       }
+  //   }
+  //   data.chosenLocation = chosenLocation
+
+  //   //min meters
+  //   let chosenMinMeters = ''
+  //   const $minMetersInputs = $minMetersParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $minMetersInputs.length; i++) {
+  //       if ( $minMetersInputs[i].checked ) {
+  //         chosenMinMeters = $minMetersInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMinMeters = chosenMinMeters
+
+  //   //max meters
+  //   let chosenMaxMeters = ''
+  //   const $maxMetersInputs = $maxMetersParent.querySelectorAll('[data-option]')
+  //   for (let i = 0; i < $maxMetersInputs.length; i++) {
+  //       if ( $maxMetersInputs[i].checked ) {
+  //         chosenMaxMeters = $maxMetersInputs[i].value
+  //       }
+  //   }
+  //   data.chosenMaxMeters = chosenMaxMeters
+
+  //   const xhr = new XMLHttpRequest()
+
+  //   xhr.open('POST', 'update-filters', true)
+  //   xhr.setRequestHeader('X-CSRFToken', csrfToken)
+  //   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+  //   xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+  //   console.log('sent', data)
+  //   xhr.send(JSON.stringify(data))
+
+  //   xhr.onreadystatechange = function () {
+  //     if (this.readyState == 4 && this.status == 200) {
+  //         const response = JSON.parse(this.responseText)
+  //         console.log('received', response)
+  //         serverResponse(response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom)
+  //     }
+  //   }
+
+  // })
 
 }

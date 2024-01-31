@@ -3,355 +3,355 @@
     <div class="properties__filters__title h4">Find your home</div>
     <form data-properties-search-form class="properties__filters__search-form theme-form" method="get">
 
-                        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
-                            <label>leave this field blank to prove your humanity
-                                <input type="text" class="url" autocomplete="off" tabindex="-1">
-                            </label>
-                        </div>
+        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+            <label>leave this field blank to prove your humanity
+                <input type="text" class="url" autocomplete="off" tabindex="-1">
+            </label>
+        </div>
 
-                        <div class="form__row">
-                            <div class="form__field">
-                                <input data-keyword name="keyword" type="text" id="keyword" placeholder="Search..." aria-label="Search by keyword">
+        <div class="form__row">
+            <div class="form__field">
+                <input data-keyword name="keyword" type="text" id="keyword" placeholder="Search..." aria-label="Search by keyword">
 
-                                <button type="submit">
-                                    <i class="ri-search-line" aria-hidden="true"></i>
-                                    <span class="visually-hidden">Search</span>
-                                </button>
-                            </div>
-                        </div>
+                <button type="submit">
+                    <i class="ri-search-line" aria-hidden="true"></i>
+                    <span class="visually-hidden">Search</span>
+                </button>
+            </div>
+        </div>
 
-                    </form>
+    </form>
 
     <form data-properties-filters-form class="properties__filters__filters-form theme-form" method="get" action="{% url 'properties' %}">
 
-                        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
-                            <label>leave this field blank to prove your humanity
-                                <input type="text" class="url" autocomplete="off" tabindex="-1">
-                            </label>
+        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+            <label>leave this field blank to prove your humanity
+                <input type="text" class="url" autocomplete="off" tabindex="-1">
+            </label>
+        </div>
+
+        {% if listing_statuses %}
+        <div class="properties__filters__title h4">Listing Status</div>
+
+        <div class="form__row">
+            <div class="form__field">
+                <div data-change-status class="form__input-wrap form__radio-wrapper">
+                    {% for status in listing_statuses %}
+                    <label>
+                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.GET.status %}checked{% endif %}>
+                        <div class="radio__label">{{ status }}</div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        {% endif %}
+
+        {% if categories %}
+        <div class="properties__filters__title h4">Category</div>
+
+        <div class="form__row">
+            <div class="form__field">
+                <div data-change-category class="form__input-wrap form__checkbox-wrapper">
+                    {% for category in categories %}
+                    <label>
+                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category|lower in request.GET.category %}checked{% endif %}>
+                        <div class="checkbox__label">{{ category }}</div>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <hr>
+        {% endif %}
+
+        <div class="properties__filters__title h4">Price Range</div>
+
+        <div class="form__row form__row__range-slider">
+            <div class="form__field">
+                <div class="form__input-wrap">
+                    <div class="custom__range-slider" data-range-slider>
+                        <div class="range-slider__inputs">
+                            <span class="range-slider__track" data-range-slider-track></span>
+                            <input type="range" name="min-value" class="range-slider__min-input" min="{% if min_price %}{{ min_price }}{% endif %}" max="{% if max_price %}{{ max_price }}{% endif %}" value="{{ min_price }}" data-range-min-input>
+                            <input type="range" name="max-value" class="range-slider__max-input" min="{% if min_price %}{{ min_price }}{% endif %}" max="{% if max_price %}{{ max_price }}{% endif %}" value="{{ max_price }}" data-range-max-input>
                         </div>
 
-                        {% if listing_statuses %}
-                        <div class="properties__filters__title h4">Listing Status</div>
+                        <div class="range-slider__value-boxes">
+                            <div class="range-slider__box">
+                                <div class="range-slider__box__currency">$</div>
+                                <div class="range-slider__box__value" data-range-min-box>{{ min_price }}</div>
+                            </div>
 
-                        <div class="form__row">
-                            <div class="form__field">
-                                <div data-change-status class="form__input-wrap form__radio-wrapper">
-                                    {% for status in listing_statuses %}
-                                    <label>
-                                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.GET.status %}checked{% endif %}>
-                                        <div class="radio__label">{{ status }}</div>
-                                    </label>
-                                    {% endfor %}
-                                </div>
+                            <div class="range-slider__box">
+                                <div class="range-slider__box__currency">$</div>
+                                <div class="range-slider__box__value" data-range-max-box>{{ max_price }}</div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <hr>
+        <hr>
+
+        <div class="properties__filters__title h4">Rooms</div>
+
+        <p class="properties__filters__room">Bedrooms</p>
+
+        <div class="form__row form__row__select-range">
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-bedrooms1"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
+
+                        {% if number_of_bedrooms %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1" data-change-min-bedrooms>
+                            {% for number in number_of_bedrooms %}<li role="option">
+                                <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min-bedrooms" />
+                                <label for="min-bedrooms-{{ number }}">{{ number }}</label>
+                            </li>
+
+                            {% endfor %}
+                        </ul>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+            <span class="form__row__select-range__line"></span>
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-bedrooms2"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                        {% if categories %}
-                        <div class="properties__filters__title h4">Category</div>
-
-                        <div class="form__row">
-                            <div class="form__field">
-                                <div data-change-category class="form__input-wrap form__checkbox-wrapper">
-                                    {% for category in categories %}
-                                    <label>
-                                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category|lower in request.GET.category %}checked{% endif %}>
-                                        <div class="checkbox__label">{{ category }}</div>
-                                    </label>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr>
+                        {% if number_of_bedrooms %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2" data-change-max-bedrooms>
+                            {% for number in number_of_bedrooms %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ number }}" id="max-bedrooms-{{ number }}" name="max-bedrooms" />
+                                <label for="max-bedrooms-{{ number }}">{{ number }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
                         {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <div class="properties__filters__title h4">Price Range</div>
+        <p class="properties__filters__room">Bathrooms</p>
 
-                        <div class="form__row form__row__range-slider">
-                            <div class="form__field">
-                                <div class="form__input-wrap">
-                                    <div class="custom__range-slider" data-range-slider>
-                                        <div class="range-slider__inputs">
-                                            <span class="range-slider__track" data-range-slider-track></span>
-                                            <input type="range" name="min-value" class="range-slider__min-input" min="{% if min_price %}{{ min_price }}{% endif %}" max="{% if max_price %}{{ max_price }}{% endif %}" value="{{ min_price }}" data-range-min-input>
-                                            <input type="range" name="max-value" class="range-slider__max-input" min="{% if min_price %}{{ min_price }}{% endif %}" max="{% if max_price %}{{ max_price }}{% endif %}" value="{{ max_price }}" data-range-max-input>
-                                        </div>
+        <div class="form__row form__row__select-range">
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-bathrooms1"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                                        <div class="range-slider__value-boxes">
-                                            <div class="range-slider__box">
-                                                <div class="range-slider__box__currency">$</div>
-                                                <div class="range-slider__box__value" data-range-min-box>{{ min_price }}</div>
-                                            </div>
+                        {% if number_of_bathrooms %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1" data-change-min-bathrooms>
+                            {% for number in number_of_bathrooms %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ number }}" id="min-bathrooms-{{ number }}" name="min-bathrooms" />
+                                <label for="min-bathrooms-{{ number }}">{{ number }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <span class="form__row__select-range__line"></span>
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-bathrooms2"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                                            <div class="range-slider__box">
-                                                <div class="range-slider__box__currency">$</div>
-                                                <div class="range-slider__box__value" data-range-max-box>{{ max_price }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% if number_of_bathrooms %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2" data-change-max-bathrooms>
+                            {% for number in number_of_bathrooms %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max-bathrooms" />
+                                <label for="max-bathrooms-{{ number }}">{{ number }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <hr>
+        <hr>
 
-                        <div class="properties__filters__title h4">Rooms</div>
+        <div class="properties__filters__title h4">Location</div>
 
-                        <p class="properties__filters__room">Bedrooms</p>
+        <div class="form__row form__row__select-range">
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-location"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <i class="ri-map-pin-line" aria-hidden="true"></i>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>City</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                        <div class="form__row form__row__select-range">
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-bedrooms1"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
+                        {% if cities %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-location" data-change-location>
+                            {% for city in cities %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ city }}" id="{{ city|unicode_filter|lower }}" name="location" />
+                                <label for="{{ city|unicode_filter|lower }}">{{ city }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                                        {% if number_of_bedrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1" data-change-min-bedrooms>
-                                            {% for number in number_of_bedrooms %}<li role="option">
-                                                <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min-bedrooms" />
-                                                <label for="min-bedrooms-{{ number }}">{{ number }}</label>
-                                            </li>
+        <div class="properties__filters__title h4">Square Meters</div>
 
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="form__row__select-range__line"></span>
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-bedrooms2"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
+        <div class="form__row form__row__select-range">
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-square1"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                                        {% if number_of_bedrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2" data-change-max-bedrooms>
-                                            {% for number in number_of_bedrooms %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ number }}" id="max-bedrooms-{{ number }}" name="max-bedrooms" />
-                                                <label for="max-bedrooms-{{ number }}">{{ number }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        {% if square_meters %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-square" data-change-min-meters>
+                            {% for sqm in square_meters %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ sqm }}" id="min-square-{{ sqm }}" name="min-square1" />
+                                <label for="min-square-{{ sqm }}">{{ sqm }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <span class="form__row__select-range__line"></span>
+            <div class="form__field">
+                <div class="form__input-wrap form__select-wrapper">
+                    <div class="custom__select" data-custom-select>
+                        <button
+                            class="custom__select__button"
+                            type="button"
+                            role="combobox"
+                            aria-labelledby="select button"
+                            aria-haspopup="listbox"
+                            aria-expanded="false"
+                            aria-controls="select-square2"
+                            data-custom-select-btn>
+                            <span class="custom__select__button__selected__wrapper">
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                            </span>
+                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
+                        </button>
 
-                        <p class="properties__filters__room">Bathrooms</p>
+                        {% if square_meters %}
+                        <ul class="custom__select__dropdown" role="listbox" id="select-square2" data-change-max-meters>
+                            {% for sqm in square_meters %}
+                            <li role="option">
+                                <input data-option type="radio" value="{{ sqm }}" id="max-square-{{ sqm }}" name="max-square" />
+                                <label for="max-square-{{ sqm }}">{{ sqm }}</label>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
 
-                        <div class="form__row form__row__select-range">
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-bathrooms1"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
+        <div class="form__row submit-row">
+            <div class="form__field form__submit">
+                <button class="btn primary-btn" type="submit">
+                    <i class="btn-icon left ri-search-line" aria-hidden="true"></i>
+                    Search
+                </button>
+            </div>
+        </div>
 
-                                        {% if number_of_bathrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1" data-change-min-bathrooms>
-                                            {% for number in number_of_bathrooms %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ number }}" id="min-bathrooms-{{ number }}" name="min-bathrooms" />
-                                                <label for="min-bathrooms-{{ number }}">{{ number }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="form__row__select-range__line"></span>
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-bathrooms2"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
-
-                                        {% if number_of_bathrooms %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2" data-change-max-bathrooms>
-                                            {% for number in number_of_bathrooms %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max-bathrooms" />
-                                                <label for="max-bathrooms-{{ number }}">{{ number }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr>
-
-                        <div class="properties__filters__title h4">Location</div>
-
-                        <div class="form__row form__row__select-range">
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-location"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <i class="ri-map-pin-line" aria-hidden="true"></i>
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>City</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
-
-                                        {% if cities %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-location" data-change-location>
-                                            {% for city in cities %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ city }}" id="{{ city|unicode_filter|lower }}" name="location" />
-                                                <label for="{{ city|unicode_filter|lower }}">{{ city }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="properties__filters__title h4">Square Meters</div>
-
-                        <div class="form__row form__row__select-range">
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-square1"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
-
-                                        {% if square_meters %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-square" data-change-min-meters>
-                                            {% for sqm in square_meters %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ sqm }}" id="min-square-{{ sqm }}" name="min-square1" />
-                                                <label for="min-square-{{ sqm }}">{{ sqm }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            <span class="form__row__select-range__line"></span>
-                            <div class="form__field">
-                                <div class="form__input-wrap form__select-wrapper">
-                                    <div class="custom__select" data-custom-select>
-                                        <button
-                                            class="custom__select__button"
-                                            type="button"
-                                            role="combobox"
-                                            aria-labelledby="select button"
-                                            aria-haspopup="listbox"
-                                            aria-expanded="false"
-                                            aria-controls="select-square2"
-                                            data-custom-select-btn>
-                                            <span class="custom__select__button__selected__wrapper">
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
-                                            </span>
-                                            <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
-                                        </button>
-
-                                        {% if square_meters %}
-                                        <ul class="custom__select__dropdown" role="listbox" id="select-square2" data-change-max-meters>
-                                            {% for sqm in square_meters %}
-                                            <li role="option">
-                                                <input data-option type="radio" value="{{ sqm }}" id="max-square-{{ sqm }}" name="max-square" />
-                                                <label for="max-square-{{ sqm }}">{{ sqm }}</label>
-                                            </li>
-                                            {% endfor %}
-                                        </ul>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="form__row submit-row">
-                            <div class="form__field form__submit">
-                                <button class="btn primary-btn" type="submit">
-                                    <i class="btn-icon left ri-search-line" aria-hidden="true"></i>
-                                    Search
-                                </button>
-                            </div>
-                        </div>
-
-                    </form>
+    </form>
 
 </div>

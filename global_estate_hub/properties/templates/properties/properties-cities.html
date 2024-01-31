@@ -5,7 +5,7 @@
 {% block content %}
 <section class="properties" data-properties>
     <div class="container">
-        <div class="row properties__row">
+        <div class="row properties__row properties__row--no-sidebar">
             <div class="results-column">
                 <div class="properties__results__top-bar">
                     <div class="properties__results__counter">
@@ -128,10 +128,6 @@
                 {% if pages.paginator.num_pages > 1 %}
                 {% include 'properties/pagination.html' %}
                 {% endif %}
-            </div>
-
-            <div class="filters-column">
-                {% include 'properties/sidebar.html' %}
             </div>
         </div>
     </div>
