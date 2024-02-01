@@ -12,7 +12,7 @@
         <div class="row">
             <div class="content-column">
                 <div class="hero__form-wrapper">
-                    <form data-hero-form class="hero__form" method="get" action="">
+                    <form data-hero-form class="hero__form" method="get" action="{% url 'properties-results' %}">
 
                         <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
                             <label>leave this field blank to prove your humanity
@@ -59,28 +59,21 @@
                                                     <span class="select__title">Location</span>
                                                     <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                                                 </span>
-                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Select location</span>
+                                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Select Location</span>
                                             </button>
                     
-
+                                            {% if cities %}
                                             <ul class="custom__select__dropdown" role="listbox" id="select-location" data-change-location>
 
+                                                {% for city in cities %}
                                                 <li role="option">
-                                                    <input data-option type="radio" value="city1" id="1" name="location" />
-                                                    <label for="1">Miasto 1 </label>
+                                                    <input data-option type="radio" value="{{ city.name }}" id="{{ city.slug }}" name="location" />
+                                                    <label for="{{ city.slug }}">{{ city.name }}</label>
                                                 </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="city2" id="2" name="location" />
-                                                    <label for="2">Miasto 2 </label>
-                                                </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="city3" id="3" name="location" />
-                                                    <label for="3">Miasto 3 </label>
-                                                </li>
+                                                {% endfor %}
 
                                             </ul>
+                                            {% endif %}
 
                                         </div>
                                     </div>
@@ -108,25 +101,18 @@
                                                 <span class="custom__select__button__selected__value" data-custom-select-btn-value>Choose Property Type</span>
                                             </button>
                     
-
+                                            {% if categories %}
                                             <ul class="custom__select__dropdown" role="listbox" id="select-type" data-change-category>
 
+                                                {% for category in categories %}
                                                 <li role="option">
-                                                    <input data-option type="radio" value="Typ 1" id="11" name="category" />
-                                                    <label for="11">Typ 1 </label>
+                                                    <input data-option type="radio" value="{{ category.name }}" id="{{ category.slug }}" name="category" />
+                                                    <label for="{{ category.slug }}">{{ category.name }}</label>
                                                 </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="Typ 2" id="22" name="category" />
-                                                    <label for="22">Typ 2 </label>
-                                                </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="Typ 3" id="33" name="category" />
-                                                    <label for="33">Typ 3 </label>
-                                                </li>
+                                                {% endfor %}
 
                                             </ul>
+                                            {% endif %}
 
                                         </div>
                                     </div>
@@ -153,26 +139,19 @@
                                                 </span>
                                                 <span class="custom__select__button__selected__value" data-custom-select-btn-value>Choose year</span>
                                             </button>
-                    
 
+                                            {% if years_of_built %}
                                             <ul class="custom__select__dropdown" role="listbox" id="select-year" data-change-year>
 
+                                                {% for year in years_of_built %}
                                                 <li role="option">
-                                                    <input data-option type="radio" value="1990" id="1990" name="year" />
-                                                    <label for="1990">1990</label>
+                                                    <input data-option type="radio" value="{{ year }}" id="{{ year }}" name="year" />
+                                                    <label for="{{ year }}">{{ year }}</label>
                                                 </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="1991" id="1991" name="year" />
-                                                    <label for="1991">1991</label>
-                                                </li>
-
-                                                <li role="option">
-                                                    <input data-option type="radio" value="1992" id="1992" name="year" />
-                                                    <label for="1992">1992</label>
-                                                </li>
+                                                {% endfor %}
 
                                             </ul>
+                                            {% endif %}
 
                                         </div>
                                     </div>

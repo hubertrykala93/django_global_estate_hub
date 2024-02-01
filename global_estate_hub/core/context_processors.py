@@ -56,14 +56,6 @@ def properties_types(request):
 
 
 def explore_cities(request):
-    print(list(
-            zip(
-                [city.name for city in City.objects.all().order_by('-name')],
-                [city.image.url for city in City.objects.all().order_by('-name')],
-                [city.get_absolute_url() for city in City.objects.all().order_by('-name')],
-                [Property.objects.filter(city=city).count() for city in
-                 City.objects.all().order_by('-name')]
-            )))
     return {
         'get_cities_info': list(
             zip(

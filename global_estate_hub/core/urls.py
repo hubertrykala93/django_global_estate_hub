@@ -9,4 +9,5 @@ urlpatterns = [
     path(route='newsletter', view=core_views.newsletter, name='newsletter'),
     path(route='error', view=core_views.error, name='error'),
     path(route='send-message', view=core_views.send_message, name='send-message'),
+    path(route='properties-results', view=core_views.properties_results, name='properties-results'),
 ]

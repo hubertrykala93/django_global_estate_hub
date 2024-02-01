@@ -8,8 +8,10 @@ from django.template.loader import render_to_string
 import os
 from dotenv import load_dotenv
 from django.utils.html import strip_tags
-from properties.models import Property, City
+from properties.models import Property, City, Category, ListingStatus
 from blog.models import Article
+from properties.views import property_pagination
+from django.core import serializers
 
 load_dotenv()
 
@@ -20,14 +22,19 @@ def index(request):
 
     return: HttpResponse
     """
-    print([c.name for c in City.objects.all()])
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
+    cities = City.objects.all().order_by('name')
+    categories = Category.objects.all().order_by('name')
+    years_of_built = sorted(set([obj.year_of_built for obj in Property.objects.all()]))
 
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
         'latest_articles': latest_articles,
         'latest_properties': latest_properties,
+        'cities': cities,
+        'categories': categories,
+        'years_of_built': years_of_built,
     })
 
 
@@ -257,3 +264,110 @@ def send_message(request):
 
         else:
             return JsonResponse(data=response, safe=False)
+
+
+def properties_results(request):
+    queryset = []
+
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+
+        response = {
+            'chosenLocation':
+                sorted(set([obj.city.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
+                    year_of_built=int(data['chosenYear']))])) if data['chosenCategory'].capitalize() and data[
+                    'chosenYear'] else
+                sorted(set([obj.city.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
+                )])) if data['chosenCategory'].capitalize() and not data['chosenYear'] else
+                sorted(set([obj.city.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    year_of_built=int(data['chosenYear'])
+                )])) if data['chosenYear'] and not data['chosenCategory'].capitalize() else
+                sorted(set([obj.city.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+                )])),
+            'chosenCategory':
+                sorted(set([obj.category.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    city=City.objects.get(name=data['chosenLocation']),
+                    year_of_built=int(data['chosenYear'])
+                )])) if data['chosenLocation'] and data['chosenYear'] else
+                sorted(set([obj.category.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    city=City.objects.get(name=data['chosenLocation'])
+                )])) if data['chosenLocation'] and not data['chosenYear'] else
+                sorted(set([obj.category.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    year_of_built=int(data['chosenYear'])
+                )])) if data['chosenYear'] and not data['chosenLocation'] else
+                sorted(set([obj.category.name for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+                )])),
+            'chosenYear':
+                sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    city=City.objects.get(name=data['chosenLocation']),
+                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
+                )])) if data['chosenLocation'] and data['chosenCategory'].capitalize() else
+                sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    city=City.objects.get(name=data['chosenLocation'])
+                )])) if data['chosenLocation'] and not data['chosenCategory'].capitalize() else
+                sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
+                )])) if data['chosenCategory'].capitalize() and not data['chosenLocation'] else
+                sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+                )])),
+        }
+
+        if data['chosenLocation'] and data['chosenCategory'] and data['chosenYear']:
+            print('ChosenLocation and ChosenCategory and Chosen Year.')
+            queryset.extend(Property.objects.filter(
+                listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                city=City.objects.get(name=data['chosenLocation']),
+                category=Category.objects.get(name=data['chosenCategory']),
+                year_of_built=int(data['chosenYear'])
+            ).order_by('title'))
+
+        if data['chosenLocation'] and data['chosenCategory'] and not data['chosenYear']:
+            print('ChosenLocation and ChosenCategory and not ChosenYear.')
+            queryset.extend(Property.objects.filter(
+                listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                city=City.objects.get(name=data['chosenLocation']),
+                category=Category.objects.get(name=data['chosenCategory'])
+            ).order_by('title'))
+
+        if data['chosenLocation'] and not data['chosenCategory'] and not data['chosenYear']:
+            print('ChosenLocation and not ChosenCategory and not ChosenYear.')
+            queryset.extend(Property.objects.filter(
+                listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+                city=City.objects.get(name=data['chosenLocation'])
+            ).order_by('title'))
+
+        if data['chosenStatus'] and not data['chosenLocation'] and not data['chosenCategory'] and not data[
+            'chosenYear']:
+            print('Not ChosenLocation and not ChosenCategory and not ChosenYear.')
+            queryset.extend(Property.objects.filter(
+                listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+            ).order_by('title').values('id', 'title', 'postal_code', 'city__name', 'country', 'province', 'main_image',
+                                       'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
+                                       'listing_status__name'))
+
+        # serializable_queryset = serializers.serialize(format='json', queryset=queryset)
+        # request.session['queryset'] = serializable_queryset
+        # print(request.session['queryset'])
+
+        return JsonResponse(data=response)
+
+    return render(request=request, template_name='core/properties-results.html', context={
+        'title': 'Properties Results',
+        'properties': queryset,
+        'sorted_type': request.session['sorted_type'],
+        'pages': property_pagination(request=request, object_list=queryset, per_page=6),
+    })
