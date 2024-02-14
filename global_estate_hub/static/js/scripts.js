@@ -61,10 +61,79 @@ if ($heroForm) {
   const $locationParent = document.querySelector('[data-change-location]')
   const $categoriesParent = document.querySelector('[data-change-category]')
   const $yearsParent = document.querySelector('[data-change-year]')
+
+  let currentlyChosenLocation = ''
+  let currentlyChosenCategory = ''
+  let currentlyChosenYear = ''
   
   const stopSubmitingWhenBotSends = function (e) {
     const urlValue = this.querySelector('.url').value
     if ( !urlValue == '' ) { e.preventDefault() }
+  }
+
+  const updateFilters = (response) => {
+    //update location
+    let newLocationsList = ''
+    response.chosenLocation.forEach(item => {
+        if ( currentlyChosenLocation == item ) {
+          newLocationsList += `
+            <li role="option">
+                <input data-option type="radio" value="${item}" id="${item}" name="location" checked>
+                <label for="${item}">${item}</label>
+            </li>
+            `
+        } else {
+          newLocationsList += `
+            <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="location">
+              <label for="${item}">${item}</label>
+            </li>
+            `
+        }
+    })
+    $locationParent.innerHTML = newLocationsList
+
+    //update categories
+    let newCategoriesList = ''
+    response.chosenCategory.forEach(item => {
+        if ( currentlyChosenCategory == item ) {
+          newCategoriesList += `
+            <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="category" checked>
+              <label for="${item}">${item}</label>
+            </li>
+          `
+        } else {
+          newCategoriesList += `
+            <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="category">
+              <label for="${item}">${item}</label>
+            </li>
+          `
+        }
+    })
+    $categoriesParent.innerHTML = newCategoriesList
+
+    //update years
+    let newYearsList = ''
+    response.chosenYear.forEach(item => {
+        if ( currentlyChosenYear == item ) {
+          newYearsList += `
+            <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="year" checked>
+              <label for="${item}">${item}</label>
+            </li>
+          `
+        } else {
+          newYearsList += `
+            <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="year">
+              <label for="${item}">${item}</label>
+            </li>
+          `
+        }
+    })
+    $yearsParent.innerHTML = newYearsList
   }
 
   $heroForm.addEventListener('submit', stopSubmitingWhenBotSends)
@@ -83,34 +152,31 @@ if ($heroForm) {
     data.chosenStatus = chosenStatus
 
     //location
-    let chosenLocation = ''
     const $locationInputs = $locationParent.querySelectorAll('[data-option]')
     for (let i = 0; i < $locationInputs.length; i++) {
         if ( $locationInputs[i].checked ) {
-          chosenLocation = $locationInputs[i].value
+          currentlyChosenLocation = $locationInputs[i].value
         }
     }
-    data.chosenLocation = chosenLocation
+    data.chosenLocation = currentlyChosenLocation
 
     //category
-    let chosenCategory = ''
     const $categoriesInputs = $categoriesParent.querySelectorAll('[data-option]')
     for (let i = 0; i < $categoriesInputs.length; i++) {
         if ( $categoriesInputs[i].checked ) {
-          chosenCategory = $categoriesInputs[i].value
+          currentlyChosenCategory = $categoriesInputs[i].value
         }
     }
-    data.chosenCategory = chosenCategory
+    data.chosenCategory = currentlyChosenCategory
 
     //year
-    let chosenYear = ''
     const $yearsInputs = $yearsParent.querySelectorAll('[data-option]')
     for (let i = 0; i < $yearsInputs.length; i++) {
         if ( $yearsInputs[i].checked ) {
-          chosenYear = $yearsInputs[i].value
+          currentlyChosenYear = $yearsInputs[i].value
         }
     }
-    data.chosenYear = chosenYear
+    data.chosenYear = currentlyChosenYear
 
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'properties-results', true)
@@ -124,12 +190,55 @@ if ($heroForm) {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
           console.log('received', response)
+          updateFilters(response)
       }
     }
   })
 }
 
+/**
+   * Hero counters
+    */
 
+const $heroCounters = document.querySelector('[data-hero-counters]')
+
+if ($heroCounters) {
+  
+  const countNumbers = () => {
+    const DURATION = 3000
+    const INCREMENT_VALUE = 1
+    const $counters = $heroCounters.querySelectorAll('[data-number]')
+
+    $counters.forEach(counter => {
+      const targetNumber = counter.dataset.number
+      const interval = DURATION / targetNumber
+      let number = 0
+
+      counter.innerText = number
+
+      const loop = setInterval(() => {
+        number+= INCREMENT_VALUE
+        counter.innerText = number
+
+        if ( number >= targetNumber ) {
+          counter.innerText = targetNumber
+          clearInterval(loop)
+        }
+      }, interval);
+    })
+  }
+
+  const observer = new IntersectionObserver((entries, obs) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        countNumbers()
+        obs.unobserve(entry.target)
+      }
+    })
+  })
+
+  observer.observe($heroCounters)
+}
 
 
 /**
