@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
-from django.utils.timezone import now, timedelta
+from django.utils.timezone import now
 from PIL import Image
+from django.shortcuts import reverse
 
 
 class CustomUserManager(UserManager):
@@ -47,7 +48,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50, unique=True)
     email = models.EmailField(max_length=100, unique=True, null=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
-    account_type = models.CharField(max_length=100, choices=(
+    account_type = models.CharField(default='Individual', max_length=100, choices=(
         ('Individual', 'Individual'),
         ('Business', 'Business'),
     ), blank=True)
@@ -55,7 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_agent = models.BooleanField(default=False)
+    is_agent = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=now)
 
     objects = CustomUserManager()
@@ -122,6 +123,7 @@ class OneTimePassword(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     password = models.CharField(max_length=20)
     created_at = models.DateTimeField(default=now)
+
     # expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
     # objects = OneTimePasswordManager()
 

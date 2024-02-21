@@ -325,17 +325,18 @@ class AdminProperty(admin.ModelAdmin):
                     'image_files',
                     'year_of_built', 'number_of_bedrooms', 'title', 'square_meters',
                     'parking_space', 'get_amenities', 'get_plans', 'get_educations',
-                    'get_health_and_medicals', 'get_transportations', 'get_shops']
+                    'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
+                    'purchasing_user']
     list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
                    'year_of_built', 'city', 'province',
                    'country', 'is_featured', 'date_posted']
     list_editable = ['main_image', 'image_files', 'title', 'price', 'year_of_built', 'number_of_bedrooms',
-                     'number_of_bathrooms',
+                     'number_of_bathrooms', 'user',
                      'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
                      'latitude',
                      'longitude', 'video',
                      'is_featured',
-                     'listing_status']
+                     'listing_status', 'purchasing_user']
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user__username', 'title']

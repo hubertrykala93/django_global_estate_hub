@@ -11,7 +11,7 @@ from django.utils.html import strip_tags
 from properties.models import Property, City, Category, ListingStatus
 from blog.models import Article
 from properties.views import property_pagination
-from django.core import serializers
+import datetime
 
 load_dotenv()
 
@@ -27,14 +27,41 @@ def index(request):
     cities = City.objects.all().order_by('name')
     categories = Category.objects.all().order_by('name')
     years_of_built = sorted(set([obj.year_of_built for obj in Property.objects.all()]))
+    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))
+
+    # year counter
+    project_started = 2024
+    current_year = datetime.date.today().year
+    substracted_year = current_year - project_started
+
+    # customers counter
+    substracted_customers_counter = len(list(
+        set([obj.purchasing_user for obj in Property.objects.all() if obj.purchasing_user is not None]))) - 1 if len(
+        list(set([obj.purchasing_user for obj in Property.objects.all() if
+                  obj.purchasing_user is not None]))) > 1 else len(
+        list(set([obj.purchasing_user for obj in Property.objects.all() if obj.purchasing_user is not None])))
+    customers_counter = len(
+        list(set([obj.purchasing_user for obj in Property.objects.all() if obj.purchasing_user is not None])))
+
+    # properties counter
+    substracted_properties_counter = Property.objects.all().count() - 1 if len(
+        Property.objects.all()) > 1 else Property.objects.all().count()
+    properties_counter = Property.objects.all().count()
 
     return render(request=request, template_name='core/index.html', context={
         'title': 'Home',
         'latest_articles': latest_articles,
         'latest_properties': latest_properties,
+        'project_started': project_started,
+        'substracted_year': substracted_year,
+        'substracted_customers_counter': substracted_customers_counter,
+        'customers_counter': customers_counter,
+        'substracted_properties_counter': substracted_properties_counter,
+        'properties_counter': properties_counter,
         'cities': cities,
         'categories': categories,
         'years_of_built': years_of_built,
+        'agents': agents,
     })
 
 
@@ -337,6 +364,10 @@ def properties_results(request):
 
         if data['chosenLocation'] and data['chosenCategory'] and not data['chosenYear']:
             print('ChosenLocation and ChosenCategory and not ChosenYear.')
+            request.session['filters'] = {
+                'category': data['chosenCategory'],
+                'city': data['chosenLocation']
+            }
             queryset.extend(Property.objects.filter(
                 listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
                 city=City.objects.get(name=data['chosenLocation']),
@@ -345,6 +376,9 @@ def properties_results(request):
 
         if data['chosenLocation'] and not data['chosenCategory'] and not data['chosenYear']:
             print('ChosenLocation and not ChosenCategory and not ChosenYear.')
+            request.session['filters'] = {
+                'city': data['chosenLocation']
+            }
             queryset.extend(Property.objects.filter(
                 listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
                 city=City.objects.get(name=data['chosenLocation'])
@@ -353,21 +387,25 @@ def properties_results(request):
         if data['chosenStatus'] and not data['chosenLocation'] and not data['chosenCategory'] and not data[
             'chosenYear']:
             print('Not ChosenLocation and not ChosenCategory and not ChosenYear.')
+            request.session['filters'] = {
+                'listing_status': data['chosenStatus'],
+            }
             queryset.extend(Property.objects.filter(
                 listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
             ).order_by('title').values('id', 'title', 'postal_code', 'city__name', 'country', 'province', 'main_image',
                                        'price', 'number_of_bedrooms', 'number_of_bathrooms', 'square_meters',
                                        'listing_status__name'))
 
-        # serializable_queryset = serializers.serialize(format='json', queryset=queryset)
-        # request.session['queryset'] = serializable_queryset
-        # print(request.session['queryset'])
+        print(request.session.items())
 
         return JsonResponse(data=response)
 
-    return render(request=request, template_name='core/properties-results.html', context={
-        'title': 'Properties Results',
-        'properties': queryset,
-        'sorted_type': request.session['sorted_type'],
-        'pages': property_pagination(request=request, object_list=queryset, per_page=6),
-    })
+    elif request.method == 'GET':
+        request.session['sorted_type'] = 'Newest Properties'
+
+        return render(request=request, template_name='core/properties-results.html', context={
+            'title': 'Properties Results',
+            'properties': queryset,
+            'sorted_type': request.session['sorted_type'],
+            'pages': property_pagination(request=request, object_list=queryset, per_page=6),
+        })

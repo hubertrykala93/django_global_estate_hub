@@ -31,9 +31,9 @@ class AdminUser(admin.ModelAdmin):
     Admin options and functionalities for User model.
     """
     list_display = ['id', 'username', 'email', 'image', 'password', 'account_type', 'is_verified', 'is_staff',
-                    'is_active', 'is_superuser', 'date_joined', 'last_login']
-    list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser']
-    list_filter = ['username', 'email', 'account_type', 'date_joined']
+                    'is_active', 'is_superuser', 'date_joined', 'last_login', 'is_agent']
+    list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser', 'is_agent']
+    list_filter = ['username', 'email', 'account_type', 'date_joined', 'is_agent']
     radio_fields = {'account_type': admin.VERTICAL}
     list_display_links = ['id']
     search_fields = ['username']
@@ -75,6 +75,13 @@ class AdminUser(admin.ModelAdmin):
                 'is_active',
                 'is_staff',
                 'is_superuser',
+            ]
+        }
+        ],
+        [
+            'Additionals', {
+            'fields': [
+                'is_agent',
             ]
         }
         ]

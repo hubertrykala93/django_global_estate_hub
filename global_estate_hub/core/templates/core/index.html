@@ -188,26 +188,26 @@
                 <div class="numberCounters" data-hero-counters>
                     <div class="numberCounters__item">
                         <div class="numberCounters__number-wrapper">
-                            <span class="numberCounters__number" data-number="10">10</span>
-                            <span class="numberCounters__number-char">+</span>
+                            <span class="numberCounters__number" data-number="{{ substracted_year }}">{{ substracted_year }}</span>
+<!--                            <span class="numberCounters__number-char">+</span>-->
                         </div>
                         <div class="numberCounters__number-text">Years of Services</div>
                     </div>
 
                     <div class="numberCounters__item">
                         <div class="numberCounters__number-wrapper">
-                            <span class="numberCounters__number" data-number="200">200</span>
-                            <span class="numberCounters__number-char">+</span>
+                            <span class="numberCounters__number" data-number="{% if customers_counter < 2 %}{{ customers_counter }}{% else %}{{ substracted_customers_counter }}{% endif %}">{% if customers_counter < 2 %}{{ customers_counter }}{% else %}{{ substracted_customers_counter }}{% endif %}</span>
+                            {% if customers_counter > 1 %}<span class="numberCounters__number-char">+</span>{% endif %}
                         </div>
-                        <div class="numberCounters__number-text">Happy Customers</div>
+                        <div class="numberCounters__number-text">{% if customers_counter == 0 %}Happy Customers{% elif customers_counter == 1 %}Happy Customer{% else %}Happy Customers{% endif %}</div>
                     </div>
 
                     <div class="numberCounters__item">
                         <div class="numberCounters__number-wrapper">
-                            <span class="numberCounters__number" data-number="150">150</span>
-                            <span class="numberCounters__number-char">+</span>
+                            <span class="numberCounters__number" data-number="{% if properties_counter < 2 %}{{ properties_counter }}{% else %}{{ substracted_properties_counter }}{% endif %}">{% if properties_counter < 2 %}{{ properties_counter }}{% else %}{{ substracted_properties_counter }}{% endif %}</span>
+                            {% if properties_counter > 1 %}<span class="numberCounters__number-char">+</span>{% endif %}
                         </div>
-                        <div class="numberCounters__number-text">Ready Property</div>
+                        <div class="numberCounters__number-text">{% if properties_counter == 0 %}Ready Properties{% elif properties_counter == 1 %}Ready Property{% else %}Ready Properties{% endif %}</div>
                     </div>
                 </div>
             </div>
@@ -221,40 +221,28 @@
                     <img src="/media/home-page/agents.jpg" alt="agents box image" class="agents__wrapper__bg" aria-hidden="true">
 
                     <div class="agents__overlay">
+                        {% if agents %}
                         <ul class="agents__list">
+                            {% for agent in agents %}
                             <li class="agents__list__item">
-                                <a href="#" class="agents__list__link">
-                                    <img src="https://picsum.photos/80" alt="agent avatar" class="agent__avatar" aria-hidden="true">
+                                <a href="{% url 'account-details' agent %}" class="agents__list__link">
+                                    <img src="{{ agent.image.url }}" alt="agent avatar" class="agent__avatar" aria-hidden="true">
                                 </a>
                             </li>
+                            {% endfor %}
 
-                            <li class="agents__list__item">
-                                <a href="#" class="agents__list__link">
-                                    <img src="https://picsum.photos/81" alt="agent avatar" class="agent__avatar" aria-hidden="true">
-                                </a>
-                            </li>
-
-                            <li class="agents__list__item">
-                                <a href="#" class="agents__list__link">
-                                    <img src="https://picsum.photos/82" alt="agent avatar" class="agent__avatar" aria-hidden="true">
-                                </a>
-                            </li>
-
-                            <li class="agents__list__item">
-                                <a href="#" class="agents__list__link">
-                                    <img src="https://picsum.photos/83" alt="agent avatar" class="agent__avatar" aria-hidden="true">
-                                </a>
-                            </li>
-
+                            {% if request.user.is_superuser %}
                             <li class="agents__list__item">
                                 <a href="#" class="agents__list__link">
                                     +
                                 </a>
                             </li>
+                            {% endif %}
                         </ul>
+                        {% endif %}
 
                         <div class="agents__text">
-                            <span class="agents__counter">10</span>+ Exclusive Agents
+                            <span class="agents__counter">{{ agents|length }}</span>{% if agents|length == 0 %} Exclusive Agents{% elif agents|length == 1 %} Exclusive Agent{% elif agents|length > 1 and agents|length <= 4 %} Exclusive Agents{% elif agents|length > 4 %}+ Exclusive Agents{% endif %}
                         </div>
                     </div>
                 </div>

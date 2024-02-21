@@ -1,10 +1,11 @@
 import os
-from django.shortcuts import render, redirect, reverse
+from django.shortcuts import render, redirect, reverse, get_object_or_404
+from django.urls import resolve
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword
+from .models import User, OneTimePassword, Individual, Business
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -1046,3 +1047,13 @@ def set_password(request):
 
         else:
             return JsonResponse(data=response, safe=False)
+
+
+def account_details(request, username):
+    # user = get_object_or_404(klass=User, username=username)
+    user = User.objects.get(username=username)
+
+    return render(request=request, template_name='accounts/account-details.html', context={
+        'title': 'Account Details',
+        'user': user,
+    })

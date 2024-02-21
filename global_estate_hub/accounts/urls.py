@@ -14,7 +14,7 @@ urlpatterns = [
     path(route='profile-settings', view=accounts_views.profile_settings, name='profile-settings'),
     path(route='localization-settings', view=accounts_views.localization_settings, name='localization-settings'),
     path(route='social-media-settings', view=accounts_views.social_media_settings, name='social-media-settings'),
-    # path(route='account-details/<str:username>', view=accounts_views.account_details, name='account-details'),
+    path(route='account-details/<str:username>', view=accounts_views.account_details, name='account-details'),
     path(route='forget-password', view=accounts_views.forget_password, name='forget-password'),
     path(route='send-password', view=accounts_views.send_password, name='send-password'),
     path(route='validate-password', view=accounts_views.validate_password, name='validate-password'),

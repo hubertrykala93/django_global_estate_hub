@@ -258,6 +258,8 @@ class Property(models.Model):
     health_and_medical = models.ManyToManyField(to=HealthAndMedical, blank=True)
     transportation = models.ManyToManyField(to=Transportation, blank=True)
     shopping = models.ManyToManyField(to=Shopping, blank=True)
+    quantity_of_purchases = models.IntegerField(default=0, null=True, blank=True)
+    purchasing_user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Property'
