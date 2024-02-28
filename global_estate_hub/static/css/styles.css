@@ -3265,7 +3265,7 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 }
 
 .article .article__comment .article__comment__content__body{
-    white-space: unset;
+    white-space: pre-line;
 }
 
 .article .article__comment .article__comment__foter {

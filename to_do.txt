@@ -1,0 +1,27 @@
+Admin:
+hubert.rykala@gmail.com
+admin
+
+szymon.levy123@gmail.com
+admin
+
+
+@Szymon-Levy
+1. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
+2. dekodowanie komentarzy
+3. kontynuowac funkcje przywracania tekstu domyslnego w wyszukiwarce w hero jak w kategoriach
+************
+1. accessible accordion
+2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
+
+@hubertrykala93
+1. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
+2. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
+4. Zrobić API.
+5. Na samym końcu odkomentować OneTimePasswordManager, odkomentować atrybuty w OneTimePassword modelu. Dodać expires_in do list display i fieldsets w interfejsie admina.
+6. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
+8. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
+9. quote__image w article details, jaki ma być tam img?
+
+***********
+1. cache busting

@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load float_converter %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -116,7 +117,7 @@
                                 </ul>
 
                                 <div class="property-card__footer">
-                                    <div class="property-card__price">$ {{ page.price }}</div>
+                                    <div class="property-card__price">${{ page.price|price_converter }}</div>
 
                                     <span class="property-card__badge property-card__badge--primary">For {% if page.listing_status.name == 'Rent' %}Rent{% else %}Sale{% endif %}</span>
                                 </div>

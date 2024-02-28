@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 from accounts.models import User
+import urllib.parse
 
 
 def blog_pagination(request, object_list, per_page):

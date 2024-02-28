@@ -10,13 +10,13 @@
       <div class="left-column">
         <div class="account-details__block account-details__block--basic">
           <div class="account-details__avatar">
-            <img src="{{ user.image.url }}" alt="user avatar">
+            <img src="{{ u.image.url }}" alt="user avatar">
           </div>
 
           <div class="account-details__basic-info">
-            <p class="account-details__basic-info__name h3">{{ user.username }}</p>
-            <p>{{ user.date_joined }}</p>
-            <p>{{ user.email }}</p>
+            <p class="account-details__basic-info__name h3">{{ u.username }}</p>
+            <p>{{ u.date_joined }}</p>
+            <p>{{ u.email }}</p>
           </div>
 
         </div>
@@ -31,10 +31,10 @@
                 Website
               </span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.website_url %}<a href="{{ user.individual.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.website_url %}<a href="{{ u.individual.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% else %}
-                {% if user.business.website_url %}<a href="{{ user.business.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+                {% if u.business.website_url %}<a href="{{ u.business.website_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% endif %}
 
             </li>
@@ -45,10 +45,10 @@
                 Facebook
               </span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.facebook_url %}<a href="{{ user.individual.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.facebook_url %}<a href="{{ u.individual.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% else %}
-                {% if user.business.facebook_url %}<a href="{{ user.business.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+                {% if u.business.facebook_url %}<a href="{{ u.business.facebook_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% endif %}
 
             </li>
@@ -59,10 +59,10 @@
                 Instagram
               </span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.instagram_url %}<a href="{{ user.individual.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.instagram_url %}<a href="{{ u.individual.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% else %}
-                {% if user.business.instagram_url %}<a href="{{ user.business.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+                {% if u.business.instagram_url %}<a href="{{ u.business.instagram_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% endif %}
 
             </li>
@@ -73,10 +73,10 @@
                 LinkedIn
               </span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.linkedin_url %}<a href="{{ user.individual.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.linkedin_url %}<a href="{{ u.individual.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% else %}
-                {% if user.business.linkedin_url %}<a href="{{ user.business.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
+                {% if u.business.linkedin_url %}<a href="{{ u.business.linkedin_url }}" target="_blank">Visit{% else %}Not provided{% endif %}</a>
               {% endif %}
 
             </li>
@@ -90,42 +90,42 @@
 
           <ul>
 
-              {% if user.account_type == 'Individual' %}
+              {% if u.account_type == 'Individual' %}
             <li>
               <span>First Name:</span>
-              {% if user.individual.first_name %}{{ user.individual.first_name }}{% else %}Not provided{% endif %}
+              {% if u.individual.first_name %}{{ u.individual.first_name }}{% else %}Not provided{% endif %}
             </li>
 
             <li>
               <span>Last Name:</span>
-              {% if user.individual.last_name %}{{ user.individual.last_name }}{% else %}Not provided{% endif %}
+              {% if u.individual.last_name %}{{ u.individual.last_name }}{% else %}Not provided{% endif %}
             </li>
 
             <li>
               <span>Gender:</span>
-              {% if user.individual.gender %}{{ user.individual.gender }}{% else %}Not provided{% endif %}
+              {% if u.individual.gender %}{{ u.individual.gender }}{% else %}Not provided{% endif %}
             </li>
 
             <li>
               <span>Phone Number:</span>
-              {% if user.individual.phone_number %}{{ user.individual.phone_number }}{% else %}Not provided{% endif %}
+              {% if u.individual.phone_number %}{{ u.individual.phone_number }}{% else %}Not provided{% endif %}
             </li>
 
               {% else %}
 
             <li>
               <span>Company ID:</span>
-              {% if user.business.company_id %}{{ user.business.company_id }}{% else %}Not provided{% endif %}
+              {% if u.business.company_id %}{{ u.business.company_id }}{% else %}Not provided{% endif %}
             </li>
 
             <li>
               <span>Company Name:</span>
-              {% if user.business.company_name %}{{ user.business.company_name }}{% else %}Not provided{% endif %}
+              {% if u.business.company_name %}{{ u.business.company_name }}{% else %}Not provided{% endif %}
             </li>
 
             <li>
               <span>Phone Number:</span>
-              {% if user.business.phone_number %}{{ user.business.phone_number }}{% else %}Not provided{% endif %}
+              {% if u.business.phone_number %}{{ u.business.phone_number }}{% else %}Not provided{% endif %}
             </li>
               {% endif %}
           </ul>
@@ -138,10 +138,10 @@
             <li>
               <span>Country:</span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.country %}{{ user.individual.country }}{% else %}Not provided{% endif %}
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.country %}{{ u.individual.country }}{% else %}Not provided{% endif %}
               {% else %}
-                {% if user.business.country %}{{ user.business.country }}{% else %}Not provided{% endif %}
+                {% if u.business.country %}{{ u.business.country }}{% else %}Not provided{% endif %}
               {% endif %}
 
             </li>
@@ -149,10 +149,10 @@
             <li>
               <span>Province:</span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.province %}{{ user.individual.province }}{% else %}Not provided{% endif %}
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.province %}{{ u.individual.province }}{% else %}Not provided{% endif %}
               {% else %}
-                {% if user.business.province %}{{ user.business.province }}{% else %}Not provided{% endif %}
+                {% if u.business.province %}{{ u.business.province }}{% else %}Not provided{% endif %}
               {% endif %}
 
             </li>
@@ -160,10 +160,10 @@
             <li>
               <span>City:</span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.city %}{{ user.individual.city }}{% else %}Not provided{% endif %}
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.city %}{{ u.individual.city }}{% else %}Not provided{% endif %}
               {% else %}
-                {% if user.business.city %}{{ user.business.city }}{% else %}Not provided{% endif %}
+                {% if u.business.city %}{{ u.business.city }}{% else %}Not provided{% endif %}
               {% endif %}
 
             </li>
@@ -171,10 +171,10 @@
             <li>
               <span>Street:</span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.street %}{{ user.individual.street }}{% else %}Not provided{% endif %}
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.street %}{{ u.individual.street }}{% else %}Not provided{% endif %}
               {% else %}
-                {% if user.business.street %}{{ user.business.street }}{% else %}Not provided{% endif %}
+                {% if u.business.street %}{{ u.business.street }}{% else %}Not provided{% endif %}
               {% endif %}
 
             </li>
@@ -182,10 +182,10 @@
             <li>
               <span>Postal Code:</span>
 
-              {% if user.account_type == 'Individual' %}
-                {% if user.individual.postal_code %}{{ user.individual.postal_code }}{% else %}Not provided{% endif %}
+              {% if u.account_type == 'Individual' %}
+                {% if u.individual.postal_code %}{{ u.individual.postal_code }}{% else %}Not provided{% endif %}
               {% else %}
-                {% if user.business.postal_code %}{{ user.business.postal_code }}{% else %}Not provided{% endif %}
+                {% if u.business.postal_code %}{{ u.business.postal_code }}{% else %}Not provided{% endif %}
               {% endif %}
 
             </li>

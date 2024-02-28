@@ -95,7 +95,12 @@ if ($heroForm) {
 
     //update categories
     let newCategoriesList = ''
+    let categoryNotInside = true
     response.chosenCategory.forEach(item => {
+        console.log(item)
+        if (currentlyChosenCategory === item) {
+            categoryNotInside = false
+        }
         if ( currentlyChosenCategory == item ) {
           newCategoriesList += `
             <li role="option">
@@ -112,6 +117,10 @@ if ($heroForm) {
           `
         }
     })
+    if (categoryNotInside) {
+        console.log($categoriesParent)
+        $heroForm.querySelector('[data-selected-category]').innerText = 'Choose Property Type'
+    }
     $categoriesParent.innerHTML = newCategoriesList
 
     //update years
@@ -1642,10 +1651,11 @@ if ($addCommentInArticleForm) {
 
     const $nameInput = this.querySelector('[data-name]')
     const $commentInput = this.querySelector('[data-comment]')
+    console.log(encodeURI($commentInput.value.trim()))
 
     const data = {
       "full_name": [$nameInput.value.trim(), "data-name", "name"],
-      "comment": [$commentInput.value.trim(), "data-comment", "comment"],
+      "comment": [encodeURI($commentInput.value.trim()), "data-comment", "comment"],
       "url": urlValue
     }
 
@@ -2611,9 +2621,9 @@ if ( $propertiesPage ) {
     $maxBathroomsParent.innerHTML = newMaxBathroomsList
   }
 
-  // $filtersForm.addEventListener('change', function(e) {
-  //   this.submit()
-  // })
+   $filtersForm.addEventListener('change', function(e) {
+     this.submit()
+   })
 
   // $filtersForm.addEventListener('change', (e) => {
   //   const data = {}

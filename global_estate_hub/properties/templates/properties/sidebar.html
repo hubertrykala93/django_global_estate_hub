@@ -38,7 +38,7 @@
                 <div data-change-status class="form__input-wrap form__radio-wrapper">
                     {% for status in listing_statuses %}
                     <label>
-                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if status|lower in request.GET.status %}checked{% endif %}>
+                        <input data-status data-input type="radio" name="status" value="{{ status|lower }}"{% if listing_statuses.0 == status %}checked{% elif status|lower in request.GET.status %}checked{% endif %}>
                         <div class="radio__label">{{ status }}</div>
                     </label>
                     {% endfor %}

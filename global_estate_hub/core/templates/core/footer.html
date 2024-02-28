@@ -87,7 +87,7 @@
 
                         <div class="property__data">
                             <a href="{{ property.get_absolute_url }}" class="property__title h3">{{ property.title }}</a>
-                            <p class="property__price">{% if property.listing_status.name == 'Rent' %}$ {{ property.price|float_converter|convert_to_str|add_dots }} / Per Month{% else %}$ {{ property.price|float_converter }}{% endif %}</p>
+                            <p class="property__price">{% if property.listing_status.name == 'Rent' %}${{ property.price|price_converter }} / Per Month{% else %}${{ property.price|price_converter }}{% endif %}</p>
                         </div>
                     </div>
                     {% endfor %}

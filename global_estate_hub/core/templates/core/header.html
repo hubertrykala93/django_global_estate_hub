@@ -13,15 +13,7 @@
             </nav>
 
             <div class="header-right">
-                {% if not user.is_authenticated %}
-                <div class="login">
-                    <a href="{% url 'login' %}">Login</a>
-                </div>
-
-                <a href="{% url 'register' %}" class="btn primary-btn">Sign Up</a>
-
-                {% else %}
-
+                {% if user.is_authenticated %}
                 <div class="add-property">
                     <a href="{% url 'add-property' %}" class="btn primary-btn">Add property</a>
                 </div>
@@ -57,6 +49,12 @@
                         </ul>
                     </div>
                 </div>
+                {% else %}
+                <div class="login">
+                    <a href="{% url 'login' %}">Login</a>
+                </div>
+
+                <a href="{% url 'register' %}" class="btn primary-btn">Sign Up</a>
                 {% endif %}
             </div>
 

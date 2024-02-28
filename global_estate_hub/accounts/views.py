@@ -1050,10 +1050,9 @@ def set_password(request):
 
 
 def account_details(request, username):
-    # user = get_object_or_404(klass=User, username=username)
-    user = User.objects.get(username=username)
+    u = User.objects.get(username=username)
 
     return render(request=request, template_name='accounts/account-details.html', context={
         'title': 'Account Details',
-        'user': user,
+        'u': u,
     })

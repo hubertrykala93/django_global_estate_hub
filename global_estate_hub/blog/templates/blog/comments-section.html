@@ -1,4 +1,5 @@
 {% load mptt_tags %}
+{% load comment_decoder %}
 
 <div class="article__comments" data-article-comments>
     <div class="article__comments__count">
@@ -19,7 +20,7 @@
                 <div class="article__comment__content">
                     <div class="article__comment__name">
                         {% if node.user.username %}
-                        <a href="#">{{ node.user.username }}</a>
+                        <a href="{% url 'account-details' node.user %}">{{ node.user.username }}</a>
                         {% else %}
                         {{ node.full_name }}
                         {% endif %}

@@ -30,9 +30,14 @@ def index(request):
 
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
-    cities = City.objects.all().order_by('name')
-    categories = Category.objects.all().order_by('name')
-    years_of_built = sorted(set([obj.year_of_built for obj in Property.objects.all()]))
+    cities = sorted(
+        set([obj.city for obj in Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]),
+        key=lambda x: x.name)
+    categories = sorted(set([obj.category for obj in
+                             Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]),
+                        key=lambda x: x.name)
+    years_of_built = sorted(set([obj.year_of_built for obj in
+                                 Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]))
     agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))
 
     # year counter
@@ -302,6 +307,8 @@ def send_message(request):
 def properties_results(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+
+        print(data)
 
         response = {
             'chosenLocation':
