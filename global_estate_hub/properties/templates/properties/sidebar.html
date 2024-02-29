@@ -57,7 +57,7 @@
                 <div data-change-category class="form__input-wrap form__checkbox-wrapper">
                     {% for category in categories %}
                     <label>
-                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category|lower in request.GET.category %}checked{% endif %}>
+                        <input data-checkbox data-input type="checkbox" name="category" value="{{ category|lower }}"{% if category|lower in request.session.category %}checked{% endif %}>
                         <div class="checkbox__label">{{ category }}</div>
                     </label>
                     {% endfor %}

@@ -48,11 +48,8 @@ def properties_context():
 def properties(request):
     queryset = []
     context = {}
-    print(request.GET)
-    print(request.session.items())
 
     if request.GET:
-        print(request.GET)
         print('Request GET.')
 
         if 'properties-order' in request.GET:
@@ -115,28 +112,113 @@ def properties(request):
 
         else:
             print('No properties order, keyword in request GET.')
-            if request.session.get('sorted_type'):
-                request.session.pop('sorted_type')
 
-            request.session['sorted_type'] = 'Newest Properties'
-            queryset.extend(Property.objects.all().order_by('-date_posted'))
+            if 'status' in request.GET:
+                print('If status in request GET.')
 
-        # if 'status' in request.GET:
-        #     print('If Status in request GET.')
-        #     if 'filters' in request.session:
-        #         print('Filters in request session.')
-        #
-        #     else:
-        #         print('Not filters in request session.')
-        #         request.session['filters'] = {
-        #             'listing_status_id': ListingStatus.objects.get(slug='rent').id,
-        #             'price__range': [int(request.GET.get('min-value')), int(request.GET.get('max-value'))]
-        #         }
-        #         print(request.GET)
-        #         print(request.session['filters'])
-        #         queryset.clear()
-        #         queryset.extend(Property.objects.filter(**request.session['filters']))
+                request.session['filters'] = {
+                    'listing_status_id': ListingStatus.objects.get(
+                        slug='-'.join(request.GET.get('status').lower().split())).id,
+                    'price__range':
+                        [
+                            min([obj.price for obj in
+                                 Property.objects.filter(listing_status_id=ListingStatus.objects.get(
+                                     slug='-'.join(request.GET.get('status').lower().split())).id)]),
+                            max([obj.price for obj in
+                                 Property.objects.filter(listing_status_id=ListingStatus.objects.get(
+                                     slug='-'.join(request.GET.get('status').lower().split())).id)])
+                        ]
+                }
+                request.session['sorted_type'] = 'Newest Properties'
+                queryset.clear()
+                queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+                context.update(
+                    {
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': sorted(set([obj.category.name for obj in
+                                                  Property.objects.filter(
+                                                      listing_status=ListingStatus.objects.get(
+                                                          slug=request.GET.get('status')))])),
+                        'min_price': min(list(
+                            set([obj.price for obj in
+                                 Property.objects.filter(
+                                     listing_status=ListingStatus.objects.get(slug=request.GET.get('status')))]))),
+                        'max_price': max(list(
+                            set([obj.price for obj in
+                                 Property.objects.filter(
+                                     listing_status=ListingStatus.objects.get(slug=request.GET.get('status')))]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in
+                                                          Property.objects.filter(
+                                                              listing_status=ListingStatus.objects.get(
+                                                                  slug=request.GET.get('status')))])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in
+                                                           Property.objects.filter(
+                                                               listing_status=ListingStatus.objects.get(
+                                                                   slug=request.GET.get('status')))])),
+                        'cities': sorted(set([obj.city.name for obj in
+                                              Property.objects.filter(
+                                                  listing_status=ListingStatus.objects.get(
+                                                      slug=request.GET.get('status')))])),
+                        'square_meters': sorted(set([obj.square_meters for obj in
+                                                     Property.objects.filter(
+                                                         listing_status=ListingStatus.objects.get(
+                                                             slug=request.GET.get('status')))])),
+                    }
+                )
 
+            if 'category' in request.GET:
+                print('Category in request GET.')
+                request.session['category'] = '-'.join(request.GET.get('category').lower().split())
+
+                if request.session.get('sorted_type'):
+                    request.session.pop('sorted_type')
+
+                request.session['filters'].update(
+                    {
+                        'category_id': Category.objects.get(
+                            slug='-'.join(request.GET.get('category').lower().split())).id
+                    }
+                )
+
+                request.session['sorted_type'] = 'Newest Properties'
+                queryset.clear()
+                queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
+                context.update(
+                    {
+                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+                        'categories': sorted(set([obj.category.name for obj in
+                                                  Property.objects.filter(
+                                                      listing_status=ListingStatus.objects.get(
+                                                          slug=request.GET.get('status')))])),
+                        'min_price': min(list(
+                            set([obj.price for obj in
+                                 Property.objects.filter(
+                                     listing_status=ListingStatus.objects.get(slug=request.GET.get('status')),
+                                     category=Category.objects.get(
+                                         slug='-'.join(request.GET.get('category').lower().split()))
+                                 )]))),
+                        'max_price': max(list(
+                            set([obj.price for obj in
+                                 Property.objects.filter(
+                                     listing_status=ListingStatus.objects.get(slug=request.GET.get('status')))]))),
+                        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in
+                                                          Property.objects.filter(
+                                                              listing_status=ListingStatus.objects.get(
+                                                                  slug=request.GET.get('status')))])),
+                        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in
+                                                           Property.objects.filter(
+                                                               listing_status=ListingStatus.objects.get(
+                                                                   slug=request.GET.get('status')))])),
+                        'cities': sorted(set([obj.city.name for obj in
+                                              Property.objects.filter(
+                                                  listing_status=ListingStatus.objects.get(
+                                                      slug=request.GET.get('status')))])),
+                        'square_meters': sorted(set([obj.square_meters for obj in
+                                                     Property.objects.filter(
+                                                         listing_status=ListingStatus.objects.get(
+                                                             slug=request.GET.get('status')))])),
+                    }
+                )
 
     else:
         print('No request GET.')
@@ -151,6 +233,9 @@ def properties(request):
         if request.session.get('filters'):
             request.session.pop('filters')
 
+        if request.session.get('category'):
+            request.session.pop('category')
+
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
 
@@ -160,7 +245,6 @@ def properties(request):
         'sorted_type': request.session['sorted_type'],
         'pages': property_pagination(request=request, object_list=queryset, per_page=6),
     })
-
     return render(request=request, template_name='properties/properties.html', context=context)
 
 
