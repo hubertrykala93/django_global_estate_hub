@@ -74,34 +74,36 @@ if ($heroForm) {
   const updateFilters = (response) => {
     //update location
     let newLocationsList = ''
+    let locationNotInside = true
     response.chosenLocation.forEach(item => {
-        if ( currentlyChosenLocation == item ) {
-          newLocationsList += `
-            <li role="option">
-                <input data-option type="radio" value="${item}" id="${item}" name="location" checked>
-                <label for="${item}">${item}</label>
-            </li>
-            `
-        } else {
-          newLocationsList += `
-            <li role="option">
-              <input data-option type="radio" value="${item}" id="${item}" name="location">
+      if ( currentlyChosenLocation == item ) {
+        locationNotInside = false
+        newLocationsList += `
+          <li role="option">
+              <input data-option type="radio" value="${item}" id="${item}" name="location" checked>
               <label for="${item}">${item}</label>
-            </li>
-            `
-        }
+          </li>
+          `
+      } else {
+        newLocationsList += `
+          <li role="option">
+            <input data-option type="radio" value="${item}" id="${item}" name="location">
+            <label for="${item}">${item}</label>
+          </li>
+          `
+      }
     })
+    if (locationNotInside) {
+      $heroForm.querySelector('[data-selected-location]').innerText = 'Select Location'
+    }
     $locationParent.innerHTML = newLocationsList
 
     //update categories
     let newCategoriesList = ''
     let categoryNotInside = true
     response.chosenCategory.forEach(item => {
-        console.log(item)
-        if (currentlyChosenCategory === item) {
-            categoryNotInside = false
-        }
         if ( currentlyChosenCategory == item ) {
+          categoryNotInside = false
           newCategoriesList += `
             <li role="option">
               <input data-option type="radio" value="${item}" id="${item}" name="category" checked>
@@ -118,15 +120,16 @@ if ($heroForm) {
         }
     })
     if (categoryNotInside) {
-        console.log($categoriesParent)
-        $heroForm.querySelector('[data-selected-category]').innerText = 'Choose Property Type'
+      $heroForm.querySelector('[data-selected-category]').innerText = 'Select Property Type'
     }
     $categoriesParent.innerHTML = newCategoriesList
 
     //update years
     let newYearsList = ''
+    let yearNotInside = true
     response.chosenYear.forEach(item => {
-        if ( currentlyChosenYear == item ) {
+      if ( currentlyChosenYear == item ) {
+          yearNotInside = false
           newYearsList += `
             <li role="option">
               <input data-option type="radio" value="${item}" id="${item}" name="year" checked>
@@ -142,6 +145,9 @@ if ($heroForm) {
           `
         }
     })
+    if (yearNotInside) {
+      $heroForm.querySelector('[data-selected-year]').innerText = 'Select year'
+    }
     $yearsParent.innerHTML = newYearsList
   }
 
@@ -1588,6 +1594,18 @@ if ( $articlesCommentsWrapper ) {
       replyHandler(e.target)
     }
   })
+
+  //comments decode with white spaces
+  const $allComments = $articlesCommentsWrapper.querySelectorAll('[data-comment-content-body]')
+  const decodeCommentIntoText = (comment) => {
+    return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')
+  }
+
+  if($allComments.length) {
+    $allComments.forEach(comment => {
+      comment.innerHTML = decodeCommentIntoText(comment.innerHTML.trim())
+    })
+  }
 }
 
 

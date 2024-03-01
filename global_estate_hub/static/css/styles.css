@@ -3264,10 +3264,6 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
     color: var(--clr-black);
 }
 
-.article .article__comment .article__comment__content__body{
-    white-space: pre-line;
-}
-
 .article .article__comment .article__comment__foter {
     margin-top: 1.8rem;
 }

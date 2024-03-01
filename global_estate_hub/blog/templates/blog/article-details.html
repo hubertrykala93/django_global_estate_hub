@@ -82,13 +82,13 @@
                             repellendus. Temporibus autem quibusdam et aut officiis.
                         </p>
 
-                        <div class="quote">
+                        <div class="quote" data-quote>
                             <div class="quote__image">
-                                <img src="{{ article.user.image.url }}" alt="">
+                                <img data-quote-avatar src="/media/default_profile_image.jpg" alt="quote author avatar">
                             </div>
 
                             <div class="quote__content">
-                                <h5>Andrew Russel </h5>
+                                <h5 data-quote-name>Andrew Russel </h5>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                                     eiusmod tempor incididunt ut labore et dolore magna.</p>
                             </div>
@@ -225,5 +225,20 @@
 <script>
     {% if user.is_authenticated %}const loggedIn = true{% else %}const loggedIn = false{% endif %}
     {% if user.is_authenticated %}const userName = '{{ request.user.username }}'{% endif %}
+
+    //random quote name
+    const $quote = document.querySelector('[data-quote]')
+    if ($quote) {
+        const $quoteName = document.querySelector('[data-quote-name]')
+        const $quoteavatar = document.querySelector('[data-quote-avatar]')
+        fetch("https://randomuser.me/api/?inc=name,picture&nat=us")
+            .then(res => res.json())
+            .then(res => {
+                const randomName = `${res.results[0].name.first} ${res.results[0].name.last}`
+                const randomAvatarSrc = res.results[0].picture.large
+                $quoteName.innerText = randomName
+                $quoteavatar.src = randomAvatarSrc
+            })
+    }
 </script>
 {% endblock %}

@@ -8,9 +8,7 @@ admin
 
 @Szymon-Levy
 1. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
-2. dekodowanie komentarzy
-3. quote__image w article details, znajdź api do łapania mord i to samo z imieniem i nazwiskiem oraz quotes
-4. kontynuowac funkcje przywracania tekstu domyslnego w wyszukiwarce w hero jak w kategoriach
+
 ************
 1. accessible accordion
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
@@ -25,3 +23,4 @@ admin
 
 ***********
 1. cache busting
+2. domyślny tekst w treści artykułu jak teraz, ale jeśli ktoś coś zmieni w edytorze tekstowym to ma się renderować ten zmieniony tekst zamiast domyślnego przypisanego na sztywno
