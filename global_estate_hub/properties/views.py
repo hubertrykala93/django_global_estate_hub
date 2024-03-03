@@ -4,6 +4,7 @@ import json
 from .models import Property, ListingStatus, Category, City
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from unidecode import unidecode
 
 
 def property_pagination(request, object_list, per_page):
@@ -43,6 +44,56 @@ def properties_context():
         'square_meters': sorted(set([obj.square_meters for obj in
                                      Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))])),
     }
+
+
+def sidebar_context(listing_status=None, category=None, min_price=None, max_price=None, min_bedrooms=None,
+                    max_bedrooms=None, min_bathrooms=None, max_bathrooms=None, location=None, min_square=None,
+                    max_square=None):
+    return {
+        'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+        'categories':
+            sorted(set([obj.category.name for obj in
+                        Property.objects.filter(
+                            listing_status_id=ListingStatus.objects.get(
+                                slug='-'.join(listing_status.lower().split())).id
+                        )])),
+        'min_price':
+            min(set([obj.price for obj in
+                     Property.objects.filter(
+                         listing_status_id=ListingStatus.objects.get(
+                             slug='-'.join(listing_status.lower().split())).id
+                     )])),
+        'max_price':
+            max(set([obj.price for obj in
+                     Property.objects.filter(
+                         listing_status_id=ListingStatus.objects.get(
+                             slug='-'.join(listing_status.lower().split())).id
+                     )])),
+        'number_of_bedrooms':
+            sorted(set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(
+                listing_status_id=ListingStatus.objects.get(
+                    slug='-'.join(listing_status.lower().split())).id
+            )])),
+        'number_of_bathrooms':
+            sorted(set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(
+                listing_status_id=ListingStatus.objects.get(
+                    slug='-'.join(listing_status.lower().split())).id
+            )])),
+        'cities':
+            sorted(set([obj.city.name for obj in
+                        Property.objects.filter(listing_status_id=ListingStatus.objects.get(
+                            slug='-'.join(listing_status.lower().split())).id
+                                                )])),
+        'square_meters':
+            sorted(set([str(obj.square_meters) for obj in Property.objects.filter(
+                listing_status_id=ListingStatus.objects.get(
+                    slug='-'.join(listing_status.lower().split())).id
+            )]))
+    }
+
+
+def properties_sorting():
+    pass
 
 
 def properties(request):
@@ -112,54 +163,12 @@ def properties(request):
 
         else:
             print('No properties order, keyword in request GET.')
-
-            if 'status' in request.GET:
-                queryset.clear()
-                queryset.extend(Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                    slug='-'.join(request.GET.get('status').lower().split())).id))
-                context.update(
-                    {
-                        'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
-                        'categories':
-                            sorted(set([obj.category.name for obj in
-                                        Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                                            slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'min_price':
-                            min(set([obj.price for obj in
-                                     Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                                         slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'max_price':
-                            max(set([obj.price for obj in
-                                     Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                                         slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'number_of_bedrooms':
-                            sorted(set([obj.number_of_bedrooms for obj in Property.objects.filter(
-                                listing_status_id=ListingStatus.objects.get(
-                                    slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'number_of_bathrooms':
-                            sorted(set([obj.number_of_bathrooms for obj in Property.objects.filter(
-                                listing_status_id=ListingStatus.objects.get(
-                                    slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'cities':
-                            sorted(set([obj.city.name for obj in
-                                        Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                                            slug='-'.join(request.GET.get('status').lower().split())).id)])),
-                        'square_meters':
-                            sorted(set([obj.square_meters for obj in Property.objects.filter(
-                                listing_status_id=ListingStatus.objects.get(
-                                    slug='-'.join(request.GET.get('status').lower().split())).id)]))
-                    }
-                )
-
-            filter_arguments = []
-
             print(request.GET)
-
-            if request.GET:
-                for value in request.GET.values():
-                    filter_arguments.append(value)
-
-            print(filter_arguments)
+            context.update(sidebar_context(listing_status=request.GET.get('status')))
+            queryset.clear()
+            queryset.extend(Property.objects.filter(listing_status_id=
+                                                    ListingStatus.objects.get(
+                                                        slug='-'.join(request.GET.get('status').lower().split())).id))
 
     else:
         print('No request GET.')
