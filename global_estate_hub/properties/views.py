@@ -113,26 +113,20 @@ def properties(request):
                     queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
                         '-date_posted'))
 
-                elif 'Oldest Properties' in request.GET.get('properties-order'):
+                if 'Oldest Properties' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = 'Oldest Properties'
                     queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
                         'date_posted'))
 
-                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                if 'Alphabetically Ascending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = 'Alphabetically Ascending'
                     queryset.extend(
                         Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('title'))
 
-                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+                if 'Alphabetically Descending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = 'Alphabetically Descending'
                     queryset.extend(
                         Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('-title'))
-
-                else:
-                    queryset.clear()
-                    request.session['sorted_type'] = 'Newest Properties'
-                    queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
-                        '-date_posted'))
 
             else:
                 if 'Newest Properties' in request.GET.get('properties-order'):
@@ -163,7 +157,6 @@ def properties(request):
 
         else:
             print('No properties order, keyword in request GET.')
-            print(request.GET)
             context.update(sidebar_context(listing_status=request.GET.get('status')))
             queryset.clear()
             queryset.extend(Property.objects.filter(listing_status_id=
