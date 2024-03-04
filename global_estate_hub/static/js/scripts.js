@@ -95,6 +95,7 @@ if ($heroForm) {
     })
     if (locationNotInside) {
       $heroForm.querySelector('[data-selected-location]').innerText = 'Select Location'
+      currentlyChosenLocation = ''
     }
     $locationParent.innerHTML = newLocationsList
 
@@ -121,6 +122,7 @@ if ($heroForm) {
     })
     if (categoryNotInside) {
       $heroForm.querySelector('[data-selected-category]').innerText = 'Select Property Type'
+      currentlyChosenCategory = ''
     }
     $categoriesParent.innerHTML = newCategoriesList
 
@@ -147,6 +149,7 @@ if ($heroForm) {
     })
     if (yearNotInside) {
       $heroForm.querySelector('[data-selected-year]').innerText = 'Select year'
+      currentlyChosenYear = ''
     }
     $yearsParent.innerHTML = newYearsList
   }
@@ -2757,5 +2760,43 @@ if ( $propertiesPage ) {
   //   }
 
   // })
+
+}
+
+
+/*----------------------------------*\
+  #PROPERTY DETAILS
+\*----------------------------------*/
+
+const $propertyPage = document.querySelector('[data-property]')
+
+if ($propertyPage) {
+
+  /**
+   * Nearby tabs
+    */
+
+  const $nearbyWrapper = $propertyPage.querySelector('[data-property-nearby]')
+  if ($nearbyWrapper) {
+    const $contents = $nearbyWrapper.querySelectorAll('[data-property-nearby-content]')
+
+    $nearbyWrapper.addEventListener('click', e => {
+      if ( e.target.matches('[data-property-nearby-button], [data-property-nearby-button] *') ) {
+        const currentBtn = e.target.dataset.hasOwnProperty('propertyNearbyButton') ? e.target : e.target.closest('[data-property-nearby-button]')
+        let currentId = +currentBtn.dataset.id
+        $nearbyWrapper.querySelector('[data-property-nearby-button].active').classList.remove('active')
+        currentBtn.classList.add('active')
+
+        $contents.forEach((content, index) => {
+          if (index === currentId - 1) {
+            content.classList.add('active')
+          } else {
+            content.classList.remove('active')
+          }
+        })
+      }
+    })
+  }
+  
 
 }
