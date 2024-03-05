@@ -157,11 +157,62 @@ def properties(request):
 
         else:
             print('No properties order, keyword in request GET.')
-            context.update(sidebar_context(listing_status=request.GET.get('status')))
+
+            filters = {}
+
+            print('Start for loop.')
+            for key, value in request.GET.items():
+                if 'status' in key:
+                    print('Status in key.')
+                    filters['listing_status_id'] = ListingStatus.objects.get(
+                        slug='-'.join(request.GET.get('status').lower().split())).id
+
+                if 'category' in key:
+                    print('Category in key.')
+                    filters['category_id'] = Category.objects.get(
+                        slug='-'.join(request.GET.get('category').lower().split())).id
+
+                if 'min_price' in key:
+                    print('Min Price in key.')
+                    filters['price__range'] = [int(request.GET.get('min_price'))]
+
+                if 'max_price' in key:
+                    print('Max Price in key.')
+                    filters['price__range'].insert(1, int(request.GET.get('max_price')))
+            print('End for loop.')
+
+            context.update(
+                {
+                    'listing_statuses': ListingStatus.objects.all(),
+                    'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                        listing_status_id=filters['listing_status_id'])])),
+                    'min_price': min(set([obj.price for obj in Property.objects.filter(**filters)])) if len(
+                        Property.objects.filter(**filters)) != 0 else min(set([obj.price for obj in
+                                                                               Property.objects.filter(
+                                                                                   listing_status_id=ListingStatus.objects.get(
+                                                                                       slug='-'.join(request.GET.get(
+                                                                                           'status').lower().split())).id)])),
+                    'max_price': max(set([obj.price for obj in Property.objects.filter(**filters)])) if len(
+                        Property.objects.filter(**filters)) != 0 else max(set([obj.price for obj in
+                                                                               Property.objects.filter(
+                                                                                   listing_status_id=ListingStatus.objects.get(
+                                                                                       slug='-'.join(request.GET.get(
+                                                                                           'status').lower().split())).id)])),
+                    'number_of_bedrooms': sorted(
+                        set([obj.number_of_bedrooms for obj in Property.objects.filter(**filters)])),
+                    'number_of_bathrooms': sorted(
+                        set([obj.number_of_bathrooms for obj in Property.objects.filter(**filters)])),
+                    'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                    'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**filters)])),
+                }
+            )
+
             queryset.clear()
-            queryset.extend(Property.objects.filter(listing_status_id=
-                                                    ListingStatus.objects.get(
-                                                        slug='-'.join(request.GET.get('status').lower().split())).id))
+            queryset.extend(Property.objects.filter(**filters))
+            print(queryset)
+
+            print(f'Request GET -> {request.GET}')
+            print(f'Filters -> {filters}')
 
     else:
         print('No request GET.')
@@ -173,15 +224,13 @@ def properties(request):
         if request.session.get('keyword'):
             request.session.pop('keyword')
 
-        if request.session.get('filters'):
-            request.session.pop('filters')
-
-        if request.session.get('category'):
-            request.session.pop('category')
+        if request.session.get('min_price'):
+            request.session.pop('min_price')
 
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
 
+    print(context)
     context.update({
         'title': 'Properties',
         'properties': queryset,
