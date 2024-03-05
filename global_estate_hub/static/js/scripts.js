@@ -2842,7 +2842,7 @@ if ($propertyPage) {
   
       const data = {
         "date": [$dateInput.value.trim(), 'data-date', 'date'],
-        "time": [chosenTime, 'name="time"', 'rating'],
+        "time": [chosenTime, 'name="time"', 'time'],
         "name": [$nameInput.value.trim(), 'data-name', 'name'],
         "phone": [$phoneInput.value.trim(), 'data-phone', 'phone'],
         "message": [$messageInput.value.trim(), 'data-message', 'message'],

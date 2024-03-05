@@ -1,11 +1,10 @@
 import os
-from django.shortcuts import render, redirect, reverse, get_object_or_404
-from django.urls import resolve
+from django.shortcuts import render, redirect, reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, OneTimePassword
 import json
 import re
 from django.contrib.auth import login, authenticate, logout

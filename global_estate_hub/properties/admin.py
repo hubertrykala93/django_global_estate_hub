@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ListingStatus, Category, Amenities, Plan, TourSchedule, OfferContact, \
+from .models import ListingStatus, Category, Amenities, TourSchedule, \
     Review, Education, HealthAndMedical, Transportation, Shopping, City, Property
 from django.utils.translation import ngettext
 from django.contrib import messages
@@ -102,37 +102,6 @@ class AdminAmenities(admin.ModelAdmin):
             'Amenity Alias', {
             'fields': [
                 'slug',
-            ]
-        }
-        ]
-    ]
-
-
-@admin.register(Plan)
-class AdminPlan(admin.ModelAdmin):
-    """
-    Admin options and functionalities for Plan model.
-    """
-    list_display = ['id', 'name', 'image', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
-    list_editable = ['image', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
-    list_filter = ['name', 'floor_square_meters', 'number_of_bedrooms', 'number_of_bathrooms']
-    list_display_links = ['id']
-    ordering = ['id']
-    fieldsets = [
-        [
-            'Basic Informations:', {
-            'fields': [
-                'name',
-                'image',
-            ]
-        }
-        ],
-        [
-            'Area Informations:', {
-            'fields': [
-                'floor_square_meters',
-                'number_of_bedrooms',
-                'number_of_bathrooms',
             ]
         }
         ]
@@ -332,7 +301,7 @@ class AdminProperty(admin.ModelAdmin):
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
                     'images',
                     'year_of_built', 'number_of_bedrooms', 'square_meters',
-                    'parking_space', 'get_amenities', 'get_plans', 'get_educations',
+                    'parking_space', 'get_amenities', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
                     'purchasing_user']
     list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
@@ -432,13 +401,6 @@ class AdminProperty(admin.ModelAdmin):
         }
         ],
         [
-            'Property Plans:', {
-            'fields': [
-                'plan',
-            ]
-        }
-        ],
-        [
             'Property Nearby:', {
             'fields': [
                 'education',
@@ -458,15 +420,6 @@ class AdminProperty(admin.ModelAdmin):
         return: str
         """
         return '\n'.join([user.username for user in obj.favourites.all()])
-
-    @admin.display(description='Property Plans')
-    def get_plans(self, obj):
-        """
-        Displays in the admin panel all property plans assigned to a given property.
-
-        return: str
-        """
-        return '\n'.join([p.name for p in obj.plan.all()])
 
     @admin.display(description='Amenities')
     def get_amenities(self, obj):
@@ -585,44 +538,6 @@ class AdminTourSchedule(admin.ModelAdmin):
             'Contact:', {
             'fields': [
                 'phone_number',
-            ]
-        }
-        ],
-        [
-            'Message Body:', {
-            'fields': [
-                'message',
-            ]
-        }
-        ]
-    ]
-
-
-@admin.register(OfferContact)
-class AdminOfferContact(admin.ModelAdmin):
-    """
-    Admin options and functionalities for OfferContact model.
-    """
-    list_display = ['id', 'date_sent', 'property', 'first_name', 'last_name', 'email', 'phone_number', 'message']
-    list_filter = ['first_name', 'last_name', 'email']
-    list_display_links = ['first_name']
-    ordering = ['date_sent']
-    search_fields = ['property__title', 'email']
-    fieldsets = [
-        [
-            'Request Informations:', {
-            'fields': [
-                'first_name',
-                'last_name',
-                'email',
-                'phone_number',
-            ]
-        }
-        ],
-        [
-            'Related to:', {
-            'fields': [
-                'property',
             ]
         }
         ],

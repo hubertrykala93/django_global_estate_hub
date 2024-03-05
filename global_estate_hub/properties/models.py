@@ -81,30 +81,6 @@ class Amenities(models.Model):
         return self.name
 
 
-class Plan(models.Model):
-    """
-    Creating Plan model instance.
-    """
-    id = models.AutoField(primary_key=True, editable=False)
-    name = models.CharField(max_length=100)
-    image = models.ImageField(upload_to=f'property_images/plans/{name}')
-    floor_square_meters = models.FloatField()
-    number_of_bedrooms = models.IntegerField()
-    number_of_bathrooms = models.IntegerField()
-
-    class Meta:
-        verbose_name = 'Plan'
-        verbose_name_plural = 'Plans'
-
-    def __str__(self):
-        """
-        Returns the string representation of the plan name and displays it in the administrator panel.
-
-        return: str
-        """
-        return self.name
-
-
 class Education(models.Model):
     """
     Creating Education model instance.
@@ -256,7 +232,6 @@ class Property(models.Model):
     listing_status = models.ForeignKey(to=ListingStatus, on_delete=models.CASCADE, related_name='listing_statuses')
     category = models.ForeignKey(to=Category, related_name='categories', null=True, on_delete=models.CASCADE)
     amenities = models.ManyToManyField(to=Amenities, related_name='amenities')
-    plan = models.ManyToManyField(to=Plan, related_name='property_plan', blank=True)
     education = models.ManyToManyField(to=Education, blank=True)
     health_and_medical = models.ManyToManyField(to=HealthAndMedical, blank=True)
     transportation = models.ManyToManyField(to=Transportation, blank=True)
@@ -316,33 +291,6 @@ class TourSchedule(models.Model):
         return self.name
 
 
-class OfferContact(models.Model):
-    """
-    Creating OfferContact model instance.
-    """
-    id = models.AutoField(primary_key=True, editable=False)
-    date_sent = models.DateTimeField(auto_now=True, editable=False)
-    property = models.ForeignKey(to=Property, on_delete=models.CASCADE, null=True)
-    first_name = models.CharField(max_length=100, null=True)
-    last_name = models.CharField(max_length=100, null=True)
-    email = models.EmailField(max_length=100, null=True)
-    phone_number = models.CharField(max_length=100, null=True)
-    message = models.TextField(max_length=20000, null=True)
-
-    class Meta:
-        verbose_name = 'Offer Contact'
-        verbose_name_plural = 'Offer Contacts'
-
-    def __str__(self):
-        """
-        Returns the string representation of the username that sends a contact request
-        and displays it in the administrator panel.
-
-        return: str
-        """
-        return f'{self.first_name}' + ' ' + f'{self.last_name}'
-
-
 class Review(models.Model):
     """
     Creating Reviews model instance.
@@ -353,7 +301,7 @@ class Review(models.Model):
     property = models.ForeignKey(to=Property, on_delete=models.CASCADE, null=True)
     rate = models.IntegerField()
     content = models.TextField(max_length=20000)
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Review'

@@ -1,10 +1,15 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
+import re
+import os
 from accounts.models import User
 from .models import Property, ListingStatus, Category, City, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 def property_pagination(request, object_list, per_page):
@@ -554,3 +559,107 @@ def add_review(request, category_slug, property_slug):
 
         else:
             return JsonResponse(data=data, safe=False)
+
+
+def schedule_tour(request, category_slug, property_slug):
+    category = Category.objects.get(slug=category_slug)
+    property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)
+    property_user_email = property_obj.user.email
+
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        date, time, name, phone_number, message = [i[0] for i in [data[key] for key in data][:-1]]
+        date_field, time_field, name_field, phone_number_field, message_field = [i[1] for i in
+                                                                                 [data[key] for key in data][:-1]]
+        date_label, time_label, name_label, phone_number_label, message_label = [i[2] for i in
+                                                                                 [data[key] for key in data][:-1]]
+        spam_verification = [data[key] for key in data][-1]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None
+            })
+
+        response = [
+            {
+                "valid":
+                    False if not date else
+                    True,
+                "field": date_field,
+                "message":
+                    f"You need to choose a meeting {date_label}." if not date else
+                    "",
+            },
+            {
+                "valid":
+                    False if not time else
+                    True,
+                "field": time_field,
+                "message":
+                    f"You need to choose a meeting {time_label}." if not time else
+                    "",
+            },
+            {
+                "valid": True,
+                "field": name_field,
+                "message": "",
+            },
+            {
+                "valid":
+                    False if not phone_number else
+                    False if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$", string=phone_number) else
+                    True,
+                "field": phone_number_field,
+                "message":
+                    f"The {phone_number_label} cannot be empty." if not phone_number else
+                    f"Invalid {phone_number_label} number format." if not re.match(pattern="^\\+?[1-9][0-9]{7,14}$",
+                                                                                   string=phone_number) else
+                    "",
+            },
+            {
+                "valid": True,
+                "field": message_field,
+                "message": "",
+            }
+        ]
+
+        validation = [data['valid'] for data in response]
+
+        if all(validation):
+            try:
+                html_message = render_to_string(
+                    template_name='properties/schedule_mail.html',
+                    context={
+                        'date': date,
+                        'time': time,
+                        'name': name,
+                        'phone_number': phone_number,
+                        'message': message
+                    }
+                )
+
+                plain_message = strip_tags(html_message)
+
+                message = EmailMultiAlternatives(
+                    subject='Meeting request from Global Estate Hub.',
+                    body=plain_message,
+                    from_email=os.environ.get("EMAIL_HOST_USER"),
+                    to=[property_user_email]
+                )
+
+                message.attach_alternative(content=html_message, mimetype='text/html')
+                message.send(fail_silently=True)
+
+                return JsonResponse(data={
+                    "valid": True,
+                    "message": "Your inquiry has been sent to the seller.",
+                })
+
+            except Exception:
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": "The message could not be sent to the seller. Please try again.",
+                })
+
+        else:
+            return JsonResponse(data=response, safe=False)
