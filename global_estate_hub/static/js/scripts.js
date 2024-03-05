@@ -2797,6 +2797,83 @@ if ($propertyPage) {
       }
     })
   }
+
+  /**
+   * Add review
+    */
+
+  const $addReviewForm = $propertyPage.querySelector('[data-property-review-form]')
+
+  if ($addReviewForm) {
+    let url = window.location.pathname
+    url = url.slice(url.lastIndexOf('/') + 1)
+
+    const serverResponse = (response)=> {
+      if ( response.valid === null ) {
+        return false
+      } else if ( response.valid === true ) {
+  
+        $addCommentInArticleForm.querySelectorAll('[data-input]').forEach(input =>{
+          if (  !input.disabled ) {
+            input.value = ''
+          }
+  
+          const $messageNode = input.closest('.form__field').querySelector('.info')
+          if ($messageNode) { $messageNode.remove() }
+        })
+  
+        successfullySentMessage($addReviewForm, response.message, true)
+      } else {
+        response.forEach(item => {
+          if ( !item.valid ) {
+            showInfo(item.valid, item.message, $addReviewForm, item.field)
+          } else {
+            removeInfo($addReviewForm, item.field)
+          }
+        })
+      }
+    }
+
+    const ajaxRequest = (data)=>{
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', url + '/add-review', true)
+      xhr.setRequestHeader('X-CSRFToken', csrfToken)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+      xhr.send(JSON.stringify(data))
+  
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+            serverResponse(response)
+            console.log('odebrane', response);
+        }
+      }
+    }
+
+    $addReviewForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const urlValue = this.querySelector('[name="url"]').value
+      if ( !urlValue == '' ) { return false }
+  
+      const $rateInputs = [...this.querySelectorAll('[data-star]')]
+      const chosenRate = $rateInputs.find(el => el.checked).value
+      const $commentInput = this.querySelector('[data-comment]')
+  
+      const data = {
+        "rate": [chosenRate, "data-star", "rating"],
+        "comment": [encodeURI($commentInput.value.trim()), "data-comment", "comment"],
+        "url": urlValue
+      }
+
+      
+      if ( clientValidation($addReviewForm, data) ) {
+        console.log('wysłane dane', data)
+        ajaxRequest(data)
+      }
+  
+    })
+  }
   
 
 }
