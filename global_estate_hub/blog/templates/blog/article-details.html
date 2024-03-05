@@ -29,6 +29,9 @@
                     <h2 class="article__title h2">{{ article.title }}</h2>
 
                     <div class="article__body">
+                        {% if article.content %}
+                        {{ article.content|safe }}
+                        {% else %}
                         <p>
                             Lorem ipsum dolor sit amet consectetur, adipiscing elit sed do eiusmod tempor incididunt, ut
                             labore corpori
@@ -107,6 +110,7 @@
                             obtain pain of self
                             because it is pain, but because occasionally circumstances
                         </p>
+                        {% endif %}
                     </div>
 
                     <div class="article__footer">

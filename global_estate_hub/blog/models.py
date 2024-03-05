@@ -86,7 +86,7 @@ class Article(models.Model):
     image = models.ImageField(upload_to='article_images')
     date_posted = models.DateTimeField(default=now)
     title = models.CharField(max_length=200, unique=True)
-    content = RichTextUploadingField(max_length=10000, unique=True)
+    content = RichTextUploadingField(max_length=10000, unique=True, blank=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
     tags = models.ManyToManyField(to=Tag)
     slug = models.SlugField(max_length=200, unique=True, null=True)

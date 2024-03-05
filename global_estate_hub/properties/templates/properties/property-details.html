@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load float_converter %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -8,16 +9,16 @@
     <div class="row">
       <div class="property__top-bar">
         <div class="column">
-          <h2 class="property__title h2">Luxury Family Home For Sale</h2>
+          <h2 class="property__title h2">{{ property.title }}</h2>
 
           <div class="property__location">
             <i class="ri-map-pin-line" aria-hidden="true"></i>
-            California City, CA USA
+            <a href="{{ city.get_absolute_url }}">{{ property.city }}</a>, {{ property.province }}, {{ property.country }}
           </div>
         </div>
 
         <div class="column">
-          <div class="property__price h2">$250,000</div>
+          <div class="property__price h2">${{ property.price|price_converter }}</div>
         </div>
       </div>
 

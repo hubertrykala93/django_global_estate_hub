@@ -10,7 +10,7 @@
             <div class="results-column">
                 <div class="properties__results__top-bar">
                     <div class="properties__results__counter">
-                        <span class="properties__results__counter__number">{{ properties|length }}</span> {% if properties|length == 0 %}Properties{% elif properties|length == 1 %}Property{% else %}Properties{% endif %}
+                        <span class="properties__results__counter__number">{{ properties }}</span> {% if properties == 0 %}Properties{% elif properties == 1 %}Property{% else %}Properties{% endif %}
                     </div>
 
                     <div class="properties__results__options">
