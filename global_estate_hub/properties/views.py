@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
+from accounts.models import User
 from .models import Property, ListingStatus, Category, City, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -511,3 +512,45 @@ def property_details(request, category_slug, property_slug):
         'range': range(5),
         'reviews': reviews,
     })
+
+
+def add_review(request, category_slug, property_slug):
+    category = Category.objects.get(slug=category_slug)
+    property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)
+
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+
+        rate = int([data[key] for key in data.keys()][0][0])
+        content = [data[key] for key in data.keys()][1][0]
+        content_field = [data[key] for key in data.keys()][1][1]
+        content_label = [data[key] for key in data.keys()][1][2]
+        spam_verification = [data[key] for key in data][-1]
+
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            })
+
+        response = {
+            "valid":
+                False if len(content) == 0 else
+                True,
+            "field": content_field,
+            "message":
+                f"The {content_label} field cannot be empty." if not content else
+                ""
+        }
+
+        if response['valid']:
+            user = User.objects.get(username=request.user)
+            review = Review(user=user, property=property_obj, rate=rate, content=content)
+            review.save()
+
+            return JsonResponse(data={
+                "valid": True,
+                "message": "The review has been submitted for approval by the administrator.",
+            })
+
+        else:
+            return JsonResponse(data=data, safe=False)
