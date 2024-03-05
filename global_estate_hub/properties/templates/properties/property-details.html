@@ -482,12 +482,17 @@
                             aria-controls="time-select"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value></span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Any</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
 
                         <ul class="custom__select__dropdown" role="listbox" id="time-select">
+                          <li role="option">
+                              <input data-option type="radio" value="Any" id="any" name="time" checked/>
+                              <label for="any">Any</label>
+                          </li>
+
                           <li role="option">
                               <input data-option type="radio" value="9:00" id="9-00" name="time" />
                               <label for="9-00">9:00</label>
@@ -501,6 +506,11 @@
                           <li role="option">
                               <input data-option type="radio" value="10:00" id="10-00" name="time" />
                               <label for="10-00">10:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="10:30" id="10-30" name="time" />
+                              <label for="10-30">10:30</label>
                           </li>
                         </ul>
                     </div>
@@ -519,9 +529,9 @@
 
             <div class="form__row">
                 <div class="form__field">
-                    <label for="schedule-email" class="form__label">Phone Number</label>
+                    <label for="schedule-phone" class="form__label">Phone Number</label>
                     <div class="form__input-wrap">
-                        <input data-email data-input type="text" id="schedule-email">
+                        <input data-phone data-input type="text" id="schedule-phone">
                     </div>
                 </div>
             </div>

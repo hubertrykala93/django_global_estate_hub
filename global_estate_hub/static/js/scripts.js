@@ -2772,6 +2772,9 @@ const $propertyPage = document.querySelector('[data-property]')
 
 if ($propertyPage) {
 
+  let url = window.location.pathname
+  url = url.slice(url.lastIndexOf('/') + 1)
+
   /**
    * Nearby tabs
     */
@@ -2799,21 +2802,81 @@ if ($propertyPage) {
   }
 
   /**
+   * Schedule A Tour
+    */
+
+  const $scheduleForm = $propertyPage.querySelector('[data-property-schedule-form]')
+
+  if ($scheduleForm) {
+
+    const ajaxRequest = (data)=>{
+      const xhr = new XMLHttpRequest()
+      xhr.open('POST', url + '/schedule-tour', true)
+      xhr.setRequestHeader('X-CSRFToken', csrfToken)
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+      xhr.send(JSON.stringify(data))
+  
+      xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const response = JSON.parse(this.responseText)
+            console.log('odebrane', response);
+            // serverResponse(response)
+        }
+      }
+    }
+
+    $scheduleForm.addEventListener('submit', function (e) {
+      e.preventDefault()
+      const urlValue = this.querySelector('[name="url"]').value
+      if ( !urlValue == '' ) { return false }
+  
+      const $dateInput = this.querySelector('[data-date]')
+
+      const $timeInputs = [...this.querySelectorAll('[name="time"]')]
+      const chosenTime = $timeInputs.find(el => el.checked).value
+
+      const $nameInput = this.querySelector('[data-name]')
+      const $phoneInput = this.querySelector('[data-phone]')
+      const $messageInput = this.querySelector('[data-message]')
+  
+      const data = {
+        "date": [$dateInput.value.trim(), 'data-date', 'date'],
+        "time": [chosenTime, 'name="time"', 'rating'],
+        "name": [$nameInput.value.trim(), 'data-name', 'name'],
+        "phone": [$phoneInput.value.trim(), 'data-phone', 'phone'],
+        "message": [$messageInput.value.trim(), 'data-message', 'message'],
+        "url": urlValue
+      }
+  
+      
+      console.log('wysłane dane', data)
+      ajaxRequest(data)
+
+      // if ( clientValidation($scheduleForm, data) ) {
+
+      // }
+  
+    })
+  }
+
+
+
+
+  /**
    * Add review
     */
 
   const $addReviewForm = $propertyPage.querySelector('[data-property-review-form]')
 
   if ($addReviewForm) {
-    let url = window.location.pathname
-    url = url.slice(url.lastIndexOf('/') + 1)
 
     const serverResponse = (response)=> {
       if ( response.valid === null ) {
         return false
       } else if ( response.valid === true ) {
   
-        $addCommentInArticleForm.querySelectorAll('[data-input]').forEach(input =>{
+        $addReviewForm.querySelectorAll('[data-input]').forEach(input =>{
           if (  !input.disabled ) {
             input.value = ''
           }
@@ -2845,8 +2908,8 @@ if ($propertyPage) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-            serverResponse(response)
             console.log('odebrane', response);
+            serverResponse(response)
         }
       }
     }

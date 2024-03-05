@@ -11,7 +11,7 @@ admin
 2. Napisać mapkę w property details
 3. loan terms - na ile czasu kredyt
 4. ajax komentarzy
-5.
+5. konwersja komentarzy w property z whitespace
 
 ************
 1. accessible accordion
