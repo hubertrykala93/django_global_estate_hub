@@ -2,6 +2,7 @@ from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from accounts.models import User
 from django.shortcuts import reverse
+from django.core.validators import FileExtensionValidator
 
 
 class ListingStatus(models.Model):
@@ -64,6 +65,8 @@ class Amenities(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=100)
     slug = models.CharField(max_length=100)
+    image = models.FileField(upload_to='icons/properties', blank=True, null=True,
+                             validators=[FileExtensionValidator(['svg'])])
 
     class Meta:
         verbose_name = 'Amenity'
@@ -230,8 +233,8 @@ class Property(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='users')
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
-    main_image = models.ImageField(upload_to='property_images', null=True)
-    image_files = models.FileField(upload_to=f'property_images/{title}', null=True, blank=True)
+    thumbnail = models.ImageField(upload_to='property_images', null=True)
+    images = models.ImageField(upload_to='property_images', null=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
     number_of_bedrooms = models.IntegerField()
@@ -296,7 +299,7 @@ class TourSchedule(models.Model):
     date_sent = models.DateTimeField(auto_now=True, editable=False)
     date = models.DateTimeField()
     name = models.CharField(max_length=100)
-    email = models.EmailField(max_length=100)
+    phone_number = models.EmailField(max_length=100)
     message = models.TextField(max_length=10000)
 
     class Meta:
@@ -348,10 +351,9 @@ class Review(models.Model):
     date_posted = models.DateTimeField(auto_now=True, editable=False)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     property = models.ForeignKey(to=Property, on_delete=models.CASCADE, null=True)
-    full_name = models.CharField(max_length=100, null=True)
     rate = models.IntegerField()
     content = models.TextField(max_length=20000)
-    active = models.BooleanField(default=False)
+    active = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'Review'

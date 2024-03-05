@@ -1,5 +1,7 @@
 {% extends 'core/base.html' %}
 {% load float_converter %}
+{% load rate_converter %}
+{% load integer_converter %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -13,7 +15,7 @@
 
           <div class="property__location">
             <i class="ri-map-pin-line" aria-hidden="true"></i>
-            <a href="{{ city.get_absolute_url }}">{{ property.city }}</a>, {{ property.province }}, {{ property.country }}
+            <span>{{ property.postal_code }} <a href="{{ city.get_absolute_url }}">{{ property.city }}</a>, {{ property.province }}, {{ property.country }}</span>
           </div>
         </div>
 
@@ -22,47 +24,41 @@
         </div>
       </div>
 
+      {% if images %}
       <ul class="property__gallery">
+        {% for i, image in images %}
+        {% if i == 0 %}
         <li class="property__gallery__item property__gallery__item--main">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_11.jpg">
-            <img src="/media/property_images/photo_11.jpg" alt="image1">
+          <a data-fslightbox="gallery" href="{{ image }}">
+            <img src="{{ image }}" alt="image{{ i }}">
           </a>
         </li>
-
+        {% elif i > 0 and i < 3 %}
         <li class="property__gallery__item property__gallery__item--other">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_20.jpg">
-            <img src="/media/property_images/photo_20.jpg" alt="image2">
+          <a data-fslightbox="gallery" href="{{ image }}">
+            <img src="{{ image }}" alt="image{{ i }}">
           </a>
         </li>
-
-        <li class="property__gallery__item property__gallery__item--other">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_19.jpg">
-            <img src="/media/property_images/photo_19.jpg" alt="image3">
-          </a>
-        </li>
-
+        {% elif i == 4 %}
         <li class="property__gallery__item property__gallery__item--other property__gallery__item--button">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_18.jpg">
-            <img src="/media/property_images/photo_18.jpg" alt="image4">
+          <a data-fslightbox="gallery" href="{{ image }}">
+            <img src="{{ image }}" alt="image{{ i }}">
             <button class="btn">
               View more images
               <i class="btn-icon right ri-arrow-right-up-line" aria-hidden="true"></i>
             </button>
           </a>
         </li>
-
+        {% else %}
         <li class="property__gallery__item property__gallery__item--hidden">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_15.jpg">
-            <img src="/media/property_images/photo_15.jpg" alt="image3">
+          <a data-fslightbox="gallery" href="{{ image }}">
+            <img src="{{ image }}" alt="image{{ i }}">
           </a>
         </li>
-
-        <li class="property__gallery__item property__gallery__item--hidden">
-          <a data-fslightbox="gallery" href="/media/property_images/photo_12.jpg">
-            <img src="/media/property_images/photo_12.jpg" alt="image3">
-          </a>
-        </li>
+        {% endif %}
+        {% endfor %}
       </ul>
+      {% endif %}
     </div>
 
     <div class="row property__modules-row">
@@ -71,50 +67,49 @@
           <div class="property__module__title">Description</div>
 
           <div class="property__description">
-            <p>Welcome to your dream luxury family home! This stunning residence offers a perfect blend the 
-              elegance, comfort, and functionality, making it an ideal retreat, for families who crave, grand to
-              exceptional living experience. As you approach the property, you are greeted by a beautifully a
-              landscaped front yard complete with lush greenery and colorful flowers. The grand entrance is 
-              welcomes you into a spacious foyer with soaring ceilings.
-            </p>
-
-            <p>The open concept living space is perfect for entertaining with a spacious living room that flows
-              seamlessly into the formal dining area. The gourmet kitchen is a chef's dream.
-            </p>
+            {{ property.description|safe }}
           </div>
 
           <div class="property__details">
             <div class="property__module__title">Property details</div>
 
             <ul class="property__details__list">
+              {% if property.category %}
               <li>
                 <div class="h4">Property Type</div>
-                <p>Apartment</p>
+                <p>{{ property.category.name }}</p>
               </li>
-              
-              <li>
-                <div class="h4">Baths</div>
-                <p>04 Of Baths</p>
-              </li>
+              {% endif %}
 
+              {% if property.number_of_bathrooms %}
               <li>
-                <div class="h4">Year Built</div>
-                <p>2023</p>
+                <div class="h4">Bathrooms</div>
+                <p>{% if property.number_of_bathrooms == 0 %}{{ property.number_of_bathrooms }} Bathrooms{% elif property.number_of_bathrooms == 1 %}{{ property.number_of_bathrooms }} Bathroom{% else %}{{ property.number_of_bathrooms }} Bathrooms{% endif %}</p>
               </li>
+              {% endif %}
+
+              {% if property.year_of_built %}
+              <li>
+                <div class="h4">Year of Built</div>
+                <p>{{ property.year_of_built }}</p>
+              </li>
+              {% endif %}
 
               <li>
                 <div class="h4">Bedrooms</div>
-                <p>07 Of Bedrooms</p>
+                <p>{% if property.number_of_bedrooms == 0 %}{{ property.number_of_bedrooms }} Bedrooms{% elif property.number_of_bedrooms == 1 %}{{ property.number_of_bedrooms }} Bedroom{% else %}{{ property.number_of_bedrooms }} Bedrooms{% endif %}</p>
               </li>
 
+              {% if property.square_meters %}
               <li>
                 <div class="h4">Size</div>
-                <p>160 Sq.m</p>
+                <p>{{ property.square_meters }} Square Meters</p>
               </li>
+              {% endif %}
 
               <li>
                 <div class="h4">Parking Space</div>
-                <p>03 Spaces</p>
+                <p>{% if property.parking_space == 0 %}{{ property.parking_space }} Parking Spaces{% elif property.parking_space == 1 %}{{ property.parking_space }} Parking Space{% else %}{{ property.parking_space }} Parking Spaces{% endif %}</p>
               </li>
             </ul>
           </div>
@@ -124,90 +119,16 @@
           <div class="property__module__title">Amenities</div>
 
           <ul class="property__amenities">
+            {% for amenity in property.amenities.all %}
             <li>
               <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
+                <img src="{{ amenity.image.url }}" aria-hidden="true" alt="{{ amenity.name|lower }} icon">
               </div>
-              <span>Amenity item</span>
+              <span>{{ amenity.name }}</span>
             </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-            
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-            
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-            
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
-
-            <li>
-              <div class="property__amenities__icon">
-                <img src="/media/property_details/amenities/wifi.svg" aria-hidden="true" alt="wifi">
-              </div>
-              <span>Amenity item</span>
-            </li>
+            {% endfor %}
           </ul>
+
         </div>
 
         <div class="property__module">
@@ -253,127 +174,73 @@
 
             <div class="property__nearby__contents">
               <div class="property__nearby__content active" data-property-nearby-content>
-                <div class="h4">Primary  Schools</div>
+                <div class="h4">Educational Institutions</div>
 
+                {% if property.education %}
                 <ul class="property__nearby__stats">
+                  {% for e in property.education.all %}
                   <li>
-                    <div class="property__nearby__stats__name">Canyon crest Academy</div>
-                    <div class="property__nearby__stats__distance">0.38 miles</div>
+                    <div class="property__nearby__stats__name">{{ e.name }}</div>
+                    <div class="property__nearby__stats__distance">{{ e.distance }} miles</div>
                     <div class="property__nearby__stats__stars">
+                      {% for i in range %}
+                      {% if i < e.rate|rate_converter %}
                       <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
+                      {% else %}
+                      <i class="ri-star-line"></i>
+                      {% endif %}
+                      {% endfor %}
                     </div>
                   </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">Palo Alto Primary School</div>
-                    <div class="property__nearby__stats__distance">1.09 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">San Marino Unified School</div>
-                    <div class="property__nearby__stats__distance">2.76 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
+                  {% endfor %}
                 </ul>
+                {% endif %}
               </div>
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Hospitals</div>
 
+                {% if property.health_and_medical %}
                 <ul class="property__nearby__stats">
+                  {% for h in property.health_and_medical.all %}
                   <li>
-                    <div class="property__nearby__stats__name">Canyon crest Academy</div>
-                    <div class="property__nearby__stats__distance">0.38 miles</div>
+                    <div class="property__nearby__stats__name">{{ h.name }}</div>
+                    <div class="property__nearby__stats__distance">{{ h.distance }} miles</div>
                     <div class="property__nearby__stats__stars">
+                      {% for i in range %}
+                      {% if i < h.rate|rate_converter %}
                       <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
+                      {% else %}
+                      <i class="ri-star-line"></i>
+                      {% endif %}
+                      {% endfor %}
                     </div>
                   </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">Palo Alto Primary School</div>
-                    <div class="property__nearby__stats__distance">1.09 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">San Marino Unified School</div>
-                    <div class="property__nearby__stats__distance">2.76 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
+                  {% endfor %}
                 </ul>
+                {% endif %}
               </div>
               <div class="property__nearby__content" data-property-nearby-content>
-                <div class="h4">Bus lines</div>
+                <div class="h4">Transportation Services</div>
 
+                {% if property.transportation %}
                 <ul class="property__nearby__stats">
+                  {% for t in property.transportation.all %}
                   <li>
-                    <div class="property__nearby__stats__name">Canyon crest Academy</div>
-                    <div class="property__nearby__stats__distance">0.38 miles</div>
+                    <div class="property__nearby__stats__name">{{ t.name }}</div>
+                    <div class="property__nearby__stats__distance">{{ t.distance }} miles</div>
                     <div class="property__nearby__stats__stars">
+                      {% for i in range %}
+                      {% if i < t.rate|rate_converter %}
                       <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
+                      {% else %}
+                      <i class="ri-star-line"></i>
+                      {% endif %}
+                      {% endfor %}
                     </div>
                   </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">Palo Alto Primary School</div>
-                    <div class="property__nearby__stats__distance">1.09 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="property__nearby__stats__name">San Marino Unified School</div>
-                    <div class="property__nearby__stats__distance">2.76 miles</div>
-                    <div class="property__nearby__stats__stars">
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-fill"></i>
-                      <i class="ri-star-line"></i>
-                      <i class="ri-star-line"></i>
-                    </div>
-                  </li>
+                  {% endfor %}
                 </ul>
+                {% endif %}
               </div>
             </div>
           </div>
@@ -412,7 +279,7 @@
                   <div class="form__field">
                       <label for="total-amount" class="form__label">total amount</label>
                       <div class="form__input-wrap">
-                          <input data-total data-input type="number" id="total-amount">
+                          <input data-total data-input type="number" id="total-amount" value="{{ property.price|convert_to_int }}">
                       </div>
                   </div>
 
@@ -465,14 +332,17 @@
           </div>
         </div>
 
+        {% if property.video %}
         <div class="property__module">
           <div class="property__module__title">Property Video</div>
 
           <div class="property__video">
-            <video controls src="/media/property_videos/video_5.mp4"></video>
+            <video controls src="{{ property.video.url }}"></video>
           </div>
         </div>
+        {% endif %}
 
+        {% if reviews %}
         <div class="property__module">
           <div class="property__module__title property__module__title--reviews">
             <i class="ri-star-fill" aria-hidden="true"></i>
@@ -480,65 +350,33 @@
           </div>
 
           <div class="property__reviews">
+            {% for review in reviews %}
             <div class="property__review">
               <div class="property__review__avatar">
-                <img src="/media/default_profile_image.jpg" alt="review author's avatar">
+                <img src="{{ review.user.image.url }}" alt="review author's avatar">
               </div>
 
               <div class="property__review__content">
-                <div class="property__review__name">Prophet Rolex</div>
-                <div class="property__review__content__text">Our agent was fantastic! They really took the time to understand our needs and preferences, and helped us find the perfect home.</div>
+                <div class="property__review__name"><a href="{% url 'account-details' review.user %}">{{ review.user }}</a></div>
+                <div class="property__review__content__text">{{ review.content }}</div>
               </div>
 
               <ul class="property__review__stars">
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-line"></i></li>
+                   {% for i in range %}
+                    {% if i < review.rate|rate_converter %}
+                    <i class="ri-star-fill"></i>
+                    {% else %}
+                    <i class="ri-star-line"></i>
+                    {% endif %}
+                    {% endfor %}
               </ul>
             </div>
-
-            <div class="property__review">
-              <div class="property__review__avatar">
-                <img src="/media/default_profile_image.jpg" alt="review author's avatar">
-              </div>
-
-              <div class="property__review__content">
-                <div class="property__review__name">Harry Brook</div>
-                <div class="property__review__content__text">We really appreciated how responsive our agent was. They were always available to answer our questions and address our concerns.</div>
-              </div>
-
-              <ul class="property__review__stars">
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-line"></i></li>
-                <li><i class="ri-star-line"></i></li>
-              </ul>
-            </div>
-
-            <div class="property__review">
-              <div class="property__review__avatar">
-                <img src="/media/default_profile_image.jpg" alt="review author's avatar">
-              </div>
-
-              <div class="property__review__content">
-                <div class="property__review__name">Mary Wangui</div>
-                <div class="property__review__content__text">The level of expertise and knowledge of the real estate market was impressive. Our agent gave us great advice and guidance throughout.</div>
-              </div>
-
-              <ul class="property__review__stars">
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-fill"></i></li>
-                <li><i class="ri-star-line"></i></li>
-              </ul>
-            </div>
+            {% endfor %}
           </div>
         </div>
+        {% endif %}
 
+        {% if user.is_authenticated %}
         <div class="property__module">
           <div class="property__module__title">Add Your Comment</div>
 
@@ -604,6 +442,7 @@
             </div>
         </form>
         </div>
+        {% endif %}
 
       </div>
 
@@ -669,11 +508,9 @@
                 </div>
             </div>
 
-            <div class="h4">Your Information</div>
-
             <div class="form__row">
               <div class="form__field">
-                  <label for="schedule-name" class="form__label">name</label>
+                  <label for="schedule-name" class="form__label">Full Name</label>
                   <div class="form__input-wrap">
                       <input data-name data-input type="text" id="schedule-name">
                   </div>
@@ -682,7 +519,7 @@
 
             <div class="form__row">
                 <div class="form__field">
-                    <label for="schedule-email" class="form__label">email</label>
+                    <label for="schedule-email" class="form__label">Phone Number</label>
                     <div class="form__input-wrap">
                         <input data-email data-input type="text" id="schedule-email">
                     </div>
@@ -710,19 +547,19 @@
         <div class="property__module">
           <div class="property__agent">
             <div class="property__agent__avatar">
-              <img src="https://randomuser.me/api/portraits/men/35.jpg" alt="agent avatar">
+              <img src="{{ property.user.image.url }}" alt="agent avatar">
             </div>
 
-            <div class="h4">Prophet Rolex</div>
-            <div class="property__agent__sign">Traveleasy</div>
+            <div class="h4">{% if property.user.account_type == 'Individual' %}{{ property.user.individual.first_name }} {{ property.user.individual.last_name }}{% else %}{{ property.user.business.company_name }}{% endif %}</div>
+            <div class="property__agent__sign">{% if property.user.account_type == 'Individual' %}Private{% else %}Business{% endif %} Seller</div>
 
             <div class="property__agent__contact">
-              <a href="" class="property__agent__contact__item">
+              <a href="mailto:{{ review.user.email }}" class="property__agent__contact__item">
                 <i class="ri-mail-line" aria-hidden="true"></i>
                 <span>E-mail</span>
               </a>
 
-              <a href="" class="property__agent__contact__item">
+              <a href="tel:511976265" class="property__agent__contact__item">
                 <i class="ri-phone-line" aria-hidden="true"></i>
                 <span>Phone</span>
               </a>
@@ -734,4 +571,11 @@
     </div>
   </div>
 </section>
+{% endblock %}
+
+{% block page_scripts %}
+<script>
+  const latitude = {{ property.latitude }}
+  const longitude = {{ property.longitude }}
+</script>
 {% endblock %}

@@ -74,8 +74,8 @@ class AdminAmenities(admin.ModelAdmin):
     """
     Admin options and functionalities for Amenities model.
     """
-    list_display = ['id', 'name', 'slug']
-    list_editable = ['slug']
+    list_display = ['id', 'name', 'slug', 'image']
+    list_editable = ['slug', 'image']
     list_filter = ['name']
     list_display_links = ['id']
     prepopulated_fields = {
@@ -88,6 +88,13 @@ class AdminAmenities(admin.ModelAdmin):
             'Amenity Name:', {
             'fields': [
                 'name',
+            ]
+        }
+        ],
+        [
+            'Uploadings:', {
+            'fields': [
+                'image',
             ]
         }
         ],
@@ -316,14 +323,14 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'title', 'category', 'listing_status', 'price', 'number_of_bathrooms', 'user',
+    list_display = ['id', 'thumbnail', 'title', 'category', 'listing_status', 'price', 'number_of_bathrooms', 'user',
                     'city',
-                    'date_posted', 'main_image',
+                    'date_posted',
                     'postal_code',
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
-                    'image_files',
+                    'images',
                     'year_of_built', 'number_of_bedrooms', 'square_meters',
                     'parking_space', 'get_amenities', 'get_plans', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
@@ -331,7 +338,7 @@ class AdminProperty(admin.ModelAdmin):
     list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
                    'year_of_built', 'city', 'province',
                    'country', 'is_featured', 'date_posted']
-    list_editable = ['title', 'main_image', 'image_files', 'price', 'year_of_built',
+    list_editable = ['title', 'thumbnail', 'price', 'year_of_built',
                      'number_of_bedrooms',
                      'number_of_bathrooms', 'user',
                      'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
@@ -358,8 +365,6 @@ class AdminProperty(admin.ModelAdmin):
                 'title',
                 'slug',
                 'year_of_built',
-                'main_image',
-                'video',
                 'price',
                 'number_of_bedrooms',
                 'number_of_bathrooms',
@@ -391,7 +396,9 @@ class AdminProperty(admin.ModelAdmin):
         [
             'Uploadings:', {
             'fields': [
-                'image_files',
+                'thumbnail',
+                'images',
+                'video',
             ]
         }
         ],
@@ -539,11 +546,11 @@ class AdminProperty(admin.ModelAdmin):
 
 @admin.register(TourSchedule)
 class AdminTourSchedule(admin.ModelAdmin):
-    list_display = ['id', 'to', 'property', 'date_sent', 'date', 'name', 'email', 'message']
-    list_editable = ['date', 'property', 'name', 'email']
-    list_filter = ['to', 'date_sent', 'date', 'name', 'email']
+    list_display = ['id', 'to', 'property', 'date_sent', 'date', 'name', 'phone_number', 'message']
+    list_editable = ['date', 'property', 'name', 'phone_number']
+    list_filter = ['to', 'date_sent', 'date', 'name', 'phone_number']
     list_display_links = ['id']
-    search_fields = ['to__username', 'name', 'email']
+    search_fields = ['to__username', 'name', 'phone_number']
     ordering = ['date_sent']
     fieldsets = [
         [
@@ -571,6 +578,13 @@ class AdminTourSchedule(admin.ModelAdmin):
             'Date:', {
             'fields': [
                 'date',
+            ]
+        }
+        ],
+        [
+            'Contact:', {
+            'fields': [
+                'phone_number',
             ]
         }
         ],
@@ -627,9 +641,9 @@ class AdminReview(admin.ModelAdmin):
     """
     Admin options and functionalities for Review model.
     """
-    list_display = ['id', 'date_posted', 'user', 'property', 'full_name', 'rate', 'content', 'active']
-    list_filter = ['user', 'date_posted', 'property', 'full_name', 'rate', 'active']
-    list_editable = ['user', 'property', 'full_name', 'rate', 'active']
+    list_display = ['id', 'date_posted', 'user', 'property', 'rate', 'content', 'active']
+    list_filter = ['user', 'date_posted', 'property', 'rate', 'active']
+    list_editable = ['user', 'property', 'rate', 'active']
     list_display_links = ['id']
     search_fields = ['user__username', 'property__title', 'full_name']
     ordering = ['date_posted']
@@ -639,7 +653,6 @@ class AdminReview(admin.ModelAdmin):
             'Creator:', {
             'fields': [
                 'user',
-                'full_name',
             ]
         }
         ],

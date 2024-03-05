@@ -8,6 +8,10 @@ admin
 
 @Szymon-Levy
 1. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
+2. Napisać mapkę w property details
+3. loan terms - na ile czasu kredyt
+4. ajax komentarzy
+5.
 
 ************
 1. accessible accordion
@@ -20,6 +24,9 @@ admin
 5. Na samym końcu odkomentować OneTimePasswordManager, odkomentować atrybuty w OneTimePassword modelu. Dodać expires_in do list display i fieldsets w interfejsie admina.
 6. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
 8. przy generowaniu komentarza w .article__comment__content__body upewnić się że nie wstawia się na początku znaku złamania linii  \n (to na razie nie ważne - nie rób teraz)
+9. przemeblowac tempalte tags
+11. image upload
+12. upload thumbnaili
 
 ***********
 1. cache busting

@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
-from .models import Property, ListingStatus, Category, City
+from .models import Property, ListingStatus, Category, City, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 
@@ -492,10 +492,22 @@ def property_details(request, category_slug, property_slug):
     category = Category.objects.get(slug=category_slug)
     property_obj = Property.objects.get(category=category, slug=property_slug)
     city = City.objects.get(name=property_obj.city)
-    print(city)
+    reviews = Review.objects.filter(property_id=property_obj.id)
+
+    images = enumerate([
+        '/media/property_images/photo_1.jpg',
+        '/media/property_images/photo_2.jpg',
+        '/media/property_images/photo_3.jpg',
+        '/media/property_images/photo_4.jpg',
+        '/media/property_images/photo_5.jpg',
+        '/media/property_images/photo_6.jpg',
+    ])
 
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,
         'property': property_obj,
         'city': city,
+        'images': images,
+        'range': range(5),
+        'reviews': reviews,
     })
