@@ -48,36 +48,56 @@ def properties(request):
 
     if request.GET:
         print('Request GET.')
-        print(request.GET)
         if 'properties-order' in request.GET:
             print('If properties order in request GET.')
             if 'keyword' in request.session:
                 print('Keyword in request session.')
                 if 'Newest Properties' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Newest Properties'
-                    queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(title__icontains=request.session['keyword']).order_by(
                         '-date_posted'))
 
                 elif 'Oldest Properties' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Oldest Properties'
-                    queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(title__icontains=request.session['keyword']).order_by(
                         'date_posted'))
 
                 elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Ascending'
+                    request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(
-                        Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('title'))
+                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('title'))
 
                 elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Descending'
+                    request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(
-                        Property.objects.filter(title__icontains=request.session.get('keyword')).order_by('-title'))
+                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('-title'))
 
                 else:
-                    queryset.clear()
                     request.session['sorted_type'] = 'Newest Properties'
-                    queryset.extend(Property.objects.filter(title__icontains=request.session.get('keyword')).order_by(
+                    queryset.extend(Property.objects.filter(title__icontains=request.session['keyword']).order_by(
                         '-date_posted'))
+
+            elif 'filters' in request.session:
+                print('Elif filters in request session.')
+                if 'Newest Properties' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+
+                elif 'Oldest Properties' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+
+                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('title'))
+
+                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-title'))
+
+                else:
+                    request.session['sorted_type'] = 'Newest Properties'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
             else:
                 if 'Newest Properties' in request.GET.get('properties-order'):
@@ -100,7 +120,6 @@ def properties(request):
             print('Elif keyword in request GET.')
             request.session['sorted_type'] = 'Newest Properties'
             request.session['keyword'] = request.GET.get('keyword')
-            queryset.clear()
             queryset.extend(
                 Property.objects.filter(title__icontains=request.GET.get('keyword')).order_by('-date_posted'))
 
@@ -118,7 +137,6 @@ def properties(request):
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
-                queryset.clear()
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
@@ -131,7 +149,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -142,7 +159,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'min_price' and 'max_price' in request.GET:
@@ -175,7 +191,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -186,7 +201,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'max_bedrooms' in request.GET:
@@ -209,7 +223,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -221,7 +234,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'min_bathrooms' in request.GET:
@@ -244,7 +256,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -255,7 +266,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'max_bathrooms' in request.GET:
@@ -278,7 +288,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -290,7 +299,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'location' in request.GET:
@@ -300,7 +308,6 @@ def properties(request):
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
-                queryset.clear()
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'min_square' in request.GET:
@@ -323,7 +330,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -334,7 +340,6 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
             if 'max_square' in request.GET:
@@ -357,7 +362,6 @@ def properties(request):
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
-                        queryset.clear()
                         queryset.extend(Property.objects.filter(**filters))
 
                 else:
@@ -369,14 +373,12 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
 
         else:
             print('No properties order, keyword and status in request GET.')
-            print(request.GET)
-            request.session.get('sorted_type')
-            request.session.pop('sorted_type')
+            if request.session.get('sorted_type'):
+                request.session.pop('sorted_type')
 
             request.session['sorted_type'] = 'Newest Properties'
             queryset.extend(Property.objects.all().order_by('-date_posted'))
@@ -388,6 +390,9 @@ def properties(request):
 
         if request.session.get('keyword'):
             request.session.pop('keyword')
+
+        if request.session.get('filters'):
+            request.session.pop('filters')
 
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
@@ -409,6 +414,8 @@ def properties(request):
         'sorted_type': request.session['sorted_type'],
         'pages': property_pagination(request=request, object_list=queryset, per_page=6),
     })
+
+    context.update(properties_context())
 
     return render(request=request, template_name='properties/properties.html', context=context)
 
