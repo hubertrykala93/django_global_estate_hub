@@ -144,7 +144,6 @@ def properties(request):
 
             context.update(properties_context())
 
-
         elif 'keyword' in request.GET:
             print('Elif keyword in request GET.')
             request.session['sorted_type'] = 'Newest Properties'

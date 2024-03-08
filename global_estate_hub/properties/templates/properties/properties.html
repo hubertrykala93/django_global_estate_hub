@@ -58,6 +58,16 @@
                                             <input data-option type="radio" value="Alphabetically Descending" id="alphabetically-descending" name="properties-order" onchange="this.form.submit()" />
                                             <label for="alphabetically-descending">Alphabetically Descending</label>
                                         </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Price Ascending" id="price-ascending" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="price-ascending">Price Ascending</label>
+                                        </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Price Descending" id="price-descending" name="properties-order" onchange="this.form.submit()" />
+                                            <label for="price-descending">Price Descending</label>
+                                        </li>
                                     </ul>
                                 </div>
                             </form>
@@ -77,6 +87,7 @@
                     </div>
                 </div>
 
+                {% if pages %}
                 <div class="row properties-cards__row properties-cards__row--list" data-properties-row>
                     {% for page in pages %}
                     <div class="property-card__column">
@@ -132,6 +143,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                No results.
+                {% endif %}
                 {% if pages.paginator.num_pages > 1 %}
                 {% include 'properties/pagination.html' %}
                 {% endif %}
