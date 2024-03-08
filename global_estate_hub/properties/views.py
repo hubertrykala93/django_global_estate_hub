@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
+from django.contrib import messages
 
 
 def property_pagination(request, object_list, per_page):
@@ -29,76 +30,15 @@ def property_pagination(request, object_list, per_page):
 
 def properties_context():
     return {
-        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-        'categories': sorted(set([obj.category.name for obj in
-                                  Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))])),
-        'min_price': min(list(
-            set([obj.price for obj in
-                 Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]))),
-        'max_price': max(list(
-            set([obj.price for obj in
-                 Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]))),
-        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in
-                                          Property.objects.filter(
-                                              listing_status=ListingStatus.objects.get(name='Rent'))])),
-        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in
-                                           Property.objects.filter(
-                                               listing_status=ListingStatus.objects.get(name='Rent'))])),
-        'cities': sorted(set([obj.city.name for obj in
-                              Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))])),
-        'square_meters': sorted(set([obj.square_meters for obj in
-                                     Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))])),
-    }
-
-
-def sidebar_context(listing_status=None, category=None, min_price=None, max_price=None, min_bedrooms=None,
-                    max_bedrooms=None, min_bathrooms=None, max_bathrooms=None, location=None, min_square=None,
-                    max_square=None):
-    return {
         'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
-        'categories':
-            sorted(set([obj.category.name for obj in
-                        Property.objects.filter(
-                            listing_status_id=ListingStatus.objects.get(
-                                slug='-'.join(listing_status.lower().split())).id
-                        )])),
-        'min_price':
-            min(set([obj.price for obj in
-                     Property.objects.filter(
-                         listing_status_id=ListingStatus.objects.get(
-                             slug='-'.join(listing_status.lower().split())).id
-                     )])),
-        'max_price':
-            max(set([obj.price for obj in
-                     Property.objects.filter(
-                         listing_status_id=ListingStatus.objects.get(
-                             slug='-'.join(listing_status.lower().split())).id
-                     )])),
-        'number_of_bedrooms':
-            sorted(set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(
-                listing_status_id=ListingStatus.objects.get(
-                    slug='-'.join(listing_status.lower().split())).id
-            )])),
-        'number_of_bathrooms':
-            sorted(set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(
-                listing_status_id=ListingStatus.objects.get(
-                    slug='-'.join(listing_status.lower().split())).id
-            )])),
-        'cities':
-            sorted(set([obj.city.name for obj in
-                        Property.objects.filter(listing_status_id=ListingStatus.objects.get(
-                            slug='-'.join(listing_status.lower().split())).id
-                                                )])),
-        'square_meters':
-            sorted(set([str(obj.square_meters) for obj in Property.objects.filter(
-                listing_status_id=ListingStatus.objects.get(
-                    slug='-'.join(listing_status.lower().split())).id
-            )]))
+        'categories': sorted(set([obj.name for obj in Category.objects.all()])),
+        'min_price': min(set([obj.price for obj in Property.objects.all()])),
+        'max_price': max(set([obj.price for obj in Property.objects.all()])),
+        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
+        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
+        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()]))
     }
-
-
-def properties_sorting():
-    pass
 
 
 def properties(request):
@@ -106,6 +46,7 @@ def properties(request):
     context = {}
 
     if request.GET:
+        print(request.GET)
         print('Request GET.')
         if 'properties-order' in request.GET:
             print('If properties order in request GET.')
@@ -164,12 +105,211 @@ def properties(request):
                 Property.objects.filter(title__icontains=keyword).order_by('-date_posted'))
 
         else:
-            print('No properties order, keyword and status in request GET.')
-            request.session.get('sorted_type')
-            request.session.pop('sorted_type')
+            filters = {}
 
-            request.session['sorted_type'] = 'Newest Properties'
-            queryset.extend(Property.objects.all().order_by('-date_posted'))
+            if 'status' in request.GET:
+                print('Listing Status in request GET.')
+                filters['listing_status_id'] = ListingStatus.objects.get(
+                    slug='-'.join(request.GET.get('status').lower().split())).id
+
+                # queryset.clear()
+                # queryset.extend(Property.objects.filter(**filters))
+                context.update(properties_context())
+
+            if 'category' in request.GET:
+                print('Category in request GET.')
+                if len(request.GET.getlist('category')) == 1:
+                    print('Category length is equal to 1.')
+                    filters['category_id'] = Category.objects.get(
+                        slug='-'.join(request.GET.get('category').lower().split())).id
+
+                    context.update(properties_context())
+
+                else:
+                    print('Category length is more than 1.')
+                    filters['category_pk__in'] = [Category.objects.get(slug=obj).id for obj in
+                                                  request.GET.getlist('category')]
+
+                    context.update(properties_context())
+
+            if 'min_price' and 'max_price' in request.GET:
+                print('Min Price and Max Price in request GET.')
+                filters['price__range'] = [int(request.GET.get('min_price')), int(request.GET.get('max_price'))]
+
+                context.update(properties_context())
+
+            if 'min_bedrooms' in request.GET:
+                print('Min Bedrooms in request GET.')
+
+                if 'max_bedrooms' in request.GET:
+                    print('Max Bedrooms in request GET.')
+
+                    if request.GET.get('min_bedrooms') > request.GET.get('max_bedrooms'):
+                        print('Min Bedrooms more than Max Bedrooms.')
+                        messages.info(request=request,
+                                      message='The maximum number of bedrooms cannot be less than the minimum number of bedrooms.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Min Bedrooms less or equal than Max Bedrooms.')
+                        filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
+                                                                int(request.GET.get('max_bedrooms'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Min Bedrooms and not Max Bedrooms.')
+                    filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')), int(max(
+                        sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()]))))]
+
+                    context.update(properties_context())
+
+            if 'max_bedrooms' in request.GET:
+                print('Max Bedrooms in request GET.')
+
+                if 'min_bedrooms' in request.GET:
+                    print('Min Bedrooms in request GET.')
+
+                    if request.GET.get('min_bedrooms') > request.GET.get('max_bedrooms'):
+                        print('Min Bedrooms more than Max Bedrooms.')
+                        messages.info(request=request,
+                                      message='The minimum number of bedrooms cannot be greater than the maximum number of bedrooms.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Min Bedrooms less than Max Bedrooms.')
+                        filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
+                                                                int(request.GET.get('max_bedrooms'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Max Bedrooms and not Min Bedrooms.')
+                    filters['number_of_bedrooms__range'] = [
+                        int(min(sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])))),
+                        request.GET.get('max_bedrooms')]
+
+                    context.update(properties_context())
+
+            if 'min_bathrooms' in request.GET:
+                print('Min Bathrooms in request GET.')
+
+                if 'max_bathrooms' in request.GET:
+                    print('If Min Bathrooms and Max Bathrooms in request GET.')
+
+                    if request.GET.get('min_bathrooms') > request.GET.get('max_bathrooms'):
+                        print('Min Bathrooms more than Max Bathrooms.')
+                        messages.info(request=request,
+                                      message='The maximum number of bathrooms cannot be less than the minimum number of bathrooms.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Min Bathrooms less than Max Bathrooms.')
+                        filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
+                                                                 int(request.GET.get('max_bathrooms'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Min Bathrooms in request GET and not Max Bathrooms in request GET.')
+                    filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')), int(max(
+                        sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()]))))]
+
+                    context.update(properties_context())
+
+            if 'max_bathrooms' in request.GET:
+                print('Max Bathrooms in request GET.')
+
+                if 'min_bathrooms' in request.GET:
+                    print('Max Bathrooms and Min Bathrooms in request GET.')
+
+                    if request.GET.get('max_bathrooms') < request.GET.get('min_bathrooms'):
+                        messages.info(request=request,
+                                      message='The minimum number of bathrooms cannot be greater than the maximum number of bathrooms.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Max Bathrooms greater than Min Bathrooms.')
+                        filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
+                                                                 int(request.GET.get('max_bathrooms'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Max Bathrooms in request GET and not Min Bathrooms in request GET.')
+                    filters['number_of_bathrooms__range'] = [
+                        int(min(sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])))),
+                        int(request.GET.get('max_bathrooms'))]
+
+                    context.update(properties_context())
+
+            if 'location' in request.GET:
+                filters['city__id'] = City.objects.get(slug='-'.join(request.GET.get('location').lower().split())).id
+
+                context.update(properties_context())
+
+            if 'min_square' in request.GET:
+                print('Min Square in request GET.')
+
+                if 'max_square' in request.GET:
+                    print('Min Square and Max Square in request GET.')
+
+                    if request.GET.get('min_square') > request.GET.get('max_square'):
+                        print('Min Square greater than Max Square.')
+                        messages.info(request=request,
+                                      message='The minimum square meters cannot be greater than the maximum square meters.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Min Square Meters less than Max Square Meters.')
+                        filters['square_meters__range'] = [float(request.GET.get('min_square')),
+                                                           float(request.GET.get('max_square'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Min Square in request GET and not Max Square in request GET.')
+                    filters['square_meters__range'] = [float(request.GET.get('min_square')), float(
+                        max(sorted(set([obj.square_meters for obj in Property.objects.all()]))))]
+
+                    context.update(properties_context())
+
+            if 'max_square' in request.GET:
+                print('Max Square in request GET.')
+
+                if 'min_square' in request.GET:
+                    print('Max Square and Min Square in request GET.')
+
+                    if request.GET.get('max_square') < request.GET.get('min_square'):
+                        print('Max Square less than Min Square.')
+                        messages.info(request=request,
+                                      message='The maximum square meters cannot be less than the minimum square meters.')
+                        return redirect(to='properties')
+
+                    else:
+                        print('Max Square greater than Min Square.')
+                        filters['square_meters__range'] = [float(request.GET.get('min_square')),
+                                                           float(request.GET.get('max_square'))]
+
+                        context.update(properties_context())
+
+                else:
+                    print('Max Square in request GET and not Min Square in request GET.')
+                    filters['square_meters__range'] = [
+                        float(min(sorted(set([obj.square_meters for obj in Property.objects.all()])))),
+                        float(request.GET.get('max_square'))]
+
+                    context.update(properties_context())
+
+
+
+            else:
+                print('No properties order, keyword and status in request GET.')
+                request.session.get('sorted_type')
+                request.session.pop('sorted_type')
+
+                request.session['sorted_type'] = 'Newest Properties'
+                queryset.extend(Property.objects.all().order_by('-date_posted'))
 
     else:
         print('No request GET.')
@@ -201,6 +341,10 @@ def properties(request):
     })
 
     return render(request=request, template_name='properties/properties.html', context=context)
+
+
+def filters(request):
+    pass
 
 
 def property_categories(request, category_slug):
