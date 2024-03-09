@@ -226,7 +226,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2" data-change-max-bathrooms>
                             {% for number in number_of_bathrooms %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max_bathrooms"{% if number in request.GET.min_bathrooms %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max_bathrooms"{% if number in request.GET.max_bathrooms %}checked{% endif %}>
                                 <label for="max-bathrooms-{{ number }}">{{ number }}</label>
                             </li>
                             {% endfor %}

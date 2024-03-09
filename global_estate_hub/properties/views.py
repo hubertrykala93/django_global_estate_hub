@@ -467,6 +467,20 @@ def properties_context():
 #
 #     return render(request=request, template_name='properties/properties.html', context=context)
 
+def sidebar_context(**kwargs):
+    return {
+        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
+        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(**kwargs)])),
+        'min_price': min([obj.price for obj in Property.objects.filter(**kwargs)]),
+        'max_price': max([obj.price for obj in Property.objects.filter(**kwargs)]),
+        'number_of_bedrooms': sorted(
+            set([obj.number_of_bedrooms for obj in Property.objects.filter(**kwargs)])),
+        'number_of_bathrooms': sorted(
+            set([obj.number_of_bathrooms for obj in Property.objects.filter(**kwargs)])),
+        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
+        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**kwargs)])),
+    }
+
 
 def properties(request):
     queryset = []
@@ -695,8 +709,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -729,8 +743,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -766,8 +780,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -801,8 +815,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -837,8 +851,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -871,8 +885,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -908,8 +922,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -943,8 +957,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -977,8 +991,8 @@ def properties(request):
                 context.update(
                     {
                         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(
-                            set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                            listing_status_id=filters['listing_status_id'])])),
                         'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                         'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                         'number_of_bedrooms': sorted(
@@ -1015,8 +1029,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -1049,8 +1063,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -1086,8 +1100,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
@@ -1121,8 +1135,8 @@ def properties(request):
                     context.update(
                         {
                             'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(
-                                set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                listing_status_id=filters['listing_status_id'])])),
                             'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                             'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                             'number_of_bedrooms': sorted(
