@@ -26,6 +26,8 @@ urlpatterns = [
     path(route='', view=include(arg='accounts.urls')),
     path(route='', view=include(arg='blog.urls')),
     path(route='', view=include(arg='properties.urls')),
+    path(route='', view=include(arg='properties.api.urls')),
+    path(route='', view=include(arg='accounts.api.urls')),
 ]
 
 if settings.DEBUG:

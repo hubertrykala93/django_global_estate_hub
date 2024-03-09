@@ -3,6 +3,12 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block messages %}
+{% for message in messages %}
+{{ message }}
+{% endfor %}
+{% endblock %}
+
 {% block content %}
 <section class="properties" data-properties>
     <div class="container">
@@ -34,23 +40,28 @@
 
                                     <ul class="custom__select__dropdown" role="listbox" id="select-order">
                                         <li role="option">
-                                            <input data-option type="radio" value="Newest Properties" id="newest" name="properties-order" onchange="this.form.submit()" />
+                                            <input data-option type="radio" value="Newest Properties" id="newest" name="properties-order" onchange="this.form.submit()">
                                             <label for="newest">Newest Properties</label>
                                         </li>
 
                                         <li role="option">
-                                            <input data-option type="radio" value="Oldest Properties" id="oldest" name="properties-order" onchange="this.form.submit()" />
+                                            <input data-option type="radio" value="Oldest Properties" id="oldest" name="properties-order" onchange="this.form.submit()">
                                             <label for="oldest">Oldest Properties</label>
                                         </li>
 
                                         <li role="option">
-                                            <input data-option type="radio" value="Alphabetically Ascending" id="alphabetically-ascending" name="properties-order" onchange="this.form.submit()" />
-                                            <label for="alphabetically-ascending">Alphabetically Ascending</label>
+                                            <input data-option type="radio" value="Price Ascending" id="price-ascending" name="properties-order" onchange="this.form.submit()">
+                                            <label for="price-ascending">Price Ascending</label>
                                         </li>
 
                                         <li role="option">
-                                            <input data-option type="radio" value="Alphabetically Descending" id="alphabetically-descending" name="properties-order" onchange="this.form.submit()" />
-                                            <label for="alphabetically-descending">Alphabetically Descending</label>
+                                            <input data-option type="radio" value="Price Descending" id="price-descending" name="properties-order" onchange="this.form.submit()">
+                                            <label for="price-descending">Price Descending</label>
+                                        </li>
+
+                                        <li role="option">
+                                            <input data-option type="radio" value="Featured" id="featured" name="properties-order" onchange="this.form.submit()">
+                                            <label for="featured">Featured</label>
                                         </li>
                                     </ul>
                                 </div>
@@ -71,6 +82,7 @@
                     </div>
                 </div>
 
+                {% if pages %}
                 <div class="row properties-cards__row properties-cards__row--list" data-properties-row>
                     {% for page in pages %}
                     <div class="property-card__column">
@@ -126,6 +138,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                No results.
+                {% endif %}
                 {% if pages.paginator.num_pages > 1 %}
                 {% include 'properties/pagination.html' %}
                 {% endif %}

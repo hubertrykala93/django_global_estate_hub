@@ -21,7 +21,7 @@
 
           <div class="property__location">
             <i class="ri-map-pin-line" aria-hidden="true"></i>
-            <span>{{ property.postal_code }} <a href="{{ city.get_absolute_url }}">{{ property.city }}</a>, {{ property.province }}, {{ property.country }}</span>
+            <span>{% if property.postal_code %}{{ property.postal_code }} {% endif %}<a href="{{ city.get_absolute_url }}">{{ property.city }}</a>, {{ property.province }}, {{ property.country }}</span>
           </div>
         </div>
 
@@ -211,7 +211,7 @@
               </div>
 
               <div class="property__nearby__content" data-property-nearby-content>
-                <div class="h4">Hospitals</div>
+                <div class="h4">Clinics and Hospitals</div>
 
                 {% if property.health_and_medical %}
                 <ul class="property__nearby__stats">
