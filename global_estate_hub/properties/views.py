@@ -11,6 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.contrib import messages
+from unidecode import unidecode
 
 
 def property_pagination(request, object_list, per_page):
@@ -31,13 +32,20 @@ def property_pagination(request, object_list, per_page):
 def properties_context():
     return {
         'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
-        'categories': sorted(set([obj.name for obj in Category.objects.all()])),
-        'min_price': min([obj.price for obj in Property.objects.all()]),
-        'max_price': max([obj.price for obj in Property.objects.all()]),
-        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])),
-        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])),
-        'cities': sorted(set([obj.name for obj in City.objects.all()])),
-        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.all()])),
+        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'min_price': min([obj.price for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
+        'max_price': max([obj.price for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
+        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
     }
 
 
@@ -625,13 +633,13 @@ def properties(request):
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
-                print(request.GET.get('category'))
                 print('Category in request GET.')
                 filters['category_id'] = Category.objects.get(
                     slug='-'.join(request.GET.get('category').lower().split())).id
 
                 if len(Property.objects.filter(**filters)) == 0:
                     queryset.clear()
+
                     messages.info(request=request, message='No Results.')
 
                     return redirect(to='properties')
@@ -642,14 +650,15 @@ def properties(request):
                 context.update(
                     {
                         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                            listing_status_id=filters['listing_status_id'])])),
                         'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                         'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                         'number_of_bedrooms': sorted(
                             set([obj.number_of_bedrooms for obj in Property.objects.filter(**filters)])),
                         'number_of_bathrooms': sorted(
                             set([obj.number_of_bathrooms for obj in Property.objects.filter(**filters)])),
-                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                         'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                     }
                 )
@@ -694,7 +703,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -716,7 +725,6 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
-                    print(filters)
 
                     context.update(
                         {
@@ -729,7 +737,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -766,7 +774,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -789,7 +797,6 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
-                    print(filters)
 
                     context.update(
                         {
@@ -802,7 +809,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -838,7 +845,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -872,7 +879,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -909,7 +916,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -944,7 +951,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -955,7 +962,8 @@ def properties(request):
 
             if 'location' in request.GET:
                 print('Location in request GET.')
-                filters['city__id'] = City.objects.get(slug='-'.join(request.GET.get('location').lower().split())).id
+                filters['city__id'] = City.objects.get(
+                    slug=unidecode('-'.join(request.GET.get('location').lower().split()))).id
 
                 if len(Property.objects.filter(**filters)) == 0:
                     queryset.clear()
@@ -1015,7 +1023,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -1049,7 +1057,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -1086,7 +1094,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -1121,7 +1129,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
+                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }

@@ -16,6 +16,7 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+1. Warunek jesli jest tyle samo min_bedrooms co max_bedrooms i na odwrót.
 1. Po wyborze miasta w filtrach nie da się zmienic na inne bo nie ma innych
 2. Ogarnąć price range w filtrach
 3. Zrobić tak, aby była możliwość zaznaczenia kilku kategorii

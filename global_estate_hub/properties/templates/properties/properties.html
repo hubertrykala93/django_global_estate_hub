@@ -5,7 +5,8 @@
 
 {% block messages %}
 {% for message in messages %}
-{{ message }}
+{{ message }} <br>
+{{ message.extra_tags }}
 {% endfor %}
 {% endblock %}
 
