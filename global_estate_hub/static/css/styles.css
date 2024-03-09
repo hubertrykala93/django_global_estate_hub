@@ -4008,6 +4008,10 @@ section.properties {
     font-size: 1.5rem;
 }
 
+.property .property__address {
+    height: 39rem;
+}
+
 .property .property__address,
 .property .property__video {
     border-radius: var(--br-500);

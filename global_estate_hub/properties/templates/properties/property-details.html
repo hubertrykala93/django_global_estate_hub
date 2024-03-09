@@ -3,6 +3,12 @@
 {% load rate_converter %}
 {% load integer_converter %}
 
+{% block page_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""/>
+{% endblock %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
@@ -134,9 +140,7 @@
         <div class="property__module">
           <div class="property__module__title">Address</div>
 
-          <div class="property__address">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d156388.46656939157!2d20.896389494429535!3d52.23303347778037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc669a869f01%3A0x72f0be2a88ead3fc!2sWarszawa!5e0!3m2!1spl!2spl!4v1709489573173!5m2!1spl!2spl" width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-          </div>
+          <div class="property__address" data-property-map id="map"></div>
         </div>
 
         <div class="property__module">
@@ -170,6 +174,15 @@
                   <span class="property__nearby__button__text">Transportation</span>
                 </button>
               </li>
+
+              <li>
+                <button class="property__nearby__button" data-property-nearby-button data-id="4">
+                  <span class="property__nearby__button__icon">
+                    <i class="ri-shopping-bag-3-line" aria-hidden="true"></i>
+                  </span>
+                  <span class="property__nearby__button__text">Shopping</span>
+                </button>
+              </li>
             </ul>
 
             <div class="property__nearby__contents">
@@ -196,6 +209,7 @@
                 </ul>
                 {% endif %}
               </div>
+
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Hospitals</div>
 
@@ -219,8 +233,33 @@
                 </ul>
                 {% endif %}
               </div>
+              
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Transportation Services</div>
+
+                {% if property.transportation %}
+                <ul class="property__nearby__stats">
+                  {% for t in property.transportation.all %}
+                  <li>
+                    <div class="property__nearby__stats__name">{{ t.name }}</div>
+                    <div class="property__nearby__stats__distance">{{ t.distance }} miles</div>
+                    <div class="property__nearby__stats__stars">
+                      {% for i in range %}
+                      {% if i < t.rate|rate_converter %}
+                      <i class="ri-star-fill"></i>
+                      {% else %}
+                      <i class="ri-star-line"></i>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                  </li>
+                  {% endfor %}
+                </ul>
+                {% endif %}
+              </div>
+
+              <div class="property__nearby__content" data-property-nearby-content>
+                <div class="h4">Shops</div>
 
                 {% if property.transportation %}
                 <ul class="property__nearby__stats">
@@ -250,7 +289,7 @@
           <div class="property__module__title">Mortgage Calculator</div>
 
           <div class="property__mortgage">
-            <div class="property__mortgage__bars">
+            <div class="property__mortgage__bars" data-mortgage-bars>
               <span class="property__mortgage__bar property__mortgage__bars--principal"></span>
               <span class="property__mortgage__bar property__mortgage__bars--tax"></span>
               <span class="property__mortgage__bar property__mortgage__bars--insurance"></span>
@@ -277,55 +316,55 @@
 
               <div class="form__row">
                   <div class="form__field">
-                      <label for="total-amount" class="form__label">total amount</label>
+                      <label for="total-amount" class="form__label">total amount * (cała kwota kupna)</label>
                       <div class="form__input-wrap">
-                          <input data-total data-input type="number" id="total-amount" value="{{ property.price|convert_to_int }}">
+                          <input data-total data-input data-required type="number" name="total-amount" id="total-amount" value="{{ property.price|convert_to_int }}">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="down-payment" class="form__label">down payment</label>
+                    <label for="down-payment" class="form__label">down payment (wpłata własna)</label>
                     <div class="form__input-wrap">
-                        <input data-down-payment data-input type="number" id="down-payment">
+                        <input data-down-payment data-input type="number" name="down-payment" id="down-payment">
                     </div>
                   </div>
               </div>
               
               <div class="form__row">
                   <div class="form__field">
-                      <label for="interest-rate" class="form__label">interest rate</label>
+                      <label for="interest-rate" class="form__label">interest rate * (oprocentowanie)</label>
                       <div class="form__input-wrap">
-                          <input data-interest-rate data-input type="number" id="interest-rate">
+                          <input data-interest-rate data-input data-required type="number" name="interest-rate" id="interest-rate">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="loan-terms" class="form__label">loan terms</label>
+                    <label for="loan-terms" class="form__label">loan terms * (lata spłaty)</label>
                     <div class="form__input-wrap">
-                        <input data-loan-terms data-input type="number" id="loan-terms">
+                        <input data-loan-terms data-input data-required type="number" name="loan-terms" id="loan-terms">
                     </div>
                   </div>
               </div>
 
               <div class="form__row">
                   <div class="form__field">
-                      <label for="property-tax" class="form__label">property tax</label>
+                      <label for="property-tax" class="form__label">property tax (podatek od nier.)</label>
                       <div class="form__input-wrap">
-                          <input data-property-tax data-input type="number" id="property-tax">
+                          <input data-property-tax data-input type="number" name="property-tax" id="property-tax">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="home-insurance" class="form__label">home insurance</label>
+                    <label for="home-insurance" class="form__label">home insurance (ubezpieczenie domu)</label>
                     <div class="form__input-wrap">
-                        <input data-home-insurance data-input type="number" id="home-insurance">
+                        <input data-home-insurance data-input type="number" name="home-insurance" id="home-insurance">
                     </div>
                   </div>
               </div>
 
               <div class="form__row submit-row">
                   <div class="form__field form__submit">
-                      <button class="btn secondary-btn btn--auto-width" type="submit">Calculate</button>
+                      <button id="btn" class="btn secondary-btn btn--auto-width" type="submit">Calculate</button>
                   </div>
               </div>
           </form>
@@ -358,7 +397,7 @@
 
               <div class="property__review__content">
                 <div class="property__review__name"><a href="{% url 'account-details' review.user %}">{{ review.user }}</a></div>
-                <div class="property__review__content__text">{{ review.content }}</div>
+                <div class="property__review__content__text" data-property-review-text>{{ review.content }}</div>
               </div>
 
               <ul class="property__review__stars">
@@ -512,6 +551,61 @@
                               <input data-option type="radio" value="10:30" id="10-30" name="time" />
                               <label for="10-30">10:30</label>
                           </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="11:00" id="11-00" name="time" />
+                              <label for="11-00">11:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="11:30" id="11-30" name="time" />
+                              <label for="11-30">11:30</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="12:00" id="12-00" name="time" />
+                              <label for="12-00">12:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="12:30" id="12-30" name="time" />
+                              <label for="12-30">12:30</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="13:00" id="13-00" name="time" />
+                              <label for="13-00">13:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="13:30" id="13-30" name="time" />
+                              <label for="13-30">13:30</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="14:00" id="14-00" name="time" />
+                              <label for="14-00">14:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="14:30" id="14-30" name="time" />
+                              <label for="14-30">14:30</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="15:00" id="15-00" name="time" />
+                              <label for="15-00">15:00</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="15:30" id="15-30" name="time" />
+                              <label for="15-30">15:30</label>
+                          </li>
+
+                          <li role="option">
+                              <input data-option type="radio" value="16:00" id="16-00" name="time" />
+                              <label for="16-00">16:00</label>
+                          </li>
                         </ul>
                     </div>
                 </div>
@@ -584,8 +678,26 @@
 {% endblock %}
 
 {% block page_scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="">
+</script>
+
 <script>
+  const $propertyMap = document.querySelector('[data-property-map]')
   const latitude = '{{ property.latitude }}'
   const longitude = '{{ property.longitude }}'
+  if ($propertyMap) {
+    const map = L.map('map').setView([latitude, longitude], 17)
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map)
+    const mapMArker = L.icon({
+      iconUrl: '/media/icons/map-marker2.svg',
+
+      iconSize:     [64, 64],
+      iconAnchor:   [32, 32],
+    });
+    const marker = L.marker([latitude, longitude], {icon: mapMArker}).addTo(map);
+  }
 </script>
 {% endblock %}

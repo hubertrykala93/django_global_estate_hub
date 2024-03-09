@@ -1,13 +1,29 @@
-You have received a meeting request from Global Estate Hub.
+<div style="
+  font-size: 1.3em;
+  font-weight: 700;
+  color: #18201B;
+  margin: 10px 0;
+">You have received a meeting request from Global Estate Hub.</div>
 
-Here are the contact details of the person reaching out and the details of the meeting request:
+<p style="
+margin: 10px 0;
+">Here are the contact details of the person reaching out and the details of the meeting request:</p>
 
-Date: {{ date }}.
-Time: {{ time }}.
-Name: {% if name %}{{ name }}.{% else %}Not Provided.{% endif %}
-Phone Number: {{ phone_number }}.
-Message: {% if message %}{{ message }}.{% else %}Not Provided.{% endif %}
+<div style="
+  display: inline-block;
+  margin: 10px 0;
+  background-color: #375844;
+  padding: 25px;
+  border-radius: .5rem;
+  color: white;
+">
+  <strong style="color: white;">Date: </strong>{{ date }}<br>
+  <strong style="color: white;">Time: </strong>{{ time }}<br>
+  <strong style="color: white;">Name: </strong>{% if name %}{{ name }}.{% else %}Not Provided.{% endif %}<br>
+  <strong style="color: white;">Phone Number: </strong>{{ phone_number }}<br>
+  <strong style="color: white;">Message: </strong>{% if message %}{{ message }}.{% else %}Not Provided.{% endif %}
+</div>
 
 We wish you a successful transaction!
-
+<br>
 The Global Estate Hub Team.

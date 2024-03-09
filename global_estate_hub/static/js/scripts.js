@@ -573,6 +573,10 @@ const getRadioValue = (form, radioDataAttr) => {
   return ''
 }
 
+const decodeCommentIntoText = (comment) => {
+  return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')
+}
+
 /**
    * Custom select element
     */
@@ -1600,9 +1604,6 @@ if ( $articlesCommentsWrapper ) {
 
   //comments decode with white spaces
   const $allComments = $articlesCommentsWrapper.querySelectorAll('[data-comment-content-body]')
-  const decodeCommentIntoText = (comment) => {
-    return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')
-  }
 
   if($allComments.length) {
     $allComments.forEach(comment => {
@@ -2809,6 +2810,32 @@ if ($propertyPage) {
 
   if ($scheduleForm) {
 
+    const serverResponse = (response)=> {
+      if ( response.valid === null ) {
+        return false
+      } else if ( response.valid === true ) {
+  
+        $scheduleForm.querySelectorAll('[data-input]').forEach(input =>{
+          if (  !input.disabled ) {
+            input.value = ''
+          }
+  
+          const $messageNode = input.closest('.form__field').querySelector('.info')
+          if ($messageNode) { $messageNode.remove() }
+        })
+  
+        successfullySentMessage($scheduleForm, response.message, true)
+      } else {
+        response.forEach(item => {
+          if ( !item.valid ) {
+            showInfo(item.valid, item.message, $scheduleForm, item.field)
+          } else {
+            removeInfo($scheduleForm, item.field)
+          }
+        })
+      }
+    }
+
     const ajaxRequest = (data)=>{
       const xhr = new XMLHttpRequest()
       xhr.open('POST', url + '/schedule-tour', true)
@@ -2820,9 +2847,45 @@ if ($propertyPage) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-            console.log('odebrane', response);
-            // serverResponse(response)
+            serverResponse(response)
         }
+      }
+    }
+
+    const clientValidation = (form, data) => {
+      let isAllValid = true
+    
+      const regexValidation = (form, field, value) => {
+        const phoneRegex = /^\+?[1-9][0-9]{7,14}$/
+    
+        if ( field === 'data-phone' ) {
+          if ( !phoneRegex.test(value) ) {
+            showInfo(false, `The ${data.phone[2]} format is invalid.`, form, field)
+            isAllValid = false
+          }
+        }
+      }
+    
+      if ( data.url !== '' ) {
+        return false
+      }
+      const newData = { ...data }
+      delete newData.url
+    
+      Object.entries(newData).forEach(([key, value]) => {
+        if ( !Array.isArray(value) ) { return false }
+        if ( value[0] === '' ) {
+          if (key == 'name' || key == 'message') { return false }
+          showInfo(false, `The ${value[2]} field cannot be empty.`, form, value[1])
+          isAllValid = false
+        } else {
+          removeInfo(form, value[1])
+          regexValidation(form, value[1], value[0])
+        }
+      })
+    
+      if ( isAllValid ) {
+        return true
       }
     }
 
@@ -2848,19 +2911,63 @@ if ($propertyPage) {
         "message": [$messageInput.value.trim(), 'data-message', 'message'],
         "url": urlValue
       }
-  
       
-      console.log('wysłane dane', data)
-      ajaxRequest(data)
-
-      // if ( clientValidation($scheduleForm, data) ) {
-
-      // }
-  
+      if ( clientValidation($scheduleForm, data) ) {
+        ajaxRequest(data)
+      }
     })
   }
 
+  /**
+   * Mortgage Calculator
+    */
 
+  const $mortgageCalculator = $propertyPage.querySelector('[data-mortgage-form]')
+
+  const showResults = () => {
+    const $barsWrapper = $propertyPage.querySelector('[data-mortgage-bars]')
+
+    $barsWrapper.style.gridTemplateColumns = `${2}fr ${6}fr ${3}fr`
+  }
+
+  const calculate = (elements) => {
+    console.log(elements);
+    const totalAmount = Number(elements['total-amount'].value)
+    const downPayment = Number(elements['total-amount'].value) || 0
+    const interestRate = Number(elements['total-amount'].value)
+    const loanTerms = Number(elements['total-amount'].value)
+    const propertyTax = Number(elements['total-amount'].value) || 0
+    const homeInsurance = Number(elements['total-amount'].value) || 0
+    
+    showResults()
+  }
+
+  const handleCalculator = (e) => {
+    e.preventDefault()
+
+    let isValid = true
+    const $elements = [...e.target.elements].filter(item => item.nodeName === 'INPUT')
+    
+    $elements.forEach(input => {
+      const value = Number(input.value)
+      if (value == '' && input.dataset.hasOwnProperty('required')) {
+        showInfo(false, 'Field cannot be empty', $mortgageCalculator, `name="${input.name}"`)
+        isValid = false
+      } else if ( value < 0 ) {
+        showInfo(false, 'Value cannot be less than 0', $mortgageCalculator, `name="${input.name}"`)
+        isValid = false
+      }
+      else {
+        removeInfo($mortgageCalculator, `name="${input.name}"`)
+      }
+    })
+
+    if (isValid) {
+      calculate(e.target.elements)
+    }
+  }
+
+  $mortgageCalculator.addEventListener('submit', handleCalculator)
 
 
   /**
@@ -2938,5 +3045,15 @@ if ($propertyPage) {
     })
   }
   
+  /**
+   * Comments decode with white spaces
+    */
+  
+  const $allComments = $propertyPage.querySelectorAll('[data-property-review-text]')
 
+  if($allComments.length) {
+    $allComments.forEach(comment => {
+      comment.innerHTML = decodeCommentIntoText(comment.innerHTML.trim())
+    })
+  }
 }

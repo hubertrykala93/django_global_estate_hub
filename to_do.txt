@@ -8,11 +8,7 @@ admin
 
 @Szymon-Levy
 1. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
-2. Napisać mapkę w property details
 3. loan terms - na ile czasu kredyt
-4. ajax komentarzy
-5. konwersja komentarzy w property z whitespace
-6. stylizacja maila properties/schedule_mail.html.
 
 ************
 1. accessible accordion
