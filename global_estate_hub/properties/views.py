@@ -62,15 +62,21 @@ def properties(request):
                     queryset.extend(Property.objects.filter(title__icontains=request.session['keyword']).order_by(
                         'date_posted'))
 
-                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                elif 'Price Ascending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(
-                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('title'))
+                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('price'))
 
-                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
+                elif 'Price Descending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(
-                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('-title'))
+                        Property.objects.filter(title__icontains=request.session['keyword']).order_by('-price'))
+
+                elif 'Featured' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(
+                        Property.objects.filter(title__icontains=request.session['keyword'], is_featured=True).order_by(
+                            '-date_posted'))
 
                 else:
                     request.session['sorted_type'] = 'Newest Properties'
@@ -80,41 +86,75 @@ def properties(request):
             elif 'filters' in request.session:
                 print('Elif filters in request session.')
                 if 'Newest Properties' in request.GET.get('properties-order'):
+                    if request.session.get('filters').get('is_featured'):
+                        request.session.get('filters').pop('is_featured')
+
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
                 elif 'Oldest Properties' in request.GET.get('properties-order'):
+                    if request.session.get('filters').get('is_featured'):
+                        request.session.get('filters').pop('is_featured')
+
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
-                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = request.GET.get('properties-order')
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('title'))
+                elif 'Price Ascending' in request.GET.get('properties-order'):
+                    print('Price Ascending.')
+                    if request.session.get('filters').get('is_featured'):
+                        request.session.get('filters').pop('is_featured')
 
-                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-title'))
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('price'))
+
+                elif 'Price Descending' in request.GET.get('properties-order'):
+                    if request.session.get('filters').get('is_featured'):
+                        request.session.get('filters').pop('is_featured')
+
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-price'))
+
+                elif 'Featured' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    request.session['filters'].update(
+                        {
+                            'is_featured': True,
+                        }
+                    )
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
                 else:
+                    if request.session.get('filters').get('is_featured'):
+                        request.session.get('filters').pop('is_featured')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
             else:
+                print('Else.')
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('-date_posted'))
 
-                if 'Oldest Properties' in request.GET.get('properties-order'):
+                elif 'Oldest Properties' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
                     queryset.extend(Property.objects.all().order_by('date_posted'))
 
-                if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+                elif 'Price Ascending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    queryset.extend(Property.objects.all().order_by('title'))
+                    queryset.extend(Property.objects.all().order_by('price'))
 
-                if 'Alphabetically Descending' in request.GET.get('properties-order'):
+                elif 'Price Descending' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    queryset.extend(Property.objects.all().order_by('-title'))
+                    queryset.extend(Property.objects.all().order_by('-price'))
+
+                elif 'Featured' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = request.GET.get('properties-order')
+                    queryset.extend(Property.objects.filter(is_featured=True).order_by('-date_posted'))
+
+                else:
+                    request.session['sorted_type'] = 'Newest Properties'
+                    queryset.extend(Property.objects.all().order_by('-date_posted'))
 
         elif 'keyword' in request.GET:
             print('Elif keyword in request GET.')
@@ -431,17 +471,25 @@ def property_categories(request, category_slug):
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
 
-            if 'Oldest Properties' in request.GET.get('properties-order'):
+            elif 'Oldest Properties' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(category=category).order_by('date_posted'))
 
-            if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+            elif 'Price Ascending' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(category=category).order_by('title'))
+                queryset.extend(Property.objects.filter(category=category).order_by('price'))
 
-            if 'Alphabetically Descending' in request.GET.get('properties-order'):
+            elif 'Price Descending' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(category=category).order_by('-title'))
+                queryset.extend(Property.objects.filter(category=category).order_by('-price'))
+
+            elif 'Featured' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(category=category, is_featured=True).order_by('-date_posted'))
+
+            else:
+                request.session['sorted_type'] = 'Newest Properties'
+                queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
 
         else:
             if request.session.get('sorted_type'):
@@ -453,9 +501,6 @@ def property_categories(request, category_slug):
     else:
         if request.session.get('sorted_type'):
             request.session.pop('sorted_type')
-
-        if request.session.get('keyword'):
-            request.session.pop('keyword')
 
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
@@ -480,17 +525,25 @@ def property_cities(request, city_slug):
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
 
-            if 'Oldest Properties' in request.GET.get('properties-order'):
+            elif 'Oldest Properties' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
                 queryset.extend(Property.objects.filter(city=city).order_by('date_posted'))
 
-            if 'Alphabetically Ascending' in request.GET.get('properties-order'):
+            elif 'Price Ascending' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(city=city).order_by('title'))
+                queryset.extend(Property.objects.filter(city=city).order_by('price'))
 
-            if 'Alphabetically Descending' in request.GET.get('properties-order'):
+            elif 'Price Descending' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(city=city).order_by('-title'))
+                queryset.extend(Property.objects.filter(city=city).order_by('-price'))
+
+            elif 'Featured' in request.GET.get('properties-order'):
+                request.session['sorted_type'] = request.GET.get('properties-order')
+                queryset.extend(Property.objects.filter(city=city, is_featured=True).order_by('-date_posted'))
+
+            else:
+                request.session['sorted_type'] = 'Newest Properties'
+                queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
 
         else:
             if request.session.get('sorted_type'):
@@ -502,9 +555,6 @@ def property_cities(request, city_slug):
     else:
         if request.session.get('sorted_type'):
             request.session.pop('sorted_type')
-
-        if request.session.get('keyword'):
-            request.session.pop('keyword')
 
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
