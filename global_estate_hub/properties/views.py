@@ -41,23 +41,6 @@ def properties_context():
     }
 
 
-def sidebar_context(**kwargs):
-    return {
-        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-        'categories': sorted(
-            set([obj.category.name for obj in Property.objects.filter(**kwargs)])),
-        'min_price': min([obj.price for obj in Property.objects.filter(**kwargs)]),
-        'max_price': max([obj.price for obj in Property.objects.filter(**kwargs)]),
-        'number_of_bedrooms': sorted(
-            set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**kwargs)])),
-        'number_of_bathrooms': sorted(
-            set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**kwargs)])),
-        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
-        'square_meters': sorted(
-            set([obj.square_meters for obj in Property.objects.filter(**kwargs)])),
-    }
-
-
 # def properties(request):
 #     queryset = []
 #     context = {}
@@ -616,6 +599,12 @@ def properties(request):
                 filters['listing_status_id'] = ListingStatus.objects.get(
                     slug='-'.join(request.GET.get('status').lower().split())).id
 
+                if len(Property.objects.filter(**filters)) == 0:
+                    queryset.clear()
+                    messages.info(request=request, message='No Results.')
+
+                    return redirect(to='properties')
+
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
@@ -636,9 +625,16 @@ def properties(request):
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
+                print(request.GET.get('category'))
                 print('Category in request GET.')
                 filters['category_id'] = Category.objects.get(
                     slug='-'.join(request.GET.get('category').lower().split())).id
+
+                if len(Property.objects.filter(**filters)) == 0:
+                    queryset.clear()
+                    messages.info(request=request, message='No Results.')
+
+                    return redirect(to='properties')
 
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
@@ -646,14 +642,14 @@ def properties(request):
                 context.update(
                     {
                         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': [obj.name for obj in Category.objects.all()],
+                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(**filters)])),
                         'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                         'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                         'number_of_bedrooms': sorted(
                             set([obj.number_of_bedrooms for obj in Property.objects.filter(**filters)])),
                         'number_of_bathrooms': sorted(
                             set([obj.number_of_bathrooms for obj in Property.objects.filter(**filters)])),
-                        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                        'cities': sorted(set([obj.name for obj in City.objects.all()])),
                         'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                     }
                 )
@@ -678,6 +674,12 @@ def properties(request):
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
                                                             int(request.GET.get('max_bedrooms'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -692,7 +694,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -705,6 +707,12 @@ def properties(request):
                     print('Min Bedrooms in request GET and not Max Bedrooms in request GET.')
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')), int(max(
                         sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()]))))]
+
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
@@ -721,7 +729,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -738,6 +746,12 @@ def properties(request):
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
                                                             int(request.GET.get('max_bedrooms'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -752,7 +766,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -766,6 +780,12 @@ def properties(request):
                     filters['number_of_bedrooms__range'] = [
                         int(min(sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])))),
                         int(request.GET.get('max_bedrooms'))]
+
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
@@ -782,7 +802,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -798,6 +818,12 @@ def properties(request):
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
                                                              int(request.GET.get('max_bathrooms'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -812,7 +838,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -826,9 +852,14 @@ def properties(request):
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')), int(max(
                         sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()]))))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
-                    print(filters)
 
                     context.update(
                         {
@@ -841,7 +872,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -858,6 +889,12 @@ def properties(request):
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
                                                              int(request.GET.get('max_bathrooms'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -872,7 +909,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -887,9 +924,14 @@ def properties(request):
                         int(min(sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])))),
                         int(request.GET.get('max_bathrooms'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
-                    print(filters)
 
                     context.update(
                         {
@@ -902,7 +944,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([obj.square_meters for obj in Property.objects.filter(**filters)])),
                         }
@@ -914,6 +956,12 @@ def properties(request):
             if 'location' in request.GET:
                 print('Location in request GET.')
                 filters['city__id'] = City.objects.get(slug='-'.join(request.GET.get('location').lower().split())).id
+
+                if len(Property.objects.filter(**filters)) == 0:
+                    queryset.clear()
+                    messages.info(request=request, message='No Results.')
+
+                    return redirect(to='properties')
 
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
@@ -947,6 +995,12 @@ def properties(request):
                     filters['square_meters__range'] = [float(request.GET.get('min_square')),
                                                        float(request.GET.get('max_square'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -961,7 +1015,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -975,6 +1029,12 @@ def properties(request):
                     filters['square_meters__range'] = [float(request.GET.get('min_square')), float(
                         max(sorted(set([obj.square_meters for obj in Property.objects.all()]))))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -989,7 +1049,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -1006,6 +1066,12 @@ def properties(request):
                     filters['square_meters__range'] = [float(request.GET.get('min_square')),
                                                        float(request.GET.get('max_square'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -1020,7 +1086,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }
@@ -1035,6 +1101,12 @@ def properties(request):
                         float(min(sorted(set([obj.square_meters for obj in Property.objects.all()])))),
                         float(request.GET.get('max_square'))]
 
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
@@ -1049,7 +1121,7 @@ def properties(request):
                                 set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
                             'number_of_bathrooms': sorted(
                                 set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                            'cities': sorted(set([obj.name for obj in City.objects.all()])),
                             'square_meters': sorted(
                                 set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
                         }

@@ -261,15 +261,15 @@
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Shops</div>
 
-                {% if property.transportation %}
+                {% if property.shopping %}
                 <ul class="property__nearby__stats">
-                  {% for t in property.transportation.all %}
+                  {% for s in property.shopping.all %}
                   <li>
-                    <div class="property__nearby__stats__name">{{ t.name }}</div>
-                    <div class="property__nearby__stats__distance">{{ t.distance }} miles</div>
+                    <div class="property__nearby__stats__name">{{ s.name }}</div>
+                    <div class="property__nearby__stats__distance">{{ s.distance }} miles</div>
                     <div class="property__nearby__stats__stars">
                       {% for i in range %}
-                      {% if i < t.rate|rate_converter %}
+                      {% if i < s.rate|rate_converter %}
                       <i class="ri-star-fill"></i>
                       {% else %}
                       <i class="ri-star-line"></i>
@@ -654,7 +654,7 @@
               <img src="{{ property.user.image.url }}" alt="agent avatar">
             </div>
 
-            <div class="h4">{% if property.user.account_type == 'Individual' %}{{ property.user.individual.first_name }} {{ property.user.individual.last_name }}{% else %}{{ property.user.business.company_name }}{% endif %}</div>
+            <a href="{% url 'account-details' property.user.username %}"><div class="h4">{% if property.user.account_type == 'Individual' %}{{ property.user.individual.first_name }} {{ property.user.individual.last_name }}{% else %}{{ property.user.business.company_name }}{% endif %}</div></a>
             <div class="property__agent__sign">{% if property.user.account_type == 'Individual' %}Private{% else %}Business{% endif %} Seller</div>
 
             <div class="property__agent__contact">
