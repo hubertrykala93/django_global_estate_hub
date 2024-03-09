@@ -76,19 +76,19 @@
                     <div class="custom__range-slider" data-range-slider>
                         <div class="range-slider__inputs">
                             <span class="range-slider__track" data-range-slider-track></span>
-                            <input type="range" name="min_price" class="range-slider__min-input" min="{% if selected_min_price %}{{ selected_min_price }}{% elif min_price %}{{ min_price }}{% endif %}" max="{% if selected_max_price %}{{ selected_max_price }}{% elif max_price %}{{ max_price }}{% endif %}" value="{% if selected_min_price %}{{ selected_min_price }}{% else %}{{ min_price }}{% endif %}" data-range-min-input>
-                            <input type="range" name="max_price" class="range-slider__max-input" min="{% if selected_min_price %}{{ selected_min_price }}{% elif min_price %}{{ min_price }}{% endif %}" max="{% if selected_max_price %}{{ selected_max_price }}{% elif max_price %}{{ max_price }}{% endif %}" value="{% if selected_max_price %}{{ selected_max_price }}{% else %}{{ max_price }}{% endif %}" data-range-max-input>
+                            <input type="range" name="min_price" class="range-slider__min-input" min="{{ min_price }}" max="{{ max_price }}" value="{{ min_price }}" data-range-min-input>
+                            <input type="range" name="max_price" class="range-slider__max-input" min="{{ min_price }}" max="{{ max_price }}" value="{{ max_price }}" data-range-max-input>
                         </div>
 
                         <div class="range-slider__value-boxes">
                             <div class="range-slider__box">
                                 <div class="range-slider__box__currency">$</div>
-                                <div class="range-slider__box__value" data-range-min-box>{% if selected_min_price %}{{ selected_min_price }}{% else %}{{ min_price }}{% endif %}</div>
+                                <div class="range-slider__box__value" data-range-min-box>{{ min_price }}</div>
                             </div>
 
                             <div class="range-slider__box">
                                 <div class="range-slider__box__currency">$</div>
-                                <div class="range-slider__box__value" data-range-max-box>{% if selected_max_price %}{{ selected_max_price }}{% else %}{{ max_price }}{% endif %}</div>
+                                <div class="range-slider__box__value" data-range-max-box>{{ max_price }}</div>
                             </div>
                         </div>
                     </div>
@@ -116,14 +116,15 @@
                             aria-controls="select-bedrooms1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_bedrooms %}{{ request.GET.min_bedrooms }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
 
                         {% if number_of_bedrooms %}
                         <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1" data-change-min-bedrooms>
-                            {% for number in number_of_bedrooms %}<li role="option">
+                            {% for number in number_of_bedrooms %}
+                            <li role="option">
                                 <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min_bedrooms"{% if number in request.GET.min_bedrooms %}checked{% endif %}>
                                 <label for="min-bedrooms-{{ number }}">{{ number }}</label>
                             </li>
@@ -148,7 +149,7 @@
                             aria-controls="select-bedrooms2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_bedrooms %}{{ request.GET.max_bedrooms }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -184,7 +185,7 @@
                             aria-controls="select-bathrooms1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_bathrooms %}{{ request.GET.min_bathrooms }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -216,7 +217,7 @@
                             aria-controls="select-bathrooms2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_bathrooms %}{{ request.GET.max_bathrooms }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -255,7 +256,7 @@
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
                                 <i class="ri-map-pin-line" aria-hidden="true"></i>
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>City</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.location %}{{ request.GET.location }}{% else %}City{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -291,7 +292,7 @@
                             aria-controls="select-square1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Min</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_square %}{{ request.GET.min_square }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -323,7 +324,7 @@
                             aria-controls="select-square2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>Max</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_square %}{{ request.GET.max_square }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>

@@ -2642,9 +2642,9 @@ if ( $propertiesPage ) {
     $maxBathroomsParent.innerHTML = newMaxBathroomsList
   }
 
-//   $filtersForm.addEventListener('change', function(e) {
-//     this.submit()
-//   })
+   $filtersForm.addEventListener('change', function(e) {
+     this.submit()
+   })
 
   // $filtersForm.addEventListener('change', (e) => {
   //   const data = {}
