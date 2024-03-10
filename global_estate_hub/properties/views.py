@@ -14,41 +14,6 @@ from django.contrib import messages
 from unidecode import unidecode
 
 
-def property_pagination(request, object_list, per_page):
-    paginator = Paginator(object_list=object_list, per_page=per_page)
-    page = request.GET.get('page')
-    pages = paginator.get_page(number=page)
-
-    if page is None:
-        pages = paginator.get_page(number=1)
-
-    else:
-        if page not in list(str(i) for i in pages.paginator.page_range):
-            return redirect(to='error')
-
-    return pages
-
-
-def properties_context():
-    return {
-        'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
-        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'min_price': min([obj.price for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
-        'max_price': max([obj.price for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
-        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-    }
-
-
 # def properties(request):
 #     queryset = []
 #     context = {}
@@ -467,6 +432,41 @@ def properties_context():
 #
 #     return render(request=request, template_name='properties/properties.html', context=context)
 
+def property_pagination(request, object_list, per_page):
+    paginator = Paginator(object_list=object_list, per_page=per_page)
+    page = request.GET.get('page')
+    pages = paginator.get_page(number=page)
+
+    if page is None:
+        pages = paginator.get_page(number=1)
+
+    else:
+        if page not in list(str(i) for i in pages.paginator.page_range):
+            return redirect(to='error')
+
+    return pages
+
+
+def properties_context():
+    return {
+        'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'min_price': min([obj.price for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
+        'max_price': max([obj.price for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
+        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(
+            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+    }
+
+
 def sidebar_context(**kwargs):
     return {
         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
@@ -635,9 +635,10 @@ def properties(request):
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
-                request.session['categories'] = []
                 print('Category in request GET.')
                 if len(request.GET.getlist('category')) == 1:
+                    print('One Category in request GET.')
+                    print(request.GET.getlist('category'))
                     filters['category_id'] = Category.objects.get(
                         slug='-'.join(request.GET.get('category').lower().split())).id
 
@@ -661,7 +662,6 @@ def properties(request):
                     print('More than one Category.')
                     filters['category__pk__in'] = [Category.objects.get(slug='-'.join(obj.lower().split())).id for
                                                    obj in request.GET.getlist('category')]
-                    print(request.GET.getlist('category'))
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -671,6 +671,7 @@ def properties(request):
                         return redirect(to='properties')
 
                     else:
+                        print(request.GET.getlist('category'))
                         request.session['sorted_type'] = 'Newest Properties'
                         request.session['filters'] = filters
 
