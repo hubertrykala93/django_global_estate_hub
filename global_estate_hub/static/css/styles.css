@@ -26,6 +26,7 @@
     --clr-body-text: #777E7A;
     --clr-input-bg: #F6F6F6;
     --clr-error: rgb(176, 28, 28);
+    --clr-error-bg: rgb(255, 212, 212);
     --clr-success: rgb(12, 134, 12);
     --clr-stars: #FF6400;
     --clr-border: #dfdfdf;
@@ -905,6 +906,26 @@ form .form__field.form__form{
 
 .pagination .pagination__item.pagination__item--with-icon i {
     display: none;
+}
+
+
+/**
+  * MESSAGES
+   */
+.messages {
+    padding: 1.2rem 0;
+    background-color: var(--clr-error-bg);
+}
+
+.messages .messages__list li{
+    margin-bottom: .8rem;
+    color: var(--clr-black);
+    font-weight: 500;
+    font-size: 1.6rem;
+}
+
+.messages .messages__list li:last-child {
+    margin-bottom: 0;
 }
 
 

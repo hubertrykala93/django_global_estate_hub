@@ -5,11 +5,17 @@
 
 {% if messages %}
 {% block messages %}
-<ul class="messages">
-{% for message in messages %}
-<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-{% endfor %}
-</ul>
+<section class="messages">
+    <div class="container">
+        <div class="row">
+            <ul class="messages__list">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
 {% endblock %}
 {% endif %}
 
