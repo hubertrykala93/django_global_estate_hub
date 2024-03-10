@@ -475,9 +475,9 @@ def sidebar_context(**kwargs):
         'min_price': min([obj.price for obj in Property.objects.filter(**kwargs)]),
         'max_price': max([obj.price for obj in Property.objects.filter(**kwargs)]),
         'number_of_bedrooms': sorted(
-            set([obj.number_of_bedrooms for obj in Property.objects.filter(**kwargs)])),
+            set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**kwargs)])),
         'number_of_bathrooms': sorted(
-            set([obj.number_of_bathrooms for obj in Property.objects.filter(**kwargs)])),
+            set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**kwargs)])),
         'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
         'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(**kwargs)])),
     }
@@ -636,23 +636,47 @@ def properties(request):
 
             if 'category' in request.GET:
                 print('Category in request GET.')
-                filters['category_id'] = Category.objects.get(
-                    slug='-'.join(request.GET.get('category').lower().split())).id
+                if len(request.GET.getlist('category')) == 1:
+                    filters['category_id'] = Category.objects.get(
+                        slug='-'.join(request.GET.get('category').lower().split())).id
 
-                if len(Property.objects.filter(**filters)) == 0:
-                    queryset.clear()
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
 
-                    messages.info(request=request, message='No Results.')
+                        messages.info(request=request, message='No Results.')
 
-                    return redirect(to='properties')
+                        return redirect(to='properties')
 
-                request.session['sorted_type'] = 'Newest Properties'
-                request.session['filters'] = filters
+                    else:
+                        request.session['sorted_type'] = 'Newest Properties'
+                        request.session['filters'] = filters
 
-                context.update(sidebar_context(**filters))
+                        context.update(sidebar_context(**filters))
 
-                queryset.clear()
-                queryset.extend(Property.objects.filter(**filters))
+                        queryset.clear()
+                        queryset.extend(Property.objects.filter(**filters))
+
+                else:
+                    print('More than one Category.')
+                    filters['category__pk__in'] = [Category.objects.get(slug='-'.join(obj.lower().split())).id for
+                                                   obj in request.GET.getlist('category')]
+                    print(request.GET.getlist('category'))
+
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
+                    else:
+                        request.session['sorted_type'] = 'Newest Properties'
+                        request.session['filters'] = filters
+
+                        context.update(sidebar_context(**filters))
+
+                        queryset.clear()
+                        queryset.extend(Property.objects.filter(**filters))
 
             # if 'min_price' and 'max_price' in request.GET:
             #     print('Min Price and Max Price in request GET.')
