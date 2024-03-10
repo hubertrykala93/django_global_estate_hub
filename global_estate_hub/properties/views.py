@@ -470,7 +470,8 @@ def properties_context():
 def sidebar_context(**kwargs):
     return {
         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(**kwargs)])),
+        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+            listing_status_id=kwargs['listing_status_id'])])),
         'min_price': min([obj.price for obj in Property.objects.filter(**kwargs)]),
         'max_price': max([obj.price for obj in Property.objects.filter(**kwargs)]),
         'number_of_bedrooms': sorted(
@@ -478,7 +479,7 @@ def sidebar_context(**kwargs):
         'number_of_bathrooms': sorted(
             set([obj.number_of_bathrooms for obj in Property.objects.filter(**kwargs)])),
         'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
-        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**kwargs)])),
+        'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(**kwargs)])),
     }
 
 
@@ -630,21 +631,7 @@ def properties(request):
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
-                context.update(
-                    {
-                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                            listing_status_id=filters['listing_status_id'])])),
-                        'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                        'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                        'number_of_bedrooms': sorted(
-                            set([obj.number_of_bedrooms for obj in Property.objects.filter(**filters)])),
-                        'number_of_bathrooms': sorted(
-                            set([obj.number_of_bathrooms for obj in Property.objects.filter(**filters)])),
-                        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                    }
-                )
+                context.update(sidebar_context(**filters))
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
@@ -662,21 +649,7 @@ def properties(request):
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
-                context.update(
-                    {
-                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                            listing_status_id=filters['listing_status_id'])])),
-                        'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                        'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                        'number_of_bedrooms': sorted(
-                            set([obj.number_of_bedrooms for obj in Property.objects.filter(**filters)])),
-                        'number_of_bathrooms': sorted(
-                            set([obj.number_of_bathrooms for obj in Property.objects.filter(**filters)])),
-                        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                    }
-                )
+                context.update(sidebar_context(**filters))
 
                 queryset.clear()
                 queryset.extend(Property.objects.filter(**filters))
@@ -707,22 +680,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -741,22 +699,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -778,22 +721,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -813,22 +741,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -849,22 +762,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -883,22 +781,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -920,22 +803,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -955,22 +823,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -989,22 +842,7 @@ def properties(request):
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
 
-                context.update(
-                    {
-                        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                            listing_status_id=filters['listing_status_id'])])),
-                        'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                        'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                        'number_of_bedrooms': sorted(
-                            set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                        'number_of_bathrooms': sorted(
-                            set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                        'square_meters': sorted(
-                            set([obj.square_meters for obj in Property.objects.filter(**filters)])),
-                    }
-                )
+                context.update(sidebar_context(**filters))
 
                 queryset.clear()
                 queryset.extend(Property.objects.filter(**filters))
@@ -1027,22 +865,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -1061,22 +884,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -1098,22 +906,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
@@ -1133,22 +926,7 @@ def properties(request):
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
 
-                    context.update(
-                        {
-                            'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                            'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-                                listing_status_id=filters['listing_status_id'])])),
-                            'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
-                            'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
-                            'number_of_bedrooms': sorted(
-                                set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**filters)])),
-                            'number_of_bathrooms': sorted(
-                                set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**filters)])),
-                            'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**filters)])),
-                            'square_meters': sorted(
-                                set([str(obj.square_meters) for obj in Property.objects.filter(**filters)])),
-                        }
-                    )
+                    context.update(sidebar_context(**filters))
 
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters))
