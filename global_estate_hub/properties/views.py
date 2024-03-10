@@ -641,7 +641,6 @@ def properties(request):
 
                 if len(Property.objects.filter(**filters)) == 0:
                     queryset.clear()
-
                     messages.info(request=request, message='No Results.')
 
                     return redirect(to='properties')
@@ -654,6 +653,47 @@ def properties(request):
                     context.update({
                         'checked_categories': checked_categories,
                     })
+                    context.update(sidebar_context(**filters))
+
+                    queryset.clear()
+                    queryset.extend(Property.objects.filter(**filters))
+
+            if 'min_price' in request.GET:
+                print('Min Price in request GET.')
+
+                if 'max_price' in request.GET:
+                    print('Min Price and Max Price in request GET.')
+                    print(request.GET)
+                    filters['price__range'] = [int(request.GET.get('min_price')), int(request.GET.get('max_price'))]
+
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
+                    request.session['sorted_type'] = 'Newest Properties'
+                    request.session['filters'] = filters
+
+                    context.update(sidebar_context(**filters))
+
+                    queryset.clear()
+                    queryset.extend(Property.objects.filter(**filters))
+
+                else:
+                    print('Min Price in request GET and not Max Price in request GET.')
+                    filters['price__range'] = [int(request.GET.get('min_price')),
+                                               int(min([obj.price for obj in Property.objects.filter(**filters)]))]
+
+                    if len(Property.objects.filter(**filters)) == 0:
+                        queryset.clear()
+                        messages.info(request=request, message='No Results.')
+
+                        return redirect(to='properties')
+
+                    request.session['sorted_type'] = 'Newest Properties'
+                    request.session['filters'] = filters
+
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
