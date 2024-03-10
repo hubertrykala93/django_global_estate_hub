@@ -636,49 +636,28 @@ def properties(request):
 
             if 'category' in request.GET:
                 print('Category in request GET.')
-                if len(request.GET.getlist('category')) == 1:
-                    print('One Category in request GET.')
-                    print(request.GET.getlist('category'))
-                    filters['category_id'] = Category.objects.get(
-                        slug='-'.join(request.GET.get('category').lower().split())).id
+                filters['category__pk__in'] = [Category.objects.get(slug='-'.join(obj.lower().split())).id for
+                                               obj in request.GET.getlist('category')]
 
-                    if len(Property.objects.filter(**filters)) == 0:
-                        queryset.clear()
+                if len(Property.objects.filter(**filters)) == 0:
+                    queryset.clear()
 
-                        messages.info(request=request, message='No Results.')
+                    messages.info(request=request, message='No Results.')
 
-                        return redirect(to='properties')
-
-                    else:
-                        request.session['sorted_type'] = 'Newest Properties'
-                        request.session['filters'] = filters
-
-                        context.update(sidebar_context(**filters))
-
-                        queryset.clear()
-                        queryset.extend(Property.objects.filter(**filters))
+                    return redirect(to='properties')
 
                 else:
-                    print('More than one Category.')
-                    filters['category__pk__in'] = [Category.objects.get(slug='-'.join(obj.lower().split())).id for
-                                                   obj in request.GET.getlist('category')]
+                    checked_categories = request.GET.getlist('category')
+                    request.session['sorted_type'] = 'Newest Properties'
+                    request.session['filters'] = filters
 
-                    if len(Property.objects.filter(**filters)) == 0:
-                        queryset.clear()
+                    context.update({
+                        'checked_categories': checked_categories,
+                    })
+                    context.update(sidebar_context(**filters))
 
-                        messages.info(request=request, message='No Results.')
-
-                        return redirect(to='properties')
-
-                    else:
-                        print(request.GET.getlist('category'))
-                        request.session['sorted_type'] = 'Newest Properties'
-                        request.session['filters'] = filters
-
-                        context.update(sidebar_context(**filters))
-
-                        queryset.clear()
-                        queryset.extend(Property.objects.filter(**filters))
+                    queryset.clear()
+                    queryset.extend(Property.objects.filter(**filters))
 
             # if 'min_price' and 'max_price' in request.GET:
             #     print('Min Price and Max Price in request GET.')

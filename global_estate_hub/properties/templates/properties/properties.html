@@ -3,12 +3,15 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% if messages %}
 {% block messages %}
+<ul class="messages">
 {% for message in messages %}
-{{ message }} <br>
-{{ message.extra_tags }}
+<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
 {% endfor %}
+</ul>
 {% endblock %}
+{% endif %}
 
 {% block content %}
 <section class="properties" data-properties>
