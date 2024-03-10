@@ -635,6 +635,7 @@ def properties(request):
                 queryset.extend(Property.objects.filter(**filters))
 
             if 'category' in request.GET:
+                request.session['categories'] = []
                 print('Category in request GET.')
                 if len(request.GET.getlist('category')) == 1:
                     filters['category_id'] = Category.objects.get(
@@ -680,13 +681,13 @@ def properties(request):
 
             # if 'min_price' and 'max_price' in request.GET:
             #     print('Min Price and Max Price in request GET.')
-            # filters['price__range'] = [int(request.GET.get('min_price')), int(request.GET.get('max_price'))]
+            #     filters['price__range'] = [int(request.GET.get('min_price')), int(request.GET.get('max_price'))]
             #
-            # request.session['sorted_type'] = 'Newest Properties'
-            # request.session['filters'] = filters
+            #     request.session['sorted_type'] = 'Newest Properties'
+            #     request.session['filters'] = filters
             #
-            # queryset.clear()
-            # queryset.extend(Property.objects.filter(**filters))
+            #     queryset.clear()
+            #     queryset.extend(Property.objects.filter(**filters))
 
             if 'min_bedrooms' in request.GET:
                 print('Min Bedrooms in request GET.')
