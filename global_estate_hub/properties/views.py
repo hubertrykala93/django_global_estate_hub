@@ -633,7 +633,8 @@ def properties(request):
                 context.update(
                     {
                         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
+                            listing_status_id=filters['listing_status_id'])])),
                         'min_price': min([obj.price for obj in Property.objects.filter(**filters)]),
                         'max_price': max([obj.price for obj in Property.objects.filter(**filters)]),
                         'number_of_bedrooms': sorted(

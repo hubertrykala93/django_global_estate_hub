@@ -16,6 +16,8 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+1. Poskracać powtarzalny się kod.
+1. Skrócić contexty.
 3. Zrobić tak, aby była możliwość zaznaczenia kilku kategorii
 2. Ogarnąć price range w filtrach
 4. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
