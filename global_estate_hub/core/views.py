@@ -31,8 +31,6 @@ def index(request):
     if request.session.get('sorted_type'):
         request.session.pop('sorted_type')
 
-    print(request.session.items())
-
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
     cities = sorted(
@@ -43,10 +41,10 @@ def index(request):
                         key=lambda x: x.name)
     years_of_built = sorted(set([obj.year_of_built for obj in
                                  Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]))
-    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))
+    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3]
 
     # year counter
-    project_started = 2024
+    project_started = 2020
     current_year = datetime.date.today().year
     substracted_year = current_year - project_started
 
@@ -77,6 +75,15 @@ def index(request):
         'cities': cities,
         'categories': categories,
         'years_of_built': years_of_built,
+        'agents': agents,
+    })
+
+
+def top_agents(request):
+    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3]
+
+    return render(request=request, template_name='core/top-agents.html', context={
+        'title': 'Top Agents',
         'agents': agents,
     })
 
@@ -443,3 +450,21 @@ def properties_results(request):
             'sorted_type': request.session['sorted_type'],
             'pages': property_pagination(request=request, object_list=queryset, per_page=6),
         })
+
+
+def rodo_rules(request):
+    email = os.environ.get('EMAIL_FROM')
+
+    return render(request=request, template_name='core/rodo-rules.html', context={
+        'title': 'Rodo Rules',
+        'email': email,
+    })
+
+
+def privacy_policy(request):
+    email = os.environ.get('EMAIL_FROM')
+
+    return render(request=request, template_name='core/privacy-policy.html', context={
+        'title': 'Privacy Policy',
+        'email': email,
+    })

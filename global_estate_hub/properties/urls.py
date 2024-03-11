@@ -14,4 +14,5 @@ urlpatterns = [
          name='add-review'),
     path(route='properties/<slug:category_slug>/<slug:property_slug>/schedule-tour',
          view=properties_views.schedule_tour, name='schedule-tour'),
+    # path(route='update-filters', view=properties_views.update_filters, name='update-filters'),
 ]

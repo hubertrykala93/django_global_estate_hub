@@ -298,17 +298,17 @@
             <ul class="property__mortgage__legend">
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--principal"></span>
-                <div class="property__mortgage__legend__text">Principal & Interest ($<span data-value>504</span>)</div>
+                <div class="property__mortgage__legend__text">Bank ($<span data-1-value>0</span>)</div>
               </li>
 
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--tax"></span>
-                <div class="property__mortgage__legend__text">Property Tax ($<span data-value>516</span>)</div>
+                <div class="property__mortgage__legend__text">Purchaser ($<span data-2-value>0</span>)</div>
               </li>
 
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--insurance"></span>
-                <div class="property__mortgage__legend__text">Home Insurance ($<span data-value>45</span>)</div>
+                <div class="property__mortgage__legend__text">Others ($<span data-3-value>0</span>)</div>
               </li>
             </ul>
 
@@ -658,7 +658,7 @@
             <div class="property__agent__sign">{% if property.user.account_type == 'Individual' %}Private{% else %}Business{% endif %} Seller</div>
 
             <div class="property__agent__contact">
-              <a href="mailto:{{ review.user.email }}" class="property__agent__contact__item">
+              <a href="mailto:{{ property.user.email }}" class="property__agent__contact__item">
                 <i class="ri-mail-line" aria-hidden="true"></i>
                 <span>E-mail</span>
               </a>

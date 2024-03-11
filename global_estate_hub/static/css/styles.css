@@ -27,6 +27,7 @@
     --clr-input-bg: #F6F6F6;
     --clr-error: rgb(176, 28, 28);
     --clr-error-bg: rgb(255, 212, 212);
+    --clr-info-bg: #54b4d3;
     --clr-success: rgb(12, 134, 12);
     --clr-stars: #FF6400;
     --clr-border: #dfdfdf;
@@ -912,20 +913,18 @@ form .form__field.form__form{
 /**
   * MESSAGES
    */
-.messages {
+.message {
     padding: 1.2rem 0;
-    background-color: var(--clr-error-bg);
 }
 
-.messages .messages__list li{
-    margin-bottom: .8rem;
-    color: var(--clr-black);
+.message.message--info {
+    background-color: var(--clr-info-bg);
+}
+
+.message .message__content{
+    color: var(--clr-white);
     font-weight: 500;
     font-size: 1.6rem;
-}
-
-.messages .messages__list li:last-child {
-    margin-bottom: 0;
 }
 
 
@@ -4139,7 +4138,7 @@ section.properties {
 .property .property__mortgage .property__mortgage__bars {
     display: grid;
     height: 1rem;
-    grid-template-columns: 2fr 1fr .5fr;
+    grid-template-columns: 0% 0% 0%;
     border: 1px solid var(--clr-border);
     border-radius: var(--br-300);
     overflow: hidden;

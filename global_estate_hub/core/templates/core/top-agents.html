@@ -1,0 +1,20 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="properties" data-properties>
+    <div class="container">
+        <div class="row">
+            <ul>
+                {% for agent in agents %}
+                <li>
+                    {% if agent.account_type == 'Individual' %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.business.company_name }}{% endif %}
+                    <a href="{% url 'account-details' agent.username %}">Profile</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+{% endblock %}

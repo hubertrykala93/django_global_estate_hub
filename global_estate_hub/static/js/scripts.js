@@ -2643,124 +2643,132 @@ if ( $propertiesPage ) {
     $maxBathroomsParent.innerHTML = newMaxBathroomsList
   }
 
-   $filtersForm.addEventListener('change', function(e) {
-     this.submit()
+//   $filtersForm.addEventListener('change', function(e) {
+//     if (e.target.name == 'min_price' || e.target.name == 'max_price') {
+//        e.preventDefault()
+//     } else {
+//        this.submit()
+//     }
+//   })
+
+      $filtersForm.addEventListener('change', function(e) {
+        this.submit()
    })
 
-  // $filtersForm.addEventListener('change', (e) => {
-  //   const data = {}
-  //   //status
-  //   let chosenStatus = ''
-  //   const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
-  //   for (let i = 0; i < $statusesInputs.length; i++) {
-  //       if ( $statusesInputs[i].checked ) {
-  //           chosenStatus = $statusesInputs[i].value
-  //       }
-  //   }
-  //   data.chosenStatus = chosenStatus
-
-
-  //   //category
-  //   let chosenCategories = []
-  //   const $categoriesInputs = $categoriesParent.querySelectorAll('[data-input]')
-  //   for (let i = 0; i < $categoriesInputs.length; i++) {
-  //       if ( $categoriesInputs[i].checked ) {
-  //           chosenCategories.push($categoriesInputs[i].value)
-  //       }
-  //   }
-  //   data.chosenCategories = chosenCategories
-
-  //   //price range
-  //   data.priceRange = [$minValue.value, $maxValue.value]
-
-  //   //min bedrooms
-  //   let chosenMinBedroom = ''
-  //   const $minBedroomsInputs = $minBedroomsParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $minBedroomsInputs.length; i++) {
-  //       if ( $minBedroomsInputs[i].checked ) {
-  //           chosenMinBedroom = $minBedroomsInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMinBedrooms = chosenMinBedroom
-
-  //   //max bedrooms
-  //   let chosenMaxBedroom = ''
-  //   const $maxBedroomsInputs = $maxBedroomsParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $maxBedroomsInputs.length; i++) {
-  //       if ( $maxBedroomsInputs[i].checked ) {
-  //           chosenMaxBedroom = $maxBedroomsInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMaxBedrooms = chosenMaxBedroom
-
-  //   //min bedrooms
-  //   let chosenMinBathroom = ''
-  //   const $minBathroomsInputs = $minBathroomsParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $minBathroomsInputs.length; i++) {
-  //       if ( $minBathroomsInputs[i].checked ) {
-  //           chosenMinBathroom = $minBathroomsInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMinBathrooms = chosenMinBathroom
-
-  //   //max bathrooms
-  //   let chosenMaxBathroom = ''
-  //   const $maxBathroomsInputs = $maxBathroomsParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $maxBathroomsInputs.length; i++) {
-  //       if ( $maxBathroomsInputs[i].checked ) {
-  //           chosenMaxBathroom = $maxBathroomsInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMaxBathrooms = chosenMaxBathroom
-
-  //   //location
-  //   let chosenLocation = ''
-  //   const $locationInputs = $locationParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $locationInputs.length; i++) {
-  //       if ( $locationInputs[i].checked ) {
-  //         chosenLocation = $locationInputs[i].value
-  //       }
-  //   }
-  //   data.chosenLocation = chosenLocation
-
-  //   //min meters
-  //   let chosenMinMeters = ''
-  //   const $minMetersInputs = $minMetersParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $minMetersInputs.length; i++) {
-  //       if ( $minMetersInputs[i].checked ) {
-  //         chosenMinMeters = $minMetersInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMinMeters = chosenMinMeters
-
-  //   //max meters
-  //   let chosenMaxMeters = ''
-  //   const $maxMetersInputs = $maxMetersParent.querySelectorAll('[data-option]')
-  //   for (let i = 0; i < $maxMetersInputs.length; i++) {
-  //       if ( $maxMetersInputs[i].checked ) {
-  //         chosenMaxMeters = $maxMetersInputs[i].value
-  //       }
-  //   }
-  //   data.chosenMaxMeters = chosenMaxMeters
-
-  //   const xhr = new XMLHttpRequest()
-
-  //   xhr.open('POST', 'update-filters', true)
-  //   xhr.setRequestHeader('X-CSRFToken', csrfToken)
-  //   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
-  //   xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-  //   console.log('sent', data)
-  //   xhr.send(JSON.stringify(data))
-
-  //   xhr.onreadystatechange = function () {
-  //     if (this.readyState == 4 && this.status == 200) {
-  //         const response = JSON.parse(this.responseText)
-  //         console.log('received', response)
-  //         serverResponse(response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom)
-  //     }
-  //   }
-
-  // })
+//   $filtersForm.addEventListener('scroll', (e) => {
+//     const data = {}
+//     //status
+//     let chosenStatus = ''
+//     const $statusesInputs = $statusesParent.querySelectorAll('[data-input]')
+//     for (let i = 0; i < $statusesInputs.length; i++) {
+//         if ( $statusesInputs[i].checked ) {
+//             chosenStatus = $statusesInputs[i].value
+//         }
+//     }
+//     data.chosenStatus = chosenStatus
+//
+//
+//     //category
+//     let chosenCategories = []
+//     const $categoriesInputs = $categoriesParent.querySelectorAll('[data-input]')
+//     for (let i = 0; i < $categoriesInputs.length; i++) {
+//         if ( $categoriesInputs[i].checked ) {
+//             chosenCategories.push($categoriesInputs[i].value)
+//         }
+//     }
+//     data.chosenCategories = chosenCategories
+//
+//     //price range
+//     data.priceRange = [$minValue.value, $maxValue.value]
+//
+//     //min bedrooms
+//     let chosenMinBedroom = ''
+//     const $minBedroomsInputs = $minBedroomsParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $minBedroomsInputs.length; i++) {
+//         if ( $minBedroomsInputs[i].checked ) {
+//             chosenMinBedroom = $minBedroomsInputs[i].value
+//         }
+//     }
+//     data.chosenMinBedrooms = chosenMinBedroom
+//
+//     //max bedrooms
+//     let chosenMaxBedroom = ''
+//     const $maxBedroomsInputs = $maxBedroomsParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $maxBedroomsInputs.length; i++) {
+//         if ( $maxBedroomsInputs[i].checked ) {
+//             chosenMaxBedroom = $maxBedroomsInputs[i].value
+//         }
+//     }
+//     data.chosenMaxBedrooms = chosenMaxBedroom
+//
+//     //min bathrooms
+//     let chosenMinBathroom = ''
+//     const $minBathroomsInputs = $minBathroomsParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $minBathroomsInputs.length; i++) {
+//         if ( $minBathroomsInputs[i].checked ) {
+//             chosenMinBathroom = $minBathroomsInputs[i].value
+//         }
+//     }
+//     data.chosenMinBathrooms = chosenMinBathroom
+//
+//     //max bathrooms
+//     let chosenMaxBathroom = ''
+//     const $maxBathroomsInputs = $maxBathroomsParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $maxBathroomsInputs.length; i++) {
+//         if ( $maxBathroomsInputs[i].checked ) {
+//             chosenMaxBathroom = $maxBathroomsInputs[i].value
+//         }
+//     }
+//     data.chosenMaxBathrooms = chosenMaxBathroom
+//
+//     //location
+//     let chosenLocation = ''
+//     const $locationInputs = $locationParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $locationInputs.length; i++) {
+//         if ( $locationInputs[i].checked ) {
+//           chosenLocation = $locationInputs[i].value
+//         }
+//     }
+//     data.chosenLocation = chosenLocation
+//
+//     //min meters
+//     let chosenMinMeters = ''
+//     const $minMetersInputs = $minMetersParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $minMetersInputs.length; i++) {
+//         if ( $minMetersInputs[i].checked ) {
+//           chosenMinMeters = $minMetersInputs[i].value
+//         }
+//     }
+//     data.chosenMinMeters = chosenMinMeters
+//
+//     //max meters
+//     let chosenMaxMeters = ''
+//     const $maxMetersInputs = $maxMetersParent.querySelectorAll('[data-option]')
+//     for (let i = 0; i < $maxMetersInputs.length; i++) {
+//         if ( $maxMetersInputs[i].checked ) {
+//           chosenMaxMeters = $maxMetersInputs[i].value
+//         }
+//     }
+//     data.chosenMaxMeters = chosenMaxMeters
+//
+//     const xhr = new XMLHttpRequest()
+//
+//     xhr.open('POST', 'update-filters', true)
+//     xhr.setRequestHeader('X-CSRFToken', csrfToken)
+//     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+//     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+//     console.log('sent', data)
+//     xhr.send(JSON.stringify(data))
+//
+//     xhr.onreadystatechange = function () {
+//       if (this.readyState == 4 && this.status == 200) {
+//           const response = JSON.parse(this.responseText)
+//           console.log('received', response)
+//           serverResponse(response, chosenCategories, chosenMinBedroom, chosenMaxBedroom, chosenMinBathroom, chosenMaxBathroom)
+//       }
+//     }
+//
+//   })
 
 }
 
@@ -2924,22 +2932,45 @@ if ($propertyPage) {
 
   const $mortgageCalculator = $propertyPage.querySelector('[data-mortgage-form]')
 
-  const showResults = () => {
+  const showResults = (bankPercent, userPercent, restPercent, bankPayment, userPayment, restPayment) => {
     const $barsWrapper = $propertyPage.querySelector('[data-mortgage-bars]')
+    const parameter1 = $propertyPage.querySelector('[data-1-value]')
+    const parameter2 = $propertyPage.querySelector('[data-2-value]')
+    const parameter3 = $propertyPage.querySelector('[data-3-value]')
 
-    $barsWrapper.style.gridTemplateColumns = `${2}fr ${6}fr ${3}fr`
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    $barsWrapper.style.gridTemplateColumns = `${bankPercent}% ${userPercent}% ${restPercent}%`
+    parameter1.textContent = numberWithCommas(bankPayment)
+    parameter2.textContent = numberWithCommas(userPayment)
+    parameter3.textContent = numberWithCommas(restPayment)
   }
 
   const calculate = (elements) => {
-    console.log(elements);
     const totalAmount = Number(elements['total-amount'].value)
-    const downPayment = Number(elements['total-amount'].value) || 0
-    const interestRate = Number(elements['total-amount'].value)
-    const loanTerms = Number(elements['total-amount'].value)
-    const propertyTax = Number(elements['total-amount'].value) || 0
-    const homeInsurance = Number(elements['total-amount'].value) || 0
-    
-    showResults()
+    const downPayment = Number(elements['down-payment'].value) || 0
+    const interestRate = Number(elements['interest-rate'].value)
+    const loanTerms = Number(elements['loan-terms'].value)
+    const propertyTax = Number(elements['property-tax'].value) || 0
+    const homeInsurance = Number(elements['home-insurance'].value) || 0
+
+    const tax = ((totalAmount * propertyTax) / 100) * loanTerms
+    const loanValue = totalAmount - downPayment
+    const agentCommission = totalAmount * 0.005
+    const loanInterest = (loanValue * interestRate) / 100 + tax + (homeInsurance * loanTerms) + agentCommission
+    const fullAmount = totalAmount + loanInterest
+
+    const fullValue = fullAmount
+    const bankPayment = loanValue
+    const bankPercent = (bankPayment * 100) / fullAmount
+    const userPayment = downPayment
+    const userPercent = (userPayment * 100) / fullAmount
+    const restPayment = fullAmount - loanValue - downPayment
+    const restPercent = (restPayment * 100) / fullAmount
+
+    showResults(bankPercent, userPercent, restPercent, bankPayment, userPayment, restPayment)
   }
 
   const handleCalculator = (e) => {

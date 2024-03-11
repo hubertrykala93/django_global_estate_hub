@@ -7,15 +7,27 @@ admin
 
 
 @Szymon-Levy
-1. Stylizacja messages w properties.html
+- sprawdzenie tekstow i wygenerowanie jak cos jest zle
+- usuniecie likow w properties na home
+- wszedzie gdzie wystepuja kafelki ze zdjeciem dodac link do zdjecia zeby wejsc w konnkretny item
+- stopka odnosnik na zdjeciudo property
+- struktura html i treści do rodo-rules i privacy-policy
+- blog side bar recent posts images href
+- wygenerować komentarze do bloga i do properties
 2. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
-3. loan terms - na ile czasu kredyt
+3. ile ty zaplacisz, ile bank, reszta
 
 ************
 1. accessible accordion
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+- zmienic sortowanie featured
+- zapisać tour schedule do bazy danych, przekonwertować string z datą na datetime
+- wyrenderować contexty w przypadku gdy powybraniu filtra wybierze się typ sortowania.
+- wyszkiwarka na home blednie zwracane kategorie (Sell i berlin > zmiana na rent)
+- src do thumbnailsow na podstronie propery-results
+1. Ogarnąć opcje aggregate i annotate.
 1. Poskracać powtarzalny się kod.
 3. Zrobić tak, aby była możliwość zaznaczenia kilku kategorii
 2. Ogarnąć price range w filtrach
@@ -25,6 +37,7 @@ admin
 7. Na samym końcu odkomentować OneTimePasswordManager, odkomentować atrybuty w OneTimePassword modelu. Dodać expires_in do list display i fieldsets w interfejsie admina.
 8. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
 9. image upload
+
 
 ***********
 1. cache busting

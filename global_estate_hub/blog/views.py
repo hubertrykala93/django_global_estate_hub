@@ -4,7 +4,6 @@ from django.core.paginator import Paginator
 import json
 from django.http import JsonResponse
 from accounts.models import User
-import urllib.parse
 
 
 def blog_pagination(request, object_list, per_page):
@@ -113,10 +112,8 @@ def blog_results(request):
             keywords = request.GET.get('search').split()
 
             for keyword in keywords:
-                articles.extend(
-                    Article.objects.filter(title__icontains=keyword).order_by('date_posted') and
-                    Article.objects.filter(content__icontains=keyword).order_by('-date_posted')
-                )
+                articles.extend(Article.objects.filter(title__icontains=keyword).order_by('date_posted'))
+                articles.extend(Article.objects.filter(content__icontains=keyword).order_by('-date_posted'))
 
             return render(request=request, template_name='blog/blog-results.html', context={
                 'title': 'Blog Results',

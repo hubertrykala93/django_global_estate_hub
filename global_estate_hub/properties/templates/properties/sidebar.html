@@ -65,36 +65,36 @@
             </div>
         </div>
 
-        <hr>
+<!--        <hr>-->
         {% endif %}
 
-        <div class="properties__filters__title h4">Price Range</div>
+<!--        <div class="properties__filters__title h4">Price Range</div>-->
 
-        <div class="form__row form__row__range-slider">
-            <div class="form__field">
-                <div class="form__input-wrap">
-                    <div class="custom__range-slider" data-range-slider>
-                        <div class="range-slider__inputs">
-                            <span class="range-slider__track" data-range-slider-track></span>
-                            <input type="range" name="min_price" class="range-slider__min-input" min="{{ min_price }}" max="{{ max_price }}" value="{{ min_price }}" data-range-min-input>
-                            <input type="range" name="max_price" class="range-slider__max-input" min="{{ min_price }}" max="{{ max_price }}" value="{{ max_price }}" data-range-max-input>
-                        </div>
+<!--        <div class="form__row form__row__range-slider">-->
+<!--            <div class="form__field">-->
+<!--                <div class="form__input-wrap">-->
+<!--                    <div class="custom__range-slider" data-range-slider>-->
+<!--                        <div class="range-slider__inputs">-->
+<!--                            <span class="range-slider__track" data-range-slider-track></span>-->
+<!--                                <input type="range" name="min_price" class="range-slider__min-input" min="{{ min_price }}" max="{{ max_price }}" value="{% if request.GET.min_price %}{{ request.GET.min_price }}{% else %}{{ min_price }}{% endif %}" data-range-min-input>-->
+<!--                                <input type="range" name="max_price" class="range-slider__max-input" min="{{ min_price }}" max="{{ max_price }}" value="{% if request.GET.max_price %}{{ request.GET.max_price }}{% else %}{{ max_price }}{% endif %}" data-range-max-input>-->
+<!--                        </div>-->
 
-                        <div class="range-slider__value-boxes">
-                            <div class="range-slider__box">
-                                <div class="range-slider__box__currency">$</div>
-                                <div class="range-slider__box__value" data-range-min-box>{% if request.GET.min_price %}{{ request.GET.min_price }}{% else %}{{ min_price }}{% endif %}</div>
-                            </div>
+<!--                        <div class="range-slider__value-boxes">-->
+<!--                            <div class="range-slider__box">-->
+<!--                                <div class="range-slider__box__currency">$</div>-->
+<!--                                <div class="range-slider__box__value" data-range-min-box>{{ min_price }}</div>-->
+<!--                            </div>-->
 
-                            <div class="range-slider__box">
-                                <div class="range-slider__box__currency">$</div>
-                                <div class="range-slider__box__value" data-range-max-box>{% if request.GET.max_price %}{{ request.GET.max_price }}{% else %}{{ max_price }}{% endif %}</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+<!--                            <div class="range-slider__box">-->
+<!--                                <div class="range-slider__box__currency">$</div>-->
+<!--                                <div class="range-slider__box__value" data-range-max-box>{{ max_price }}</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
 
         <hr>
 
