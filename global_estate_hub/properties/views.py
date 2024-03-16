@@ -11,6 +11,7 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from unidecode import unidecode
+from datetime import datetime
 
 
 def property_pagination(request, object_list, per_page):
@@ -525,7 +526,7 @@ def property_categories(request, category_slug):
 
             elif 'Featured' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(category=category, is_featured=True).order_by('-date_posted'))
+                queryset.extend(Property.objects.filter(category=category).order_by('-is_featured'))
 
             else:
                 request.session['sorted_type'] = 'Newest Properties'
@@ -579,7 +580,7 @@ def property_cities(request, city_slug):
 
             elif 'Featured' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(city=city, is_featured=True).order_by('-date_posted'))
+                queryset.extend(Property.objects.filter(city=city).order_by('-is_featured'))
 
             else:
                 request.session['sorted_type'] = 'Newest Properties'
@@ -726,12 +727,18 @@ def schedule_tour(request, category_slug, property_slug):
 
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        print(data)
         date, time, name, phone_number, message = [i[0] for i in [data[key] for key in data][:-1]]
         date_field, time_field, name_field, phone_number_field, message_field = [i[1] for i in
                                                                                  [data[key] for key in data][:-1]]
         date_label, time_label, name_label, phone_number_label, message_label = [i[2] for i in
                                                                                  [data[key] for key in data][:-1]]
         spam_verification = [data[key] for key in data][-1]
+
+        datetime_now = datetime.now()
+        converted_date = datetime.strptime(date, '%Y-%m-%d')
+        converted_time = datetime.time(datetime.strptime(time, '%H:%M'))
+        converted_meeting_date = datetime.combine(date=converted_date, time=converted_time)
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -742,10 +749,14 @@ def schedule_tour(request, category_slug, property_slug):
             {
                 "valid":
                     False if not date else
+                    False if datetime_now.date() > converted_date.date() else
+                    False if datetime_now.date() == converted_date.date() else
                     True,
                 "field": date_field,
                 "message":
                     f"You need to choose a meeting {date_label}." if not date else
+                    "The date cannot be earlier than today." if datetime_now.date() > converted_date.date() else
+                    "The meeting must be scheduled at least one day in advance." if datetime_now.date() == converted_date.date() else
                     "",
             },
             {
@@ -806,7 +817,11 @@ def schedule_tour(request, category_slug, property_slug):
                 )
 
                 message.attach_alternative(content=html_message, mimetype='text/html')
-                message.send(fail_silently=True)
+                message.send()
+
+                # tour_schedule = TourSchedule(user=request.user, property=property_obj, name=name,
+                #                              date=converted_meeting_date, phone_number=phone_number, message=message)
+                # tour_schedule.save()
 
                 return JsonResponse(data={
                     "valid": True,

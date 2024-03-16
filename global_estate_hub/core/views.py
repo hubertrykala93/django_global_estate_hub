@@ -316,91 +316,309 @@ def send_message(request):
             return JsonResponse(data=response, safe=False)
 
 
+# def properties_results(request):
+#     if request.method == 'POST':
+#         data = json.loads(s=request.body.decode('utf-8'))
+#         print(data)
+#
+#         response = {
+#             'chosenLocation':
+#                 sorted(set([obj.city.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     category=Category.objects.get(name=data['chosenCategory'].capitalize()),
+#                     year_of_built=int(data['chosenYear']))])) if data['chosenCategory'].capitalize() and data[
+#                     'chosenYear'] else
+#                 sorted(set([obj.city.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     category=Category.objects.get(name=data['chosenCategory'].capitalize()),
+#                 )])) if data['chosenCategory'].capitalize() and not data['chosenYear'] else
+#                 sorted(set([obj.city.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     year_of_built=int(data['chosenYear'])
+#                 )])) if data['chosenYear'] and not data['chosenCategory'].capitalize() else
+#                 sorted(set([obj.city.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+#                 )])),
+#             'chosenCategory':
+#                 sorted(set([obj.category.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     city=City.objects.get(name=data['chosenLocation']),
+#                     year_of_built=int(data['chosenYear'])
+#                 )])) if data['chosenLocation'] and data['chosenYear'] else
+#                 sorted(set([obj.category.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     city=City.objects.get(name=data['chosenLocation'])
+#                 )])) if data['chosenLocation'] and not data['chosenYear'] else
+#                 sorted(set([obj.category.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     year_of_built=int(data['chosenYear'])
+#                 )])) if data['chosenYear'] and not data['chosenLocation'] else
+#                 sorted(set([obj.category.name for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+#                 )])),
+#             'chosenYear':
+#                 sorted(set([obj.year_of_built for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     city=City.objects.get(name=data['chosenLocation']),
+#                     category=Category.objects.get(name=data['chosenCategory'].capitalize())
+#                 )])) if data['chosenLocation'] and data['chosenCategory'].capitalize() else
+#                 sorted(set([obj.year_of_built for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     city=City.objects.get(name=data['chosenLocation'])
+#                 )])) if data['chosenLocation'] and not data['chosenCategory'].capitalize() else
+#                 sorted(set([obj.year_of_built for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
+#                     category=Category.objects.get(name=data['chosenCategory'].capitalize())
+#                 )])) if data['chosenCategory'].capitalize() and not data['chosenLocation'] else
+#                 sorted(set([obj.year_of_built for obj in Property.objects.filter(
+#                     listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
+#                 )])),
+#         }
+#
+#         request.session['filters'] = {
+#             'listing_status_id': ListingStatus.objects.get(slug='rent').id if not data[
+#                 'chosenStatus'] else ListingStatus.objects.get(slug='-'.join(data['chosenStatus'].lower().split())).id
+#         }
+#
+#         if data['chosenLocation']:
+#             request.session['filters'].update(
+#                 {
+#                     'city_id': City.objects.get(slug='-'.join(data['chosenLocation'].lower().split())).id
+#                 }
+#             )
+#
+#         if data['chosenCategory']:
+#             request.session['filters'].update(
+#                 {
+#                     'category_id': Category.objects.get(slug='-'.join(data['chosenCategory'].lower().split())).id
+#                 }
+#             )
+#
+#         if data['chosenYear']:
+#             request.session['filters'].update(
+#                 {
+#                     'year_of_built': int(data['chosenYear'])
+#                 }
+#             )
+#
+#         return JsonResponse(data=response)
+#
+#     elif request.method == 'GET':
+#         queryset = []
+#         request.session['sorted_type'] = 'Newest Properties'
+#
+#         if 'properties-order' in request.GET:
+#             if 'filters' in request.session:
+#                 if 'Newest Properties' in request.GET.get('properties-order'):
+#                     request.session['sorted_type'] = 'Newest Properties'
+#                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+#
+#                 elif 'Oldest Properties' in request.GET.get('properties-order'):
+#                     request.session['sorted_type'] = 'Oldest Properties'
+#                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
+#
+#                 elif 'Price Ascending' in request.GET.get('properties-order'):
+#                     request.session['sorted_type'] = 'Price Ascending'
+#                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('price'))
+#
+#                 elif 'Price Descending' in request.GET.get('properties-order'):
+#                     request.session['sorted_type'] = 'Price Descending'
+#                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-price'))
+#
+#                 elif 'Featured' in request.GET.get('properties-order'):
+#                     request.session['sorted_type'] = 'Featured'
+#                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
+#
+#             else:
+#                 request.session['filters'] = {
+#                     'listing_status_id': ListingStatus.objects.get(slug='rent').id
+#                 }
+#                 queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+#
+#         else:
+#             if 'filters' in request.session:
+#                 request.session['sorted_type'] = 'Newest Properties'
+#                 queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+#
+#             else:
+#                 request.session['sorted_type'] = 'Newest Properties'
+#                 request.session['filters'] = {
+#                     'listing_status_id': ListingStatus.objects.get(slug='rent').id
+#                 }
+#                 queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+#
+#         return render(request=request, template_name='core/properties-results.html', context={
+#             'title': 'Properties Results',
+#             'properties': queryset,
+#             'sorted_type': request.session['sorted_type'],
+#             'pages': property_pagination(request=request, object_list=queryset, per_page=6),
+#         })
+
 def properties_results(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        filters = {}
+        response = {}
 
-        print(data)
+        if 'chosenStatus' in data:
+            print('Chosen Status in data.')
+            if len(data['chosenStatus']) != 0:
+                filters['listing_status_id'] = ListingStatus.objects.get(
+                    slug='-'.join(data['chosenStatus'].lower().split())).id
+                request.session['filters'] = filters
 
-        response = {
-            'chosenLocation':
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
-                    year_of_built=int(data['chosenYear']))])) if data['chosenCategory'].capitalize() and data[
-                    'chosenYear'] else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
-                )])) if data['chosenCategory'].capitalize() and not data['chosenYear'] else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenYear'] and not data['chosenCategory'].capitalize() else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-            'chosenCategory':
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation']),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenLocation'] and data['chosenYear'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation'])
-                )])) if data['chosenLocation'] and not data['chosenYear'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenYear'] and not data['chosenLocation'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-            'chosenYear':
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation']),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
-                )])) if data['chosenLocation'] and data['chosenCategory'].capitalize() else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation'])
-                )])) if data['chosenLocation'] and not data['chosenCategory'].capitalize() else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
-                )])) if data['chosenCategory'].capitalize() and not data['chosenLocation'] else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-        }
+                if 'chosenLocation' in data:
+                    print('If Chosen Status in data and Chosen Location in data.')
+                    if len(data['chosenLocation']) != 0:
+                        print('If Chosen Status and Chosen Location and length of Chosen Location != 0.')
+                        filters['city_id'] = City.objects.get(
+                            slug='-'.join(data['chosenLocation'].lower().split())).id
+                        request.session['filters'] = filters
 
-        request.session['filters'] = {
-            'listing_status_id': ListingStatus.objects.get(slug='rent').id if not data[
-                'chosenStatus'] else ListingStatus.objects.get(slug='-'.join(data['chosenStatus'].lower().split())).id
-        }
+                        if Property.objects.filter(**filters).exists():
+                            print('Exists.')
 
-        if data['chosenLocation']:
-            request.session['filters'].update(
-                {
-                    'city_id': City.objects.get(slug='-'.join(data['chosenLocation'].lower().split())).id
-                }
-            )
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': [obj.city.name for obj in Property.objects.filter(**filters)],
+                                    'chosenCategory': sorted(
+                                        set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                                    'chosenYear': sorted(
+                                        set([obj.year_of_built for obj in Property.objects.filter(**filters)])),
+                                }
+                            )
 
-        if data['chosenCategory']:
-            request.session['filters'].update(
-                {
-                    'category_id': Category.objects.get(slug='-'.join(data['chosenCategory'].lower().split())).id
-                }
-            )
+                        else:
+                            print('Not Exists.')
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': sorted(
+                                        set([obj.city.name for obj in
+                                             Property.objects.filter(listing_status_id=filters['listing_status_id'])])),
+                                    'chosenCategory': sorted(
+                                        set([obj.category.name for obj in
+                                             Property.objects.filter(listing_status_id=filters['listing_status_id'])])),
+                                    'chosenYear': sorted(
+                                        set([obj.year_of_built for obj in
+                                             Property.objects.filter(listing_status_id=filters['listing_status_id'])])),
+                                }
+                            )
 
-        if data['chosenYear']:
-            request.session['filters'].update(
-                {
-                    'year_of_built': int(data['chosenYear'])
-                }
-            )
+                    else:
+                        print('If Chosen Status and Chosen Location and length of Chosen Location == 0.')
+                        filters['listing_status_id'] = ListingStatus.objects.get(
+                            slug='-'.join(data['chosenStatus'].lower().split())).id
+
+                        response.update(
+                            {
+                                'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                'chosenLocation': sorted(set([obj.city.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenCategory': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenYear': sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])]))
+                            }
+                        )
+
+                if 'chosenCategory' in data:
+                    print('If Chosen Status in data and Chosen Category in data.')
+                    if len(data['chosenCategory']) != 0:
+                        print('If Chosen Status and Chosen Category and length of Chosen Category != 0.')
+                        filters['category_id'] = Category.objects.get(
+                            slug='-'.join(data['chosenCategory'].lower().split())).id
+                        request.session['filters'] = filters
+
+                        if Property.objects.filter(**filters).exists():
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': sorted(
+                                        set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                                    'chosenCategory': sorted(
+                                        set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                                    'chosenYear': sorted(
+                                        set([obj.year_of_built for obj in Property.objects.filter(**filters)])),
+                                }
+                            )
+
+                        else:
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': sorted(set([obj.city.name for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])])),
+                                    'chosenCategory': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])])),
+                                    'chosenYear': sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])]))
+                                }
+                            )
+
+
+                    else:
+                        print('If Chosen Status and Chosen Category and length of Chosen Category == 0.')
+                        response.update(
+                            {
+                                'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                'chosenLocation': sorted(set([obj.city.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenCategory': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenYear': sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])]))
+                            }
+                        )
+
+                if 'chosenYear' in data:
+                    print('If Chosen Status in data and ChosenYear in data.')
+
+                    if len(data['chosenYear']) != 0:
+                        print('If Chosen Status and Chosen Year and length of Chosen Year != 0.')
+                        filters['year_of_built'] = int(data['chosenYear'])
+                        request.session['filters'] = filters
+
+                        if Property.objects.filter(**filters).exists():
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': sorted(
+                                        set([obj.city.name for obj in Property.objects.filter(**filters)])),
+                                    'chosenCategory': sorted(
+                                        set([obj.category.name for obj in Property.objects.filter(**filters)])),
+                                    'chosenYear': sorted(
+                                        set([obj.year_of_built for obj in Property.objects.filter(**filters)])),
+                                }
+                            )
+
+                        else:
+                            response.update(
+                                {
+                                    'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                    'chosenLocation': sorted(set([obj.city.name for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])])),
+                                    'chosenCategory': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])])),
+                                    'chosenYear': sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                                        listing_status_id=filters['listing_status_id'])])),
+                                }
+                            )
+
+                    else:
+                        print('If Chosen Status and Chosen Category and length of Chosen Category == 0.')
+                        response.update(
+                            {
+                                'chosenStatus': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
+                                'chosenLocation': sorted(set([obj.city.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenCategory': sorted(set([obj.category.name for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                                'chosenYear': sorted(set([obj.year_of_built for obj in Property.objects.filter(
+                                    listing_status_id=filters['listing_status_id'])])),
+                            }
+                        )
 
         return JsonResponse(data=response)
 
@@ -409,35 +627,55 @@ def properties_results(request):
         request.session['sorted_type'] = 'Newest Properties'
 
         if 'properties-order' in request.GET:
+            print('Properties Order in request GET.')
             if 'filters' in request.session:
+                print('If Filters in request session.')
                 if 'Newest Properties' in request.GET.get('properties-order'):
+                    print(
+                        'If Properties Order in request GET and filters in request session and Newest Properties in Properties Order.')
                     request.session['sorted_type'] = 'Newest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
                 elif 'Oldest Properties' in request.GET.get('properties-order'):
+                    print(
+                        'If Properties Order in request GET and filters in request session and Oldest Properties in Properties Order.')
                     request.session['sorted_type'] = 'Oldest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
 
-                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Ascending'
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('title'))
+                elif 'Price Ascending' in request.GET.get('properties-order'):
+                    print(
+                        'If Properties Order in request GET and filters in request session and Price Ascending in Properties Order.')
+                    request.session['sorted_type'] = 'Price Ascending'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('price'))
 
-                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Descending'
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-title'))
+                elif 'Price Descending' in request.GET.get('properties-order'):
+                    print(
+                        'If Properties Order in request GET and filters in request session and Price Descending in Properties Order.')
+                    request.session['sorted_type'] = 'Price Descending'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-price'))
 
-            else:
-                request.session['filters'] = {
-                    'listing_status_id': ListingStatus.objects.get(slug='rent').id
-                }
-                queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+                elif 'Featured' in request.GET.get('properties-order'):
+                    print(
+                        'If Properties Order in request GET and filters in request session and Featured in Properties Order.')
+                    request.session['sorted_type'] = 'Featured'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
+
+            # else:
+            #     print('If Properties Order in request GET and not filters in request session.')
+            #     request.session['filters'] = {
+            #         'listing_status_id': ListingStatus.objects.get(slug='rent').id
+            #     }
+            #     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
         else:
+            print('If not Properties Order in request GET.')
             if 'filters' in request.session:
+                print('If not Properties order in request GET and filters in request session.')
                 request.session['sorted_type'] = 'Newest Properties'
                 queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
             else:
+                print('If not Properties order in request GET and not filters in request GET.')
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = {
                     'listing_status_id': ListingStatus.objects.get(slug='rent').id
