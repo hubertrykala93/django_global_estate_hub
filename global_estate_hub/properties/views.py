@@ -4,13 +4,14 @@ import json
 import re
 import os
 from accounts.models import User
-from .models import Property, ListingStatus, Category, City, Review, TourSchedule
+from .models import Property, ListingStatus, Category, City, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from unidecode import unidecode
+from datetime import datetime
 
 
 def property_pagination(request, object_list, per_page):
@@ -33,17 +34,13 @@ def properties_context():
         'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
         'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'min_price': min([obj.price for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
-        'max_price': max([obj.price for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)]),
-        'number_of_bedrooms': sorted(set([obj.number_of_bedrooms for obj in Property.objects.filter(
+        'number_of_bedrooms': sorted(set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'number_of_bathrooms': sorted(set([obj.number_of_bathrooms for obj in Property.objects.filter(
+        'number_of_bathrooms': sorted(set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
         'cities': sorted(set([obj.city.name for obj in Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'square_meters': sorted(set([obj.square_meters for obj in Property.objects.filter(
+        'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
     }
 
@@ -53,15 +50,12 @@ def sidebar_context(**kwargs):
         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
         'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
             listing_status_id=kwargs['listing_status_id'])])),
-        # 'min_price': str(min([obj.price for obj in Property.objects.filter(**kwargs)])),
-        # 'max_price': str(max([obj.price for obj in Property.objects.filter(**kwargs)])),
         'number_of_bedrooms': sorted(
             set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**kwargs)])),
         'number_of_bathrooms': sorted(
             set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**kwargs)])),
         'cities': sorted(
             set([obj.city.name for obj in Property.objects.filter(listing_status_id=kwargs['listing_status_id'])])),
-        # 'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
         'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(**kwargs)])),
     }
 
@@ -70,13 +64,17 @@ def properties(request):
     queryset = []
     context = {}
     filters = {}
+    checked_filters = {}
 
     if request.GET:
-        print('Request GET.')
         if 'properties-order' in request.GET:
-            print('If properties order in request GET.')
             if 'keyword' in request.session:
-                print('Keyword in request session.')
+                if request.session.get('filters'):
+                    request.session.pop('filters')
+
+                if request.session.get('checked_filters'):
+                    request.session.pop('checked_filters')
+
                 context.update(properties_context())
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
@@ -111,7 +109,7 @@ def properties(request):
                         '-date_posted'))
 
             elif 'filters' in request.session:
-                print('Elif filters in request session.')
+                context.update(sidebar_context(**request.session['filters']))
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     if request.session.get('filters').get('is_featured'):
@@ -125,10 +123,9 @@ def properties(request):
                         request.session.get('filters').pop('is_featured')
 
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
 
                 elif 'Price Ascending' in request.GET.get('properties-order'):
-                    print('Price Ascending.')
                     if request.session.get('filters').get('is_featured'):
                         request.session.get('filters').pop('is_featured')
 
@@ -144,11 +141,6 @@ def properties(request):
 
                 elif 'Featured' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    # request.session['filters'].update(
-                    #     {
-                    #         'is_featured': True,
-                    #     }
-                    # )
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
 
                 else:
@@ -159,7 +151,6 @@ def properties(request):
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
             else:
-                print('Else.')
                 context.update(properties_context())
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
@@ -187,7 +178,8 @@ def properties(request):
                     queryset.extend(Property.objects.all().order_by('-date_posted'))
 
         elif 'keyword' in request.GET:
-            print('Elif keyword in request GET.')
+            if request.session.get('checked_filters'):
+                request.session.pop('checked_filters')
             context.update(properties_context())
 
             request.session['sorted_type'] = 'Newest Properties'
@@ -199,10 +191,11 @@ def properties(request):
                 'max_price' in request.GET or 'min_bedrooms' in request.GET or 'max_bedrooms' in request.GET or \
                 'min_bathrooms' in request.GET or 'max_bathrooms' in request.GET or 'location' in request.GET or \
                 'min_square' in request.GET or 'max_square' in request.GET:
-            print(
-                'Elif status or category or min_price or max_price or min_bedrooms or max_bedrooms or min_bathrooms or max_bathrooms or location or min_square or max_square in request GET.')
+
+            if request.session.get('keyword'):
+                request.session.pop('keyword')
+
             if 'status' in request.GET:
-                print('Listing Status in request GET.')
                 filters['listing_status_id'] = ListingStatus.objects.get(
                     slug='-'.join(request.GET.get('status').lower().split())).id
 
@@ -211,12 +204,17 @@ def properties(request):
 
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
+                checked_filters.update(
+                    {
+                        'checked_status': request.GET.get('status').capitalize(),
+                    }
+                )
+                request.session['checked_filters'] = checked_filters
 
                 context.update(sidebar_context(**filters))
-                queryset.extend(Property.objects.filter(**filters))
+                queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'category' in request.GET:
-                print('Category in request GET.')
                 filters['category__pk__in'] = [Category.objects.get(slug='-'.join(obj.lower().split())).id for
                                                obj in request.GET.getlist('category')]
 
@@ -227,6 +225,13 @@ def properties(request):
                     checked_categories = request.GET.getlist('category')
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_categories': [category.capitalize() for category in
+                                                   request.GET.getlist('category')],
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update({
                         'checked_categories': checked_categories,
@@ -234,12 +239,10 @@ def properties(request):
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'min_bedrooms' in request.GET:
-                print('Min Bedrooms in request GET.')
                 if 'max_bedrooms' in request.GET:
-                    print('Min Bedrooms and Max Bedrooms in request GET.')
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
                                                             int(request.GET.get('max_bedrooms'))]
 
@@ -248,14 +251,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bedrooms': request.GET.get('min_bedrooms'),
+                            'checked_max_bedrooms': request.GET.get('max_bedrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Min Bedrooms in request GET and not Max Bedrooms in request GET.')
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')), int(max(
                         sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()]))))]
 
@@ -264,17 +273,21 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bedrooms': request.GET.get('min_bedrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'max_bedrooms' in request.GET:
-                print('Max Bedrooms in request GET.')
 
                 if 'min_bedrooms' in request.GET:
-                    print('Max Bedrooms and Min Bedrooms in request GET.')
                     filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')),
                                                             int(request.GET.get('max_bedrooms'))]
 
@@ -283,14 +296,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bedrooms': request.GET.get('min_bedrooms'),
+                            'checked_max_bedrooms': request.GET.get('max_bedrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Max Bedrooms in request GET and not Min Bedrooms in request GET.')
                     filters['number_of_bedrooms__range'] = [
                         int(min(sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])))),
                         int(request.GET.get('max_bedrooms'))]
@@ -300,16 +319,19 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_max_bedrooms': request.GET.get('max_bedrooms'),
+                        }
+                    )
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'min_bathrooms' in request.GET:
-                print('Min Bathrooms in request GET.')
                 if 'max_bathrooms' in request.GET:
-                    print('Min Bathrooms and Max Bathrooms in request GET.')
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
                                                              int(request.GET.get('max_bathrooms'))]
 
@@ -318,14 +340,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bathrooms': request.GET.get('min_bathrooms'),
+                            'checked_max_bathrooms': request.GET.get('max_bathrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Min Bathrooms in request GET and not Max Bathrooms in request GET.')
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')), int(max(
                         sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()]))))]
 
@@ -334,17 +362,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bathrooms': request.GET.get('min_bathrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'max_bathrooms' in request.GET:
-                print('Max Bathrooms in request GET.')
-
                 if 'min_bathrooms' in request.GET:
-                    print('Max Bathrooms and Min Bathrooms in request GET.')
                     filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')),
                                                              int(request.GET.get('max_bathrooms'))]
 
@@ -353,14 +384,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_bathrooms': request.GET.get('min_bathrooms'),
+                            'checked_max_bathrooms': request.GET.get('max_bathrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Max Bathrooms in request GET and not Min Bathrooms in request GET.')
                     filters['number_of_bathrooms__range'] = [
                         int(min(sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])))),
                         int(request.GET.get('max_bathrooms'))]
@@ -370,14 +407,19 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_max_bathrooms': request.GET.get('max_bathrooms'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'location' in request.GET:
-                print('Location in request GET.')
                 filters['city__id'] = City.objects.get(
                     slug=unidecode('-'.join(request.GET.get('location').lower().split()))).id
 
@@ -386,18 +428,20 @@ def properties(request):
 
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
+                checked_filters.update(
+                    {
+                        'city': request.GET.get('location').capitalize(),
+                    }
+                )
+                request.session['checked_filters'] = checked_filters
 
                 context.update(sidebar_context(**filters))
 
                 queryset.clear()
-                queryset.extend(Property.objects.filter(**filters))
+                queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'min_square' in request.GET:
-                print('Min Square in request GET.')
-                print(request.GET)
-
                 if 'max_square' in request.GET:
-                    print('Min Square and Max Square in request GET.')
                     filters['square_meters__range'] = [float(request.GET.get('min_square')),
                                                        float(request.GET.get('max_square'))]
 
@@ -406,14 +450,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_square': request.GET.get('min_square'),
+                            'checked_max_square': request.GET.get('max_square'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Min Square in request GET and not Max Square in request GET.')
                     filters['square_meters__range'] = [float(request.GET.get('min_square')), float(
                         max(sorted(set([obj.square_meters for obj in Property.objects.all()]))))]
 
@@ -422,17 +472,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_square': request.GET.get('min_square'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
             if 'max_square' in request.GET:
-                print('Max Square in request GET.')
-
                 if 'min_square' in request.GET:
-                    print('Max Square and Min Square in request GET.')
                     filters['square_meters__range'] = [float(request.GET.get('min_square')),
                                                        float(request.GET.get('max_square'))]
 
@@ -441,14 +494,20 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_min_square': request.GET.get('min_square'),
+                            'checked_max_square': request.GET.get('max_square'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    print('Max Square in request GET and not Min Square in request GET.')
                     filters['square_meters__range'] = [
                         float(min(sorted(set([obj.square_meters for obj in Property.objects.all()])))),
                         float(request.GET.get('max_square'))]
@@ -458,14 +517,19 @@ def properties(request):
 
                     request.session['sorted_type'] = 'Newest Properties'
                     request.session['filters'] = filters
+                    checked_filters.update(
+                        {
+                            'checked_max_square': request.GET.get('max_square'),
+                        }
+                    )
+                    request.session['checked_filters'] = checked_filters
 
                     context.update(sidebar_context(**filters))
 
                     queryset.clear()
-                    queryset.extend(Property.objects.filter(**filters))
+                    queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
         else:
-            print('No properties order, keyword and status in request GET.')
             context.update(properties_context())
 
             if request.session.get('sorted_type'):
@@ -475,7 +539,6 @@ def properties(request):
             queryset.extend(Property.objects.all().order_by('-date_posted'))
 
     else:
-        print('No request GET.')
         if request.session.get('sorted_type'):
             request.session.pop('sorted_type')
 
@@ -484,6 +547,9 @@ def properties(request):
 
         if request.session.get('filters'):
             request.session.pop('filters')
+
+        if request.session.get('checked_filters'):
+            request.session.pop('checked_filters')
 
         request.session['sorted_type'] = 'Newest Properties'
         queryset.extend(Property.objects.all().order_by('-date_posted'))
@@ -525,7 +591,7 @@ def property_categories(request, category_slug):
 
             elif 'Featured' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(category=category, is_featured=True).order_by('-date_posted'))
+                queryset.extend(Property.objects.filter(category=category).order_by('-is_featured'))
 
             else:
                 request.session['sorted_type'] = 'Newest Properties'
@@ -556,7 +622,6 @@ def property_categories(request, category_slug):
 
 def property_cities(request, city_slug):
     city = get_object_or_404(klass=City, slug=city_slug)
-
     queryset = []
 
     if request.GET:
@@ -579,7 +644,7 @@ def property_cities(request, city_slug):
 
             elif 'Featured' in request.GET.get('properties-order'):
                 request.session['sorted_type'] = request.GET.get('properties-order')
-                queryset.extend(Property.objects.filter(city=city, is_featured=True).order_by('-date_posted'))
+                queryset.extend(Property.objects.filter(city=city).order_by('-is_featured'))
 
             else:
                 request.session['sorted_type'] = 'Newest Properties'
@@ -733,6 +798,11 @@ def schedule_tour(request, category_slug, property_slug):
                                                                                  [data[key] for key in data][:-1]]
         spam_verification = [data[key] for key in data][-1]
 
+        datetime_now = datetime.now()
+        converted_date = datetime.strptime(date, '%Y-%m-%d')
+        converted_time = datetime.time(datetime.strptime(time, '%H:%M'))
+        converted_meeting_date = datetime.combine(date=converted_date, time=converted_time)
+
         if len(spam_verification) != 0:
             return JsonResponse(data={
                 "valid": None
@@ -742,10 +812,14 @@ def schedule_tour(request, category_slug, property_slug):
             {
                 "valid":
                     False if not date else
+                    False if datetime_now.date() > converted_date.date() else
+                    False if datetime_now.date() == converted_date.date() else
                     True,
                 "field": date_field,
                 "message":
                     f"You need to choose a meeting {date_label}." if not date else
+                    "The date cannot be earlier than today." if datetime_now.date() > converted_date.date() else
+                    "The meeting must be scheduled at least one day in advance." if datetime_now.date() == converted_date.date() else
                     "",
             },
             {
@@ -806,7 +880,11 @@ def schedule_tour(request, category_slug, property_slug):
                 )
 
                 message.attach_alternative(content=html_message, mimetype='text/html')
-                message.send(fail_silently=True)
+                message.send()
+
+                # tour_schedule = TourSchedule(user=request.user, property=property_obj, name=name,
+                #                              date=converted_meeting_date, phone_number=phone_number, message=message)
+                # tour_schedule.save()
 
                 return JsonResponse(data={
                     "valid": True,

@@ -12,6 +12,7 @@ from properties.models import Property, City, Category, ListingStatus
 from blog.models import Article
 from properties.views import property_pagination
 import datetime
+from django.db.models.functions import Lower
 
 load_dotenv()
 
@@ -22,15 +23,6 @@ def index(request):
 
     return: HttpResponse
     """
-    if request.session.get('category_names'):
-        request.session.pop('category_names')
-
-    if request.session.get('filters'):
-        request.session.pop('filters')
-
-    if request.session.get('sorted_type'):
-        request.session.pop('sorted_type')
-
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
     cities = sorted(
@@ -319,90 +311,45 @@ def send_message(request):
 def properties_results(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        filters = {}
+        response = {}
 
-        print(data)
+        if 'chosenStatus' in data or 'chosenLocation' in data or 'chosenCategory' in data or 'chosenYear' in data:
+            if len(data['chosenStatus']) != 0:
+                filters['listing_status_id'] = ListingStatus.objects.get(
+                    slug='-'.join(data['chosenStatus'].lower().split())).id
+                request.session['filters'] = filters
 
-        response = {
-            'chosenLocation':
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
-                    year_of_built=int(data['chosenYear']))])) if data['chosenCategory'].capitalize() and data[
-                    'chosenYear'] else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize()),
-                )])) if data['chosenCategory'].capitalize() and not data['chosenYear'] else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenYear'] and not data['chosenCategory'].capitalize() else
-                sorted(set([obj.city.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-            'chosenCategory':
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation']),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenLocation'] and data['chosenYear'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation'])
-                )])) if data['chosenLocation'] and not data['chosenYear'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    year_of_built=int(data['chosenYear'])
-                )])) if data['chosenYear'] and not data['chosenLocation'] else
-                sorted(set([obj.category.name for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-            'chosenYear':
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation']),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
-                )])) if data['chosenLocation'] and data['chosenCategory'].capitalize() else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    city=City.objects.get(name=data['chosenLocation'])
-                )])) if data['chosenLocation'] and not data['chosenCategory'].capitalize() else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize()),
-                    category=Category.objects.get(name=data['chosenCategory'].capitalize())
-                )])) if data['chosenCategory'].capitalize() and not data['chosenLocation'] else
-                sorted(set([obj.year_of_built for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name=data['chosenStatus'].capitalize())
-                )])),
-        }
+                response.clear()
+                response.update(
+                    {
+                        'chosenStatus': list(
+                            ListingStatus.objects.values_list('name').order_by(Lower('name')).distinct()),
+                        'chosenLocation': list(
+                            Property.objects.filter(**filters).values_list('city__name').order_by(
+                                Lower('city__name')).distinct()),
+                        'chosenCategory': list(
+                            Property.objects.filter(**filters).values_list('category__name', flat=True).order_by(
+                                Lower('category__name')).distinct()),
+                        'chosenYear': list(
+                            Property.objects.filter(**filters).values_list('year_of_built', flat=True).order_by(
+                                Lower('year_of_built')).distinct()),
+                    }
+                )
 
-        request.session['filters'] = {
-            'listing_status_id': ListingStatus.objects.get(slug='rent').id if not data[
-                'chosenStatus'] else ListingStatus.objects.get(slug='-'.join(data['chosenStatus'].lower().split())).id
-        }
+            if len(data['chosenLocation']) != 0:
+                filters['city_id'] = City.objects.get(slug='-'.join(data['chosenLocation'].lower().split())).id
+                request.session['filters'] = filters
 
-        if data['chosenLocation']:
-            request.session['filters'].update(
-                {
-                    'city_id': City.objects.get(slug='-'.join(data['chosenLocation'].lower().split())).id
-                }
-            )
+            if len(data['chosenCategory']) != 0:
+                filters['category_id'] = Category.objects.get(slug='-'.join(data['chosenCategory'].lower().split())).id
+                request.session['filters'] = filters
 
-        if data['chosenCategory']:
-            request.session['filters'].update(
-                {
-                    'category_id': Category.objects.get(slug='-'.join(data['chosenCategory'].lower().split())).id
-                }
-            )
+            if len(data['chosenYear']) != 0:
+                filters['year_of_built'] = int(data['chosenYear'])
+                request.session['filters'] = filters
 
-        if data['chosenYear']:
-            request.session['filters'].update(
-                {
-                    'year_of_built': int(data['chosenYear'])
-                }
-            )
-
-        return JsonResponse(data=response)
+            return JsonResponse(data=response)
 
     elif request.method == 'GET':
         queryset = []
@@ -418,19 +365,17 @@ def properties_results(request):
                     request.session['sorted_type'] = 'Oldest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
 
-                elif 'Alphabetically Ascending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Ascending'
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('title'))
+                elif 'Price Ascending' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = 'Price Ascending'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('price'))
 
-                elif 'Alphabetically Descending' in request.GET.get('properties-order'):
-                    request.session['sorted_type'] = 'Alphabetically Descending'
-                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-title'))
+                elif 'Price Descending' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = 'Price Descending'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-price'))
 
-            else:
-                request.session['filters'] = {
-                    'listing_status_id': ListingStatus.objects.get(slug='rent').id
-                }
-                queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
+                elif 'Featured' in request.GET.get('properties-order'):
+                    request.session['sorted_type'] = 'Featured'
+                    queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
 
         else:
             if 'filters' in request.session:
