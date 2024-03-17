@@ -739,6 +739,7 @@ def property_details(request, category_slug, property_slug):
         'images': images,
         'range': range(5),
         'reviews': reviews,
+        'current_date': datetime.today().strftime('%Y-%m-%d'),
     })
 
 
@@ -812,14 +813,12 @@ def schedule_tour(request, category_slug, property_slug):
             {
                 "valid":
                     False if not date else
-                    False if datetime_now.date() > converted_date.date() else
-                    False if datetime_now.date() == converted_date.date() else
+                    # False if datetime_now.date() == converted_date.date() else
                     True,
                 "field": date_field,
                 "message":
                     f"You need to choose a meeting {date_label}." if not date else
-                    "The date cannot be earlier than today." if datetime_now.date() > converted_date.date() else
-                    "The meeting must be scheduled at least one day in advance." if datetime_now.date() == converted_date.date() else
+                    # "The meeting must be scheduled at least one day in advance." if datetime_now.date() == converted_date.date() else
                     "",
             },
             {
@@ -858,7 +857,25 @@ def schedule_tour(request, category_slug, property_slug):
         validation = [data['valid'] for data in response]
 
         if all(validation):
+            if request.user.is_anonymous:
+                user = User()
+                user.save()
+                print('Schedule Saving...')
+                tour_schedule = TourSchedule(to=user, property=property_obj, name=name,
+                                             date=converted_meeting_date, phone_number=phone_number, message=message)
+                tour_schedule.save()
+                print('Schedule Save')
+                user.delete()
+
+            else:
+                print('Schedule Saving.')
+                tour_schedule = TourSchedule(to=request.user, property=property_obj, name=name,
+                                             date=converted_meeting_date, phone_number=phone_number, message=message)
+                tour_schedule.save()
+                print('Schedule Save.')
+
             try:
+
                 html_message = render_to_string(
                     template_name='properties/schedule_mail.html',
                     context={
@@ -881,10 +898,6 @@ def schedule_tour(request, category_slug, property_slug):
 
                 message.attach_alternative(content=html_message, mimetype='text/html')
                 message.send()
-
-                tour_schedule = TourSchedule(user=request.user, property=property_obj, name=name,
-                                             date=converted_meeting_date, phone_number=phone_number, message=message)
-                tour_schedule.save()
 
                 return JsonResponse(data={
                     "valid": True,
