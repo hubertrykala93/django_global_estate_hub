@@ -113,8 +113,8 @@ def properties(request):
 
             elif 'filters' in request.session:
                 print('Elif filters in request session.')
-                context.update(sidebar_context(**request.session['filters']))
                 print(request.session['checked_filters'])
+                context.update(sidebar_context(**request.session['filters']))
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     if request.session.get('filters').get('is_featured'):
@@ -563,6 +563,8 @@ def properties(request):
                     queryset.clear()
                     queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
+            print(request.session['checked_filters'])
+
         else:
             print('No properties order, keyword and status in request GET.')
             context.update(properties_context())
@@ -601,6 +603,9 @@ def properties(request):
 
     return render(request=request, template_name='properties/properties.html', context=context)
 
+
+# {% if request.session.checked_filters.city %}{{ request.session.checked_filters.city }}{% else %}City{% endif %}
+# {% if request.session.checked_filters %}{% if request.session.checked_filters.checked_categories %}{% if category in request.session.checked_filters.checked_categories %}checked{% endif %}{% endif %}{% else %}{% if category|lower in checked_categories %}checked{% endif %}{% endif %}
 
 def property_categories(request, category_slug):
     category = get_object_or_404(klass=Category, slug=category_slug)
