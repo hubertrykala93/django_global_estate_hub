@@ -206,7 +206,7 @@ class Property(models.Model):
     Creating Property model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='users')
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='properties')
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
     thumbnail = models.ImageField(upload_to='property_images', null=True)

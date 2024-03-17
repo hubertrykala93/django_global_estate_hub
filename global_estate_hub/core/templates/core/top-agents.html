@@ -10,10 +10,10 @@
                 {% for agent in agents %}
                 <li class="top-agents__item">
                     <div class="top-agents__name h4">
-                    {% if agent.account_type == 'Individual' %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.business.company_name }}{% endif %}
+                    {% if agent.account_type == 'Individual' %}{% if agent.individual.first_name and agent.individual.last_name %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.username }}{% endif %}{% else %}{% if agent.business.company_name %}{{ agent.business.company_name }}{% else %}{{ agent.username }}{% endif %}{% endif %}
                     </div>
 
-                    <div class="top-agents__counter">(10 properties)</div>
+                    <div class="top-agents__counter">({{ agent.properties.all.count }} {% if agent.properties.all.count == 0 or agent.properties.all.count == 1 %}Property{% else %}Properties{% endif %})</div>
 
                     <a class="btn primary-btn" href="{% url 'account-details' agent.username %}">
                         <div class="visually-hidden">See agent profile</div>

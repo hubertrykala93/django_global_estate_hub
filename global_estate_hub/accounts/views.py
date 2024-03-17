@@ -515,7 +515,6 @@ def user_settings(request):
 
         for k, v in result.items():
             if k == 'password1' or k == 'password2':
-                print('if')
                 user.password = make_password(password=raw_password1)
                 update_session_auth_hash(request=request, user=user)
 

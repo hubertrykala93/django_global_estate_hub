@@ -166,7 +166,7 @@ class Comment(MPTTModel):
 
         return: str
         """
-        return f'Comment by {self.user}.'
+        return f'Comment by {self.full_name}.' if self.full_name else f'Comment by {self.user}.'
 
 
 class CommentLike(models.Model):

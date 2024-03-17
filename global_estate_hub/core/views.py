@@ -72,11 +72,9 @@ def index(request):
 
 
 def top_agents(request):
-    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3]
-
     return render(request=request, template_name='core/top-agents.html', context={
         'title': 'Top Agents',
-        'agents': agents,
+        'agents': list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3],
     })
 
 
