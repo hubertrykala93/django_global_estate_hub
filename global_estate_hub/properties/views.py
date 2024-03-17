@@ -4,7 +4,7 @@ import json
 import re
 import os
 from accounts.models import User
-from .models import Property, ListingStatus, Category, City, Review
+from .models import Property, ListingStatus, Category, City, Review, TourSchedule
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import EmailMultiAlternatives
@@ -882,9 +882,9 @@ def schedule_tour(request, category_slug, property_slug):
                 message.attach_alternative(content=html_message, mimetype='text/html')
                 message.send()
 
-                # tour_schedule = TourSchedule(user=request.user, property=property_obj, name=name,
-                #                              date=converted_meeting_date, phone_number=phone_number, message=message)
-                # tour_schedule.save()
+                tour_schedule = TourSchedule(user=request.user, property=property_obj, name=name,
+                                             date=converted_meeting_date, phone_number=phone_number, message=message)
+                tour_schedule.save()
 
                 return JsonResponse(data={
                     "valid": True,

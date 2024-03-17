@@ -2561,7 +2561,10 @@ if ($propertyPage) {
         })
   
         successfullySentMessage($scheduleForm, response.message, true)
-      } else {
+      } else if ( response.valid === false ) {
+        successfullySentMessage($scheduleForm, response.message, true)
+      }
+      else {
         response.forEach(item => {
           if ( !item.valid ) {
             showInfo(item.valid, item.message, $scheduleForm, item.field)
@@ -2583,6 +2586,7 @@ if ($propertyPage) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
+            console.log(response)
             serverResponse(response)
         }
       }
