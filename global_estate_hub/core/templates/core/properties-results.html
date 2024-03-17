@@ -75,6 +75,7 @@
                     </div>
                 </div>
 
+                {% if pages %}
                 <div class="row properties-cards__row properties-cards__row--list" data-properties-row>
                     {% for page in pages %}
                     <div class="property-card__column">
@@ -130,6 +131,9 @@
                     </div>
                     {% endfor %}
                 </div>
+                {% else %}
+                No Results.
+                {% endif %}
                 {% if pages.paginator.num_pages > 1 %}
                 {% include 'properties/pagination.html' %}
                 {% endif %}

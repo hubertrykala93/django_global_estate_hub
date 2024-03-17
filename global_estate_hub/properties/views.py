@@ -4,7 +4,7 @@ import json
 import re
 import os
 from accounts.models import User
-from .models import Property, ListingStatus, Category, City, Review, TourSchedule
+from .models import Property, ListingStatus, Category, City, Review
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import EmailMultiAlternatives
@@ -54,15 +54,12 @@ def sidebar_context(**kwargs):
         'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
         'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
             listing_status_id=kwargs['listing_status_id'])])),
-        # 'min_price': str(min([obj.price for obj in Property.objects.filter(**kwargs)])),
-        # 'max_price': str(max([obj.price for obj in Property.objects.filter(**kwargs)])),
         'number_of_bedrooms': sorted(
             set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**kwargs)])),
         'number_of_bathrooms': sorted(
             set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**kwargs)])),
         'cities': sorted(
             set([obj.city.name for obj in Property.objects.filter(listing_status_id=kwargs['listing_status_id'])])),
-        # 'cities': sorted(set([obj.city.name for obj in Property.objects.filter(**kwargs)])),
         'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(**kwargs)])),
     }
 
@@ -74,6 +71,7 @@ def properties(request):
 
     if request.GET:
         print('Request GET.')
+        print(Property.objects.select_related('user'))
         if 'properties-order' in request.GET:
             print('If properties order in request GET.')
             if 'keyword' in request.session:
@@ -113,6 +111,8 @@ def properties(request):
 
             elif 'filters' in request.session:
                 print('Elif filters in request session.')
+                context.update(sidebar_context(**request.session['filters']))
+                print(request.session.keys())
 
                 if 'Newest Properties' in request.GET.get('properties-order'):
                     if request.session.get('filters').get('is_featured'):
@@ -145,12 +145,8 @@ def properties(request):
 
                 elif 'Featured' in request.GET.get('properties-order'):
                     request.session['sorted_type'] = request.GET.get('properties-order')
-                    # request.session['filters'].update(
-                    #     {
-                    #         'is_featured': True,
-                    #     }
-                    # )
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
+                    print(request.session['filters'])
 
                 else:
                     if request.session.get('filters').get('is_featured'):
@@ -212,6 +208,7 @@ def properties(request):
 
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = filters
+                request.session['sidebar_context'] = sidebar_context(**filters)
 
                 context.update(sidebar_context(**filters))
                 queryset.extend(Property.objects.filter(**filters))
