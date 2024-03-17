@@ -392,22 +392,15 @@
                 <div class="property-card__wrapper" data-property-card data-id="{{ property.id }}">
                     <div class="property-card__image">
                         {% if property.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
-                        <img src="{{ property.thumbnail.url }}" alt="property title image">
+                        <a href="{{ property.get_absolute_url }}">
+                            <img src="{{ property.thumbnail.url }}" alt="{{ property.title }} image">
+                        </a>
                     </div>
 
                     <div class="property-card__content">
                         <div class="property-card__title h4">
                             <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
                         </div>
-
-                        {% if user.is_authenticated %}
-                        <div class="property-card__favourite">
-                            <button class="property-card__favourite__btn {% if user in property.favourites.all %}active{% endif %}" data-add-to-favourites>
-                                <i class="ri-heart-line" aria-hidden="true"></i>
-                                <span class="visually-hidden">Add to favourites</span>
-                            </button>
-                        </div>
-                        {% endif %}
 
                         <div class="property-card__localization">
                             <i class="ri-map-pin-line" aria-hidden="true"></i>
@@ -814,7 +807,9 @@
                     <a class="blog-card__category"
                        href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
                     <div class="blog-card__image">
-                        <img src="{{ article.image.url }}" alt="article intro image">
+                        <a href="{{ article.get_absolute_url }}">
+                            <img src="{{ article.image.url }}" alt="{{ article.title }} intro image">
+                        </a>
                     </div>
 
                     <div class="blog-card__content">

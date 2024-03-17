@@ -3,14 +3,22 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-<section class="properties" data-properties>
+<section class="top-agents">
     <div class="container">
         <div class="row">
-            <ul>
+            <ul class="top-agents__list">
                 {% for agent in agents %}
-                <li>
+                <li class="top-agents__item">
+                    <div class="top-agents__name h4">
                     {% if agent.account_type == 'Individual' %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.business.company_name }}{% endif %}
-                    <a href="{% url 'account-details' agent.username %}">Profile</a>
+                    </div>
+
+                    <div class="top-agents__counter">(10 properties)</div>
+
+                    <a class="btn primary-btn" href="{% url 'account-details' agent.username %}">
+                        <div class="visually-hidden">See agent profile</div>
+                        <i class="ri-user-shared-line" aria-hidden="true"></i>
+                    </a>
                 </li>
                 {% endfor %}
             </ul>

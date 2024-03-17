@@ -8,14 +8,11 @@ admin
 
 @Szymon-Levy
 - sprawdzenie tekstow i wygenerowanie jak cos jest zle
-- usuniecie likow w properties na home
-- wszedzie gdzie wystepuja kafelki ze zdjeciem dodac link do zdjecia zeby wejsc w konnkretny item
-- stopka odnosnik na zdjeciudo property
-- struktura html i treści do rodo-rules i privacy-policy
-- blog side bar recent posts images href
 - wygenerować komentarze do bloga i do properties
+- animacje
 2. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
 3. ile ty zaplacisz, ile bank, reszta
+- article-tags.html nie działa href w .blog-card__category
 
 ************
 1. accessible accordion

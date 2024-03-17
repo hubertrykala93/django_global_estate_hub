@@ -13,7 +13,9 @@
                         <div class="blog-card__wrapper">
                             <a class="blog-card__category" href="{{ article.category.get_absolute_url }}">{{ page.category }}</a>
                             <div class="blog-card__image">
-                                <img src="{{ page.image.url }}">
+                                <a href="{{ page.get_absolute_url }}">
+                                    <img src="{{ page.image.url }}" alt="{{ page.title }} intro image">
+                                </a>
                             </div>
 
                             <div class="blog-card__content">

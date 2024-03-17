@@ -3,52 +3,65 @@
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
-GDPR Privacy Policy
+<section class="site-policy">
+  <div class="container">
+    <div class="row">
+      <h2 class="h2">GDPR Privacy Policy</h2>
 
-This Privacy Policy explains how we collect, use, and protect your personal data in compliance with the General Data Protection Regulation (GDPR).
+      <p>This Privacy Policy explains how we collect, use, and protect your personal data in compliance with the General Data Protection Regulation (GDPR).</p>
 
-1. Information We Collect
+      <h3 class="h3">1. Information We Collect</h3>
 
-We collect personal data that you provide to us voluntarily, such as your name, email address, phone number, and address when you register an account, make a purchase, or subscribe to our newsletter. We may also collect information automatically when you visit our website, including your IP address, browser type, and device identifiers.
+      <p>We collect personal data that you provide to us voluntarily, such as your name, email address, phone number, and address when you register an account, make a purchase, or subscribe to our newsletter. We may also collect information automatically when you visit our website, including your IP address, browser type, and device identifiers.</p>
 
-2. How We Use Your Information
+      <h3 class="h3">2. How We Use Your Information</h3>
 
-We use the information we collect to:
+      <p>We use the information we collect to:</p>
 
-Provide and maintain our services
-Process transactions and fulfill orders
-Communicate with you about your account and updates to our services
-Send you marketing communications, where permitted by law
-Customize and improve our website and services
-Detect and prevent fraud and unauthorized access
-3. Legal Basis for Processing
+      <ul>
+        <li>Provide and maintain our services</li>
+        <li>Process transactions and fulfill orders</li>
+        <li>Communicate with you about your account and updates to our services</li>
+        <li>Send you marketing communications, where permitted by law</li>
+        <li>Customize and improve our website and services</li>
+        <li>Detect and prevent fraud and unauthorized access</li>
+      </ul>
 
-We process your personal data based on one or more of the following legal grounds:
+      <h3 class="h3">3. Legal Basis for Processing</h3>
 
-Your consent
-To fulfill a contract with you
-To comply with legal obligations
-For legitimate interests pursued by us or a third party
-4. Data Sharing
+      <p>We process your personal data based on one or more of the following legal grounds:</p>
 
-We may share your personal data with trusted third parties who provide services on our behalf, such as payment processing, shipping, and marketing. We will only share your data to the extent necessary for these purposes and will ensure that appropriate data processing agreements are in place.
+      <ul>
+        <li>Your consent</li>
+        <li>To fulfill a contract with you</li>
+        <li>To comply with legal obligations</li>
+        <li>For legitimate interests pursued by us or a third party</li>
+      </ul>
 
-5. Your Rights
+      <h3 class="h3">4. Data Sharing</h3>
 
-You have the right to access, correct, or delete your personal data, as well as to object to or restrict its processing. You may also have the right to data portability and to lodge a complaint with a supervisory authority.
+      <p>We may share your personal data with trusted third parties who provide services on our behalf, such as payment processing, shipping, and marketing. We will only share your data to the extent necessary for these purposes and will ensure that appropriate data processing agreements are in place.</p>
 
-6. Data Security
+      <h3 class="h3">5. Your Rights</h3>
 
-We take reasonable measures to protect your personal data from unauthorized access, disclosure, alteration, and destruction. We use encryption and other security technologies to safeguard your information.
+      <p>You have the right to access, correct, or delete your personal data, as well as to object to or restrict its processing. You may also have the right to data portability and to lodge a complaint with a supervisory authority.</p>
 
-7. Data Retention
+      <h3 class="h3">6. Data Security</h3>
 
-We will retain your personal data for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law.
+      <p>We take reasonable measures to protect your personal data from unauthorized access, disclosure, alteration, and destruction. We use encryption and other security technologies to safeguard your information.</p>
 
-8. Changes to This Policy
+      <h3 class="h3">7. Data Retention</h3>
 
-We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any material changes by posting the updated policy on our website.
+      <p>We will retain your personal data for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law.</p>
 
-9. Contact Us
+      <h3 class="h3">8. Changes to This Policy</h3>
 
-If you have any questions or concerns about our Privacy Policy or the processing of your personal data, please contact us at {{ email }}.{% endblock %}
+      <p>We may update this Privacy Policy from time to time to reflect changes in our practices or legal requirements. We will notify you of any material changes by posting the updated policy on our website.</p>
+
+      <h3 class="h3">9. Contact Us</h3>
+
+      <p>If you have any questions or concerns about our Privacy Policy or the processing of your personal data, please contact us at <a href="mailto: {{ email }}">{{ email }}</a>.</p>
+    </div>
+  </div>
+</section>
+{% endblock %}

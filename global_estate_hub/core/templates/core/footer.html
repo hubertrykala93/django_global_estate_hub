@@ -82,7 +82,9 @@
                     {% for property in featured_properties %}
                     <div class="footer__property">
                         <div class="property__image">
-                            <img src="{{ property.thumbnail.url }}" alt="Property name">
+                            <a href="{{ property.get_absolute_url }}">
+                                <img src="{{ property.thumbnail.url }}" alt="Property name">
+                            </a>
                         </div>
 
                         <div class="property__data">

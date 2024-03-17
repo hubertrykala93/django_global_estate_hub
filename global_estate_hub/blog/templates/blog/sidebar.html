@@ -36,11 +36,15 @@
             {% for article in newest_articles %}
             <li class="aside__posts__item">
                 <div class="aside__posts__item__image">
-                    <img src="{{ article.image.url }}" alt="post image">
+                    <a href="{{ article.get_absolute_url }}">
+                        <img src="{{ article.image.url }}" alt="post image">
+                    </a>
                 </div>
 
                 <div class="aside__posts__item__info">
-                    <a href="{{ article.get_absolute_url }}" class="aside__posts__item__title">{{ article.title }}</a>
+                    <a href="{{ article.get_absolute_url }}" class="aside__posts__item__title">
+                        {{ article.title }}
+                    </a>
 
                     <div class="aside__posts__item__date">{{ article.date_posted }}</div>
                 </div>

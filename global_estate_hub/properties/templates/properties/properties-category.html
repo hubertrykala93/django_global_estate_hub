@@ -82,12 +82,14 @@
                         <div class="property-card__wrapper" data-property-card data-id="{{ page.id }}">
                             <div class="property-card__image">
                                 {% if page.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
-                                <img src="{{ page.thumbnail.url }}" alt="property title image">
+                                <a href="{{ page.get_absolute_url }}">
+                                    <img src="{{ page.thumbnail.url }}" alt="{{ page.title }} image">
+                                </a>
                             </div>
 
                             <div class="property-card__content">
                                 <div class="property-card__title h4">
-                                    <a href="{{ page.get_absolute_url }}" target="_blank">{{ page.title }}</a>
+                                    <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
                                 </div>
 
                                 {% if user.is_authenticated %}
