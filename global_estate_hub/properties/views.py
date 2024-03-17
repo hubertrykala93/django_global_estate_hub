@@ -13,6 +13,7 @@ from django.utils.html import strip_tags
 from unidecode import unidecode
 from datetime import datetime
 from datetime import timedelta
+from django.db.models import Min
 
 
 def property_pagination(request, object_list, per_page):
@@ -510,7 +511,7 @@ def properties(request):
 
                 else:
                     filters['square_meters__range'] = [
-                        float(min(sorted(set([obj.square_meters for obj in Property.objects.all()])))),
+                        Property.objects.aggregate(Min('square_meters'))['square_meters__min'],
                         float(request.GET.get('max_square'))]
 
                     if len(Property.objects.filter(**filters)) == 0:
@@ -613,7 +614,7 @@ def property_categories(request, category_slug):
         queryset.extend(Property.objects.filter(category=category).order_by('-date_posted'))
 
     return render(request=request, template_name='properties/properties-category.html', context={
-        'title': category,
+        'title': f'{category} Properties',
         'category': category,
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
@@ -666,7 +667,7 @@ def property_cities(request, city_slug):
         queryset.extend(Property.objects.filter(city=city).order_by('-date_posted'))
 
     return render(request=request, template_name='properties/properties-cities.html', context={
-        'title': city,
+        'title': f'{city} Properties',
         'city': city,
         'properties': queryset,
         'sorted_type': request.session['sorted_type'],
