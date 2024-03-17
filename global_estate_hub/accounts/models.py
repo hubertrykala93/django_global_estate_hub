@@ -45,7 +45,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     Creating custom User model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    username = models.CharField(max_length=50, unique=True)
+    username = models.CharField(max_length=50, unique=True, blank=True, null=True)
     email = models.EmailField(max_length=100, unique=True, null=True)
     image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
     account_type = models.CharField(default='Individual', max_length=100, choices=(

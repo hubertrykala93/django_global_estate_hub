@@ -269,10 +269,11 @@ class TourSchedule(models.Model):
     Creating TourSchedule model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    to = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, related_name='tour_schedules')
     property = models.ForeignKey(to=Property, on_delete=models.CASCADE, null=True)
     date_sent = models.DateTimeField(auto_now=True, editable=False)
-    date = models.DateTimeField()
+    date = models.CharField(max_length=100)
+    time = models.CharField(max_length=100, null=True)
     name = models.CharField(max_length=100)
     phone_number = models.EmailField(max_length=100)
     message = models.TextField(max_length=10000)

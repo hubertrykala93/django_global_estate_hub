@@ -2,20 +2,6 @@
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block messages %}
-{% if messages %}
-<section class="message message--info">
-    <div class="container">
-        <div class="row">
-            {% for message in messages %}
-            <div class="message__content">{{ message }}</div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-{% endif %}
-{% endblock %}
-
 {% block content %}
 <section class="user-access-page signup-page">
     <div class

@@ -12,6 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from unidecode import unidecode
 from datetime import datetime
+from datetime import timedelta
 
 
 def property_pagination(request, object_list, per_page):
@@ -739,7 +740,7 @@ def property_details(request, category_slug, property_slug):
         'images': images,
         'range': range(5),
         'reviews': reviews,
-        'current_date': datetime.today().strftime('%Y-%m-%d'),
+        'current_date': (datetime.today() + timedelta(days=1)).strftime('%Y-%m-%d'),
     })
 
 
@@ -799,11 +800,6 @@ def schedule_tour(request, category_slug, property_slug):
                                                                                  [data[key] for key in data][:-1]]
         spam_verification = [data[key] for key in data][-1]
 
-        datetime_now = datetime.now()
-        converted_date = datetime.strptime(date, '%Y-%m-%d')
-        converted_time = datetime.time(datetime.strptime(time, '%H:%M'))
-        converted_meeting_date = datetime.combine(date=converted_date, time=converted_time)
-
         if len(spam_verification) != 0:
             return JsonResponse(data={
                 "valid": None
@@ -813,12 +809,10 @@ def schedule_tour(request, category_slug, property_slug):
             {
                 "valid":
                     False if not date else
-                    # False if datetime_now.date() == converted_date.date() else
                     True,
                 "field": date_field,
                 "message":
                     f"You need to choose a meeting {date_label}." if not date else
-                    # "The meeting must be scheduled at least one day in advance." if datetime_now.date() == converted_date.date() else
                     "",
             },
             {
@@ -860,19 +854,16 @@ def schedule_tour(request, category_slug, property_slug):
             if request.user.is_anonymous:
                 user = User()
                 user.save()
-                print('Schedule Saving...')
-                tour_schedule = TourSchedule(to=user, property=property_obj, name=name,
-                                             date=converted_meeting_date, phone_number=phone_number, message=message)
-                tour_schedule.save()
-                print('Schedule Save')
-                user.delete()
 
-            else:
-                print('Schedule Saving.')
-                tour_schedule = TourSchedule(to=request.user, property=property_obj, name=name,
-                                             date=converted_meeting_date, phone_number=phone_number, message=message)
+                tour_schedule = TourSchedule(property=property_obj, name=name,
+                                             date=date, time=time, phone_number=phone_number, message=message)
                 tour_schedule.save()
-                print('Schedule Save.')
+
+                user.delete()
+            else:
+                tour_schedule = TourSchedule(customer=request.user, property=property_obj, name=name,
+                                             date=date, time=time, phone_number=phone_number, message=message)
+                tour_schedule.save()
 
             try:
 

@@ -499,11 +499,11 @@ class AdminProperty(admin.ModelAdmin):
 
 @admin.register(TourSchedule)
 class AdminTourSchedule(admin.ModelAdmin):
-    list_display = ['id', 'to', 'property', 'date_sent', 'date', 'name', 'phone_number', 'message']
-    list_editable = ['date', 'property', 'name', 'phone_number']
-    list_filter = ['to', 'date_sent', 'date', 'name', 'phone_number']
+    list_display = ['id', 'customer', 'property', 'date_sent', 'date', 'time', 'name', 'phone_number', 'message']
+    list_editable = ['date', 'time', 'property', 'name', 'phone_number']
+    list_filter = ['customer', 'date_sent', 'date', 'time', 'name', 'phone_number']
     list_display_links = ['id']
-    search_fields = ['to__username', 'name', 'phone_number']
+    search_fields = ['customer__username', 'name', 'phone_number']
     ordering = ['date_sent']
     fieldsets = [
         [
@@ -514,9 +514,9 @@ class AdminTourSchedule(admin.ModelAdmin):
         }
         ],
         [
-            'To User:', {
+            'Customer:', {
             'fields': [
-                'to',
+                'customer',
             ]
         }
         ],
@@ -528,9 +528,10 @@ class AdminTourSchedule(admin.ModelAdmin):
         }
         ],
         [
-            'Date:', {
+            'Date and Time:', {
             'fields': [
                 'date',
+                'time',
             ]
         }
         ],
