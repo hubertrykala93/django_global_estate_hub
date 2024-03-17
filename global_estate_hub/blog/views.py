@@ -142,100 +142,163 @@ def add_comment(request, category_slug, article_slug):
     article = get_object_or_404(klass=Article, slug=article_slug, category=category)
 
     if request.method == 'POST':
-        if request.user.is_authenticated:
-            data = json.loads(s=request.body.decode('utf-8'))
+        data = json.loads(s=request.body.decode('utf-8'))
 
-            comment = [data[key] for key in list(data.keys())][1][0]
-            spam_verification = [data[key] for key in data][-1]
-            comment_field = [data[key] for key in list(data.keys())][1][1]
-            comment_label = [data[key] for key in list(data.keys())][1][2]
+        full_name, comment = [data[key] for key in data][0][0], [data[key] for key in data][1][0]
+        full_name_field, comment_field = [data[key] for key in data][0][1], [data[key] for key in data][1][1]
+        full_name_label, comment_label = [data[key] for key in data][0][2], [data[key] for key in data][1][2]
+        spam_verification = [data[key] for key in data][-1]
 
-            if len(spam_verification) != 0:
-                return JsonResponse(data={
-                    "valid": None,
-                }, safe=False)
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            }, safe=False)
 
-            response = [
-                {
-                    "valid":
-                        False if not comment else
-                        True,
-                    "field": comment_field,
-                    "message":
-                        f"The {comment_label} field cannot be empty." if not comment else
-                        "",
-                }
-            ]
+        response = [
+            {
+                "valid":
+                    False if not comment else
+                    True,
+                "field": comment_field,
+                "message":
+                    f"The {comment_label} field cannot be empty." if not comment else
+                    "",
+            }
+        ]
 
-            validation = [data['valid'] for data in response]
+        validation = [data['valid'] for data in response]
 
-            if all(validation):
-                user = User.objects.get(username=request.user)
-                comment = Comment(user=user, article=article,
-                                  comment=comment)
-                comment.save()
-
-                return JsonResponse(data={
-                    "valid": True,
-                    "message": "The comment has been submitted for approval by the administrator.",
-                }, safe=False)
-            else:
-                return JsonResponse(data=response, safe=False)
-
-        elif request.user.is_anonymous:
-            data = json.loads(s=request.body.decode('utf-8'))
-
-            full_name, comment = [data[key][0] for key in list(data.keys())[:-1]]
-            spam_verification = [data[key] for key in data][-1]
-            full_name_field, comment_field = [data[key][1] for key in list(data.keys())[:-1]]
-            full_name_label, comment_label = [data[key][2] for key in list(data.keys())[:-1]]
-
-            if len(spam_verification) != 0:
-                return JsonResponse(data={
-                    "valid": None,
-                }, safe=False)
-
-            response = [
-                {
-                    "valid":
-                        False if not full_name else
-                        False if User.objects.filter(username=full_name) else
-                        True,
-                    "field": full_name_field,
-                    "message":
-                        f"The {full_name_label} field cannot be empty." if not full_name else
-                        f"The name {full_name} is already taken. Please choose another one."
-                        "",
-                },
-                {
-                    "valid":
-                        False if not comment else
-                        True,
-                    "field": comment_field,
-                    "message":
-                        f"The {comment_label} field cannot be empty." if not comment else
-                        "",
-                }
-            ]
-
-            validation = list(set([data['valid'] for data in response]))
-
-            if all(validation):
+        if all(validation):
+            if request.user.is_anonymous:
                 user = User()
                 user.save()
 
                 comment = Comment(user=user, article=article, full_name=full_name, comment=comment)
                 comment.save()
-
+                
                 user.delete()
 
-                return JsonResponse(data={
-                    "valid": True,
-                    "message": "The comment has been submitted for approval by the administrator.",
-                }, safe=False)
-
             else:
-                return JsonResponse(data=response, safe=False)
+                user = User.objects.get(username=request.user)
+                comment = Comment(user=user, article=article, comment=comment)
+                comment.save()
+
+            return JsonResponse(data={
+                "valid": True,
+                "message": "The comment has been submitted for approval by the administrator.",
+            }, safe=False)
+        else:
+            return JsonResponse(data=response, safe=False)
+
+
+# def add_comment(request, category_slug, article_slug):
+#     """
+#     The function handles the comment submission form for a specific article by both logged-in and non-logged-in users.
+#     If the comment is added by a non-logged-in user, they can enter their own name in the 'Name' field.
+#     However, if the comment is added by a logged-in user, their username is automatically assigned.
+#     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+#     Upon successful form validation, the data is saved in the database.
+#
+#     return: JsonResponse
+#     """
+#     category = Category.objects.get(slug=category_slug)
+#     article = get_object_or_404(klass=Article, slug=article_slug, category=category)
+#
+#     if request.method == 'POST':
+#         if request.user.is_authenticated:
+#             data = json.loads(s=request.body.decode('utf-8'))
+#
+#             comment = [data[key] for key in list(data.keys())][1][0]
+#             spam_verification = [data[key] for key in data][-1]
+#             comment_field = [data[key] for key in list(data.keys())][1][1]
+#             comment_label = [data[key] for key in list(data.keys())][1][2]
+#
+#             if len(spam_verification) != 0:
+#                 return JsonResponse(data={
+#                     "valid": None,
+#                 }, safe=False)
+#
+#             response = [
+#                 {
+#                     "valid":
+#                         False if not comment else
+#                         True,
+#                     "field": comment_field,
+#                     "message":
+#                         f"The {comment_label} field cannot be empty." if not comment else
+#                         "",
+#                 }
+#             ]
+#
+#             validation = [data['valid'] for data in response]
+#
+#             if all(validation):
+#                 user = User.objects.get(username=request.user)
+#                 comment = Comment(user=user, article=article,
+#                                   comment=comment)
+#                 comment.save()
+#
+#                 return JsonResponse(data={
+#                     "valid": True,
+#                     "message": "The comment has been submitted for approval by the administrator.",
+#                 }, safe=False)
+#             else:
+#                 return JsonResponse(data=response, safe=False)
+#
+#         elif request.user.is_anonymous:
+#             data = json.loads(s=request.body.decode('utf-8'))
+#
+#             full_name, comment = [data[key][0] for key in list(data.keys())[:-1]]
+#             spam_verification = [data[key] for key in data][-1]
+#             full_name_field, comment_field = [data[key][1] for key in list(data.keys())[:-1]]
+#             full_name_label, comment_label = [data[key][2] for key in list(data.keys())[:-1]]
+#
+#             if len(spam_verification) != 0:
+#                 return JsonResponse(data={
+#                     "valid": None,
+#                 }, safe=False)
+#
+#             response = [
+#                 {
+#                     "valid":
+#                         False if not full_name else
+#                         False if User.objects.filter(username=full_name) else
+#                         True,
+#                     "field": full_name_field,
+#                     "message":
+#                         f"The {full_name_label} field cannot be empty." if not full_name else
+#                         f"The name {full_name} is already taken. Please choose another one."
+#                         "",
+#                 },
+#                 {
+#                     "valid":
+#                         False if not comment else
+#                         True,
+#                     "field": comment_field,
+#                     "message":
+#                         f"The {comment_label} field cannot be empty." if not comment else
+#                         "",
+#                 }
+#             ]
+#
+#             validation = list(set([data['valid'] for data in response]))
+#
+#             if all(validation):
+#                 user = User()
+#                 user.save()
+#
+#                 comment = Comment(user=user, article=article, full_name=full_name, comment=comment)
+#                 comment.save()
+#
+#                 user.delete()
+#
+#                 return JsonResponse(data={
+#                     "valid": True,
+#                     "message": "The comment has been submitted for approval by the administrator.",
+#                 }, safe=False)
+#
+#             else:
+#                 return JsonResponse(data=response, safe=False)
 
 
 def edit_comment(request, category_slug, article_slug):

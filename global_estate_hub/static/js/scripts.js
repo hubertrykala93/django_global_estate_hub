@@ -201,13 +201,11 @@ if ($heroForm) {
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    console.log('sent', data)
     xhr.send(JSON.stringify(data))
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
           const response = JSON.parse(this.responseText)
-          console.log('received', response)
           updateFilters(response)
       }
     }
@@ -1673,7 +1671,6 @@ if ($addCommentInArticleForm) {
 
     const $nameInput = this.querySelector('[data-name]')
     const $commentInput = this.querySelector('[data-comment]')
-    console.log(encodeURI($commentInput.value.trim()))
 
     const data = {
       "full_name": [$nameInput.value.trim(), "data-name", "name"],
@@ -2586,7 +2583,6 @@ if ($propertyPage) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-            console.log(response)
             serverResponse(response)
         }
       }
@@ -2778,7 +2774,6 @@ if ($propertyPage) {
       xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             const response = JSON.parse(this.responseText)
-            console.log('odebrane', response);
             serverResponse(response)
         }
       }
@@ -2801,7 +2796,6 @@ if ($propertyPage) {
 
       
       if ( clientValidation($addReviewForm, data) ) {
-        console.log('wysłane dane', data)
         ajaxRequest(data)
       }
   
