@@ -87,7 +87,7 @@
                             aria-controls="select-bedrooms1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_bedrooms %}{{ request.GET.min_bedrooms }}{% else %}Min{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_min_bedrooms %}{{ request.session.checked_filters.checked_min_bedrooms }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -96,7 +96,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms1" data-change-min-bedrooms>
                             {% for number in number_of_bedrooms %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min_bedrooms"{% if number == request.GET.min_bedrooms %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ number }}" id="min-bedrooms-{{ number }}" name="min_bedrooms"{% if number == request.session.checked_filters.checked_min_bedrooms %}checked{% endif %}>
                                 <label for="min-bedrooms-{{ number }}">{{ number }}</label>
                             </li>
 
@@ -120,7 +120,7 @@
                             aria-controls="select-bedrooms2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_bedrooms %}{{ request.GET.max_bedrooms }}{% else %}Max{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_max_bedrooms %}{{ request.session.checked_filters.checked_max_bedrooms }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -129,7 +129,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-bedrooms2" data-change-max-bedrooms>
                             {% for number in number_of_bedrooms %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ number }}" id="max-bedrooms-{{ number }}" name="max_bedrooms"{% if number in request.GET.max_bedrooms %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ number }}" id="max-bedrooms-{{ number }}" name="max_bedrooms"{% if number == request.session.checked_filters.checked_max_bedrooms %}checked{% endif %}>
                                 <label for="max-bedrooms-{{ number }}">{{ number }}</label>
                             </li>
                             {% endfor %}
@@ -156,7 +156,7 @@
                             aria-controls="select-bathrooms1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_bathrooms %}{{ request.GET.min_bathrooms }}{% else %}Min{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_min_bathrooms %}{{ request.session.checked_filters.checked_min_bathrooms }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -165,7 +165,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms1" data-change-min-bathrooms>
                             {% for number in number_of_bathrooms %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ number }}" id="min-bathrooms-{{ number }}" name="min_bathrooms"{% if number in request.GET.min_bathrooms %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ number }}" id="min-bathrooms-{{ number }}" name="min_bathrooms"{% if number == request.session.checked_filters.checked_min_bathrooms %}checked{% endif %}>
                                 <label for="min-bathrooms-{{ number }}">{{ number }}</label>
                             </li>
                             {% endfor %}
@@ -188,7 +188,7 @@
                             aria-controls="select-bathrooms2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_bathrooms %}{{ request.GET.max_bathrooms }}{% else %}Max{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_max_bathrooms %}{{ request.session.checked_filters.checked_max_bathrooms }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -197,7 +197,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-bathrooms2" data-change-max-bathrooms>
                             {% for number in number_of_bathrooms %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max_bathrooms"{% if number in request.GET.max_bathrooms %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ number }}" id="max-bathrooms-{{ number }}" name="max_bathrooms"{% if number == request.session.checked_filters.checked_max_bathrooms %}checked{% endif %}>
                                 <label for="max-bathrooms-{{ number }}">{{ number }}</label>
                             </li>
                             {% endfor %}
@@ -263,7 +263,7 @@
                             aria-controls="select-square1"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.min_square %}{{ request.GET.min_square }}{% else %}Min{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_min_square %}{{ request.session.checked_filters.checked_min_square }}{% else %}Min{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -272,7 +272,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-square" data-change-min-meters>
                             {% for sqm in square_meters %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ sqm }}" id="min-square-{{ sqm }}" name="min_square"{% if sqm in request.GET.min_square %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ sqm }}" id="min-square-{{ sqm }}" name="min_square"{% if sqm == request.session.checked_filters.checked_min_square %}checked{% endif %}>
                                 <label for="min-square-{{ sqm }}">{{ sqm }}</label>
                             </li>
                             {% endfor %}
@@ -295,7 +295,7 @@
                             aria-controls="select-square2"
                             data-custom-select-btn>
                             <span class="custom__select__button__selected__wrapper">
-                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.GET.max_square %}{{ request.GET.max_square }}{% else %}Max{% endif %}</span>
+                                <span class="custom__select__button__selected__value" data-custom-select-btn-value>{% if request.session.checked_filters.checked_max_square %}{{ request.session.checked_filters.checked_max_square }}{% else %}Max{% endif %}</span>
                             </span>
                             <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                         </button>
@@ -304,7 +304,7 @@
                         <ul class="custom__select__dropdown" role="listbox" id="select-square2" data-change-max-meters>
                             {% for sqm in square_meters %}
                             <li role="option">
-                                <input data-option type="radio" value="{{ sqm }}" id="max-square-{{ sqm }}" name="max_square"{% if sqm in request.GET.max_square %}checked{% endif %}>
+                                <input data-option type="radio" value="{{ sqm }}" id="max-square-{{ sqm }}" name="max_square"{% if sqm == request.session.checked_filters.checked_max_square %}checked{% endif %}>
                                 <label for="max-square-{{ sqm }}">{{ sqm }}</label>
                             </li>
                             {% endfor %}
