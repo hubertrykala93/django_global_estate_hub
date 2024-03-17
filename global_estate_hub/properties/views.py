@@ -604,9 +604,6 @@ def properties(request):
     return render(request=request, template_name='properties/properties.html', context=context)
 
 
-# {% if request.session.checked_filters.city %}{{ request.session.checked_filters.city }}{% else %}City{% endif %}
-# {% if request.session.checked_filters %}{% if request.session.checked_filters.checked_categories %}{% if category in request.session.checked_filters.checked_categories %}checked{% endif %}{% endif %}{% else %}{% if category|lower in checked_categories %}checked{% endif %}{% endif %}
-
 def property_categories(request, category_slug):
     category = get_object_or_404(klass=Category, slug=category_slug)
 

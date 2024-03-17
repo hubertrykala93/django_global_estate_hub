@@ -24,7 +24,6 @@ admin
 
 @hubertrykala93
 - zapisać tour schedule do bazy danych
-- wyrenderować contexty w przypadku gdy powybraniu filtra wybierze się typ sortowania.
 1. Ogarnąć opcje aggregate i annotate.
 1. Poskracać powtarzalny się kod.
 4. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
