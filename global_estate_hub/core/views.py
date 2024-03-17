@@ -23,15 +23,6 @@ def index(request):
 
     return: HttpResponse
     """
-    if request.session.get('category_names'):
-        request.session.pop('category_names')
-
-    if request.session.get('filters'):
-        request.session.pop('filters')
-
-    if request.session.get('sorted_type'):
-        request.session.pop('sorted_type')
-
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
     cities = sorted(

@@ -7,7 +7,8 @@ admin
 
 
 @Szymon-Levy
-- naprawić błąd w responsie gdy zapisuje tour schedule do db
+- naprawić błąd w konsoli po przeładowaniu na properties-results po formie w index.html
+- naprawić błąd w responsie gdy zapisuje tour schedule do db, we views.py w folderze properties w funkcji schedule_tour (787 linia kodu) pojawia się błąd w konsoli gdy chcę zapisać obiekt do bazy danych (885-887 linia kodu), jak jest to zakomentowane, to błąd w konsoli się nie pojawia, weź sobie odkomentuj, zakomentuj i przetestuj co naprawić
 - sprawdzenie tekstow i wygenerowanie jak cos jest zle
 - usuniecie likow w properties na home
 - wszedzie gdzie wystepuja kafelki ze zdjeciem dodac link do zdjecia zeby wejsc w konnkretny item
