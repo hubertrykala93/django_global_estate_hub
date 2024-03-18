@@ -319,23 +319,20 @@ def properties_results(request):
                 filters['listing_status_id'] = ListingStatus.objects.get(
                     slug='-'.join(data['chosenStatus'].lower().split())).id
                 request.session['filters'] = filters
-                print(ListingStatus.objects.values_list('name', flat=True).order_by(Lower('name')).distinct())
-                print(ListingStatus.objects.values_list('name', flat=True).order_by('name').distinct())
 
-                response.clear()
                 response.update(
                     {
                         'chosenStatus': list(
-                            ListingStatus.objects.values_list('name').order_by(Lower('name')).distinct()),
-                        'chosenLocation': list(
-                            Property.objects.filter(**filters).values_list('city__name').order_by(
-                                Lower('city__name')).distinct()),
-                        'chosenCategory': list(
-                            Property.objects.filter(**filters).values_list('category__name', flat=True).order_by(
-                                Lower('category__name')).distinct()),
-                        'chosenYear': list(
-                            Property.objects.filter(**filters).values_list('year_of_built', flat=True).order_by(
-                                Lower('year_of_built')).distinct()),
+                            ListingStatus.objects.values_list('name', flat=True).order_by('name').distinct()),
+                        'chosenLocation': list(Property.objects.filter(**filters).values_list('city__name',
+                                                                                              flat=True).order_by(
+                            'city__name').distinct()),
+                        'chosenCategory': list(Property.objects.filter(**filters).values_list('category__name',
+                                                                                              flat=True).order_by(
+                            'category__name').distinct()),
+                        'chosenYear': list(Property.objects.filter(**filters).values_list('year_of_built',
+                                                                                          flat=True).order_by(
+                            'year_of_built').distinct()),
                     }
                 )
 
