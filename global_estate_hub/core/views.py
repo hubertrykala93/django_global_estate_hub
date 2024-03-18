@@ -13,6 +13,7 @@ from blog.models import Article
 from properties.views import property_pagination
 import datetime
 from django.db.models.functions import Lower
+from accounts.models import User
 
 load_dotenv()
 
@@ -31,9 +32,10 @@ def index(request):
     categories = sorted(set([obj.category for obj in
                              Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]),
                         key=lambda x: x.name)
-    years_of_built = sorted(set([obj.year_of_built for obj in
-                                 Property.objects.filter(listing_status=ListingStatus.objects.get(name='Rent'))]))
-    agents = list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3]
+    years_of_built = Property.objects.filter(
+        listing_status_id=ListingStatus.objects.get(name='Rent')).values_list('year_of_built', flat=True).order_by(
+        'year_of_built').distinct()
+    agents = User.objects.filter(is_agent=True)[:3]
 
     # year counter
     project_started = 2020
@@ -74,7 +76,7 @@ def index(request):
 def top_agents(request):
     return render(request=request, template_name='core/top-agents.html', context={
         'title': 'Top Agents',
-        'agents': list(set([obj.user for obj in Property.objects.all() if obj.user.is_agent]))[:3],
+        'agents': User.objects.filter(is_agent=True)[:3],
     })
 
 
@@ -317,6 +319,8 @@ def properties_results(request):
                 filters['listing_status_id'] = ListingStatus.objects.get(
                     slug='-'.join(data['chosenStatus'].lower().split())).id
                 request.session['filters'] = filters
+                print(ListingStatus.objects.values_list('name', flat=True).order_by(Lower('name')).distinct())
+                print(ListingStatus.objects.values_list('name', flat=True).order_by('name').distinct())
 
                 response.clear()
                 response.update(

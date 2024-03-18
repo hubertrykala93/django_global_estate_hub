@@ -13,7 +13,7 @@ from django.utils.html import strip_tags
 from unidecode import unidecode
 from datetime import datetime
 from datetime import timedelta
-from django.db.models import Min
+from django.db.models import Min, Max
 
 
 def property_pagination(request, object_list, per_page):
@@ -33,32 +33,43 @@ def property_pagination(request, object_list, per_page):
 
 def properties_context():
     return {
-        'listing_statuses': sorted(set([obj.name for obj in ListingStatus.objects.all()])),
-        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'number_of_bedrooms': sorted(set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'number_of_bathrooms': sorted(set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'cities': sorted(set([obj.city.name for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
-        'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(
-            listing_status_id=ListingStatus.objects.get(name='Rent').id)])),
+        'listing_statuses': ListingStatus.objects.all().order_by('name'),
+        'categories': Property.objects.filter(listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
+            'category__name', flat=True).order_by('category__name').distinct(),
+        'number_of_bedrooms': [str(obj) for obj in
+                               Property.objects.filter(
+                                   listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
+                                   'number_of_bedrooms', flat=True).order_by('number_of_bedrooms').distinct()],
+        'number_of_bathrooms': [str(obj) for obj in
+                                Property.objects.filter(
+                                    listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
+                                    'number_of_bathrooms', flat=True).order_by('number_of_bathrooms').distinct()],
+        'cities': Property.objects.filter(listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
+            'city__name', flat=True).order_by('city__name').distinct(),
+        'square_meters': [str(obj) for obj in
+                          Property.objects.filter(
+                              listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
+                              'square_meters', flat=True).order_by('square_meters').distinct()],
     }
 
 
 def sidebar_context(**kwargs):
     return {
-        'listing_statuses': [obj.name for obj in ListingStatus.objects.all()],
-        'categories': sorted(set([obj.category.name for obj in Property.objects.filter(
-            listing_status_id=kwargs['listing_status_id'])])),
-        'number_of_bedrooms': sorted(
-            set([str(obj.number_of_bedrooms) for obj in Property.objects.filter(**kwargs)])),
-        'number_of_bathrooms': sorted(
-            set([str(obj.number_of_bathrooms) for obj in Property.objects.filter(**kwargs)])),
-        'cities': sorted(
-            set([obj.city.name for obj in Property.objects.filter(listing_status_id=kwargs['listing_status_id'])])),
-        'square_meters': sorted(set([str(obj.square_meters) for obj in Property.objects.filter(**kwargs)])),
+        'listing_statuses': ListingStatus.objects.all().order_by('name'),
+        'categories': Property.objects.filter(listing_status_id=kwargs['listing_status_id']).values_list(
+            'category__name', flat=True).order_by('category__name').distinct(),
+        'number_of_bedrooms': [str(obj) for obj in
+                               Property.objects.filter(**kwargs).values_list('number_of_bedrooms', flat=True).order_by(
+                                   'number_of_bedrooms').distinct()],
+        'number_of_bathrooms': [str(obj) for obj in Property.objects.filter(**kwargs).values_list('number_of_bathrooms',
+                                                                                                  flat=True).order_by(
+            'number_of_bathrooms').distinct()],
+        'cities': Property.objects.filter(listing_status_id=kwargs['listing_status_id']).values_list('city__name',
+                                                                                                     flat=True).order_by(
+            'city__name').distinct(),
+        'square_meters': [str(obj) for obj in
+                          Property.objects.filter(**kwargs).values_list('square_meters', flat=True).order_by(
+                              'square_meters').distinct()],
     }
 
 
@@ -182,6 +193,7 @@ def properties(request):
         elif 'keyword' in request.GET:
             if request.session.get('checked_filters'):
                 request.session.pop('checked_filters')
+
             context.update(properties_context())
 
             request.session['sorted_type'] = 'Newest Properties'
@@ -267,8 +279,10 @@ def properties(request):
                     queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    filters['number_of_bedrooms__range'] = [int(request.GET.get('min_bedrooms')), int(max(
-                        sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()]))))]
+                    filters['number_of_bedrooms__range'] = [
+                        int(request.GET.get('min_bedrooms')),
+                        Property.objects.aggregate(Max('number_of_bedrooms'))['number_of_bedrooms__max']
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -313,8 +327,9 @@ def properties(request):
 
                 else:
                     filters['number_of_bedrooms__range'] = [
-                        int(min(sorted(set([obj.number_of_bedrooms for obj in Property.objects.all()])))),
-                        int(request.GET.get('max_bedrooms'))]
+                        Property.objects.aggregate(Min('number_of_bedrooms'))['number_of_bedrooms__min'],
+                        int(request.GET.get('max_bedrooms'))
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -356,8 +371,10 @@ def properties(request):
                     queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    filters['number_of_bathrooms__range'] = [int(request.GET.get('min_bathrooms')), int(max(
-                        sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()]))))]
+                    filters['number_of_bathrooms__range'] = [
+                        int(request.GET.get('min_bathrooms')),
+                        Property.objects.aggregate(Max('number_of_bathrooms'))['number_of_bathrooms__max']
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -401,8 +418,9 @@ def properties(request):
 
                 else:
                     filters['number_of_bathrooms__range'] = [
-                        int(min(sorted(set([obj.number_of_bathrooms for obj in Property.objects.all()])))),
-                        int(request.GET.get('max_bathrooms'))]
+                        Property.objects.aggregate(Min('number_of_bathrooms'))['number_of_bathrooms__min'],
+                        int(request.GET.get('max_bathrooms'))
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -466,8 +484,10 @@ def properties(request):
                     queryset.extend(Property.objects.filter(**filters).order_by('-date_posted'))
 
                 else:
-                    filters['square_meters__range'] = [float(request.GET.get('min_square')), float(
-                        max(sorted(set([obj.square_meters for obj in Property.objects.all()]))))]
+                    filters['square_meters__range'] = [
+                        float(request.GET.get('min_square')),
+                        Property.objects.aggregate(Max('square_meters'))['square_meters__max']
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
@@ -512,7 +532,8 @@ def properties(request):
                 else:
                     filters['square_meters__range'] = [
                         Property.objects.aggregate(Min('square_meters'))['square_meters__min'],
-                        float(request.GET.get('max_square'))]
+                        float(request.GET.get('max_square'))
+                    ]
 
                     if len(Property.objects.filter(**filters)) == 0:
                         queryset.clear()
