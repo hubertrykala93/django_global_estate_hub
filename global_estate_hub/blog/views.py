@@ -46,6 +46,8 @@ def article_categories(request, category_slug):
     """
     Returns an HttpResponse with the article categories template along with pagination.
 
+    category_slug: str
+
     return: HttpResponse
     """
     category = get_object_or_404(klass=Category, slug=category_slug)

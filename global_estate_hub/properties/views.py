@@ -42,7 +42,7 @@ def property_pagination(request, object_list, per_page):
 def properties_context():
     """
     Returns context for the properties page if the user is not using any filters.
-    The values in filters such as categories, number_of_bedrooms, number_of_bathrooms, cities, and square_meters
+    The values in filters such as Category, Rooms, Location, and Square Meters
     are narrowed down to the listing_status. In this case, to the 'Rent' status.
 
     return: dict
@@ -70,7 +70,12 @@ def properties_context():
 
 def sidebar_context(**kwargs):
     """
+    Returns context for the properties page when the user is using filters.
+    Values in filters such as Category and Location are narrowed down based on the user-selected Status,
+    while values in filters such as Rooms and Square Meters are narrowed down to all user-selected filters.
 
+    kwargs: dict
+    return: dict
     """
     return {
         'listing_statuses': ListingStatus.objects.all().order_by('name'),
@@ -92,6 +97,18 @@ def sidebar_context(**kwargs):
 
 
 def properties(request):
+    """
+    The function handles a GET request. It includes sorting properties by Newest Properties, Oldest Properties,
+    Price (ascending), Price (descending), and Featured properties.
+    The function also handles two forms using the GET method.
+    The first form is for searching properties by keyword in the property title.
+    The second form is for filtering properties, and after selecting each filter,
+    the page reloads and displays the newly filtered properties.
+    Keywords and filters are also stored in the session for further sorting.
+    Pagination has also been implemented. Finally, the function returns an HttpResponse for the properties template.
+
+    return: HttpResponse
+    """
     queryset = []
     context = {}
     filters = {}
@@ -608,6 +625,13 @@ def properties(request):
 
 
 def property_categories(request, category_slug):
+    """
+    Returns an HttpResponse with the property-categories template along with pagination.
+
+    category_slug: str
+
+    return: HttpResponse
+    """
     category = get_object_or_404(klass=Category, slug=category_slug)
 
     queryset = []
@@ -662,6 +686,13 @@ def property_categories(request, category_slug):
 
 
 def property_cities(request, city_slug):
+    """
+    Returns an HttpResponse with the property-cities template along with pagination.
+
+    city_slug: str
+
+    return: HttpResponse
+    """
     city = get_object_or_404(klass=City, slug=city_slug)
     queryset = []
 
@@ -759,6 +790,14 @@ def add_to_favourites(request):
 
 
 def property_details(request, category_slug, property_slug):
+    """
+    Returns an HttpResponse with the property-details template.
+
+    category_slug: str
+    property_slug: str
+
+    return: HttpResponse
+    """
     category = Category.objects.get(slug=category_slug)
     property_obj = Property.objects.get(category=category, slug=property_slug)
     city = City.objects.get(name=property_obj.city)
@@ -785,6 +824,18 @@ def property_details(request, category_slug, property_slug):
 
 
 def add_review(request, category_slug, property_slug):
+    """
+    The function handles a form for adding reviews to properties.
+    It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Users can submit a textual review and a rating from 1 to 5 for the property.
+    Only registered and logged-in users are allowed to fill out the form.
+    After successful form validation, the review is saved to the database and awaits approval from the administrator.
+
+    category_slug: str
+    property_slug: str
+
+    return: JsonResponse
+    """
     category = Category.objects.get(slug=category_slug)
     property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)
 
@@ -827,6 +878,16 @@ def add_review(request, category_slug, property_slug):
 
 
 def schedule_tour(request, category_slug, property_slug):
+    """
+    The function handles a form for scheduling a visit with a property seller or landlord.
+    It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    Both logged-in and non-logged-in users have the option to schedule a visit.
+    After successful form validation, an email message is sent to the seller requesting a meeting,
+    and the meeting details are saved to the database.
+
+    category_slug: str
+    property_slug: str
+    """
     category = Category.objects.get(slug=category_slug)
     property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)
     property_user_email = property_obj.user.email

@@ -4,10 +4,14 @@ from django.dispatch.dispatcher import receiver
 
 
 @receiver(signal=post_save, sender=User)
-def create_profile(sender, instance, created, **kwargs):
+def create_profile(sender, instance, created, **kwargs) -> None:
     """
     Automatically creates a individual or business profile upon successful registration.
     """
+    print(type(sender))
+    print(type(instance))
+    print(type(created))
+
     if created:
         if instance.account_type == 'Individual':
             Individual.objects.create(user=instance).save()

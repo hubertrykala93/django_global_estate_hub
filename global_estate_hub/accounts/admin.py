@@ -17,9 +17,11 @@ class AdminSession(admin.ModelAdmin):
     ordering = ['-expire_date']
 
     @admin.display(description='user')
-    def get_user(self, obj):
+    def get_user(self, obj) -> str:
         """
         Displays in the admin panel all users assigned to a given session.
+
+        obj: django.contrib.session.models.Session
 
         return: str
         """
@@ -27,9 +29,13 @@ class AdminSession(admin.ModelAdmin):
         user = User.objects.get(pk=session_user)
         return user.username
 
-    def _session_data(self, obj):
+    def _session_data(self, obj) -> str:
         """
         Displays in the admin panel session data assigned to a given user.
+
+        obj: django.contrib.session.models.Session
+
+        return: str
         """
         return pprint.pformat(obj.get_decoded()).replace('\n', '\n')
 
