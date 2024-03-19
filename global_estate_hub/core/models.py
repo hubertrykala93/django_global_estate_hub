@@ -14,7 +14,7 @@ class Newsletter(models.Model):
         verbose_name_plural = 'Newsletters'
         ordering = ['-subscribed_at']
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the user's email address and displays it in the administrator panel.
 
@@ -38,7 +38,7 @@ class ContactMail(models.Model):
         verbose_name_plural = 'Contact Mails'
         ordering = ['-date_sent']
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the user's full name and displays it in the administrator panel.
 

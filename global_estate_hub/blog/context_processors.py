@@ -6,6 +6,8 @@ def get_category_info(request) -> dict:
     """
     Returns full information about categories.
 
+    request: django.core.handlers.wsgi.WSGIRequest
+
     return dict
     """
     return {
@@ -25,6 +27,8 @@ def newest_articles(request) -> dict:
     Creates a query set for the database and returns the four most recent articles from the Blog application,
     which are then rendered in the Blog sidebar.
 
+    request: django.core.handlers.wsgi.WSGIRequest
+
     return: dict
     """
     return {
@@ -32,9 +36,11 @@ def newest_articles(request) -> dict:
     }
 
 
-def popular_tags(request):
+def popular_tags(request) -> dict:
     """
     Returns a set of queries with the most frequently occurring tags.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: dict
     """
@@ -60,9 +66,11 @@ def popular_tags(request):
     }
 
 
-def users(request):
+def users(request) -> dict:
     """
     Creates a set of queries to the database and returns all registered users in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: dict
     """

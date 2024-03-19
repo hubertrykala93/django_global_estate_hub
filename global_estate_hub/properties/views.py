@@ -1,3 +1,4 @@
+import django.http.response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
@@ -14,16 +15,19 @@ from unidecode import unidecode
 from datetime import datetime
 from datetime import timedelta
 from django.db.models import Min, Max
+from django.core.paginator import Page
+from django.http.response import HttpResponse, HttpResponseRedirect
 
 
-def property_pagination(request, object_list, per_page):
+def property_pagination(request, object_list, per_page) -> Page:
     """
-    Returns Pagination object.
+    Returns Page object for pagination.
 
-    object_list: QuerySet
+    request: django.core.handlers.wsgi.WSGIRequest
+    object_list: django.db.models.query.Queryset
     per_page: int
 
-    return: Page
+    return: django.core.paginator.Page
     """
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
@@ -39,7 +43,7 @@ def property_pagination(request, object_list, per_page):
     return pages
 
 
-def properties_context():
+def properties_context() -> dict:
     """
     Returns context for the properties page if the user is not using any filters.
     The values in filters such as Category, Rooms, Location, and Square Meters
@@ -68,13 +72,14 @@ def properties_context():
     }
 
 
-def sidebar_context(**kwargs):
+def sidebar_context(**kwargs) -> dict:
     """
     Returns context for the properties page when the user is using filters.
     Values in filters such as Category and Location are narrowed down based on the user-selected Status,
     while values in filters such as Rooms and Square Meters are narrowed down to all user-selected filters.
 
     kwargs: dict
+
     return: dict
     """
     return {
@@ -96,7 +101,7 @@ def sidebar_context(**kwargs):
     }
 
 
-def properties(request):
+def properties(request) -> HttpResponse:
     """
     The function handles a GET request. It includes sorting properties by Newest Properties, Oldest Properties,
     Price (ascending), Price (descending), and Featured properties.
@@ -106,6 +111,8 @@ def properties(request):
     the page reloads and displays the newly filtered properties.
     Keywords and filters are also stored in the session for further sorting.
     Pagination has also been implemented. Finally, the function returns an HttpResponse for the properties template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -624,10 +631,11 @@ def properties(request):
     return render(request=request, template_name='properties/properties.html', context=context)
 
 
-def property_categories(request, category_slug):
+def property_categories(request, category_slug) -> HttpResponse:
     """
     Returns an HttpResponse with the property-categories template along with pagination.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     category_slug: str
 
     return: HttpResponse
@@ -685,10 +693,11 @@ def property_categories(request, category_slug):
     })
 
 
-def property_cities(request, city_slug):
+def property_cities(request, city_slug) -> HttpResponse:
     """
     Returns an HttpResponse with the property-cities template along with pagination.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     city_slug: str
 
     return: HttpResponse
@@ -752,13 +761,15 @@ def add_property(request):
     })
 
 
-def add_to_favourites(request):
+def add_to_favourites(request) -> JsonResponse:
     """
     The function handles the form for adding a property to favorites.
     If the property was already added to favorites by the user, the liking is removed.
     However, if the user adds the property to favorites for the first time, the liking is saved.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -789,10 +800,11 @@ def add_to_favourites(request):
             })
 
 
-def property_details(request, category_slug, property_slug):
+def property_details(request, category_slug, property_slug) -> HttpResponse:
     """
     Returns an HttpResponse with the property-details template.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     category_slug: str
     property_slug: str
 
@@ -823,7 +835,7 @@ def property_details(request, category_slug, property_slug):
     })
 
 
-def add_review(request, category_slug, property_slug):
+def add_review(request, category_slug, property_slug) -> JsonResponse:
     """
     The function handles a form for adding reviews to properties.
     It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
@@ -831,6 +843,7 @@ def add_review(request, category_slug, property_slug):
     Only registered and logged-in users are allowed to fill out the form.
     After successful form validation, the review is saved to the database and awaits approval from the administrator.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     category_slug: str
     property_slug: str
 
@@ -877,7 +890,7 @@ def add_review(request, category_slug, property_slug):
             return JsonResponse(data=data, safe=False)
 
 
-def schedule_tour(request, category_slug, property_slug):
+def schedule_tour(request, category_slug, property_slug) -> JsonResponse:
     """
     The function handles a form for scheduling a visit with a property seller or landlord.
     It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
@@ -885,8 +898,11 @@ def schedule_tour(request, category_slug, property_slug):
     After successful form validation, an email message is sent to the seller requesting a meeting,
     and the meeting details are saved to the database.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     category_slug: str
     property_slug: str
+
+    return: JsonResponse
     """
     category = Category.objects.get(slug=category_slug)
     property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)

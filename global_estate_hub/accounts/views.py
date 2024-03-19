@@ -19,14 +19,17 @@ from .tokens import token_generator
 from django.contrib import messages
 from dotenv import load_dotenv
 import uuid
+from django.http.response import HttpResponse, HttpResponseRedirect
 
 load_dotenv()
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def register(request):
+def register(request) -> HttpResponse:
     """
     Returns an HttpResponse with the register template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -35,12 +38,14 @@ def register(request):
     })
 
 
-def create_user(request):
+def create_user(request) -> JsonResponse:
     """
     The function handling the registration form for a new user in the database
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent from the website administrator
     to the provided email address for account activation.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -218,12 +223,16 @@ def create_user(request):
             return JsonResponse(data=response, safe=False)
 
 
-def activate(request, uidb64, token):
+def activate(request, uidb64, token) -> HttpResponseRedirect:
     """
     The function activating the account of a new user. The activation link is valid for 5 minutes.
     Upon successful verification, the user is redirected to the login page.
     If the activation link has expired and the user has not activated the account,
     they are removed from the database and must register again.
+
+    request: django.core.handlers.wsgi.WSGIRequest
+    uidb64: str
+    token: str
 
     return: HttpResponseRedirect
     """
@@ -247,20 +256,26 @@ def activate(request, uidb64, token):
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def log_in(request):
+def log_in(request) -> HttpResponse:
     """
     Returns an HttpResponse with the login template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
+
+    return: HttpResponse
     """
     return render(request=request, template_name='accounts/login.html', context={
         'title': 'Login'
     })
 
 
-def authorization(request):
+def authorization(request) -> JsonResponse:
     """
     The function handles the user authentication form using the POST method with Asynchronous JavaScript
     and XMLHttpRequest (AJAX) request. Upon successful form validation, the user is logged in,
     and data such as the user's login status and their ID in the database are stored in the session.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -337,9 +352,11 @@ def authorization(request):
             return JsonResponse(data=response, safe=False)
 
 
-def log_out(request):
+def log_out(request) -> HttpResponseRedirect:
     """
     Logout user.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponseRedirect
     """
@@ -351,9 +368,11 @@ def log_out(request):
 
 
 @login_required(login_url='login')
-def account_settings(request):
+def account_settings(request) -> HttpResponse:
     """
     Returns an HttpResponse with the account settings template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -362,11 +381,13 @@ def account_settings(request):
     })
 
 
-def upload_avatar(request):
+def upload_avatar(request) -> JsonResponse:
     """
     The function handles the profile picture change form using the PATCH method
     with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the new picture is saved in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -407,11 +428,13 @@ def upload_avatar(request):
             })
 
 
-def user_settings(request):
+def user_settings(request) -> JsonResponse:
     """
     The function handles the user data change form, including the username, email address, and password,
     using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -526,12 +549,14 @@ def user_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-def profile_settings(request):
+def profile_settings(request) -> JsonResponse:
     """
     The function handles the form for changing individual user profile data such as first name, last name, gender,
     and phone number, as well as the form for changing business user profile data such as company name,
     company ID, and phone number. The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -661,12 +686,14 @@ def profile_settings(request):
             return JsonResponse(data=response, safe=False)
 
 
-def localization_settings(request):
+def localization_settings(request) -> JsonResponse:
     """
     The function handles the form for changing location data in both individual and business user profiles,
     including country, state, city, street, and postal code.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -747,12 +774,14 @@ def localization_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-def social_media_settings(request):
+def social_media_settings(request) -> JsonResponse:
     """
     The function handles the form for changing website and social media link data in both individual
     and business user profiles, including website, Facebook page, Instagram page, and LinkedIn page.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -824,9 +853,11 @@ def social_media_settings(request):
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def forget_password(request):
+def forget_password(request) -> HttpResponse:
     """
     Returns an HttpResponse with the forget password template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -835,7 +866,7 @@ def forget_password(request):
     })
 
 
-def send_password(request):
+def send_password(request) -> JsonResponse:
     """
     The function handling the user email address validation form using
     the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
@@ -846,6 +877,8 @@ def send_password(request):
     Only after deleting the OneTimePassword from the database can another password change request be sent.
     This is done to prevent potential email spam. Upon successful verification of the user's email address,
     the user is redirected to the next step for OneTimePassword validation.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -924,11 +957,13 @@ def send_password(request):
             })
 
 
-def validate_password(request):
+def validate_password(request) -> JsonResponse:
     """
     The function handling the OneTimePassword validation form using
     the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, the user can proceed to set a new password for their account.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -965,11 +1000,13 @@ def validate_password(request):
             }, safe=False)
 
 
-def set_password(request):
+def set_password(request) -> JsonResponse:
     """
     The function handling the user password update form and saving it to the database
     using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, the database is automatically updated.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -1047,10 +1084,11 @@ def set_password(request):
             return JsonResponse(data=response, safe=False)
 
 
-def account_details(request, username):
+def account_details(request, username) -> HttpResponse:
     """
     Returns an HttpResponse with the account detailss template.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     username: str
 
     return: HttpResponse

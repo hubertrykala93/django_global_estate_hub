@@ -13,14 +13,16 @@ from blog.models import Article
 from properties.views import property_pagination
 import datetime
 from accounts.models import User
+from django.http.response import HttpResponse, HttpResponseRedirect
 
 load_dotenv()
 
 
-def index(request):
+def index(request) -> HttpResponse:
     """
     Returns an HttpResponse with the homepage template.
 
+    request: django.core.handlers.wsgi.WSGIRequest
     return: HttpResponse
     """
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
@@ -72,9 +74,11 @@ def index(request):
     })
 
 
-def top_agents(request):
+def top_agents(request) -> HttpResponse:
     """
-    Returns an HttpResponse with the top agentss template.
+    Returns an HttpResponse with the top agents template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -84,12 +88,14 @@ def top_agents(request):
     })
 
 
-def newsletter(request):
+def newsletter(request) -> JsonResponse:
     """
     The function handling the form for saving an email address for the newsletter to the database
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent
     from the website administrator to the provided email address.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -156,9 +162,11 @@ def newsletter(request):
             return JsonResponse(data=response)
 
 
-def about(request):
+def about(request) -> HttpResponse:
     """
     Returns an HttpResponse with the about template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -167,9 +175,11 @@ def about(request):
     })
 
 
-def faq(request):
+def faq(request) -> HttpResponse:
     """
     Returns an HttpResponse with the FAQ template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -178,9 +188,11 @@ def faq(request):
     })
 
 
-def contact(request):
+def contact(request) -> HttpResponse:
     """
     Returns an HttpResponse with the contact template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -189,9 +201,11 @@ def contact(request):
     })
 
 
-def error(request):
+def error(request) -> HttpResponse:
     """
     Returns an HttpResponse with the error404 template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: HttpResponse
     """
@@ -200,12 +214,14 @@ def error(request):
     })
 
 
-def send_message(request):
+def send_message(request) -> JsonResponse:
     """
     The function handling the form for sending an email message to the website administrator
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     The function also saves data such as Full Name, Phone Number, Email Address, and Message to the database.
     Upon successful form validation, an email message is automatically sent to the website administrator.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse
     """
@@ -312,7 +328,7 @@ def send_message(request):
             return JsonResponse(data=response, safe=False)
 
 
-def properties_results(request):
+def properties_results(request) -> JsonResponse and HttpResponse:
     """
     A function handling two request methods, POST and GET. During a POST request, the function handles
     a property search form using fields in the database such as listing_status, city, category, and year_of_built
@@ -324,6 +340,8 @@ def properties_results(request):
     During a GET request, the filters selected by the user in the session are unpacked,
     and a queryset of properties is rendered based on these filters.
     The user also has the option to sort the search results.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return: JsonResponse, HttpResponse
     """
@@ -414,9 +432,11 @@ def properties_results(request):
         })
 
 
-def rodo_rules(request):
+def rodo_rules(request) -> HttpResponse:
     """
     Returns an HttpResponse with the rodo rules template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return HttpResponse
     """
@@ -428,9 +448,11 @@ def rodo_rules(request):
     })
 
 
-def privacy_policy(request):
+def privacy_policy(request) -> HttpResponse:
     """
     Returns an HttpResponse with the privacy policy template.
+
+    request: django.core.handlers.wsgi.WSGIRequest
 
     return HttpResponse
     """

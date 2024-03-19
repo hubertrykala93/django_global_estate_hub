@@ -5,6 +5,7 @@ from django.shortcuts import reverse
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import TreeForeignKey, MPTTModel
+from django.http.response import HttpResponseRedirect
 
 
 class Category(models.Model):
@@ -35,11 +36,11 @@ class Category(models.Model):
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given category.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='article-categories', kwargs={
             'category_slug': self.slug,
@@ -66,11 +67,11 @@ class Tag(models.Model):
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given tag.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='article-tags', kwargs={
             'tag_slug': self.slug,
@@ -104,11 +105,11 @@ class Article(models.Model):
         """
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given article.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='article-details', kwargs={
             'category_slug': self.category.slug,
@@ -146,7 +147,7 @@ class Comment(MPTTModel):
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
     full_name = models.CharField(max_length=200, blank=True, null=True)
-    date_posted = models.DateTimeField(default=now, editable=False)
+    date_posted = models.DateTimeField(default=now)
     comment = models.TextField(max_length=1000)
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)

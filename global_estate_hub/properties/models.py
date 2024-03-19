@@ -3,6 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from accounts.models import User
 from django.shortcuts import reverse
 from django.core.validators import FileExtensionValidator
+from django.http.response import HttpResponseRedirect
 
 
 class ListingStatus(models.Model):
@@ -17,7 +18,7 @@ class ListingStatus(models.Model):
         verbose_name = 'Listing Status'
         verbose_name_plural = 'Listing Statuses'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the status name and displays it in the administrator panel.
 
@@ -39,7 +40,7 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the category name and displays it in the administrator panel.
 
@@ -47,11 +48,11 @@ class Category(models.Model):
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given category.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='property-categories', kwargs={
             'category_slug': self.slug,
@@ -72,7 +73,7 @@ class Amenities(models.Model):
         verbose_name = 'Amenity'
         verbose_name_plural = 'Amenities'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the amenity name and displays it in the administrator panel.
 
@@ -94,7 +95,7 @@ class Education(models.Model):
         verbose_name = 'Education'
         verbose_name_plural = 'Educations'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the education institution name and displays it in the administrator panel.
 
@@ -115,7 +116,7 @@ class Shopping(models.Model):
     class Meta:
         verbose_name = 'Shopping'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the shopping places name and displays it in the administrator panel.
 
@@ -137,7 +138,7 @@ class HealthAndMedical(models.Model):
         verbose_name = 'Health & Medical'
         verbose_name_plural = 'Health & Medicals'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the health and medical institution name
         and displays it in the administrator panel.
@@ -160,7 +161,7 @@ class Transportation(models.Model):
         verbose_name = 'Transportation'
         verbose_name_plural = 'Transportations'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the transportation name and displays it in the administrator panel.
 
@@ -182,7 +183,7 @@ class City(models.Model):
         verbose_name = 'City'
         verbose_name_plural = 'Cities'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the city name and displays it in the administrator panel.
 
@@ -190,11 +191,11 @@ class City(models.Model):
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given city.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='property-cities', kwargs={
             'city_slug': self.slug,
@@ -244,7 +245,7 @@ class Property(models.Model):
         verbose_name_plural = 'Properties'
         ordering = ['date_posted']
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the property title and displays it in the administrator panel.
 
@@ -252,11 +253,11 @@ class Property(models.Model):
         """
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given property.
 
-        return HttpsResponseRedirect
+        return: str
         """
         return reverse(viewname='property-details', kwargs={
             'category_slug': self.category.slug,
@@ -282,7 +283,7 @@ class TourSchedule(models.Model):
         verbose_name = 'Tour Schedule'
         verbose_name_plural = 'Tour Schedules'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the username that sends a request to visit a property
         and displays it in the administrator panel.
@@ -308,7 +309,7 @@ class Review(models.Model):
         verbose_name = 'Review'
         verbose_name_plural = 'Reviews'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the reviews for the property and displays them in the administrator panel.
 

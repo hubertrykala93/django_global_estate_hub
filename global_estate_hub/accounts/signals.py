@@ -7,10 +7,14 @@ from django.dispatch.dispatcher import receiver
 def create_profile(sender, instance, created, **kwargs) -> None:
     """
     Automatically creates a individual or business profile upon successful registration.
+
+    sender: django.db.models.base.ModelBase
+    instance: accounts.models.User
+    created: bool
+    kwargs: dict
+
+    return: None
     """
-    print(type(sender))
-    print(type(instance))
-    print(type(created))
 
     if created:
         if instance.account_type == 'Individual':

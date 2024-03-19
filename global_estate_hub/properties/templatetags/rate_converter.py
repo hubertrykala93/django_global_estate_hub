@@ -4,7 +4,7 @@ register = template.Library()
 
 
 @register.filter(name='rate_converter')
-def rate_converter(value):
+def rate_converter(value) -> int:
     """
     Rounds and converts the value to an integer.
 

@@ -4,11 +4,12 @@ register = template.Library()
 
 
 @register.simple_tag(name='url_replace')
-def url_replace(request, page, number):
+def url_replace(request, page, number) -> str:
     """
     Template tag for pagination.
 
-    page: page request
+    request: django.core.handlers.wsgi.WSGIRequest
+    page: django.utils.safestring.SafeString
     number: int
 
     return: dict

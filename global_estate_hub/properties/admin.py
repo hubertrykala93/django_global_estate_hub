@@ -413,63 +413,79 @@ class AdminProperty(admin.ModelAdmin):
     ]
 
     @admin.display(description='Property Favourites')
-    def get_favourites(self, obj):
+    def get_favourites(self, obj) -> str:
         """
         Display in the admin panel all users who have added this property to their favorites.
 
+        obj: properties.models.Property
+
         return: str
         """
+        print(type(obj))
         return '\n'.join([user.username for user in obj.favourites.all()])
 
     @admin.display(description='Amenities')
-    def get_amenities(self, obj):
+    def get_amenities(self, obj) -> str:
         """
         Displays in the admin panel all amenities assigned to a given property.
+
+        obj: properties.models.Property
 
         return: str
         """
         return '\n'.join([a.name for a in obj.amenities.all()])
 
     @admin.display(description='Educations')
-    def get_educations(self, obj):
+    def get_educations(self, obj) -> str:
         """
         Displays in the admin panel all education institutions assigned to a given property.
+
+        obj: properties.models.Property
 
         return: str
         """
         return '\n'.join([e.name for e in obj.education.all()])
 
     @admin.display(description='Health & Medicals')
-    def get_health_and_medicals(self, obj):
+    def get_health_and_medicals(self, obj) -> str:
         """
         Displays in the admin panel all health and medicals institutions assigned to a given property.
+
+        obj: properties.models.Property
 
         return: str
         """
         return '\n'.join([h.name for h in obj.health_and_medical.all()])
 
     @admin.display(description='Transportations')
-    def get_transportations(self, obj):
+    def get_transportations(self, obj) -> str:
         """
         Displays in the admin panel all transportations assigned to a given property.
+
+        obj: properties.models.Property
 
         return: str
         """
         return '\n'.join([t.name for t in obj.transportation.all()])
 
     @admin.display(description='Shops')
-    def get_shops(self, obj):
+    def get_shops(self, obj) -> str:
         """
         Displays in the admin panel all shops assigned to a given property.
+
+        obj: properties.models.Property
 
         return: str
         """
         return '\n'.join([s.name for s in obj.shopping.all()])
 
     @admin.action(description='Highlight selected Properties')
-    def make_featured(self, request, queryset):
+    def make_featured(self, request, queryset) -> None:
         """
         Highlights all selected properties that have the 'is_featured' attribute set to 'False'.
+
+        request: django.core.handlers.wsgi.WSGIRequest
+        queryset: django.db.models.query.Queryset
 
         return: None
         """
@@ -482,9 +498,12 @@ class AdminProperty(admin.ModelAdmin):
                           level=messages.SUCCESS)
 
     @admin.action(description='Remove highlights from selected properties.')
-    def remove_featured(self, request, queryset):
+    def remove_featured(self, request, queryset) -> None:
         """
         Unhighlights all selected properties that have the 'is_featured' attribute set to 'True'.
+
+        request: django.core.handlers.wsgi.WSGIRequest
+        queryset: django.db.models.query.Queryset
 
         return: None
         """
@@ -606,9 +625,12 @@ class AdminReview(admin.ModelAdmin):
     ]
 
     @admin.action(description='Approve selected Reviews')
-    def approve_reviews(self, request, queryset):
+    def approve_reviews(self, request, queryset) -> None:
         """
         Approves all selected reviews that have the 'active' attribute set to 'False'.
+
+        request: django.core.handlers.wsgi.WSGIRequest
+        queryset: django.db.models.query.Queryset
 
         return: None
         """
