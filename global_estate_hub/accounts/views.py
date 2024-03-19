@@ -1048,6 +1048,13 @@ def set_password(request):
 
 
 def account_details(request, username):
+    """
+    Returns an HttpResponse with the account detailss template.
+
+    username: str
+
+    return: HttpResponse
+    """
     u = User.objects.get(username=username)
 
     return render(request=request, template_name='accounts/account-details.html', context={

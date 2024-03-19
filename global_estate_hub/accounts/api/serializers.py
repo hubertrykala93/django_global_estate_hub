@@ -3,6 +3,9 @@ from accounts.models import User, Individual, Business
 
 
 class UserSerializer(serializers.Serializer):
+    """
+    User Model Serializer.
+    """
     id = serializers.ReadOnlyField()
     username = serializers.CharField()
     email = serializers.EmailField()
@@ -20,6 +23,9 @@ class UserSerializer(serializers.Serializer):
 
 
 class IndividualProfileSerializer(serializers.Serializer):
+    """
+    Individual Model Serializer.
+    """
     id = serializers.ReadOnlyField()
     user = UserSerializer()
     first_name = serializers.CharField()
@@ -41,6 +47,9 @@ class IndividualProfileSerializer(serializers.Serializer):
 
 
 class BusinessProfileSerializer(serializers.Serializer):
+    """
+    Business Model Serializer
+    """
     id = serializers.ReadOnlyField()
     user = UserSerializer()
     company_name = serializers.CharField()
@@ -55,3 +64,6 @@ class BusinessProfileSerializer(serializers.Serializer):
     facebook_url = serializers.URLField()
     instagram_url = serializers.URLField()
     linkedin_url = serializers.URLField()
+
+    class Meta:
+        model = Business

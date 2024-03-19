@@ -162,7 +162,8 @@ class Comment(MPTTModel):
 
     def __str__(self):
         """
-        Returns the string representation of the commenting user and displays it in the administrator panel.
+        Returns the string representation of the commenting user if user is authenticated
+        or full name if user is anonymous and displays it in the administrator panel.
 
         return: str
         """

@@ -10,6 +10,6 @@ def convert_to_int(value):
 
     value: float
 
-    return: str
+    return: int
     """
     return int(value)

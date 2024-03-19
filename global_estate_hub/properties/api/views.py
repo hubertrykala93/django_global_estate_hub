@@ -6,6 +6,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 
 class PropertyList(ListAPIView):
+    """
+    The API view with all properties.
+    """
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     filter_backends = [DjangoFilterBackend]

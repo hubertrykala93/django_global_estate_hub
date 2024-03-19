@@ -9,12 +9,6 @@
                         <a href="{% url 'index' %}">Home</a>
                     </li>
 
-                    {% for item_1, item_2 in breadcrumbs_urls %}
-                    <li>
-                        <a href="{% url item_2 %}">{{ item_1 }}</a>
-                    </li>
-                    {% endfor %}
-
                     <li>
                         <span>{{ title }}</span>
                     </li>

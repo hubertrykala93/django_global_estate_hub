@@ -7,6 +7,14 @@ from accounts.models import User
 
 
 def blog_pagination(request, object_list, per_page):
+    """
+    Returns Pagination object.
+
+    object_list: QuerySet
+    per_page: int
+
+    return: Page
+    """
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
 
@@ -55,6 +63,8 @@ def article_tags(request, tag_slug):
     """
     Returns an HttpResponse with the article tags template along with pagination.
 
+    tag_slug: str
+
     return: HttpResponse
     """
     tag = get_object_or_404(klass=Tag, slug=tag_slug)
@@ -69,6 +79,9 @@ def article_tags(request, tag_slug):
 def article_details(request, category_slug, article_slug):
     """
     Returns an HttpResponse with the article-details template.
+
+    category_slug: str
+    article_slug: str
 
     return: HttpResponse
     """
@@ -197,6 +210,9 @@ def edit_comment(request, category_slug, article_slug):
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
+    category_slug: str
+    article_slug: str
+
     returns: JsonResponse
     """
     if request.method == 'PATCH':
@@ -236,6 +252,9 @@ def delete_comment(request, category_slug, article_slug):
     The function handles the comment deletion form for a specific article by a logged-in user.
     The function utilizes the DELETE method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    category_slug: str
+    article_slug: str
 
     returns: JsonResponse
     """
@@ -282,6 +301,9 @@ def give_like(request, category_slug, article_slug):
     the number of dislikes in the 'Comment' model is updated.
     The function utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
+
+    category_slug: str
+    article_slug: str
 
     return: JsonResponse
     """
@@ -337,6 +359,9 @@ def give_dislike(request, category_slug, article_slug):
     The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
+    category_slug: str
+    article_slug: str
+
     return: JsonResponse
     """
     if request.method == 'PUT':
@@ -388,6 +413,9 @@ def reply_comment(request, category_slug, article_slug):
     their username is automatically assigned.
     The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is saved in the database.
+
+    category_slug: str
+    article_slug: str
 
     return: JsonResponse
     """

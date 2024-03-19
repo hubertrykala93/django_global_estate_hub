@@ -33,6 +33,11 @@ def newest_articles(request) -> dict:
 
 
 def popular_tags(request):
+    """
+    Returns a set of queries with the most frequently occurring tags.
+
+    return: dict
+    """
     articles = Article.objects.all()
 
     result = []
@@ -56,6 +61,11 @@ def popular_tags(request):
 
 
 def users(request):
+    """
+    Creates a set of queries to the database and returns all registered users in the database.
+
+    return: dict
+    """
     return {
         'users': User.objects.all()
     }

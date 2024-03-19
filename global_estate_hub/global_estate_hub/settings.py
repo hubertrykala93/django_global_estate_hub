@@ -83,7 +83,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "core.context_processors.breadcrumbs_urls",
                 "core.context_processors.generate_token",
                 "core.context_processors.properties_types",
                 "blog.context_processors.get_category_info",

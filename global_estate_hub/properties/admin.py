@@ -499,6 +499,9 @@ class AdminProperty(admin.ModelAdmin):
 
 @admin.register(TourSchedule)
 class AdminTourSchedule(admin.ModelAdmin):
+    """
+    Admin options and functionalities for TourSchedule model.
+    """
     list_display = ['id', 'customer', 'property', 'date_sent', 'date', 'time', 'name', 'phone_number', 'message']
     list_editable = ['date', 'time', 'property', 'name', 'phone_number']
     list_filter = ['customer', 'date_sent', 'date', 'time', 'name', 'phone_number']

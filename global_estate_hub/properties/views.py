@@ -17,6 +17,14 @@ from django.db.models import Min, Max
 
 
 def property_pagination(request, object_list, per_page):
+    """
+    Returns Pagination object.
+
+    object_list: QuerySet
+    per_page: int
+
+    return: Page
+    """
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
     pages = paginator.get_page(number=page)
@@ -32,6 +40,13 @@ def property_pagination(request, object_list, per_page):
 
 
 def properties_context():
+    """
+    Returns context for the properties page if the user is not using any filters.
+    The values in filters such as categories, number_of_bedrooms, number_of_bathrooms, cities, and square_meters
+    are narrowed down to the listing_status. In this case, to the 'Rent' status.
+
+    return: dict
+    """
     return {
         'listing_statuses': ListingStatus.objects.all().order_by('name'),
         'categories': Property.objects.filter(listing_status_id=ListingStatus.objects.get(name='Rent').id).values_list(
@@ -54,6 +69,9 @@ def properties_context():
 
 
 def sidebar_context(**kwargs):
+    """
+
+    """
     return {
         'listing_statuses': ListingStatus.objects.all().order_by('name'),
         'categories': Property.objects.filter(listing_status_id=kwargs['listing_status_id']).values_list(

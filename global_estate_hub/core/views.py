@@ -12,7 +12,6 @@ from properties.models import Property, City, Category, ListingStatus
 from blog.models import Article
 from properties.views import property_pagination
 import datetime
-from django.db.models.functions import Lower
 from accounts.models import User
 
 load_dotenv()
@@ -74,6 +73,11 @@ def index(request):
 
 
 def top_agents(request):
+    """
+    Returns an HttpResponse with the top agentss template.
+
+    return: HttpResponse
+    """
     return render(request=request, template_name='core/top-agents.html', context={
         'title': 'Top Agents',
         'agents': User.objects.filter(is_agent=True)[:3],
@@ -309,6 +313,20 @@ def send_message(request):
 
 
 def properties_results(request):
+    """
+    A function handling two request methods, POST and GET. During a POST request, the function handles
+    a property search form using fields in the database such as listing_status, city, category, and year_of_built
+    with the help of Asynchronous JavaScript and XMLHttpRequest (AJAX).
+    The function returns a JsonResponse with updated city, category, and year_of_built fields
+    depending on the listing_status chosen by the user during the POST method.
+    It also saves the filters selected by the user in the session.
+
+    During a GET request, the filters selected by the user in the session are unpacked,
+    and a queryset of properties is rendered based on these filters.
+    The user also has the option to sort the search results.
+
+    return: JsonResponse, HttpResponse
+    """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
         filters = {}
@@ -397,6 +415,11 @@ def properties_results(request):
 
 
 def rodo_rules(request):
+    """
+    Returns an HttpResponse with the rodo rules template.
+
+    return HttpResponse
+    """
     email = os.environ.get('EMAIL_FROM')
 
     return render(request=request, template_name='core/rodo-rules.html', context={
@@ -406,6 +429,11 @@ def rodo_rules(request):
 
 
 def privacy_policy(request):
+    """
+    Returns an HttpResponse with the privacy policy template.
+
+    return HttpResponse
+    """
     email = os.environ.get('EMAIL_FROM')
 
     return render(request=request, template_name='core/privacy-policy.html', context={
