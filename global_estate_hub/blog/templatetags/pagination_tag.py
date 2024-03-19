@@ -8,11 +8,15 @@ def url_replace(request, page, number) -> str:
     """
     Template tag for pagination.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    page: django.utils.safestring.SafeString
-    number: int
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        page: django.utils.safestring.SafeString
+        number: int
 
-    return: dict
+    Returns
+    ----------
+        dict
     """
     dict_ = request.GET.copy()
     dict_[page] = number

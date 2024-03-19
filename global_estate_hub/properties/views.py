@@ -1,4 +1,4 @@
-import django.http.response
+import django.core.paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 import json
@@ -15,19 +15,21 @@ from unidecode import unidecode
 from datetime import datetime
 from datetime import timedelta
 from django.db.models import Min, Max
-from django.core.paginator import Page
-from django.http.response import HttpResponse, HttpResponseRedirect
 
 
-def property_pagination(request, object_list, per_page) -> Page:
+def property_pagination(request, object_list, per_page) -> django.core.paginator.Page:
     """
     Returns Page object for pagination.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    object_list: django.db.models.query.Queryset
-    per_page: int
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        object_list: django.db.models.query.Queryset
+        per_page: int
 
-    return: django.core.paginator.Page
+    Returns
+    ----------
+        django.core.paginator.Page
     """
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
@@ -49,7 +51,9 @@ def properties_context() -> dict:
     The values in filters such as Category, Rooms, Location, and Square Meters
     are narrowed down to the listing_status. In this case, to the 'Rent' status.
 
-    return: dict
+    Returns
+    ----------
+        dict
     """
     return {
         'listing_statuses': ListingStatus.objects.all().order_by('name'),
@@ -78,9 +82,13 @@ def sidebar_context(**kwargs) -> dict:
     Values in filters such as Category and Location are narrowed down based on the user-selected Status,
     while values in filters such as Rooms and Square Meters are narrowed down to all user-selected filters.
 
-    kwargs: dict
+    Parameters
+    ----------
+        kwargs: dict
 
-    return: dict
+    Returns
+    ----------
+        dict
     """
     return {
         'listing_statuses': ListingStatus.objects.all().order_by('name'),
@@ -101,7 +109,7 @@ def sidebar_context(**kwargs) -> dict:
     }
 
 
-def properties(request) -> HttpResponse:
+def properties(request) -> django.http.response.HttpResponse:
     """
     The function handles a GET request. It includes sorting properties by Newest Properties, Oldest Properties,
     Price (ascending), Price (descending), and Featured properties.
@@ -112,9 +120,13 @@ def properties(request) -> HttpResponse:
     Keywords and filters are also stored in the session for further sorting.
     Pagination has also been implemented. Finally, the function returns an HttpResponse for the properties template.
 
-    request: django.core.handlers.wsgi.WSGIRequest
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     queryset = []
     context = {}
@@ -631,14 +643,18 @@ def properties(request) -> HttpResponse:
     return render(request=request, template_name='properties/properties.html', context=context)
 
 
-def property_categories(request, category_slug) -> HttpResponse:
+def property_categories(request, category_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the property-categories template along with pagination.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    category_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     category = get_object_or_404(klass=Category, slug=category_slug)
 
@@ -693,14 +709,18 @@ def property_categories(request, category_slug) -> HttpResponse:
     })
 
 
-def property_cities(request, city_slug) -> HttpResponse:
+def property_cities(request, city_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the property-cities template along with pagination.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    city_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        city_slug: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     city = get_object_or_404(klass=City, slug=city_slug)
     queryset = []
@@ -755,13 +775,24 @@ def property_cities(request, city_slug) -> HttpResponse:
 
 
 @login_required(login_url='login')
-def add_property(request):
+def add_property(request) -> django.http.response.HttpResponse:
+    """
+    Returns an HttpResponse with the add-property template.
+
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
+    """
     return render(request=request, template_name='properties/add-property.html', context={
         'title': 'Add Property',
     })
 
 
-def add_to_favourites(request) -> JsonResponse:
+def add_to_favourites(request) -> django.http.response.JsonResponse:
     """
     The function handles the form for adding a property to favorites.
     If the property was already added to favorites by the user, the liking is removed.
@@ -769,9 +800,13 @@ def add_to_favourites(request) -> JsonResponse:
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    request: django.core.handlers.wsgi.WSGIRequest
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         property_id = int(json.loads(s=request.body.decode('utf-8'))['propertyId'])
@@ -800,15 +835,19 @@ def add_to_favourites(request) -> JsonResponse:
             })
 
 
-def property_details(request, category_slug, property_slug) -> HttpResponse:
+def property_details(request, category_slug, property_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the property-details template.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    category_slug: str
-    property_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        property_slug: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     category = Category.objects.get(slug=category_slug)
     property_obj = Property.objects.get(category=category, slug=property_slug)
@@ -835,7 +874,7 @@ def property_details(request, category_slug, property_slug) -> HttpResponse:
     })
 
 
-def add_review(request, category_slug, property_slug) -> JsonResponse:
+def add_review(request, category_slug, property_slug) -> django.http.response.JsonResponse:
     """
     The function handles a form for adding reviews to properties.
     It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
@@ -843,11 +882,15 @@ def add_review(request, category_slug, property_slug) -> JsonResponse:
     Only registered and logged-in users are allowed to fill out the form.
     After successful form validation, the review is saved to the database and awaits approval from the administrator.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    category_slug: str
-    property_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        property_slug: str
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     category = Category.objects.get(slug=category_slug)
     property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)
@@ -890,7 +933,7 @@ def add_review(request, category_slug, property_slug) -> JsonResponse:
             return JsonResponse(data=data, safe=False)
 
 
-def schedule_tour(request, category_slug, property_slug) -> JsonResponse:
+def schedule_tour(request, category_slug, property_slug) -> django.http.response.JsonResponse:
     """
     The function handles a form for scheduling a visit with a property seller or landlord.
     It utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
@@ -898,11 +941,15 @@ def schedule_tour(request, category_slug, property_slug) -> JsonResponse:
     After successful form validation, an email message is sent to the seller requesting a meeting,
     and the meeting details are saved to the database.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    category_slug: str
-    property_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        property_slug: str
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     category = Category.objects.get(slug=category_slug)
     property_obj = get_object_or_404(klass=Property, slug=property_slug, category=category)

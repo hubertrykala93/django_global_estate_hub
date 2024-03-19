@@ -7,8 +7,13 @@ def generate_token(request) -> dict:
     """
     Generating CSRF middleware tokens for all forms in the project.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    return: dict
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        dict
     """
     return {
         'csrf_token': get_token(request=request)
@@ -20,8 +25,13 @@ def properties_types(request) -> dict:
     Returns all available property categories along with information such as category name,
     image source, URL address, and the number of properties in each category.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    return: dict
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        dict
     """
     return {
         'get_category_properties_info': list(
@@ -41,8 +51,13 @@ def explore_cities(request) -> dict:
     Returns all available property cities along with information such as city name,
     image source, URL address, and the number of properties in each city.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    return: dict
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        dict
     """
     return {
         'get_cities_info': list(
@@ -61,8 +76,13 @@ def discover_cities(request) -> dict:
     """
     Returns the most frequently occurring cities in the database.
 
-    request: django.core.handlers.wsgi.WSGIRequest
-    return: dict
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        dict
     """
     return {
         'discover_cities': [p.city for p in

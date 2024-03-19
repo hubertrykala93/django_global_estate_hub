@@ -18,7 +18,9 @@ class Newsletter(models.Model):
         """
         Returns the string representation of the user's email address and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.email
 
@@ -42,6 +44,8 @@ class ContactMail(models.Model):
         """
         Returns the string representation of the user's full name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'E-mail from {self.full_name}.'

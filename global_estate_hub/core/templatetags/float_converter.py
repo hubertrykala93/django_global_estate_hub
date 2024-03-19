@@ -8,8 +8,12 @@ def price_converter(value) -> str:
     """
     Converts float to integer, then adds a separator in the form of a dot in the property price.
 
-    value: float
+    Parameters
+    ----------
+        value: float
 
-    return: str
+    Returns
+    ----------
+        str
     """
     return format(int(value), ',d').replace(',', '.')

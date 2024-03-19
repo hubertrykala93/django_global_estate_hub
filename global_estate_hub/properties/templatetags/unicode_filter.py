@@ -9,8 +9,12 @@ def unicode_filter(value) -> str:
     """
     Translates non-English letters into English letters.
 
-    value: str
+    Parameters
+    ----------
+        value: str
 
-    return: str
+    Returns
+    ----------
+        return: str
     """
     return unidecode(value)

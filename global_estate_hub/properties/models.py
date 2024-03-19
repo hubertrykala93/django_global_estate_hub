@@ -3,7 +3,6 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from accounts.models import User
 from django.shortcuts import reverse
 from django.core.validators import FileExtensionValidator
-from django.http.response import HttpResponseRedirect
 
 
 class ListingStatus(models.Model):
@@ -22,7 +21,9 @@ class ListingStatus(models.Model):
         """
         Returns the string representation of the status name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -44,7 +45,9 @@ class Category(models.Model):
         """
         Returns the string representation of the category name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -52,7 +55,9 @@ class Category(models.Model):
         """
         Returns the absolute URL for a given category.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='property-categories', kwargs={
             'category_slug': self.slug,
@@ -77,7 +82,9 @@ class Amenities(models.Model):
         """
         Returns the string representation of the amenity name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -99,7 +106,9 @@ class Education(models.Model):
         """
         Returns the string representation of the education institution name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -120,7 +129,9 @@ class Shopping(models.Model):
         """
         Returns the string representation of the shopping places name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -143,7 +154,9 @@ class HealthAndMedical(models.Model):
         Returns the string representation of the health and medical institution name
         and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -165,7 +178,9 @@ class Transportation(models.Model):
         """
         Returns the string representation of the transportation name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -187,7 +202,9 @@ class City(models.Model):
         """
         Returns the string representation of the city name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -195,7 +212,9 @@ class City(models.Model):
         """
         Returns the absolute URL for a given city.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='property-cities', kwargs={
             'city_slug': self.slug,
@@ -249,7 +268,9 @@ class Property(models.Model):
         """
         Returns the string representation of the property title and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.title
 
@@ -257,7 +278,9 @@ class Property(models.Model):
         """
         Returns the absolute URL for a given property.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='property-details', kwargs={
             'category_slug': self.category.slug,
@@ -288,7 +311,9 @@ class TourSchedule(models.Model):
         Returns the string representation of the username that sends a request to visit a property
         and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -313,6 +338,8 @@ class Review(models.Model):
         """
         Returns the string representation of the reviews for the property and displays them in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'Reviewed by {self.user}'

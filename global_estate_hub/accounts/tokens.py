@@ -11,10 +11,14 @@ class TokenGenerator(PasswordResetTokenGenerator):
         """
         Generates a token for the user for the purpose of account activation.
 
-        user: account.models.User
-        timestamp: int
+        Parameters
+        ----------
+            user: account.models.User
+            timestamp: int
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_verified)
 

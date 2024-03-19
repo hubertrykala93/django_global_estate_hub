@@ -417,9 +417,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Display in the admin panel all users who have added this property to their favorites.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         print(type(obj))
         return '\n'.join([user.username for user in obj.favourites.all()])
@@ -429,9 +433,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Displays in the admin panel all amenities assigned to a given property.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([a.name for a in obj.amenities.all()])
 
@@ -440,9 +448,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Displays in the admin panel all education institutions assigned to a given property.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([e.name for e in obj.education.all()])
 
@@ -451,9 +463,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Displays in the admin panel all health and medicals institutions assigned to a given property.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([h.name for h in obj.health_and_medical.all()])
 
@@ -462,9 +478,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Displays in the admin panel all transportations assigned to a given property.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([t.name for t in obj.transportation.all()])
 
@@ -473,9 +493,13 @@ class AdminProperty(admin.ModelAdmin):
         """
         Displays in the admin panel all shops assigned to a given property.
 
-        obj: properties.models.Property
+        Parameters
+        ----------
+            obj: properties.models.Property
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([s.name for s in obj.shopping.all()])
 
@@ -484,10 +508,14 @@ class AdminProperty(admin.ModelAdmin):
         """
         Highlights all selected properties that have the 'is_featured' attribute set to 'False'.
 
-        request: django.core.handlers.wsgi.WSGIRequest
-        queryset: django.db.models.query.Queryset
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
 
-        return: None
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(featured=True)
 
@@ -502,10 +530,14 @@ class AdminProperty(admin.ModelAdmin):
         """
         Unhighlights all selected properties that have the 'is_featured' attribute set to 'True'.
 
-        request: django.core.handlers.wsgi.WSGIRequest
-        queryset: django.db.models.query.Queryset
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
 
-        return: None
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(featured=False)
 
@@ -629,10 +661,14 @@ class AdminReview(admin.ModelAdmin):
         """
         Approves all selected reviews that have the 'active' attribute set to 'False'.
 
-        request: django.core.handlers.wsgi.WSGIRequest
-        queryset: django.db.models.query.Queryset
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
 
-        return: None
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(active=True)
 

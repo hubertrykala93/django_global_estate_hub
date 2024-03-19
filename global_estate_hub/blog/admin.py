@@ -136,9 +136,13 @@ class AdminArticle(admin.ModelAdmin):
         """
         Displays in the admin panel all tags assigned to a given article.
 
-        obj: blog.models.Article
+        Parameters
+        ----------
+            obj: blog.models.Article
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return '\n'.join([tag.name for tag in obj.tags.all()])
 
@@ -215,12 +219,15 @@ class AdminComment(MPTTModelAdmin):
         """
         Approves all selected comments that have the 'active' attribute set to 'False'.
 
-        request: django.core.handlers.wsgi.WSGIRequest
-        queryset: django.db.models.Queryset
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.Queryset
 
-        return: None
+        Returns
+        ----------
+            None
         """
-        print(type(queryset))
         updated = queryset.update(active=True)
 
         self.message_user(request=request,

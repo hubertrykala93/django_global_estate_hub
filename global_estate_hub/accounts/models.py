@@ -1,10 +1,9 @@
 from datetime import timedelta
-
+import django.db.models.query
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from PIL import Image
-from django.db.models import QuerySet
 
 
 class CustomUserManager(UserManager):
@@ -75,7 +74,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Returns the string representation of the user's username and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.username
 
@@ -83,10 +84,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Converts the user's profile image to a smaller size of 300 x 300.
 
-        args: tuple
-        kwargs: dict
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
 
-        return: None
+        Returns
+        ----------
+            None
         """
         super(User, self).save(*args, **kwargs)
 
@@ -103,7 +108,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         Returns the username for a given user.
 
-        returns: str
+        Returns
+        ----------
+            str
         """
         return self.username
 
@@ -113,11 +120,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 #     Creating OneTimePasswordManager model.
 #     """
 #
-#     def get_queryset(self) -> QuerySet:
+#     def get_queryset(self) -> django.db.models.query.QuerySet:
 #         """
 #         Automatically deletes the OneTimePassword after 5 minutes.
 #
-#         return: django.db.models.Queryset
+#         Returns
+#         ----------
+#             django.db.models.query.Queryset
 #         """
 #         return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
 
@@ -143,7 +152,9 @@ class OneTimePassword(models.Model):
         Returns the string representation of the username of the user
         to whom the OneTimePassword has been assigned and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'One Time Password for {self.user.username}.'
 
@@ -179,7 +190,9 @@ class Individual(models.Model):
         """
         Returns the string representation of the profile's username and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user.username} Individual Profile.'
 
@@ -211,6 +224,8 @@ class Business(models.Model):
         """
         Returns the string representation of the business's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.company_name} Business Profile.'

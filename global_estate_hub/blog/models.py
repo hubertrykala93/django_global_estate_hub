@@ -5,7 +5,6 @@ from django.shortcuts import reverse
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import TreeForeignKey, MPTTModel
-from django.http.response import HttpResponseRedirect
 
 
 class Category(models.Model):
@@ -28,11 +27,13 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the category's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -40,7 +41,9 @@ class Category(models.Model):
         """
         Returns the absolute URL for a given category.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-categories', kwargs={
             'category_slug': self.slug,
@@ -59,11 +62,13 @@ class Tag(models.Model):
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the tag's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
@@ -71,7 +76,9 @@ class Tag(models.Model):
         """
         Returns the absolute URL for a given tag.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-tags', kwargs={
             'tag_slug': self.slug,
@@ -101,7 +108,9 @@ class Article(models.Model):
         """
         Returns the string representation of the article's title and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.title
 
@@ -109,7 +118,9 @@ class Article(models.Model):
         """
         Returns the absolute URL for a given article.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-details', kwargs={
             'category_slug': self.category.slug,
@@ -120,7 +131,14 @@ class Article(models.Model):
         """
         Converts the article's image to a smaller size based on proportions.
 
-        return: None
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
+
+        Returns
+        ----------
+            None
         """
         super(Article, self).save(*args, **kwargs)
 
@@ -161,12 +179,14 @@ class Comment(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['date_posted']
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the commenting user if user is authenticated
         or full name if user is anonymous and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'Comment by {self.full_name}.' if self.full_name else f'Comment by {self.user}.'
 
@@ -183,12 +203,14 @@ class CommentLike(models.Model):
         verbose_name = 'Comment Like'
         verbose_name_plural = 'Comment Likes'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the user giving a Like,
         along with the comment content, and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user}, {self.comment}'
 
@@ -205,11 +227,13 @@ class CommentDislike(models.Model):
         verbose_name = 'Comment Dislike'
         verbose_name_plural = 'Comment Dislikes'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the user giving a Dislike,
         along with the comment content, and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user}, {self.comment}'

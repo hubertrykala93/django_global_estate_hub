@@ -8,8 +8,12 @@ def rate_converter(value) -> int:
     """
     Rounds and converts the value to an integer.
 
-    values: float
+    Parameters
+    ----------
+        values: float
 
-    return: int
+    Returns
+    ----------
+        int
     """
     return int(round(number=value))

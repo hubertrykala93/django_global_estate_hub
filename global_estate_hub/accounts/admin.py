@@ -21,9 +21,13 @@ class AdminSession(admin.ModelAdmin):
         """
         Displays in the admin panel all users assigned to a given session.
 
-        obj: django.contrib.session.models.Session
+        Parameters
+        ----------
+            obj: django.contrib.session.models.Session
 
-        return: str
+        Returns
+        ----------
+            str
         """
         session_user = obj.get_decoded().get('_auth_user_id')
         user = User.objects.get(pk=session_user)
@@ -33,9 +37,13 @@ class AdminSession(admin.ModelAdmin):
         """
         Displays in the admin panel session data assigned to a given user.
 
-        obj: django.contrib.session.models.Session
+        Parameters
+        ----------
+            obj: django.contrib.session.models.Session
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return pprint.pformat(obj.get_decoded()).replace('\n', '\n')
 

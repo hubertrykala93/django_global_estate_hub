@@ -8,8 +8,12 @@ def convert_to_int(value) -> int:
     """
     Converts float to integer.
 
-    value: float
+    Parameters
+    ----------
+        value: float
 
-    return: int
+    Returns
+    ----------
+        int
     """
     return int(value)
