@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from properties.models import ListingStatus, Category, Amenities, Education, Shopping, HealthAndMedical, Transportation, \
-    City, Property
-from accounts.api.serializers import UserSerializer
+    City, Property, TourSchedule, Review
+from accounts.api.serializers import UserSerializer, UserUsernameSerializer
 
 
 class ListingStatusSerializer(serializers.Serializer):
@@ -141,3 +141,45 @@ class PropertySerializer(serializers.Serializer):
 
     class Meta:
         model = Property
+
+
+class PropertyTitleSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
+    title = serializers.CharField()
+
+    class Meta:
+        model = Property
+
+
+class TourScheduleSerializer(serializers.Serializer):
+    """
+    TourSchedule Model Serializer.
+    """
+    id = serializers.ReadOnlyField()
+    customer = UserUsernameSerializer()
+    property = PropertyTitleSerializer()
+    date_sent = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    date = serializers.CharField()
+    time = serializers.CharField()
+    name = serializers.CharField()
+    phone_number = serializers.EmailField()
+    message = serializers.CharField()
+
+    class Meta:
+        model = TourSchedule
+
+
+class ReviewSerializer(serializers.Serializer):
+    """
+    Review Model Serializer.
+    """
+    id = serializers.ReadOnlyField()
+    date_posted = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    user = UserUsernameSerializer()
+    property = PropertyTitleSerializer()
+    rate = serializers.IntegerField()
+    content = serializers.CharField()
+    active = serializers.BooleanField()
+
+    class Meta:
+        model = Review

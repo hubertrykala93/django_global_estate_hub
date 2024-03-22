@@ -7,16 +7,21 @@ class UserSerializer(serializers.Serializer):
     User Model Serializer.
     """
     id = serializers.ReadOnlyField()
+    date_joined = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
     username = serializers.CharField()
     email = serializers.EmailField()
-    # image = serializers.ImageField()
+    image = serializers.ImageField()
     account_type = serializers.CharField()
     is_verified = serializers.BooleanField()
-    is_active = serializers.BooleanField()
-    is_superuser = serializers.BooleanField()
-    is_staff = serializers.BooleanField()
     is_agent = serializers.BooleanField()
-    date_joined = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+
+    class Meta:
+        model = User
+
+
+class UserUsernameSerializer(serializers.Serializer):
+    id = serializers.ReadOnlyField()
+    username = serializers.CharField()
 
     class Meta:
         model = User

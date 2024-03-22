@@ -3,6 +3,7 @@ from ckeditor_uploader.fields import RichTextUploadingField
 from accounts.models import User
 from django.shortcuts import reverse
 from django.core.validators import FileExtensionValidator
+from PIL import Image
 
 
 class ListingStatus(models.Model):
@@ -286,6 +287,35 @@ class Property(models.Model):
             'category_slug': self.category.slug,
             'property_slug': self.slug,
         })
+
+    def save(self, *args, **kwargs):
+        """
+        Converts the article's image to a smaller size based on proportions.
+
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
+
+        Returns
+        ----------
+            None
+        """
+        super(Property, self).save(*args, **kwargs)
+
+        img = Image.open(fp=self.image.path)
+
+        if img.mode == 'RGBA':
+            img.convert(mode='RGB')
+
+        img_width = img.width
+        img_height = img.height
+
+        output_width = 1100
+        output_height = img_height * output_width / img_width
+
+        img.thumbnail(size=(output_width, output_height))
+        img.save(fp=self.image.path)
 
 
 class TourSchedule(models.Model):
