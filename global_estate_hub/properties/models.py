@@ -231,7 +231,7 @@ class Property(models.Model):
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
     thumbnail = models.ImageField(upload_to='property_images', null=True)
-    images = models.ImageField(upload_to='property_images', null=True)
+    images = models.ImageField(upload_to='property_images', blank=True, null=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
     number_of_bedrooms = models.IntegerField()
@@ -316,6 +316,11 @@ class Property(models.Model):
 
         img.thumbnail(size=(output_width, output_height))
         img.save(fp=self.image.path)
+
+    def path_and_rename(self, path):
+        def wrapper(instance, filename):
+            ext = filename.split(sep='.')[-1]
+            print(ext)
 
 
 class TourSchedule(models.Model):
