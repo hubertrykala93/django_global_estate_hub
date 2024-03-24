@@ -2419,7 +2419,8 @@ if ( $propertiesPage ) {
       $listBtn.classList.add('active')
     }
   }
-  changeView(view)
+
+  if ($propertiesRow) { changeView(view) }
 
   $changeView.addEventListener('click', e => {
     if ( e.target.dataset.hasOwnProperty('gridBtn') ) {
@@ -2467,7 +2468,7 @@ if ( $propertiesPage ) {
 
   }
 
-  $propertiesRow.addEventListener('click', e=> {
+  $propertiesRow?.addEventListener('click', e=> {
     // add to favourites
     if ( e.target.dataset.hasOwnProperty('addToFavourites') ) {
       addToFavouritesHandler(e.target)
@@ -2658,75 +2659,96 @@ if ($propertyPage) {
    * Mortgage Calculator
     */
 
-  const $mortgageCalculator = $propertyPage.querySelector('[data-mortgage-form]')
-
-  const showResults = (bankPercent, userPercent, restPercent, bankPayment, userPayment, restPayment) => {
-    const $barsWrapper = $propertyPage.querySelector('[data-mortgage-bars]')
-    const parameter1 = $propertyPage.querySelector('[data-1-value]')
-    const parameter2 = $propertyPage.querySelector('[data-2-value]')
-    const parameter3 = $propertyPage.querySelector('[data-3-value]')
-
-    function numberWithCommas(x) {
-        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    $barsWrapper.style.gridTemplateColumns = `${bankPercent}% ${userPercent}% ${restPercent}%`
-    parameter1.textContent = numberWithCommas(bankPayment)
-    parameter2.textContent = numberWithCommas(userPayment)
-    parameter3.textContent = numberWithCommas(restPayment)
-  }
-
-  const calculate = (elements) => {
-    const totalAmount = Number(elements['total-amount'].value)
-    const downPayment = Number(elements['down-payment'].value) || 0
-    const interestRate = Number(elements['interest-rate'].value)
-    const loanTerms = Number(elements['loan-terms'].value)
-    const propertyTax = Number(elements['property-tax'].value) || 0
-    const homeInsurance = Number(elements['home-insurance'].value) || 0
-
-    const tax = ((totalAmount * propertyTax) / 100) * loanTerms
-    const loanValue = totalAmount - downPayment
-    const agentCommission = totalAmount * 0.005
-    const loanInterest = (loanValue * interestRate) / 100 + tax + (homeInsurance * loanTerms) + agentCommission
-    const fullAmount = totalAmount + loanInterest
-
-    const fullValue = fullAmount
-    const bankPayment = loanValue
-    const bankPercent = (bankPayment * 100) / fullAmount
-    const userPayment = downPayment
-    const userPercent = (userPayment * 100) / fullAmount
-    const restPayment = fullAmount - loanValue - downPayment
-    const restPercent = (restPayment * 100) / fullAmount
-
-    showResults(bankPercent, userPercent, restPercent, bankPayment, userPayment, restPayment)
-  }
-
-  const handleCalculator = (e) => {
-    e.preventDefault()
-
-    let isValid = true
-    const $elements = [...e.target.elements].filter(item => item.nodeName === 'INPUT')
-    
-    $elements.forEach(input => {
-      const value = Number(input.value)
-      if (value == '' && input.dataset.hasOwnProperty('required')) {
-        showInfo(false, 'Field cannot be empty', $mortgageCalculator, `name="${input.name}"`)
-        isValid = false
-      } else if ( value < 0 ) {
-        showInfo(false, 'Value cannot be less than 0', $mortgageCalculator, `name="${input.name}"`)
-        isValid = false
-      }
-      else {
-        removeInfo($mortgageCalculator, `name="${input.name}"`)
-      }
-    })
-
-    if (isValid) {
-      calculate(e.target.elements)
+  const mortgageStats = {
+    $barsWrapper: $propertyPage.querySelector('[data-mortgage-bars]'),
+    $stat1: $propertyPage.querySelector('[data-stat1]'),
+    $stat2: $propertyPage.querySelector('[data-stat2]'),
+    $stat3: $propertyPage.querySelector('[data-stat3]'),
+    numberWithCommas: function (num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+    updateBars: function (p1, p2, p3) {
+      this.$barsWrapper.style.gridTemplateColumns = `${p1}% ${p2}% ${p3}%`
+    },
+    updateStats: function (s1, s2, s3) {
+      this.$stat1.innerText = this.numberWithCommas(s1)
+      this.$stat2.innerText = this.numberWithCommas(s2)
+      this.$stat3.innerText = this.numberWithCommas(s3)
     }
   }
 
-  $mortgageCalculator.addEventListener('submit', handleCalculator)
+  const mortgageCalculator = {
+    form: $propertyPage.querySelector('[data-mortgage-form]'),
+    calculate: function (elements) {
+      const totalAmount = Number(elements['total-amount'].value)
+      const downPayment = Number(elements['down-payment'].value) || 0
+      const interestRate = Number(elements['interest-rate'].value)
+      const loanTerms = Number(elements['loan-terms'].value)
+      const propertyTax = Number(elements['property-tax'].value) || 0
+      const homeInsurance = Number(elements['home-insurance'].value) || 0
+
+      const tax = ((totalAmount * propertyTax) / 100) * loanTerms
+      const loanValue = totalAmount - downPayment
+      const agentCommission = totalAmount * 0.005
+      const loanInterest = (loanValue * interestRate) / 100 + tax + (homeInsurance * loanTerms) + agentCommission
+      const fullAmount = totalAmount + loanInterest
+
+      const bankPayment = loanValue
+      const bankPercent = (bankPayment * 100) / fullAmount
+      const userPayment = downPayment
+      const userPercent = (userPayment * 100) / fullAmount
+      const restPayment = fullAmount - loanValue - downPayment
+      const restPercent = (restPayment * 100) / fullAmount
+      
+      mortgageStats.updateBars(bankPercent, userPercent, restPercent)
+      mortgageStats.updateStats(bankPayment, userPayment, restPayment)
+    },
+    liveValidation: function (e) {
+      const input = e.target
+      const value = input.value.trim()
+      const inputName = input.name
+      let cutValue = value
+
+      if ( Number(isNaN(value)) ) {
+        cutValue = value.substring(0, value.length - 1)
+        if ( Number(isNaN(cutValue)) ) {
+          while ( Number(isNaN(cutValue)) && cutValue.length ) {
+            cutValue = cutValue.substring(0, cutValue.length - 1)
+          }
+        }
+        input.value = cutValue
+      }
+      if ( Number(cutValue[0]) === 0 ) {
+        input.value = cutValue.substring(0, 0)
+      }
+    },
+    validation: function (e) {
+      e.preventDefault()
+      let isValid = true
+      const $elements = [...mortgageCalculator.form.elements].filter(item => item.nodeName === 'INPUT')
+
+      $elements.forEach(input => {
+        const value = Number(input.value)
+        if (value == '' && input.dataset.hasOwnProperty('required')) {
+          showInfo(false, 'Field cannot be empty', mortgageCalculator.form, `name="${input.name}"`)
+          isValid = false
+        } else if ( value < 0 ) {
+          showInfo(false, 'Value cannot be less than 0', mortgageCalculator.form, `name="${input.name}"`)
+          isValid = false
+        }
+        else {
+          removeInfo(mortgageCalculator.form, `name="${input.name}"`)
+        }
+      })
+
+      if (isValid) {
+        mortgageCalculator.calculate(mortgageCalculator.form.elements)
+      }
+    },
+  }
+
+  mortgageCalculator.form.addEventListener('submit', mortgageCalculator.validation)
+  mortgageCalculator.form.addEventListener('input', mortgageCalculator.liveValidation)
 
 
   /**

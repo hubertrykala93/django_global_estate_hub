@@ -298,17 +298,17 @@
             <ul class="property__mortgage__legend">
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--principal"></span>
-                <div class="property__mortgage__legend__text">Bank ($<span data-1-value>0</span>)</div>
+                <div class="property__mortgage__legend__text">Bank ($<span data-stat1>0</span>)</div>
               </li>
 
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--tax"></span>
-                <div class="property__mortgage__legend__text">Purchaser ($<span data-2-value>0</span>)</div>
+                <div class="property__mortgage__legend__text">Purchaser ($<span data-stat2>0</span>)</div>
               </li>
 
               <li class="property__mortgage__legend__item" data-principal>
                 <span class="property__mortgage__legend__dot property__mortgage__legend__dot--insurance"></span>
-                <div class="property__mortgage__legend__text">Others ($<span data-3-value>0</span>)</div>
+                <div class="property__mortgage__legend__text">Others ($<span data-stat3>0</span>)</div>
               </li>
             </ul>
 
@@ -316,48 +316,48 @@
 
               <div class="form__row">
                   <div class="form__field">
-                      <label for="total-amount" class="form__label">total amount * (cała kwota kupna)</label>
+                      <label for="total-amount" class="form__label">total amount *</label>
                       <div class="form__input-wrap">
-                          <input data-total data-input data-required type="number" name="total-amount" id="total-amount" value="{{ property.price|convert_to_int }}">
+                          <input data-total data-input data-required type="text" name="total-amount" id="total-amount" value="{{ property.price|convert_to_int }}">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="down-payment" class="form__label">down payment (wpłata własna)</label>
+                    <label for="down-payment" class="form__label">down payment</label>
                     <div class="form__input-wrap">
-                        <input data-down-payment data-input type="number" name="down-payment" id="down-payment">
+                        <input data-down-payment data-input type="text" name="down-payment" id="down-payment">
                     </div>
                   </div>
               </div>
               
               <div class="form__row">
                   <div class="form__field">
-                      <label for="interest-rate" class="form__label">interest rate * (oprocentowanie)</label>
+                      <label for="interest-rate" class="form__label">interest rate *</label>
                       <div class="form__input-wrap">
-                          <input data-interest-rate data-input data-required type="number" name="interest-rate" id="interest-rate">
+                          <input data-interest-rate data-input data-required type="text" name="interest-rate" id="interest-rate">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="loan-terms" class="form__label">loan terms * (lata spłaty)</label>
+                    <label for="loan-terms" class="form__label">loan terms *</label>
                     <div class="form__input-wrap">
-                        <input data-loan-terms data-input data-required type="number" name="loan-terms" id="loan-terms">
+                        <input data-loan-terms data-input data-required type="text" name="loan-terms" id="loan-terms">
                     </div>
                   </div>
               </div>
 
               <div class="form__row">
                   <div class="form__field">
-                      <label for="property-tax" class="form__label">property tax (podatek od nier.)</label>
+                      <label for="property-tax" class="form__label">property tax</label>
                       <div class="form__input-wrap">
-                          <input data-property-tax data-input type="number" name="property-tax" id="property-tax">
+                          <input data-property-tax data-input type="text" name="property-tax" id="property-tax">
                       </div>
                   </div>
 
                   <div class="form__field">
-                    <label for="home-insurance" class="form__label">home insurance (ubezpieczenie domu)</label>
+                    <label for="home-insurance" class="form__label">home insurance</label>
                     <div class="form__input-wrap">
-                        <input data-home-insurance data-input type="number" name="home-insurance" id="home-insurance">
+                        <input data-home-insurance data-input type="text" name="home-insurance" id="home-insurance">
                     </div>
                   </div>
               </div>

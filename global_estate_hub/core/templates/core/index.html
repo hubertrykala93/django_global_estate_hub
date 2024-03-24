@@ -12,9 +12,9 @@
     <div class="container">
         <div class="row hero__row">
             <div class="content-column">
-                <h1 class="hero__title h1">Find Your Dream <br> Home Easily.</h1>
+                <h1 class="hero__title h1" data-animation-fade-from-right>Find Your Dream <br> Home Easily.</h1>
 
-                <p class="hero__text">Determine what you want Make a list of the things
+                <p class="hero__text" data-animation-fade-from-left>Determine what you want and make a list of the things
                     you want in your dream home, such as the
                     number of bedrooms, bathrooms.
                 </p>
@@ -190,17 +190,17 @@
                     <div class="numberCounters__item">
                         <div class="numberCounters__number-wrapper">
                             <span class="numberCounters__number" data-number="{{ substracted_year }}">{{ substracted_year }}</span>
-<!--                            <span class="numberCounters__number-char">+</span>-->
+                           <span class="numberCounters__number-char">+</span>
                         </div>
                         <div class="numberCounters__number-text">Years of Services</div>
                     </div>
 
                     <div class="numberCounters__item">
                         <div class="numberCounters__number-wrapper">
-                            <span class="numberCounters__number" data-number="{% if customers_counter < 2 %}{{ customers_counter }}{% else %}{{ substracted_customers_counter }}{% endif %}">{% if customers_counter < 2 %}{{ customers_counter }}{% else %}{{ substracted_customers_counter }}{% endif %}</span>
-                            {% if customers_counter > 1 %}<span class="numberCounters__number-char">+</span>{% endif %}
+                            <span class="numberCounters__number" data-number="200">200</span>
+                            <span class="numberCounters__number-char">+</span>
                         </div>
-                        <div class="numberCounters__number-text">{% if customers_counter == 0 %}Happy Customers{% elif customers_counter == 1 %}Happy Customer{% else %}Happy Customers{% endif %}</div>
+                        <div class="numberCounters__number-text">Happy Customers</div>
                     </div>
 
                     <div class="numberCounters__item">
@@ -214,7 +214,7 @@
             </div>
 
             <div class="image-column">
-                <div class="hero__image-wrapper">
+                <div class="hero__image-wrapper" data-animation-fade-from-right>
                     <img src="/media/home-page/hero-image2.jpg" alt="main page image" aria-hidden="true">
                 </div>
 
@@ -257,11 +257,11 @@
     <div class="container">
         <div class="row title__row">
             <div class="content">
-                <div class="section-title" data-sectiontitle-animation="">
-                    <div class="upper-title h4">Apartment</div>
+                <div class="section-title" data-animation-fade-from-right>
+                    <div class="upper-title h4">Categories</div>
                     <h2 class="main-title h2"> Explore Apartment Types</h2>
                 </div>
-                <p>Get some inspirations from 1600+ skills</p>
+                <p>Choose the one that You are interested in.</p>
             </div>
 
             <div class="categories__arrows">
@@ -310,29 +310,29 @@
     <div class="container">
         <div class="row">
             <div class="content-column">
-                <div class="section-title" data-sectiontitle-animation>
+                <div class="section-title" data-animation-fade-from-bottom>
                     <div class="upper-title h4">About us</div>
                     <h2 class="main-title h2">We offer quality homes for purchase and rental</h2>
                 </div>
 
                 <div class="about__text">
-                    We offer a wide range of properties to suit any budget and lifestyle
+                    We offer a wide range of properties to suit any budget and lifestyle.
                     Whether you are looking for a starter home, a luxury property,
                     or an investment opportunity.
                 </div>
 
                 <div class="about__call">
-                    <p>Talk to our destination as a direct call:</p>
+                    <p>Talk to our consultant directly:</p>
                     <span class="number">+ 1 456 789 321</span>
                 </div>
 
                 <ul class="about__list">
-                    <li class="about__list-item">Outstanding Property</li>
-                    <li class="about__list-item">Provied the best services for users</li>
+                    <li class="about__list-item">Outstanding Properties</li>
+                    <li class="about__list-item">Provided the best services for users</li>
                     <li class="about__list-item">Modern city locations and exceptional lifestyle</li>
                 </ul>
 
-                <a href="#" class="btn secondary-btn">
+                <a href="{% url 'about' %}" class="btn secondary-btn">
                     Find out more
                     <i class="btn-icon right ri-arrow-right-s-line" aria-hidden="true"></i>
                 </a>
@@ -375,7 +375,7 @@
 <section class="last-properties">
     <div class="container">
         <div class="row title-row">
-            <div class="section-title" data-sectiontitle-animation>
+            <div class="section-title" data-animation-fade-from-bottom>
                 <div class="upper-title h4">Properties</div>
                 <h2 class="main-title h2">Explore Latest Properties</h2>
             </div>
@@ -389,7 +389,7 @@
             {% for property in latest_properties %}
 
             <div class="property-card__column">
-                <div class="property-card__wrapper" data-property-card data-id="{{ property.id }}">
+                <div class="property-card__wrapper" data-property-card data-id="{{ property.id }}" data-animation-fade-from-left>
                     <div class="property-card__image">
                         {% if property.is_featured %}<span class="property-card__badge property-card__badge--secondary">Featured</span>{% endif %}
                         <a href="{{ property.get_absolute_url }}">
@@ -437,7 +437,7 @@
         </div>
 
         <div class="row button-row">
-            <a class="last-properties__more-btn" href="/properties">
+            <a class="last-properties__more-btn" href="{% url 'properties' %}">
                 See all properties
                 <i class="ri-arrow-right-up-line" aria-hidden="true"></i>
             </a>
@@ -453,7 +453,7 @@
     <div class="container">
         <div class="row title__row">
             <div class="content">
-                <div class="section-title" data-sectiontitle-animation>
+                <div class="section-title" data-animation-fade-from-right>
                     <div class="upper-title h4">Cities</div>
                     <h2 class="main-title h2"> Explore our cities</h2>
                 </div>
@@ -512,12 +512,12 @@
 <section class="testimonials" data-testimonials>
     <div class="container">
         <div class="row">
-            <div class="section-title" data-sectiontitle-animation>
+            <div class="section-title" data-animation-fade-from-bottom>
                 <div class="upper-title h4">Testimonials</div>
                 <h2 class="main-title h2"> Our Customer To Says</h2>
             </div>
 
-            <div class="testimonials__text">Excellent Experience with Real Estate Agent - Highly Recommend!</div>
+            <div class="testimonials__text">Excellent Experience with Global Estate Hub - Highly Recommended!</div>
 
             <div class="testimonials__carousel swiper" data-testimonials-carousel>
                 <div class="swiper-wrapper">
@@ -526,12 +526,12 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person1.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person1.jpg" alt="Sarah Johnson">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">David Mallan</div>
-                                    <div class="testimony__signature">Sales Manager, Envato</div>
+                                    <div class="testimony__name h3">Sarah Johnson</div>
+                                    <div class="testimony__signature">Software Engineer</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -543,10 +543,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                I had a fantastic experience working with this real estate agency. Their agents were professional, knowledgeable, and went above and beyond to help me find the perfect property to rent. Highly recommend their services!
                             </div>
 
                             <div class="testimony__location">
@@ -567,12 +564,12 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person2.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person2.jpg" alt="Michael Brown">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">James Turner</div>
-                                    <div class="testimony__signature">Product Manager, Envato</div>
+                                    <div class="testimony__name h3">Michael Brown</div>
+                                    <div class="testimony__signature">Marketing Manager</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -584,10 +581,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                I've bought and sold properties through several agencies, but none have matched the level of expertise and personalized attention that I received from this company. Their team guided me through every step of the process with integrity and transparency.
                             </div>
 
                             <div class="testimony__location">
@@ -595,7 +589,7 @@
                                     <img src="/media/icons/testimony-location.svg" alt="location icon">
                                 </div>
 
-                                <div class="testimony__location-city">Pennsylvania, USA</div>
+                                <div class="testimony__location-city">Houston, USA</div>
                             </div>
 
                             <div class="testimony__quote-icon">
@@ -608,12 +602,12 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person3.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person3.jpg" alt="David Wilson">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">Ethan Foster</div>
-                                    <div class="testimony__signature">Product Manager</div>
+                                    <div class="testimony__name h3">David Wilson</div>
+                                    <div class="testimony__signature">Teacher</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -625,10 +619,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                Five stars for this real estate agency! From the initial consultation to the final closing, they provided exceptional service. Their agents were responsive, efficient, and made the entire buying process seamless. Will definitely be using them again in the future.
                             </div>
 
                             <div class="testimony__location">
@@ -636,7 +627,7 @@
                                     <img src="/media/icons/testimony-location.svg" alt="location icon">
                                 </div>
 
-                                <div class="testimony__location-city">Pennsylvania, USA</div>
+                                <div class="testimony__location-city">Phoenix, USA</div>
                             </div>
 
                             <div class="testimony__quote-icon">
@@ -649,12 +640,12 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person4.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person4.jpg" alt="Mark Thompson">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">William Parker</div>
-                                    <div class="testimony__signature">Data Scientist</div>
+                                    <div class="testimony__name h3">Mark Thompson</div>
+                                    <div class="testimony__signature">Lawyer</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -666,10 +657,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                Working with this real estate agency was an absolute pleasure! Their team, especially Emily Johnson, was incredibly attentive and knowledgeable. Thanks to their expertise, I found my dream home without any hassle.
                             </div>
 
                             <div class="testimony__location">
@@ -677,7 +665,7 @@
                                     <img src="/media/icons/testimony-location.svg" alt="location icon">
                                 </div>
 
-                                <div class="testimony__location-city">Pennsylvania, USA</div>
+                                <div class="testimony__location-city">Philadelphia, USA</div>
                             </div>
 
                             <div class="testimony__quote-icon">
@@ -690,11 +678,11 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person5.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person5.jpg" alt="Robert Taylor">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">Daniel Mitchell</div>
+                                    <div class="testimony__name h3">Robert Taylor</div>
                                     <div class="testimony__signature">Landscape Designer</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -707,10 +695,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                Choosing this real estate agency was the best decision I made during my house hunt. Mark Davis was my agent, and his knowledge of the market and negotiation skills were impressive. He made the buying process smooth and stress-free. Highly recommend!
                             </div>
 
                             <div class="testimony__location">
@@ -718,7 +703,7 @@
                                     <img src="/media/icons/testimony-location.svg" alt="location icon">
                                 </div>
 
-                                <div class="testimony__location-city">Pennsylvania, USA</div>
+                                <div class="testimony__location-city">San Diego, USA</div>
                             </div>
 
                             <div class="testimony__quote-icon">
@@ -731,11 +716,11 @@
                         <div class="testimony__card">
                             <div class="testimony__info">
                                 <div class="testimony__avatar">
-                                    <img src="/media/home-page/testimonials/person6.jpg" alt="David Mallan">
+                                    <img src="/media/home-page/testimonials/person6.jpg" alt="Matthew Roberts">
                                 </div>
 
                                 <div class="testimony__personal">
-                                    <div class="testimony__name h3">Jacob Hayes</div>
+                                    <div class="testimony__name h3">Matthew Roberts</div>
                                     <div class="testimony__signature">Sales Representative</div>
                                     <div class="testimony__rating">
                                         <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -748,10 +733,7 @@
                             </div>
 
                             <div class="testimony__content">
-                                But I must explain to you how all this idea
-                                of denouncing pleasure and praising pain
-                                was born and I will give you complete to
-                                account of the system.
+                                I recently purchased a condo with the help of a real estate company and I couldn't be happier with the experience. My agent, a real estate agent, was incredibly knowledgeable about the market and helped me find the perfect place for my needs. She was also very patient and responsive to all of my questions.
                             </div>
 
                             <div class="testimony__location">
@@ -759,7 +741,7 @@
                                     <img src="/media/icons/testimony-location.svg" alt="location icon">
                                 </div>
 
-                                <div class="testimony__location-city">Pennsylvania, USA</div>
+                                <div class="testimony__location-city">San Jose, USA</div>
                             </div>
 
                             <div class="testimony__quote-icon">
@@ -787,12 +769,12 @@
 <!--
   - #BLOG SECTION
 -->
-<section class="home-blog" data-home-blog-animation>
+<section class="home-blog">
     <div class="container">
         <div class="row title-row">
-            <div class="section-title" data-sectiontitle-animation>
+            <div class="section-title" data-animation-fade-from-bottom>
                 <div class="upper-title h4">Blog</div>
-                <h2 class="main-title h2">Our Latest Blog</h2>
+                <h2 class="main-title h2">Our Latest Articles</h2>
             </div>
 
             <p>
@@ -803,7 +785,7 @@
         <div class="row blog-cards-row">
             {% for article in latest_articles %}
             <div class="blog-card__column">
-                <div class="blog-card__wrapper">
+                <div class="blog-card__wrapper" data-animation-fade-from-right>
                     <a class="blog-card__category"
                        href="{{ article.category.get_absolute_url }}">{{ article.category }}</a>
                     <div class="blog-card__image">
@@ -856,7 +838,7 @@
 <section class="our-partners">
     <div class="container">
         <div class="row">
-            <div class="section-title" data-sectiontitle-animation>
+            <div class="section-title" data-animation-fade-from-bottom>
                 <h2 class="main-title h2">Our partners</h2>
             </div>
 

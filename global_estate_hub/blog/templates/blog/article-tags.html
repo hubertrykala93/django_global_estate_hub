@@ -11,7 +11,7 @@
                     {% for page in pages %}
                     <div class="blog-card__column">
                         <div class="blog-card__wrapper">
-                            <a class="blog-card__category" href="{{ article.category.get_absolute_url }}">{{ page.category }}</a>
+                            <a class="blog-card__category" href="{{ page.category.get_absolute_url }}">{{ page.category }}</a>
                             <div class="blog-card__image">
                                 <a href="{{ page.get_absolute_url }}">
                                     <img src="{{ page.image.url }}" alt="{{ page.title }} intro image">

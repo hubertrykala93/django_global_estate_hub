@@ -144,6 +144,11 @@ main {
     overflow: hidden;
 }
 
+strong,
+b {
+    font-weight: 500;
+}
+
 
 /*----------------------------------*\
   #REUSED STYLES
@@ -1433,7 +1438,7 @@ form .form__field.form__form{
     display: flex;
     align-items: flex-end;
     min-height: 300px;
-    margin: -7rem 2rem 0;
+    margin: -28rem 2rem 0;
     padding: 1.6rem;
     position: relative;
     border-radius: var(--br-500);
@@ -3108,10 +3113,52 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 
 .article .article__body {
     margin-top: 2rem;
+    margin-bottom: 3rem;
+}
+
+.article .article__body h2,
+.article .article__body h3,
+.article .article__body h4 {
+    margin-bottom: 1.6rem;
+    line-height: 1.38em;
+    color: var(--clr-dark);
+}
+
+.article .article__body h2 {
+    font-size: var(--fs-h2);
+    font-weight: 700;
+}
+
+.article .article__body h3 {
+    font-size: var(--fs-h3);
+    font-weight: 500;
+}
+
+.article .article__body h4 {
+    font-size: var(--fs-h4);
+    font-weight: 600;
+}
+
+.article .article__body strong {
+    color: var(--clr-black);
 }
 
 .article .article__body p{
     margin-bottom: 1.5rem;
+}
+
+.article .article__body ul {
+    margin-bottom: 2rem;
+    padding-left: 3rem;
+    list-style: disc;
+}
+
+.article .article__body ul li {
+    margin-bottom: 1rem;
+}
+
+.article .article__body ul li > p {
+    margin: 0;
 }
 
 .article .article__body .images__grid {
@@ -3136,8 +3183,8 @@ section.blog .blog-cards_row-results .blog-card__wrapper {
 }
 
 .article .article__body .quote {
+    margin-top: 3rem;
     padding: 3rem;
-    margin-bottom: 2rem;
     background-color: var(--clr-primary);
     background-image: url("/media/icons/article-quote-icon.svg");
     background-repeat: no-repeat;
@@ -5045,7 +5092,7 @@ section.properties {
     }
 
     .article .article__body p{
-        margin-bottom: 3rem;
+        margin-bottom: 2rem;
     }
 
     /*----------------------------------*\

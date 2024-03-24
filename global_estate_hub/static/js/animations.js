@@ -1,34 +1,4 @@
 /**
-   * PAGE TITLE
-    */
-
-const $pageTitle = document.querySelector('[data-pagetitle-animation]')
-
-if ( $pageTitle ){
-
-const titleAnimation = {
-  delay: 100,
-  distance: '100px',
-  duration: 700,
-  opacity: .01,
-  origin: 'right',
-  easing: 'linear'
-}
-
-const breadcrumbsListItems = {
-  delay: 200,
-  distance: '30px',
-  duration: 1000,
-  origin: 'bottom',
-  interval: 150,
-}
-
-ScrollReveal().reveal($pageTitle.querySelector('.title'), titleAnimation)
-ScrollReveal().reveal($pageTitle.querySelectorAll('.breadcrumbs li'), breadcrumbsListItems)
-}
-
-
-/**
    * HOME PAGE
     */
 
@@ -79,89 +49,40 @@ if($aboutSection){
   ScrollReveal().reveal($aboutSection.querySelectorAll('.about__list .about__list-item'), listAnimation)
 }
 
-const $blogSection = document.querySelector('[data-home-blog-animation]')
-
-if ($blogSection) {
-  const cardAnimation = {
-    delay: 200,
-    distance: '90px',
-    duration: 900,
-    opacity: 0,
-    origin: 'right',
-    easing: 'ease',
-    interval: 150,
-  }
-
-  ScrollReveal().reveal($blogSection.querySelectorAll('.blog-card__wrapper'), cardAnimation)
-}
-
-
 /**
-   * -SECTION TITLE
+   * REUSABLE ANIMATIONS
     */
 
-const $sectionTitles = document.querySelectorAll('[data-sectiontitle-animation]')
-
-if ($sectionTitles.length){
-  const upperTitleAnimation = {
-    delay: 250,
-    distance: '30px',
-    duration: 700,
-    opacity: 0,
-    origin: 'bottom',
-    easing: 'ease'
-  }
-
-  const mainTitleAnimation = {
-    delay: 350,
-    distance: '30px',
-    duration: 700,
-    opacity: 0,
-    origin: 'bottom',
-    easing: 'ease'
-  }
-
-  $sectionTitles.forEach(item => {
-    const upperTitle = item.querySelector('.upper-title')
-    const mainTitle = item.querySelector('.main-title')
-
-    if(upperTitle){
-      ScrollReveal().reveal(upperTitle, upperTitleAnimation)
-    }
-    if(mainTitle){
-      ScrollReveal().reveal(mainTitle, mainTitleAnimation)
-    }
-  });
-
+const $fadeFromLeft = document.querySelectorAll('[data-animation-fade-from-left]')
+const fadeFromLeft = {
+  distance: '40px',
+  origin: 'left',
+  opacity: 0,
+  duration: 800,
+  easing: 'ease-in-out',
+  interval: 90
 }
 
-
-/**
-   * FAQ
-    */
-
-const $faqSection = document.querySelector('[data-faq-animation]')
-
-if ($faqSection) {
-  const accordionItemsAnimation = {
-    delay: 100,
-    distance: '50px',
-    duration: 900,
-    opacity: 0,
-    origin: 'bottom',
-    easing: 'ease',
-    interval: 150,
-  }
-
-  const ImageAnimation = {
-    delay: 300,
-    distance: '200px',
-    duration: 900,
-    opacity: 0,
-    origin: 'right',
-    easing: 'ease-out'
-  }
-
-  ScrollReveal().reveal($faqSection.querySelectorAll('.theme-accordion .accordion__item'), accordionItemsAnimation)
-  ScrollReveal().reveal($faqSection.querySelector('.faq__image'), ImageAnimation)
+const $fadeFromRight = document.querySelectorAll('[data-animation-fade-from-right]')
+const fadeFromRight = {
+  distance: '40px',
+  origin: 'right',
+  opacity: 0,
+  duration: 800,
+  easing: 'ease-in-out',
+  interval: 90
 }
+
+const $fadeFromBottom = document.querySelectorAll('[data-animation-fade-from-bottom]')
+const fadeFromBottom = {
+  distance: '20px',
+  origin: 'bottom',
+  opacity: 0,
+  duration: 800,
+  easing: 'ease-in-out',
+  interval: 90
+}
+
+ScrollReveal().reveal($fadeFromRight, fadeFromRight)
+ScrollReveal().reveal($fadeFromLeft, fadeFromLeft)
+ScrollReveal().reveal($fadeFromBottom, fadeFromBottom)

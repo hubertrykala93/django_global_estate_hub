@@ -4,15 +4,13 @@
 
 {% block content %}
 <section class="user-access-page signup-page">
-    <div class
-                 ="container">
+    <div class="container">
         <div class="row">
             <div class="testimony-column">
                 <div class="login-testimony">
-                    <div class="testimony__wrapper">
+                    <div class="testimony__wrapper" data-animation-fade-from-bottom>
                         <div class="testimony__content">
-                            We’ve been using United to kick start every new project and can’t imagine working without
-                            it.
+                            Unlock the door to your dreams with our collection of exceptional properties.
                         </div>
 
                         <div class="testimony__info">
@@ -20,9 +18,9 @@
                                 <img src="https://picsum.photos/90" alt="Prophet's Rolex picture">
                             </div>
 
-                            <div class="testimony__name">Prophet Rolex</div>
+                            <div class="testimony__name">William Lee</div>
 
-                            <div class="testimony__signature">Head of Design, Envato</div>
+                            <div class="testimony__signature">Unknown real estate agent</div>
 
                             <div class="testimony__stars">
                                 <img src="/media/icons/testimony-star.svg" alt="rating star" aria-hidden="true">
@@ -38,7 +36,7 @@
 
             <div class="form-column">
                 <div class="section-title">
-                    <h2 class="main-title h2">Register</h2>
+                    <h2 class="main-title h2" data-animation-fade-from-right>Register</h2>
                 </div>
 
                 <div class="signup-form">
@@ -114,7 +112,7 @@
                                 <div class="form__input-wrap form__checkbox-wrapper">
                                     <label>
                                         <input data-checkbox data-input type="checkbox">
-                                        <div class="checkbox__label">I agree to the <a href="#">terms & Privacy</a></div>
+                                        <div class="checkbox__label">I agree to the <a href="{% url 'privacy-policy' %}">Terms & Privacy</a></div>
                                     </label>
                                 </div>
                             </div>
