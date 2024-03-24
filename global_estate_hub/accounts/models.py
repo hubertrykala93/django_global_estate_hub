@@ -1,7 +1,10 @@
+from datetime import timedelta
+import django.db.models.query
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from PIL import Image
+from uuid import uuid4
 
 
 class CustomUserManager(UserManager):
@@ -55,7 +58,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
-    is_agent = models.BooleanField(default=True)
+    is_agent = models.BooleanField(default=False)
     date_joined = models.DateTimeField(default=now)
 
     objects = CustomUserManager()
@@ -68,19 +71,28 @@ class User(AbstractBaseUser, PermissionsMixin):
         verbose_name = 'User'
         verbose_name_plural = 'Accounts'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the user's username and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.username
 
-    def save(self, *args, **kwargs):
+    def save(self, *args, **kwargs) -> None:
         """
         Converts the user's profile image to a smaller size of 300 x 300.
 
-        return: None
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
+
+        Returns
+        ----------
+            None
         """
         super(User, self).save(*args, **kwargs)
 
@@ -93,51 +105,26 @@ class User(AbstractBaseUser, PermissionsMixin):
             img.thumbnail(size=(300, 300))
             img.save(fp=self.image.path)
 
-    def get_username(self):
+    def get_username(self) -> str:
         """
         Returns the username for a given user.
 
-        returns: str
+        Returns
+        ----------
+            str
         """
         return self.username
 
-
-# class OneTimePasswordManager(models.Manager):
-#     """
-#     Creating OneTimePasswordManager model.
-#     """
-#
-#     def get_queryset(self):
-#         """
-#         Automatically deletes the OneTimePassword after 5 minutes.
-#         """
-#         return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
-
-
-class OneTimePassword(models.Model):
-    """
-    Creating OneTimePassword model instance.
-    """
-    id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    password = models.CharField(max_length=20)
-    created_at = models.DateTimeField(default=now)
-
-    # expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
-    # objects = OneTimePasswordManager()
-
-    class Meta:
-        verbose_name = 'One Time Password'
-        verbose_name_plural = 'One Time Passwords'
-
-    def __str__(self):
+    @property
+    def rename_image(self) -> str:
         """
-        Returns the string representation of the username of the user
-        to whom the OneTimePassword has been assigned and displays it in the administrator panel.
+        Returns new name of uploaded user profile image.
 
-        return: str
+        Returns:
+        ----------
+            str
         """
-        return f'One Time Password for {self.user.username}.'
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
 class Individual(models.Model):
@@ -167,11 +154,13 @@ class Individual(models.Model):
         verbose_name = 'Individual Profile'
         verbose_name_plural = 'Individual Profiles'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the profile's username and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user.username} Individual Profile.'
 
@@ -199,10 +188,12 @@ class Business(models.Model):
         verbose_name = 'Business Profile'
         verbose_name_plural = 'Business Profiles'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the business's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.company_name} Business Profile.'

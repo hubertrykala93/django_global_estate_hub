@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ListingStatus, Category, Amenities, TourSchedule, \
-    Review, Education, HealthAndMedical, Transportation, Shopping, City, Property
+    Review, Education, HealthAndMedical, Transportation, Shopping, City, Property, Img
 from django.utils.translation import ngettext
 from django.contrib import messages
 
@@ -287,6 +287,25 @@ class AdminCity(admin.ModelAdmin):
     ]
 
 
+@admin.register(Img)
+class AdminImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Img model.
+    """
+    list_display = ['id', 'image']
+    list_editable = ['image']
+    ordering = ['id']
+    fieldsets = [
+        [
+            'Property Images:', {
+            'fields': [
+                'image',
+            ]
+        }
+        ]
+    ]
+
+
 @admin.register(Property)
 class AdminProperty(admin.ModelAdmin):
     """
@@ -299,7 +318,7 @@ class AdminProperty(admin.ModelAdmin):
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
-                    'images',
+                    'get_images',
                     'year_of_built', 'number_of_bedrooms', 'square_meters',
                     'parking_space', 'get_amenities', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
@@ -310,7 +329,8 @@ class AdminProperty(admin.ModelAdmin):
     list_editable = ['title', 'thumbnail', 'price', 'year_of_built',
                      'number_of_bedrooms',
                      'number_of_bathrooms', 'user',
-                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
+                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country',
+                     'country_code',
                      'latitude',
                      'longitude', 'video',
                      'is_featured',
@@ -412,66 +432,124 @@ class AdminProperty(admin.ModelAdmin):
         ]
     ]
 
-    @admin.display(description='Property Favourites')
-    def get_favourites(self, obj):
+    @admin.display(description='Property Images')
+    def get_images(self, obj) -> str:
         """
         Display in the admin panel all users who have added this property to their favorites.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
+        """
+        return '\n'.join([str(img) for img in obj.images.all()])
+
+    @admin.display(description='Property Favourites')
+    def get_favourites(self, obj) -> str:
+        """
+        Display in the admin panel all users who have added this property to their favorites.
+
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([user.username for user in obj.favourites.all()])
 
     @admin.display(description='Amenities')
-    def get_amenities(self, obj):
+    def get_amenities(self, obj) -> str:
         """
         Displays in the admin panel all amenities assigned to a given property.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([a.name for a in obj.amenities.all()])
 
     @admin.display(description='Educations')
-    def get_educations(self, obj):
+    def get_educations(self, obj) -> str:
         """
         Displays in the admin panel all education institutions assigned to a given property.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([e.name for e in obj.education.all()])
 
     @admin.display(description='Health & Medicals')
-    def get_health_and_medicals(self, obj):
+    def get_health_and_medicals(self, obj) -> str:
         """
         Displays in the admin panel all health and medicals institutions assigned to a given property.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([h.name for h in obj.health_and_medical.all()])
 
     @admin.display(description='Transportations')
-    def get_transportations(self, obj):
+    def get_transportations(self, obj) -> str:
         """
         Displays in the admin panel all transportations assigned to a given property.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([t.name for t in obj.transportation.all()])
 
     @admin.display(description='Shops')
-    def get_shops(self, obj):
+    def get_shops(self, obj) -> str:
         """
         Displays in the admin panel all shops assigned to a given property.
 
-        return: str
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([s.name for s in obj.shopping.all()])
 
     @admin.action(description='Highlight selected Properties')
-    def make_featured(self, request, queryset):
+    def make_featured(self, request, queryset) -> None:
         """
         Highlights all selected properties that have the 'is_featured' attribute set to 'False'.
 
-        return: None
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
+
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(featured=True)
 
@@ -482,11 +560,18 @@ class AdminProperty(admin.ModelAdmin):
                           level=messages.SUCCESS)
 
     @admin.action(description='Remove highlights from selected properties.')
-    def remove_featured(self, request, queryset):
+    def remove_featured(self, request, queryset) -> None:
         """
         Unhighlights all selected properties that have the 'is_featured' attribute set to 'True'.
 
-        return: None
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
+
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(featured=False)
 
@@ -606,11 +691,18 @@ class AdminReview(admin.ModelAdmin):
     ]
 
     @admin.action(description='Approve selected Reviews')
-    def approve_reviews(self, request, queryset):
+    def approve_reviews(self, request, queryset) -> None:
         """
         Approves all selected reviews that have the 'active' attribute set to 'False'.
 
-        return: None
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
+
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(active=True)
 

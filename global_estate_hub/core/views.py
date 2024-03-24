@@ -1,3 +1,4 @@
+import django.http.response
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Newsletter, ContactMail
@@ -17,11 +18,17 @@ from accounts.models import User
 load_dotenv()
 
 
-def index(request):
+def index(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the homepage template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     latest_articles = Article.objects.all().order_by('-date_posted')[:3]
     latest_properties = Property.objects.all().order_by('-date_posted')[:3]
@@ -72,11 +79,17 @@ def index(request):
     })
 
 
-def top_agents(request):
+def top_agents(request) -> django.http.response.HttpResponse:
     """
-    Returns an HttpResponse with the top agentss template.
+    Returns an HttpResponse with the top agents template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='core/top-agents.html', context={
         'title': 'Top Agents',
@@ -84,14 +97,20 @@ def top_agents(request):
     })
 
 
-def newsletter(request):
+def newsletter(request) -> django.http.response.JsonResponse:
     """
     The function handling the form for saving an email address for the newsletter to the database
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent
     from the website administrator to the provided email address.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -156,58 +175,88 @@ def newsletter(request):
             return JsonResponse(data=response)
 
 
-def about(request):
+def about(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the about template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='core/about.html', context={
         'title': 'About',
     })
 
 
-def faq(request):
+def faq(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the FAQ template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='core/faq.html', context={
         'title': 'Faq',
     })
 
 
-def contact(request):
+def contact(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the contact template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='core/contact.html', context={
         'title': 'Contact',
     })
 
 
-def error(request):
+def error(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the error404 template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='core/error.html', context={
         'title': 'Error 404',
     })
 
 
-def send_message(request):
+def send_message(request) -> django.http.response.JsonResponse:
     """
     The function handling the form for sending an email message to the website administrator
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     The function also saves data such as Full Name, Phone Number, Email Address, and Message to the database.
     Upon successful form validation, an email message is automatically sent to the website administrator.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -312,7 +361,7 @@ def send_message(request):
             return JsonResponse(data=response, safe=False)
 
 
-def properties_results(request):
+def properties_results(request) -> django.http.response.JsonResponse or django.http.response.HttpResponse:
     """
     A function handling two request methods, POST and GET. During a POST request, the function handles
     a property search form using fields in the database such as listing_status, city, category, and year_of_built
@@ -325,7 +374,13 @@ def properties_results(request):
     and a queryset of properties is rendered based on these filters.
     The user also has the option to sort the search results.
 
-    return: JsonResponse, HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse or django.http.response.HttpResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -414,11 +469,17 @@ def properties_results(request):
         })
 
 
-def rodo_rules(request):
+def rodo_rules(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the rodo rules template.
 
-    return HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     email = os.environ.get('EMAIL_FROM')
 
@@ -428,11 +489,17 @@ def rodo_rules(request):
     })
 
 
-def privacy_policy(request):
+def privacy_policy(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the privacy policy template.
 
-    return HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     email = os.environ.get('EMAIL_FROM')
 

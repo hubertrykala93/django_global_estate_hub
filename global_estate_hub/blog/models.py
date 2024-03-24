@@ -5,6 +5,7 @@ from django.shortcuts import reverse
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import TreeForeignKey, MPTTModel
+from uuid import uuid4
 
 
 class Category(models.Model):
@@ -27,19 +28,23 @@ class Category(models.Model):
         verbose_name = 'Category'
         verbose_name_plural = 'Categories'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the category's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given category.
 
-        return HttpsResponseRedirect
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-categories', kwargs={
             'category_slug': self.slug,
@@ -58,19 +63,23 @@ class Tag(models.Model):
         verbose_name = 'Tag'
         verbose_name_plural = 'Tags'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the tag's name and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.name
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given tag.
 
-        return HttpsResponseRedirect
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-tags', kwargs={
             'tag_slug': self.slug,
@@ -100,15 +109,19 @@ class Article(models.Model):
         """
         Returns the string representation of the article's title and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return self.title
 
-    def get_absolute_url(self):
+    def get_absolute_url(self) -> str:
         """
         Returns the absolute URL for a given article.
 
-        return HttpsResponseRedirect
+        Returns
+        ----------
+            str
         """
         return reverse(viewname='article-details', kwargs={
             'category_slug': self.category.slug,
@@ -119,7 +132,14 @@ class Article(models.Model):
         """
         Converts the article's image to a smaller size based on proportions.
 
-        return: None
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
+
+        Returns
+        ----------
+            None
         """
         super(Article, self).save(*args, **kwargs)
 
@@ -137,6 +157,17 @@ class Article(models.Model):
         img.thumbnail(size=(output_width, output_height))
         img.save(fp=self.image.path)
 
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
+
 
 class Comment(MPTTModel):
     """
@@ -146,7 +177,7 @@ class Comment(MPTTModel):
     user = models.ForeignKey(to=User, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     article = models.ForeignKey(to=Article, on_delete=models.CASCADE, null=True, related_name='comments')
     full_name = models.CharField(max_length=200, blank=True, null=True)
-    date_posted = models.DateTimeField(default=now, editable=False)
+    date_posted = models.DateTimeField(default=now)
     comment = models.TextField(max_length=1000)
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
@@ -160,12 +191,14 @@ class Comment(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['date_posted']
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns the string representation of the commenting user if user is authenticated
         or full name if user is anonymous and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'Comment by {self.full_name}.' if self.full_name else f'Comment by {self.user}.'
 
@@ -182,12 +215,14 @@ class CommentLike(models.Model):
         verbose_name = 'Comment Like'
         verbose_name_plural = 'Comment Likes'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the user giving a Like,
         along with the comment content, and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user}, {self.comment}'
 
@@ -204,11 +239,13 @@ class CommentDislike(models.Model):
         verbose_name = 'Comment Dislike'
         verbose_name_plural = 'Comment Dislikes'
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns a string representation of the user giving a Dislike,
         along with the comment content, and displays it in the administrator panel.
 
-        return: str
+        Returns
+        ----------
+            str
         """
         return f'{self.user}, {self.comment}'

@@ -132,11 +132,17 @@ class AdminArticle(admin.ModelAdmin):
     ]
 
     @admin.display(description='Tags')
-    def get_tags(self, obj):
+    def get_tags(self, obj) -> str:
         """
         Displays in the admin panel all tags assigned to a given article.
 
-        return: str
+        Parameters
+        ----------
+            obj: blog.models.Article
+
+        Returns
+        ----------
+            str
         """
         return '\n'.join([tag.name for tag in obj.tags.all()])
 
@@ -209,11 +215,18 @@ class AdminComment(MPTTModelAdmin):
     ]
 
     @admin.action(description='Approve selected Comments')
-    def approve_comments(self, request, queryset):
+    def approve_comments(self, request, queryset) -> None:
         """
         Approves all selected comments that have the 'active' attribute set to 'False'.
 
-        return: None
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.Queryset
+
+        Returns
+        ----------
+            None
         """
         updated = queryset.update(active=True)
 

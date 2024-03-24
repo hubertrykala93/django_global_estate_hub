@@ -1,7 +1,6 @@
 {% extends 'core/base.html' %}
-{% load float_converter %}
-{% load rate_converter %}
-{% load integer_converter %}
+{% load property_filters %}
+{% load core_filters %}
 
 {% block page_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -30,7 +29,7 @@
         </div>
       </div>
 
-      {% if images %}
+      {% if images|length > 0 %}
       <ul class="property__gallery">
         {% for i, image in images %}
         {% if i == 0 %}
@@ -64,6 +63,12 @@
         {% endif %}
         {% endfor %}
       </ul>
+      {% else %}
+      <li class="property__gallery__item property__gallery__item--main">
+        <a data-fslightbox="gallery" href="{{ property.thumbnail.url }}">
+          <img src="{{ property.thumbnail.url }}">
+        </a>
+      </li>
       {% endif %}
     </div>
 
@@ -233,7 +238,7 @@
                 </ul>
                 {% endif %}
               </div>
-              
+
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Transportation Services</div>
 
@@ -329,7 +334,7 @@
                     </div>
                   </div>
               </div>
-              
+
               <div class="form__row">
                   <div class="form__field">
                       <label for="interest-rate" class="form__label">interest rate *</label>
@@ -430,7 +435,7 @@
             <div class="form__row">
               <div class="form__field">
                 <div class="form__input-wrap property__comment-form__stars">
-                  
+
                   <input data-star value="1" id="star1" checked type="radio" name="rating" class="visually-hidden">
                   <label for="star1">
                     <span class="visually-hidden">1 Star</span>

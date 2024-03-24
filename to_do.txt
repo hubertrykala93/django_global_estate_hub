@@ -15,16 +15,17 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
+<<<<<<< HEAD
 - w properties-results.html w core jeśli nie ma żadnych znalezionych wyników to ma się nie renderować cały element .properties__results__options i jego wszystkie dzieci (zamknij blok żeby dobrze objąć ifem i nie zrobić żadnego niedomknięcia bo to będzie nie do ogarnięcia jak się wysypie) [to samo na podstronie wyników wyszukiwania w modelu properties] {pewnie jak to zrobisz to pojawi się błąd w js ale to naprawię wtedy}
 
 
 1. Poskracać powtarzalny się kod.
+=======
+6. Zrobić API.
+>>>>>>> h_develop
 4. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
 5. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić
-6. Zrobić API.
 7. Na samym końcu odkomentować OneTimePasswordManager, odkomentować atrybuty w OneTimePassword modelu. Dodać expires_in do list display i fieldsets w interfejsie admina.
-8. uzupelnic dokumentacje do properties.html, gdy będzie gotowe.
-9. images upload
 
 
 ***********

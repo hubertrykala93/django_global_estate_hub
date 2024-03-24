@@ -1,10 +1,11 @@
 import os
+import django.http.response
 from django.shortcuts import render, redirect, reverse
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User, OneTimePassword
+from .models import User
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -19,30 +20,43 @@ from .tokens import token_generator
 from django.contrib import messages
 from dotenv import load_dotenv
 import uuid
+import datetime
 
 load_dotenv()
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def register(request):
+def register(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the register template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='accounts/register.html', context={
         'title': 'Sign Up',
     })
 
 
-def create_user(request):
+def create_user(request) -> django.http.response.JsonResponse:
     """
     The function handling the registration form for a new user in the database
     using the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
     Upon successful form validation, an email message is automatically sent from the website administrator
     to the provided email address for account activation.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -107,7 +121,8 @@ def create_user(request):
                 "field": raw_password1_field,
                 "message":
                     f"The {raw_password1_label} field cannot be empty." if not raw_password1 else
-                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password1_label} should be at least 8 characters long, "
+                    f"including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
@@ -125,7 +140,8 @@ def create_user(request):
                 "message":
                     f"The {raw_password2_label} field cannot be empty." if not raw_password2 else
                     f"The {raw_password2_label} field must be filled in." if not raw_password1 else
-                    f"The {raw_password1_label} should be at least 8 characters long, including at least one uppercase letter, "
+                    f"The {raw_password1_label} should be at least 8 characters long, "
+                    f"including at least one uppercase letter, "
                     "one lowercase letter, one digit, and one special character." if not re.match(
                         pattern='^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$',
                         string=raw_password1) else
@@ -218,14 +234,22 @@ def create_user(request):
             return JsonResponse(data=response, safe=False)
 
 
-def activate(request, uidb64, token):
+def activate(request, uidb64, token) -> django.http.response.HttpResponseRedirect:
     """
     The function activating the account of a new user. The activation link is valid for 5 minutes.
     Upon successful verification, the user is redirected to the login page.
     If the activation link has expired and the user has not activated the account,
     they are removed from the database and must register again.
 
-    return: HttpResponseRedirect
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        uidb64: str
+        token: str
+
+    Returns
+    ----------
+        django.http.response.HttpResponseRedirect
     """
     try:
         uid = force_str(s=urlsafe_base64_decode(s=uidb64))
@@ -247,22 +271,36 @@ def activate(request, uidb64, token):
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def log_in(request):
+def log_in(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the login template.
+
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='accounts/login.html', context={
         'title': 'Login'
     })
 
 
-def authorization(request):
+def authorization(request) -> JsonResponse:
     """
     The function handles the user authentication form using the POST method with Asynchronous JavaScript
     and XMLHttpRequest (AJAX) request. Upon successful form validation, the user is logged in,
     and data such as the user's login status and their ID in the database are stored in the session.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -322,11 +360,8 @@ def authorization(request):
                 user = authenticate(request=request, email=email, password=password,
                                     backend='django.contrib.auth.backends.ModelBackend')
 
-                request.session['user'] = user.id
-                request.session['is_logged_in'] = True
-                request.session.save()
-
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
+                request.session.set_expiry(600)
 
                 return JsonResponse(data=response, safe=False)
 
@@ -337,11 +372,17 @@ def authorization(request):
             return JsonResponse(data=response, safe=False)
 
 
-def log_out(request):
+def log_out(request) -> django.http.response.HttpResponseRedirect:
     """
     Logout user.
 
-    return: HttpResponseRedirect
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponseRedirect
     """
     logout(request=request)
 
@@ -351,24 +392,36 @@ def log_out(request):
 
 
 @login_required(login_url='login')
-def account_settings(request):
+def account_settings(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the account settings template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='accounts/account-settings.html', context={
         'title': 'Account Settings',
     })
 
 
-def upload_avatar(request):
+def upload_avatar(request) -> django.http.response.JsonResponse:
     """
     The function handles the profile picture change form using the PATCH method
     with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the new picture is saved in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         if request.FILES:
@@ -407,13 +460,19 @@ def upload_avatar(request):
             })
 
 
-def user_settings(request):
+def user_settings(request) -> django.http.response.JsonResponse:
     """
     The function handles the user data change form, including the username, email address, and password,
     using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -526,14 +585,20 @@ def user_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-def profile_settings(request):
+def profile_settings(request) -> django.http.response.JsonResponse:
     """
     The function handles the form for changing individual user profile data such as first name, last name, gender,
     and phone number, as well as the form for changing business user profile data such as company name,
     company ID, and phone number. The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         if request.user.account_type == 'Individual':
@@ -661,14 +726,20 @@ def profile_settings(request):
             return JsonResponse(data=response, safe=False)
 
 
-def localization_settings(request):
+def localization_settings(request) -> django.http.response.JsonResponse:
     """
     The function handles the form for changing location data in both individual and business user profiles,
     including country, state, city, street, and postal code.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -747,14 +818,20 @@ def localization_settings(request):
         return JsonResponse(data=response, safe=False)
 
 
-def social_media_settings(request):
+def social_media_settings(request) -> django.http.response.JsonResponse:
     """
     The function handles the form for changing website and social media link data in both individual
     and business user profiles, including website, Facebook page, Instagram page, and LinkedIn page.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -824,33 +901,43 @@ def social_media_settings(request):
 
 
 @user_passes_test(test_func=lambda user: not user.is_authenticated, login_url='error')
-def forget_password(request):
+def forget_password(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the forget password template.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='accounts/forget-password.html', context={
         'title': 'Forget Password',
     })
 
 
-def send_password(request):
+def send_password(request) -> django.http.response.JsonResponse:
     """
     The function handling the user email address validation form using
     the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
-
     This function sends an email message with a OneTimePassword to the user who requests password recovery/change.
-    The OneTimePassword is active for 5 minutes and then deleted. While the OneTimePassword is active,
-    the user cannot go back to the previous step to send another email message.
-    Only after deleting the OneTimePassword from the database can another password change request be sent.
+    The OneTimePassword is active for 5 minutes and stored in the session, and then deleted.
+    While the OneTimePassword is active, the user cannot go back to the previous step to send another email message.
+    Only after deleting the OneTimePassword from the session after 5 minutescan another password change request be sent.
     This is done to prevent potential email spam. Upon successful verification of the user's email address,
     the user is redirected to the next step for OneTimePassword validation.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
-        one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
 
         email, spam_verification = [data[key][0] for key in list(data.keys())[:-1]][0], [data[key] for key in data][1]
@@ -861,19 +948,40 @@ def send_password(request):
                 "valid": None,
             })
 
-        if email:
-            if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
-                if User.objects.filter(email=email).exists():
-                    if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
+        if request.session.get('otp'):
+            now = datetime.datetime.now().time()
+            expire_time = datetime.datetime.strptime(request.session['expire_time'], '%H:%M:%S').time()
+
+            if expire_time < now:
+                request.session.pop('otp')
+
+                return JsonResponse(data={
+                    "valid": False,
+                    "message": f"The previous password has expired. "
+                               f"Click 'Reset Password' to receive a new password at the email address {email}.",
+                })
+
+            else:
+                return JsonResponse(data={
+                    "valid": True,
+                    "email": email,
+                })
+
+        else:
+            request.session['otp'] = str(randint(a=1111, b=9999))
+            request.session['expire_time'] = (datetime.datetime.now() + datetime.timedelta(minutes=5)).strftime(
+                '%H:%M:%S')
+
+            if email:
+                if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
+                    if User.objects.filter(email=email).exists():
                         user = User.objects.get(email=email)
-                        one_time_password = OneTimePassword(user=user, password=one_time_password)
-                        one_time_password.save()
 
                         try:
                             html_message = render_to_string(template_name='accounts/password_reset_email.html',
                                                             context={
-                                                                'one_time_password': one_time_password.password,
-                                                                'expire_password': one_time_password.expires_in,
+                                                                'one_time_password': request.session['otp'],
+                                                                'expire_password': request.session['expire_time'],
                                                             })
                             plain_message = strip_tags(html_message)
 
@@ -899,38 +1007,41 @@ def send_password(request):
                                 "message": "The message could not be sent.",
                             })
 
-                    elif len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 1:
+                    else:
                         return JsonResponse(data={
-                            "valid": True,
-                            "email": email,
+                            "valid": False,
+                            "message": "The user with the provided email address does not exist.",
                         })
 
                 else:
                     return JsonResponse(data={
                         "valid": False,
-                        "message": "The user with the provided email address does not exist.",
+                        "message": f"The {email_label} address format is invalid.",
                     })
 
             else:
                 return JsonResponse(data={
                     "valid": False,
-                    "message": "The e-mail address format is invalid.",
+                    "message": f"The {email_label} field cannot be empty.",
                 })
 
-        else:
-            return JsonResponse(data={
-                "valid": False,
-                "message": f"The {email_label} field cannot be empty.",
-            })
 
-
-def validate_password(request):
+def validate_password(request) -> django.http.response.JsonResponse:
     """
     The function handling the OneTimePassword validation form using
     the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
-    Upon successful form validation, the user can proceed to set a new password for their account.
+    The one-time password is stored in the session; during validation,
+    the password entered by the user is compared with the password stored in the session
+    and sent to the provided email address. Upon successful form validation,
+    the user can proceed to set a new password for their account.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -942,8 +1053,7 @@ def validate_password(request):
             })
 
         if password:
-            user_id = User.objects.get(email=email).pk
-            token = OneTimePassword.objects.get(user_id=user_id).password
+            token = request.session['otp']
 
             if password == token:
                 return JsonResponse(data={
@@ -965,13 +1075,20 @@ def validate_password(request):
             }, safe=False)
 
 
-def set_password(request):
+def set_password(request) -> django.http.response.JsonResponse:
     """
     The function handling the user password update form and saving it to the database
     using the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
-    Upon successful form validation, the database is automatically updated.
+    Upon successful form validation, the database is automatically updated with the new password,
+    and the session storing the one-time password and its expiration time is deleted.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -1031,12 +1148,11 @@ def set_password(request):
         if len(validation) == 1:
             if validation[0]:
                 user = User.objects.get(email=email)
-                user_id = User.objects.get(email=email).pk
                 user.set_password(raw_password=raw_password1)
                 user.save()
 
-                password = OneTimePassword.objects.get(user_id=user_id)
-                password.delete()
+                request.session.pop('otp')
+                request.session.pop('expire_time')
 
                 return JsonResponse(data=response, safe=False)
 
@@ -1047,13 +1163,18 @@ def set_password(request):
             return JsonResponse(data=response, safe=False)
 
 
-def account_details(request, username):
+def account_details(request, username) -> django.http.response.HttpResponse:
     """
-    Returns an HttpResponse with the account detailss template.
+    Returns an HttpResponse with the account details template.
 
-    username: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        username: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     u = User.objects.get(username=username)
 

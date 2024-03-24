@@ -1,3 +1,4 @@
+import django.core.paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Article, Category, Tag, Comment, CommentLike, CommentDislike
 from django.core.paginator import Paginator
@@ -6,14 +7,19 @@ from django.http import JsonResponse
 from accounts.models import User
 
 
-def blog_pagination(request, object_list, per_page):
+def blog_pagination(request, object_list, per_page) -> django.core.paginator.Page:
     """
-    Returns Pagination object.
+    Returns Page object for pagination.
 
-    object_list: QuerySet
-    per_page: int
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        object_list: django.db.models.query.Queryset
+        per_page: int
 
-    return: Page
+    Returns
+    ----------
+        django.core.paginator.Page
     """
     paginator = Paginator(object_list=object_list, per_page=per_page)
     page = request.GET.get('page')
@@ -30,11 +36,17 @@ def blog_pagination(request, object_list, per_page):
     return pages
 
 
-def blog(request):
+def blog(request) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the blog template along with pagination.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     return render(request=request, template_name='blog/blog.html', context={
         'title': 'Blog',
@@ -42,11 +54,18 @@ def blog(request):
     })
 
 
-def article_categories(request, category_slug):
+def article_categories(request, category_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the article categories template along with pagination.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     category = get_object_or_404(klass=Category, slug=category_slug)
 
@@ -59,13 +78,18 @@ def article_categories(request, category_slug):
     })
 
 
-def article_tags(request, tag_slug):
+def article_tags(request, tag_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the article tags template along with pagination.
 
-    tag_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        tag_slug: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     tag = get_object_or_404(klass=Tag, slug=tag_slug)
 
@@ -76,14 +100,19 @@ def article_tags(request, tag_slug):
     })
 
 
-def article_details(request, category_slug, article_slug):
+def article_details(request, category_slug, article_slug) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the article-details template.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    return: HttpResponse
+    Returns
+    ----------
+        django.http.response.HttpResponse
     """
     category = Category.objects.get(slug=category_slug)
     article = Article.objects.get(slug=article_slug)
@@ -109,14 +138,20 @@ def article_details(request, category_slug, article_slug):
     })
 
 
-def blog_results(request):
+def blog_results(request) -> django.http.response.HttpResponse or django.http.response.HttpResponseRedirect:
     """
     Returns an HttpResponse with the blog-results template along with pagination.
 
     On this page, articles are listed based on keywords provided by the user
     and retrieved through the GET request method. Model attributes such as title and content are searched.
 
-    return: HttpResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+
+    Returns
+    ----------
+        django.http.response.HttpResponse or django.http.response.HttpResponseRedirect
     """
     articles = []
 
@@ -141,7 +176,7 @@ def blog_results(request):
         return redirect(to='blog')
 
 
-def add_comment(request, category_slug, article_slug):
+def add_comment(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the comment submission form for a specific article by both logged-in and non-logged-in users.
     If the comment is added by a non-logged-in user, they can enter their own name in the 'Name' field.
@@ -149,7 +184,15 @@ def add_comment(request, category_slug, article_slug):
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is saved in the database.
 
-    return: JsonResponse
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
+
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     category = Category.objects.get(slug=category_slug)
     article = get_object_or_404(klass=Article, slug=article_slug, category=category)
@@ -204,16 +247,21 @@ def add_comment(request, category_slug, article_slug):
             return JsonResponse(data=response, safe=False)
 
 
-def edit_comment(request, category_slug, article_slug):
+def edit_comment(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the comment editing form for a specific article by a logged-in user.
     The function utilizes the PATCH method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    returns: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PATCH':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -247,16 +295,21 @@ def edit_comment(request, category_slug, article_slug):
             return JsonResponse(data=response)
 
 
-def delete_comment(request, category_slug, article_slug):
+def delete_comment(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the comment deletion form for a specific article by a logged-in user.
     The function utilizes the DELETE method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    returns: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'DELETE':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -292,7 +345,7 @@ def delete_comment(request, category_slug, article_slug):
             return JsonResponse(data=response)
 
 
-def give_like(request, category_slug, article_slug):
+def give_like(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the like submission form for the current comment in a given article.
     If the user has already liked the comment, the like is removed,
@@ -302,10 +355,15 @@ def give_like(request, category_slug, article_slug):
     The function utilizes the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PUT':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -349,7 +407,7 @@ def give_like(request, category_slug, article_slug):
             })
 
 
-def give_dislike(request, category_slug, article_slug):
+def give_dislike(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the form for adding a dislike to the current comment in a given article.
     If the comment has already been disliked by the user, the dislike is removed,
@@ -359,10 +417,15 @@ def give_dislike(request, category_slug, article_slug):
     The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is updated in the database.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     if request.method == 'PUT':
         data = json.loads(s=request.body.decode('utf-8'))
@@ -405,7 +468,7 @@ def give_dislike(request, category_slug, article_slug):
             })
 
 
-def reply_comment(request, category_slug, article_slug):
+def reply_comment(request, category_slug, article_slug) -> django.http.response.JsonResponse:
     """
     The function handles the form for adding a reply to a comment in a given article
     by both logged-in and non-logged-in users. If the reply is added by a non-logged-in user,
@@ -414,10 +477,15 @@ def reply_comment(request, category_slug, article_slug):
     The function uses the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX).
     Upon successful form validation, the data is saved in the database.
 
-    category_slug: str
-    article_slug: str
+    Parameters
+    ----------
+        request: django.core.handlers.wsgi.WSGIRequest
+        category_slug: str
+        article_slug: str
 
-    return: JsonResponse
+    Returns
+    ----------
+        django.http.response.JsonResponse
     """
     category = Category.objects.get(slug=category_slug)
     article = get_object_or_404(klass=Article, slug=article_slug, category=category)

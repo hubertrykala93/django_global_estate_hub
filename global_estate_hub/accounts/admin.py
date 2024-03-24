@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, Individual, Business
 from django.contrib.sessions.models import Session
 import pprint
 
@@ -17,19 +17,33 @@ class AdminSession(admin.ModelAdmin):
     ordering = ['-expire_date']
 
     @admin.display(description='user')
-    def get_user(self, obj):
+    def get_user(self, obj) -> str:
         """
         Displays in the admin panel all users assigned to a given session.
 
-        return: str
+        Parameters
+        ----------
+            obj: django.contrib.session.models.Session
+
+        Returns
+        ----------
+            str
         """
         session_user = obj.get_decoded().get('_auth_user_id')
         user = User.objects.get(pk=session_user)
         return user.username
 
-    def _session_data(self, obj):
+    def _session_data(self, obj) -> str:
         """
         Displays in the admin panel session data assigned to a given user.
+
+        Parameters
+        ----------
+            obj: django.contrib.session.models.Session
+
+        Returns
+        ----------
+            str
         """
         return pprint.pformat(obj.get_decoded()).replace('\n', '\n')
 
@@ -93,32 +107,6 @@ class AdminUser(admin.ModelAdmin):
             'Additionals', {
             'fields': [
                 'is_agent',
-            ]
-        }
-        ]
-    ]
-
-
-@admin.register(OneTimePassword)
-class AdminOneTimePassword(admin.ModelAdmin):
-    """
-    Admin options and functionalities for OneTimePassword model.
-    """
-    list_display = ['user', 'password', 'created_at']
-    ordering = ['created_at']
-    fieldsets = [
-        [
-            'Basic Informations', {
-            'fields': [
-                'user',
-                'password',
-            ]
-        }
-        ],
-        [
-            'Dates', {
-            'fields': [
-                'created_at',
             ]
         }
         ]

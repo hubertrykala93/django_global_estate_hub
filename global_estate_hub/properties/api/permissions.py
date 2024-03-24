@@ -13,7 +13,13 @@ class AdminOnly(permissions.BasePermission):
         """
         Checks whether the user is a superuser. If so, they are granted permissions to access the properties API.
 
-        return: bool
+        Parametrs
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+
+        Returns
+        ----------
+            bool
         """
         user = request.user
 
