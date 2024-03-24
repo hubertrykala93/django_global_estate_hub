@@ -20,6 +20,7 @@ from .tokens import token_generator
 from django.contrib import messages
 from dotenv import load_dotenv
 import uuid
+import datetime
 
 load_dotenv()
 
@@ -358,11 +359,8 @@ def authorization(request) -> JsonResponse:
                 user = authenticate(request=request, email=email, password=password,
                                     backend='django.contrib.auth.backends.ModelBackend')
 
-                request.session['user'] = user.id
-                request.session['is_logged_in'] = True
-                request.session.save()
-
                 login(request=request, user=user, backend='django.contrib.auth.backends.ModelBackend')
+                request.session.set_expiry(300)
 
                 return JsonResponse(data=response, safe=False)
 
@@ -919,6 +917,100 @@ def forget_password(request) -> django.http.response.HttpResponse:
     })
 
 
+# def send_password(request) -> django.http.response.JsonResponse:
+#     """
+#     The function handling the user email address validation form using
+#     the POST method with Asynchronous JavaScript and XMLHttpRequest (AJAX) request.
+#
+#     This function sends an email message with a OneTimePassword to the user who requests password recovery/change.
+#     The OneTimePassword is active for 5 minutes and then deleted. While the OneTimePassword is active,
+#     the user cannot go back to the previous step to send another email message.
+#     Only after deleting the OneTimePassword from the database can another password change request be sent.
+#     This is done to prevent potential email spam. Upon successful verification of the user's email address,
+#     the user is redirected to the next step for OneTimePassword validation.
+#
+#     Parameters
+#     ----------
+#         request: django.core.handlers.wsgi.WSGIRequest
+#
+#     Returns
+#     ----------
+#         django.http.response.JsonResponse
+#     """
+#     if request.method == 'POST':
+#         one_time_password = randint(a=1111, b=9999)
+#         data = json.loads(s=request.body.decode('utf-8'))
+#
+#         email, spam_verification = [data[key][0] for key in list(data.keys())[:-1]][0], [data[key] for key in data][1]
+#         email_label = [data[key][2] for key in list(data.keys())[:-1]][0]
+#
+#         if len(spam_verification) != 0:
+#             return JsonResponse(data={
+#                 "valid": None,
+#             })
+#
+#         if email:
+#             if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
+#                 if User.objects.filter(email=email).exists():
+#                     if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
+#                         user = User.objects.get(email=email)
+#                         one_time_password = OneTimePassword(user=user, password=one_time_password)
+#                         one_time_password.save()
+#
+#                         try:
+#                             html_message = render_to_string(template_name='accounts/password_reset_email.html',
+#                                                             context={
+#                                                                 'one_time_password': one_time_password.password,
+#                                                                 'expire_password': one_time_password.expires_in,
+#                                                             })
+#                             plain_message = strip_tags(html_message)
+#
+#                             message = EmailMultiAlternatives(
+#                                 subject=f"Password reset request for {user.username}.",
+#                                 body=plain_message,
+#                                 from_email=os.environ.get("EMAIL_HOST_USER"),
+#                                 to=[user.email]
+#                             )
+#
+#                             message.attach_alternative(content=html_message, mimetype='text/html')
+#                             message.send(fail_silently=True)
+#
+#                             return JsonResponse(data={
+#                                 "valid": True,
+#                                 "email": email,
+#                                 "message": "",
+#                             })
+#
+#                         except Exception:
+#                             return JsonResponse(data={
+#                                 "valid": False,
+#                                 "message": "The message could not be sent.",
+#                             })
+#
+#                     elif len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 1:
+#                         return JsonResponse(data={
+#                             "valid": True,
+#                             "email": email,
+#                         })
+#
+#                 else:
+#                     return JsonResponse(data={
+#                         "valid": False,
+#                         "message": "The user with the provided email address does not exist.",
+#                     })
+#
+#             else:
+#                 return JsonResponse(data={
+#                     "valid": False,
+#                     "message": "The e-mail address format is invalid.",
+#                 })
+#
+#         else:
+#             return JsonResponse(data={
+#                 "valid": False,
+#                 "message": f"The {email_label} field cannot be empty.",
+#             })
+
 def send_password(request) -> django.http.response.JsonResponse:
     """
     The function handling the user email address validation form using
@@ -940,11 +1032,19 @@ def send_password(request) -> django.http.response.JsonResponse:
         django.http.response.JsonResponse
     """
     if request.method == 'POST':
-        one_time_password = randint(a=1111, b=9999)
         data = json.loads(s=request.body.decode('utf-8'))
 
         email, spam_verification = [data[key][0] for key in list(data.keys())[:-1]][0], [data[key] for key in data][1]
         email_label = [data[key][2] for key in list(data.keys())[:-1]][0]
+
+        start = datetime.datetime.now().time()
+        end = datetime.datetime.now() + datetime.timedelta(minutes=5)
+
+        request.session['otp'] = str(randint(a=1111, b=9999))
+        request.session['activation_time'] = start.strftime('%H:%M:%S')
+        request.session['expire_time'] = end.strftime('%H:%M:%S')
+        request.session['email'] = email
+        print(request.session.items())
 
         if len(spam_verification) != 0:
             return JsonResponse(data={
@@ -952,18 +1052,21 @@ def send_password(request) -> django.http.response.JsonResponse:
             })
 
         if email:
+            print('Is Email.')
             if re.match(pattern=r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)', string=email):
+                print('Is Re Match.')
                 if User.objects.filter(email=email).exists():
-                    if len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 0:
+                    print('Is User.')
+                    if request.session.get('otp'):
+                        print('Is request session get otp.')
                         user = User.objects.get(email=email)
-                        one_time_password = OneTimePassword(user=user, password=one_time_password)
-                        one_time_password.save()
 
                         try:
+                            print('Try before email send.')
                             html_message = render_to_string(template_name='accounts/password_reset_email.html',
                                                             context={
-                                                                'one_time_password': one_time_password.password,
-                                                                'expire_password': one_time_password.expires_in,
+                                                                'one_time_password': request.session['otp'],
+                                                                'expire_password': request.session['expire_time'],
                                                             })
                             plain_message = strip_tags(html_message)
 
@@ -977,6 +1080,7 @@ def send_password(request) -> django.http.response.JsonResponse:
                             message.attach_alternative(content=html_message, mimetype='text/html')
                             message.send(fail_silently=True)
 
+                            print('Email Sent.')
                             return JsonResponse(data={
                                 "valid": True,
                                 "email": email,
@@ -984,16 +1088,11 @@ def send_password(request) -> django.http.response.JsonResponse:
                             })
 
                         except Exception:
+                            print('Try except Exception.')
                             return JsonResponse(data={
                                 "valid": False,
                                 "message": "The message could not be sent.",
                             })
-
-                    elif len(OneTimePassword.objects.filter(user_id=User.objects.get(email=email).pk)) == 1:
-                        return JsonResponse(data={
-                            "valid": True,
-                            "email": email,
-                        })
 
                 else:
                     return JsonResponse(data={
