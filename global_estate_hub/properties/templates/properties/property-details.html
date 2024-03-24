@@ -1,7 +1,5 @@
 {% extends 'core/base.html' %}
-{% load float_converter %}
-{% load rate_converter %}
-{% load integer_converter %}
+{% load property_filters %}
 
 {% block page_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -30,7 +28,7 @@
         </div>
       </div>
 
-      {% if images %}
+      {% if images|length > 0 %}
       <ul class="property__gallery">
         {% for i, image in images %}
         {% if i == 0 %}
@@ -64,6 +62,12 @@
         {% endif %}
         {% endfor %}
       </ul>
+      {% else %}
+      <li class="property__gallery__item property__gallery__item--main">
+        <a data-fslightbox="gallery" href="{{ property.thumbnail.url }}">
+          <img src="{{ property.thumbnail.url }}">
+        </a>
+      </li>
       {% endif %}
     </div>
 

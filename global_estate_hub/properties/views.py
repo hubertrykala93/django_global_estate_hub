@@ -853,15 +853,7 @@ def property_details(request, category_slug, property_slug) -> django.http.respo
     property_obj = Property.objects.get(category=category, slug=property_slug)
     city = City.objects.get(name=property_obj.city)
     reviews = Review.objects.filter(property_id=property_obj.id)
-
-    images = enumerate([
-        '/media/property_images/photo_1.jpg',
-        '/media/property_images/photo_2.jpg',
-        '/media/property_images/photo_3.jpg',
-        '/media/property_images/photo_4.jpg',
-        '/media/property_images/photo_5.jpg',
-        '/media/property_images/photo_6.jpg',
-    ])
+    images = list(enumerate([img.image.url for img in property_obj.images.all()]))
 
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import ListingStatus, Category, Amenities, TourSchedule, \
-    Review, Education, HealthAndMedical, Transportation, Shopping, City, Property
+    Review, Education, HealthAndMedical, Transportation, Shopping, City, Property, Img
 from django.utils.translation import ngettext
 from django.contrib import messages
 
@@ -287,6 +287,25 @@ class AdminCity(admin.ModelAdmin):
     ]
 
 
+@admin.register(Img)
+class AdminImage(admin.ModelAdmin):
+    """
+    Admin options and functionalities for Img model.
+    """
+    list_display = ['id', 'image']
+    list_editable = ['image']
+    ordering = ['id']
+    fieldsets = [
+        [
+            'Property Images:', {
+            'fields': [
+                'image',
+            ]
+        }
+        ]
+    ]
+
+
 @admin.register(Property)
 class AdminProperty(admin.ModelAdmin):
     """
@@ -299,7 +318,7 @@ class AdminProperty(admin.ModelAdmin):
                     'province',
                     'country',
                     'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
-                    'images',
+                    'get_images',
                     'year_of_built', 'number_of_bedrooms', 'square_meters',
                     'parking_space', 'get_amenities', 'get_educations',
                     'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
@@ -310,7 +329,8 @@ class AdminProperty(admin.ModelAdmin):
     list_editable = ['title', 'thumbnail', 'price', 'year_of_built',
                      'number_of_bedrooms',
                      'number_of_bathrooms', 'user',
-                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country', 'country_code',
+                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country',
+                     'country_code',
                      'latitude',
                      'longitude', 'video',
                      'is_featured',
@@ -412,6 +432,21 @@ class AdminProperty(admin.ModelAdmin):
         ]
     ]
 
+    @admin.display(description='Property Images')
+    def get_images(self, obj) -> str:
+        """
+        Display in the admin panel all users who have added this property to their favorites.
+
+        Parameters
+        ----------
+            obj: properties.models.Property
+
+        Returns
+        ----------
+            str
+        """
+        return '\n'.join([str(img) for img in obj.images.all()])
+
     @admin.display(description='Property Favourites')
     def get_favourites(self, obj) -> str:
         """
@@ -425,7 +460,6 @@ class AdminProperty(admin.ModelAdmin):
         ----------
             str
         """
-        print(type(obj))
         return '\n'.join([user.username for user in obj.favourites.all()])
 
     @admin.display(description='Amenities')

@@ -4,6 +4,7 @@ from accounts.models import User
 from django.shortcuts import reverse
 from django.core.validators import FileExtensionValidator
 from PIL import Image
+from uuid import uuid4
 
 
 class ListingStatus(models.Model):
@@ -221,6 +222,79 @@ class City(models.Model):
             'city_slug': self.slug,
         })
 
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
+
+
+class Img(models.Model):
+    """
+    Creating Image model instance.
+    """
+    id = models.AutoField(primary_key=True)
+    image = models.ImageField(upload_to='property_details_images', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Image'
+        verbose_name_plural = 'Images'
+
+    def __str__(self) -> str:
+        """
+        Returns the string representation of the image and displays it in the administrator panel.
+
+        Returns
+        ----------
+            str
+        """
+        return self.image.name
+
+    def save(self, *args, **kwargs):
+        """
+        Converts the article's image to a smaller size based on proportions.
+
+        Parameters
+        ----------
+            args: tuple
+            kwargs: dict
+
+        Returns
+        ----------
+            None
+        """
+        super(Img, self).save(*args, **kwargs)
+
+        img = Image.open(fp=self.image.path)
+
+        if img.mode == 'RGBA':
+            img.convert(mode='RGB')
+
+        img_width = img.width
+        img_height = img.height
+
+        output_width = 1100
+        output_height = img_height * output_width / img_width
+
+        img.thumbnail(size=(output_width, output_height))
+        img.save(fp=self.image.path)
+
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
+
 
 class Property(models.Model):
     """
@@ -231,7 +305,8 @@ class Property(models.Model):
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
     thumbnail = models.ImageField(upload_to='property_images', null=True)
-    images = models.ImageField(upload_to='property_images', blank=True, null=True)
+    # images = models.ImageField(upload_to='property_images', blank=True, null=True)
+    images = models.ManyToManyField(to=Img, related_name='property_images', blank=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
     number_of_bedrooms = models.IntegerField()
@@ -303,7 +378,7 @@ class Property(models.Model):
         """
         super(Property, self).save(*args, **kwargs)
 
-        img = Image.open(fp=self.image.path)
+        img = Image.open(fp=self.thumbnail.path)
 
         if img.mode == 'RGBA':
             img.convert(mode='RGB')
@@ -315,12 +390,18 @@ class Property(models.Model):
         output_height = img_height * output_width / img_width
 
         img.thumbnail(size=(output_width, output_height))
-        img.save(fp=self.image.path)
+        img.save(fp=self.thumbnail.path)
 
-    def path_and_rename(self, path):
-        def wrapper(instance, filename):
-            ext = filename.split(sep='.')[-1]
-            print(ext)
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
 class TourSchedule(models.Model):

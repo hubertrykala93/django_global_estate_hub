@@ -4,6 +4,7 @@ from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
 from PIL import Image
+from uuid import uuid4
 
 
 class CustomUserManager(UserManager):
@@ -113,6 +114,17 @@ class User(AbstractBaseUser, PermissionsMixin):
             str
         """
         return self.username
+
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
 # class OneTimePasswordManager(models.Manager):

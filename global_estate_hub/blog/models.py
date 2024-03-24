@@ -5,6 +5,7 @@ from django.shortcuts import reverse
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
 from mptt.models import TreeForeignKey, MPTTModel
+from uuid import uuid4
 
 
 class Category(models.Model):
@@ -155,6 +156,17 @@ class Article(models.Model):
 
         img.thumbnail(size=(output_width, output_height))
         img.save(fp=self.image.path)
+
+    @property
+    def rename_image(self) -> str:
+        """
+        Returns new name of uploaded user profile image.
+
+        Returns:
+        ----------
+            str
+        """
+        return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
 class Comment(MPTTModel):
