@@ -1,5 +1,6 @@
 {% extends 'core/base.html' %}
 {% load property_filters %}
+{% load core_filters %}
 
 {% block page_css %}
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -237,7 +238,7 @@
                 </ul>
                 {% endif %}
               </div>
-              
+
               <div class="property__nearby__content" data-property-nearby-content>
                 <div class="h4">Transportation Services</div>
 
@@ -333,7 +334,7 @@
                     </div>
                   </div>
               </div>
-              
+
               <div class="form__row">
                   <div class="form__field">
                       <label for="interest-rate" class="form__label">interest rate * (oprocentowanie)</label>
@@ -434,7 +435,7 @@
             <div class="form__row">
               <div class="form__field">
                 <div class="form__input-wrap property__comment-form__stars">
-                  
+
                   <input data-star value="1" id="star1" checked type="radio" name="rating" class="visually-hidden">
                   <label for="star1">
                     <span class="visually-hidden">1 Star</span>
