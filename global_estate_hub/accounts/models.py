@@ -127,50 +127,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
-# class OneTimePasswordManager(models.Manager):
-#     """
-#     Creating OneTimePasswordManager model.
-#     """
-#
-#     def get_queryset(self) -> django.db.models.query.QuerySet:
-#         """
-#         Automatically deletes the OneTimePassword after 5 minutes.
-#
-#         Returns
-#         ----------
-#             django.db.models.query.Queryset
-#         """
-#         return super().get_queryset().filter(created_at__gte=now() - timedelta(minutes=5))
-
-
-class OneTimePassword(models.Model):
-    """
-    Creating OneTimePassword model instance.
-    """
-    id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    password = models.CharField(max_length=20)
-    created_at = models.DateTimeField(default=now)
-
-    # expires_in = models.DateTimeField(default=now() + timedelta(minutes=5))
-    # objects = OneTimePasswordManager()
-
-    class Meta:
-        verbose_name = 'One Time Password'
-        verbose_name_plural = 'One Time Passwords'
-
-    def __str__(self) -> str:
-        """
-        Returns the string representation of the username of the user
-        to whom the OneTimePassword has been assigned and displays it in the administrator panel.
-
-        Returns
-        ----------
-            str
-        """
-        return f'One Time Password for {self.user.username}.'
-
-
 class Individual(models.Model):
     """
     Creating IndividualProfile model instance.

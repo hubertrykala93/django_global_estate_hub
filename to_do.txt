@@ -20,7 +20,6 @@ admin
 2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
 
 @hubertrykala93
-9. images upload
 6. Zrobić API.
 4. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
 5. Błąd w account-settings. W przypadku uzupełnienia pola np. Country, a następnie chcąc je usunąć aby było puste nie da się tego zrobić

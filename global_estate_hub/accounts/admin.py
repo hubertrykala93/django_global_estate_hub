@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import User, OneTimePassword, Individual, Business
+from .models import User, Individual, Business
 from django.contrib.sessions.models import Session
 import pprint
 
@@ -107,32 +107,6 @@ class AdminUser(admin.ModelAdmin):
             'Additionals', {
             'fields': [
                 'is_agent',
-            ]
-        }
-        ]
-    ]
-
-
-@admin.register(OneTimePassword)
-class AdminOneTimePassword(admin.ModelAdmin):
-    """
-    Admin options and functionalities for OneTimePassword model.
-    """
-    list_display = ['user', 'password', 'created_at']
-    ordering = ['created_at']
-    fieldsets = [
-        [
-            'Basic Informations', {
-            'fields': [
-                'user',
-                'password',
-            ]
-        }
-        ],
-        [
-            'Dates', {
-            'fields': [
-                'created_at',
             ]
         }
         ]
