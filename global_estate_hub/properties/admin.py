@@ -537,7 +537,7 @@ class AdminProperty(admin.ModelAdmin):
         """
         return '\n'.join([s.name for s in obj.shopping.all()])
 
-    @admin.action(description='Highlight selected Properties')
+    @admin.action(description='Make all selected Properties featured')
     def make_featured(self, request, queryset) -> None:
         """
         Highlights all selected properties that have the 'is_featured' attribute set to 'False'.
@@ -559,7 +559,7 @@ class AdminProperty(admin.ModelAdmin):
                                            number=updated),
                           level=messages.SUCCESS)
 
-    @admin.action(description='Remove highlights from selected properties.')
+    @admin.action(description='Remove highlights featured from selected properties.')
     def remove_featured(self, request, queryset) -> None:
         """
         Unhighlights all selected properties that have the 'is_featured' attribute set to 'True'.

@@ -3,6 +3,8 @@ from django.contrib.auth.models import Group
 from .models import User, Individual, Business
 from django.contrib.sessions.models import Session
 import pprint
+from django.utils.translation import ngettext
+from django.contrib import messages
 
 admin.site.unregister(Group)
 
@@ -63,6 +65,7 @@ class AdminUser(admin.ModelAdmin):
     list_display_links = ['id']
     search_fields = ['username']
     ordering = ['date_joined']
+    actions = ['make_verified']
     fieldsets = [
         [
             'Basic Informations:', {
@@ -111,6 +114,28 @@ class AdminUser(admin.ModelAdmin):
         }
         ]
     ]
+
+    @admin.action(description='Make all selected Users verified')
+    def make_verified(self, request, queryset) -> None:
+        """
+        Highlights all selected users that have the 'is_verified' attribute set to 'False'.
+
+        Parameters
+        ----------
+            request: django.core.handlers.wsgi.WSGIRequest
+            queryset: django.db.models.query.Queryset
+
+        Returns
+        ----------
+            None
+        """
+        updated = queryset.update(is_verified=True)
+
+        self.message_user(request=request,
+                          message=ngettext(singular=f'{updated} user has been verified successfully.',
+                                           plural=f'{updated} users have been verified successfully.',
+                                           number=updated),
+                          level=messages.SUCCESS)
 
 
 @admin.register(Individual)

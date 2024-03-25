@@ -1,6 +1,8 @@
+import os
+
 from django.middleware.csrf import get_token
 from properties.models import Property, Category, City
-from itertools import chain
+from django.db.models import Count
 
 
 def generate_token(request) -> dict:
@@ -85,6 +87,6 @@ def discover_cities(request) -> dict:
         dict
     """
     return {
-        'discover_cities': [p.city for p in
-                            list(chain(*[Property.objects.filter(city=c) for c in City.objects.all()]))][:8],
+        'discover_cities': [City.objects.get(name=obj.city.name) for obj in
+                            Property.objects.annotate(city_count=Count('city'))][:8],
     }
