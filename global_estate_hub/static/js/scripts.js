@@ -572,7 +572,7 @@ const getRadioValue = (form, radioDataAttr) => {
 }
 
 const decodeCommentIntoText = (comment) => {
-  return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, '&nbsp;')
+  return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, ' ')
 }
 
 /**
