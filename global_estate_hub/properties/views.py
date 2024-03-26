@@ -4,7 +4,7 @@ from django.http import JsonResponse
 import json
 import re
 import os
-from accounts.models import User
+from accounts.models import User, Individual, Business
 from .models import Property, ListingStatus, Category, City, Review, TourSchedule
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -855,9 +855,16 @@ def property_details(request, category_slug, property_slug) -> django.http.respo
     reviews = Review.objects.filter(property_id=property_obj.id)
     images = list(enumerate([img.image.url for img in property_obj.images.all()]))
 
+    if property_obj.user.account_type == 'Individual':
+        profile = Individual.objects.get(user=property_obj.user)
+
+    else:
+        profile = Business.objects.get(user=property_obj.user)
+
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,
         'property': property_obj,
+        'profile': profile,
         'city': city,
         'images': images,
         'range': range(5),

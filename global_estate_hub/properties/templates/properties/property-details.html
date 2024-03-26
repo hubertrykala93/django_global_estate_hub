@@ -659,7 +659,7 @@
               <img src="{{ property.user.image.url }}" alt="agent avatar">
             </div>
 
-            <a href="{% url 'account-details' property.user.username %}"><div class="h4">{% if property.user.account_type == 'Individual' %}{{ property.user.individual.first_name }} {{ property.user.individual.last_name }}{% else %}{{ property.user.business.company_name }}{% endif %}</div></a>
+            <a href="{% url 'account-details' property.user.username %}"><div class="h4">{% if property.user.account_type == 'Individual' %}{{ profile.first_name }} {{ profile.last_name }}{% else %}{{ profile.company_name }}{% endif %}</div></a>
             <div class="property__agent__sign">{% if property.user.account_type == 'Individual' %}Private{% else %}Business{% endif %} Seller</div>
 
             <div class="property__agent__contact">

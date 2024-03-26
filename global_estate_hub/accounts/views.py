@@ -5,7 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth import update_session_auth_hash
 from django.http import JsonResponse
-from .models import User
+from .models import User, Individual, Business
 import json
 import re
 from django.contrib.auth import login, authenticate, logout
@@ -1178,7 +1178,14 @@ def account_details(request, username) -> django.http.response.HttpResponse:
     """
     u = User.objects.get(username=username)
 
+    if u.account_type == 'Individual':
+        profile = Individual.objects.get(user=u)
+
+    else:
+        profile = Business.objects.get(user=u)
+
     return render(request=request, template_name='accounts/account-details.html', context={
         'title': 'Account Details',
         'u': u,
+        'profile': profile,
     })

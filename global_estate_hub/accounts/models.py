@@ -132,7 +132,7 @@ class Individual(models.Model):
     Creating IndividualProfile model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    user = models.OneToOneField(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
