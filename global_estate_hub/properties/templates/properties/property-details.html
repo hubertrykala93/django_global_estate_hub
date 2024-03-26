@@ -323,7 +323,7 @@
                   <div class="form__field">
                       <label for="total-amount" class="form__label">total amount *</label>
                       <div class="form__input-wrap">
-                          <input data-total data-input data-required type="text" name="total-amount" id="total-amount" value="{{ property.price|convert_to_int }}">
+                          <input data-total data-input data-required type="text" name="total-amount" id="total-amount" value="{% if property.listing_status.name == 'Rent' %}{% else %}{{ property.price|convert_to_int }}{% endif %}">
                       </div>
                   </div>
 

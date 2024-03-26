@@ -1,3 +1,4 @@
+import json
 from datetime import timedelta
 import django.db.models.query
 from django.db import models
@@ -125,6 +126,28 @@ class User(AbstractBaseUser, PermissionsMixin):
             str
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
+
+    def serialize(self) -> dict:
+        """
+        Convert User object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "username": self.username,
+            "email": self.email,
+            "image": self.image.url,
+            "account_type": self.account_type,
+            "is_verified": self.is_verified,
+            "is_active": self.is_active,
+            "is_superuser": self.is_superuser,
+            "is_staff": self.is_staff,
+            "is_agent": self.is_agent,
+            "date_joined": self.date_joined.strftime('%m/%d/%Y %H:%M:%S'),
+        }
 
 
 class Individual(models.Model):
