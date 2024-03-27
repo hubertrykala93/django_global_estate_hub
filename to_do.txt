@@ -3,9 +3,7 @@ admin@gmail.com
 admin
 
 @Szymon-Levy
-1. Ustalenie adresu global estate hub w zakladce kontakt
-2. Lorem ipsum w cytatach w article-details
-3. Przydzielić uzytkownikow do komentarzy, reviews i properties,
+
 
 ************
 

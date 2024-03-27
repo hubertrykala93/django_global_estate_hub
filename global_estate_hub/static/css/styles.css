@@ -3883,6 +3883,10 @@ section.properties {
     padding-top: 3rem;
 }
 
+.property .property__gallery--single {
+    display: block;
+}
+
 .property .property__gallery .property__gallery__item.property__gallery__item--hidden {
     display: none;
 }
@@ -3904,11 +3908,19 @@ section.properties {
     overflow: hidden;
 }
 
+.property .property__gallery--single .property__gallery__item a {
+    height: unset;
+}
+
 .property .property__gallery .property__gallery__item img {
     width: 100%;
     height: 100%;
     transform: scale(1.09);
     transition: transform .3s;
+}
+
+.property .property__gallery--single .property__gallery__item img {
+    height: unset;
 }
 
 .property .property__gallery .property__gallery__item:hover img {

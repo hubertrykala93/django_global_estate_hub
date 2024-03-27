@@ -692,7 +692,7 @@ if ( $propertiesPage ) {
 
   if ($propertiesRow) { changeView(view) }
 
-  $changeView.addEventListener('click', e => {
+  $changeView?.addEventListener('click', e => {
     if ( e.target.dataset.hasOwnProperty('gridBtn') ) {
       changeView('grid')
       localStorage.setItem('view', 'grid')
