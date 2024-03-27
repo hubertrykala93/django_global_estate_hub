@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -131,4 +132,8 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'js/user.js' %}"></script>
 {% endblock %}

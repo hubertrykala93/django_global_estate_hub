@@ -8,8 +8,7 @@ admin
 3. Przydzielić uzytkownikow do komentarzy, reviews i properties,
 
 ************
-1. accessible accordion
-2. wygenerowanie tekstów wszędzie gdzie są jakieś tymczasowe lorem ipsum
+
 
 @hubertrykala93
 6. Zrobić API.
