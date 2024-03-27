@@ -9,6 +9,8 @@ admin
 
 
 @hubertrykala93
+1. Wyczyścić filtry w adminie,
+2. Nadać użytwkonikom is_agent
 6. Zrobić API.
 4. Wyłączyć możliwość kliknięcia bieżącej strony w paginacji
 

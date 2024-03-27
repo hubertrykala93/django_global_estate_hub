@@ -861,6 +861,9 @@ def property_details(request, category_slug, property_slug) -> django.http.respo
     else:
         profile = Business.objects.get(user=property_obj.user)
 
+    properties = [p.user for p in Property.objects.all()]
+    print(len(properties))
+
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,
         'property': property_obj,

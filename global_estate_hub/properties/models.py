@@ -456,7 +456,7 @@ class TourSchedule(models.Model):
     date = models.CharField(max_length=100)
     time = models.CharField(max_length=100, null=True)
     name = models.CharField(max_length=100)
-    phone_number = models.EmailField(max_length=100)
+    phone_number = models.CharField(max_length=100)
     message = models.TextField(max_length=10000)
 
     class Meta:

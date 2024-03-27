@@ -12,12 +12,10 @@ class AdminCategory(admin.ModelAdmin):
     """
     list_display = ['id', 'name', 'slug']
     list_editable = ['slug']
-    list_filter = ['name']
     prepopulated_fields = {
         'slug': ['name']
     }
     list_display_links = ['id']
-    search_fields = ['name']
     ordering = ['id']
     fieldsets = [
         [
@@ -43,10 +41,8 @@ class AdminTag(admin.ModelAdmin):
     Admin options and functionalities for Tag model.
     """
     list_display = ['id', 'name', 'slug']
-    list_filter = ['name']
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['name']}
-    search_fields = ['name']
     ordering = ['id']
     fieldsets = [
         [
@@ -72,11 +68,11 @@ class AdminArticle(admin.ModelAdmin):
     Admin options and functionalities for Article model.
     """
     list_display = ['id', 'user', 'title', 'category', 'image', 'date_posted', 'slug', 'get_tags']
-    list_filter = ['user', 'category', 'date_posted', 'tags']
+    list_filter = ['category', 'date_posted', 'tags']
     list_editable = ['user', 'image', 'category']
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
-    search_fields = ['user__username', 'title']
+    search_fields = ['user__username', 'title', 'category', 'tags']
     ordering = ['date_posted']
     fieldsets = [
         [
@@ -154,11 +150,11 @@ class AdminComment(MPTTModelAdmin):
     """
     list_display = ['id', 'user', 'article', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active',
                     'parent']
-    list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
+    list_filter = ['article__title', 'date_posted', 'active']
     list_editable = ['user', 'likes', 'dislikes', 'active']
     list_display_links = ['id']
     actions = ['approve_comments']
-    search_fields = ['user__username', 'comment']
+    search_fields = ['user__username', 'article__title', 'full_name', 'comment']
     ordering = ['date_posted']
     fieldsets = [
         [
@@ -243,7 +239,7 @@ class AdminCommentLike(admin.ModelAdmin):
     Admin options and functionalities for CommentLike model.
     """
     list_display = ['id', 'user', 'comment']
-    list_filter = ['user', 'comment']
+    list_filter = ['user__username']
     list_display_links = ['id']
     search_fields = ['user__username', 'comment__comment']
     ordering = ['id']
@@ -271,7 +267,7 @@ class AdminCommentDislike(admin.ModelAdmin):
     Admin options and functionalities for CommentDislike model.
     """
     list_display = ['id', 'user', 'comment']
-    list_filter = ['user', 'comment']
+    list_filter = ['user__username']
     list_display_links = ['id']
     search_fields = ['user__username', 'comment__comment']
     ordering = ['id']

@@ -7,7 +7,7 @@ class Newsletter(models.Model):
     Creating Newsletter model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    subscribed_at = models.DateTimeField(default=now, editable=False)
+    subscribed_at = models.DateTimeField(default=now)
     email = models.EmailField(max_length=200, unique=True, null=True)
 
     class Meta:
@@ -30,7 +30,7 @@ class ContactMail(models.Model):
     Creating ContactMail model instance.
     """
     id = models.AutoField(primary_key=True, editable=False)
-    date_sent = models.DateTimeField(default=now, editable=False)
+    date_sent = models.DateTimeField(default=now)
     full_name = models.CharField(max_length=150)
     phone_number = models.CharField(max_length=150)
     email = models.CharField(max_length=150)

@@ -8,6 +8,7 @@
         <div class="row">
             <ul class="top-agents__list">
                 {% for agent in agents %}
+                {% if agent.property_count != 0 %}
                 <li class="top-agents__item">
                     <div class="top-agents__name h4">
                     {% if agent.account_type == 'Individual' %}{% if agent.individual.first_name and agent.individual.last_name %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.username }}{% endif %}{% else %}{% if agent.business.company_name %}{{ agent.business.company_name }}{% else %}{{ agent.username }}{% endif %}{% endif %}
@@ -20,6 +21,7 @@
                         <i class="ri-user-shared-line" aria-hidden="true"></i>
                     </a>
                 </li>
+                {% endif %}
                 {% endfor %}
             </ul>
         </div>

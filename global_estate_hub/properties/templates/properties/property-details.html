@@ -30,7 +30,7 @@
       </div>
 
       {% if images|length > 0 %}
-      <ul class="property__gallery property__gallery--single">
+      <ul class="property__gallery">
         {% for i, image in images %}
         {% if i == 0 %}
         <li class="property__gallery__item property__gallery__item--main">
@@ -64,11 +64,13 @@
         {% endfor %}
       </ul>
       {% else %}
+      <ul class="property__gallery property__gallery--single">
       <li class="property__gallery__item property__gallery__item--main">
         <a data-fslightbox="gallery" href="{{ property.thumbnail.url }}">
-          <img src="{{ property.thumbnail.url }}">
+          <img src="{{ property.thumbnail.url }}" alt="property image">
         </a>
       </li>
+      </ul>
       {% endif %}
     </div>
 

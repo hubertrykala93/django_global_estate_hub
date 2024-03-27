@@ -8,6 +8,7 @@ class AdminNewsletter(admin.ModelAdmin):
     Admin options and functionalities for Newsletter model.
     """
     list_display = ['id', 'email', 'subscribed_at']
+    list_filter = ['subscribed_at']
     list_editable = ['email']
     list_display_links = ['id']
     search_fields = ['email']

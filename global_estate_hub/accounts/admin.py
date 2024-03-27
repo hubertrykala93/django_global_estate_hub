@@ -60,10 +60,10 @@ class AdminUser(admin.ModelAdmin):
     list_display = ['id', 'username', 'email', 'image', 'password', 'account_type', 'is_verified', 'is_staff',
                     'is_active', 'is_superuser', 'date_joined', 'last_login', 'is_agent']
     list_editable = ['email', 'account_type', 'is_verified', 'is_staff', 'is_active', 'is_superuser', 'is_agent']
-    list_filter = ['username', 'email', 'account_type', 'date_joined', 'is_agent']
+    list_filter = ['account_type', 'date_joined', 'is_agent']
     radio_fields = {'account_type': admin.VERTICAL}
     list_display_links = ['id']
-    search_fields = ['username']
+    search_fields = ['username', 'email']
     ordering = ['date_joined']
     actions = ['make_verified']
     fieldsets = [
@@ -149,9 +149,9 @@ class AdminIndividualProfile(admin.ModelAdmin):
     list_editable = ['first_name', 'last_name', 'gender', 'country', 'province', 'city',
                      'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                      'linkedin_url']
-    list_filter = ['last_name', 'country', 'province', 'city', 'street', 'postal_code']
+    list_filter = ['country', 'province', 'city']
     list_display_links = ['id']
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'country', 'province', 'city']
     ordering = ['id']
     radio_fields = {'gender': admin.VERTICAL}
     fieldsets = [
@@ -207,9 +207,9 @@ class AdminBusinessProfile(admin.ModelAdmin):
     list_editable = ['company_name', 'company_id', 'country', 'province', 'city',
                      'street', 'postal_code', 'phone_number', 'website_url', 'facebook_url', 'instagram_url',
                      'linkedin_url']
-    list_filter = ['company_name', 'country', 'province', 'city', 'street', 'postal_code']
+    list_filter = ['country', 'province', 'city']
     list_display_links = ['id']
-    search_fields = ['user__username']
+    search_fields = ['user__username', 'country', 'province', 'city']
     ordering = ['id']
     fieldsets = [
         [

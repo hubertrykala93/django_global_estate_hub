@@ -11,8 +11,7 @@ class AdminListingStatus(admin.ModelAdmin):
     Admin options and functionalities for ListingStatus model.
     """
     list_display = ['id', 'name', 'slug']
-    list_editable = ['slug']
-    list_filter = ['name']
+    list_editable = ['name', 'slug']
     list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
@@ -43,8 +42,7 @@ class AdminCategory(admin.ModelAdmin):
     Admin options and functionalities for Category model.
     """
     list_display = ['id', 'name', 'slug', 'image']
-    list_editable = ['slug', 'image']
-    list_filter = ['name']
+    list_editable = ['name', 'slug', 'image']
     list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
@@ -75,8 +73,7 @@ class AdminAmenities(admin.ModelAdmin):
     Admin options and functionalities for Amenities model.
     """
     list_display = ['id', 'name', 'slug', 'image']
-    list_editable = ['slug', 'image']
-    list_filter = ['name']
+    list_editable = ['name', 'slug', 'image']
     list_display_links = ['id']
     prepopulated_fields = {
         'slug': ['name'],
@@ -256,9 +253,8 @@ class AdminCity(admin.ModelAdmin):
     """
     Admin options and functionalities for City model.
     """
-    list_display = ['id', 'image', 'name', 'slug']
-    list_filter = ['name']
-    list_editable = ['image', 'name', 'slug']
+    list_display = ['id', 'name', 'slug', 'image']
+    list_editable = ['name', 'slug', 'image']
     prepopulated_fields = {'slug': ['name']}
     search_fields = ['name']
     ordering = ['id']
@@ -311,29 +307,54 @@ class AdminProperty(admin.ModelAdmin):
     """
     Admin options and functionalities for Property model.
     """
-    list_display = ['id', 'thumbnail', 'title', 'category', 'listing_status', 'price', 'number_of_bathrooms', 'user',
-                    'city',
-                    'date_posted',
-                    'postal_code',
-                    'province',
-                    'country',
-                    'country_code', 'latitude', 'longitude', 'video', 'is_featured', 'get_favourites',
-                    'get_images',
-                    'year_of_built', 'number_of_bedrooms', 'square_meters',
-                    'parking_space', 'get_amenities', 'get_educations',
-                    'get_health_and_medicals', 'get_transportations', 'get_shops', 'purchasing_user']
-    list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
-                   'year_of_built', 'city', 'province',
-                   'country', 'is_featured', 'date_posted']
-    list_editable = ['title', 'thumbnail', 'price', 'year_of_built',
-                     'number_of_bedrooms',
-                     'number_of_bathrooms', 'user',
-                     'square_meters', 'parking_space', 'category', 'city', 'province', 'country',
-                     'country_code',
-                     'latitude',
-                     'longitude', 'video',
-                     'is_featured',
-                     'listing_status', 'purchasing_user']
+    list_display = [
+        'id',
+        'date_posted',
+        'user',
+        'title',
+        'slug',
+        'year_of_built',
+        'price',
+        'number_of_bedrooms',
+        'number_of_bathrooms',
+        'square_meters',
+        'parking_space',
+        'latitude',
+        'longitude',
+        'country',
+        'country_code',
+        'province',
+        'city',
+        'postal_code',
+        'thumbnail',
+        'get_images',
+        'video',
+        'listing_status',
+        'category',
+        'get_favourites',
+        'get_amenities',
+        'get_educations',
+        'get_health_and_medicals',
+        'get_transportations',
+        'get_shops',
+        'is_featured',
+        'purchasing_user'
+    ]
+
+    list_filter = [
+        'user',
+        'category',
+        'listing_status',
+        'number_of_bedrooms',
+        'number_of_bathrooms',
+        'year_of_built',
+        'city',
+        'province',
+        'country',
+        'is_featured',
+        'date_posted'
+    ]
+
     list_display_links = ['id']
     prepopulated_fields = {'slug': ['title']}
     search_fields = ['user__username', 'title']
@@ -587,7 +608,6 @@ class AdminTourSchedule(admin.ModelAdmin):
     Admin options and functionalities for TourSchedule model.
     """
     list_display = ['id', 'customer', 'property', 'date_sent', 'date', 'time', 'name', 'phone_number', 'message']
-    list_editable = ['date', 'time', 'property', 'name', 'phone_number']
     list_filter = ['customer', 'date_sent', 'date', 'time', 'name', 'phone_number']
     list_display_links = ['id']
     search_fields = ['customer__username', 'name', 'phone_number']
@@ -645,7 +665,7 @@ class AdminReview(admin.ModelAdmin):
     Admin options and functionalities for Review model.
     """
     list_display = ['id', 'date_posted', 'user', 'property', 'rate', 'content', 'active']
-    list_filter = ['user', 'date_posted', 'property', 'rate', 'active']
+    list_filter = ['user__username', 'date_posted', 'property__title', 'active']
     list_editable = ['user', 'property', 'rate', 'active']
     list_display_links = ['id']
     search_fields = ['user__username', 'property__title', 'full_name']
