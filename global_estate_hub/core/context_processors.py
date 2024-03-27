@@ -1,5 +1,3 @@
-import os
-
 from django.middleware.csrf import get_token
 from properties.models import Property, Category, City
 from django.db.models import Count

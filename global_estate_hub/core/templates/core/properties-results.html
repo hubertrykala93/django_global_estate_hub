@@ -12,6 +12,7 @@
                         <span class="properties__results__counter__number">{{ properties|length }}</span> {% if properties|length == 0 %}Properties{% elif properties|length == 1 %}Property{% else %}Properties{% endif %}
                     </div>
 
+                    {% if pages %}
                     <div class="properties__results__options">
                         <div class="properties__results__ordering">
                             <form class="properties__results__ordering__form">
@@ -73,6 +74,7 @@
                             </ul>
                         </div>
                     </div>
+                    {% endif %}
                 </div>
 
                 {% if pages %}

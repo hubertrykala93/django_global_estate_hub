@@ -321,8 +321,7 @@ class AdminProperty(admin.ModelAdmin):
                     'get_images',
                     'year_of_built', 'number_of_bedrooms', 'square_meters',
                     'parking_space', 'get_amenities', 'get_educations',
-                    'get_health_and_medicals', 'get_transportations', 'get_shops', 'quantity_of_purchases',
-                    'purchasing_user']
+                    'get_health_and_medicals', 'get_transportations', 'get_shops', 'purchasing_user']
     list_filter = ['user', 'category', 'listing_status', 'number_of_bedrooms', 'number_of_bathrooms',
                    'year_of_built', 'city', 'province',
                    'country', 'is_featured', 'date_posted']

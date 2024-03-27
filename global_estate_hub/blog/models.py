@@ -97,7 +97,7 @@ class Article(models.Model):
     title = models.CharField(max_length=200, unique=True)
     content = RichTextUploadingField(max_length=10000, unique=True, blank=True)
     category = models.ForeignKey(to=Category, related_name='article', on_delete=models.CASCADE, null=True)
-    tags = models.ManyToManyField(to=Tag)
+    tags = models.ManyToManyField(to=Tag, related_name='tags')
     slug = models.SlugField(max_length=200, unique=True, null=True)
 
     class Meta:
@@ -168,6 +168,26 @@ class Article(models.Model):
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
+    def serialize(self) -> dict:
+        """
+        Convert Article object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "image": self.image.url,
+            "date_posted": self.date_posted.strftime('%d/%m/%Y, %H:%M:%S'),
+            "title": self.title,
+            "content": self.content,
+            "category_id": self.category.id,
+            "tags_id": [tag.id for tag in self.tags.all()],
+            "slug": self.slug,
+        }
+
 
 class Comment(MPTTModel):
     """
@@ -182,7 +202,7 @@ class Comment(MPTTModel):
     likes = models.IntegerField(default=0)
     dislikes = models.IntegerField(default=0)
     parent = TreeForeignKey(to='self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
-    active = models.BooleanField(default=True)
+    active = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Comment'
@@ -201,6 +221,27 @@ class Comment(MPTTModel):
             str
         """
         return f'Comment by {self.full_name}.' if self.full_name else f'Comment by {self.user}.'
+
+    def serialize(self) -> dict:
+        """
+        Convert Article object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "article_id": self.article.id,
+            "full_name": self.full_name,
+            "date_posted": self.date_posted.strftime('%d/%m/%Y, %H:%M:%S'),
+            "comment": self.comment,
+            "likes": self.likes,
+            "dislikes": self.dislikes,
+            "parent": self.parent.id if self.parent else None,
+            "active": self.active,
+        }
 
 
 class CommentLike(models.Model):

@@ -426,6 +426,7 @@ def properties_results(request) -> django.http.response.JsonResponse or django.h
     elif request.method == 'GET':
         queryset = []
         request.session['sorted_type'] = 'Newest Properties'
+        print(request.session.items())
 
         if 'properties-order' in request.GET:
             if 'filters' in request.session:

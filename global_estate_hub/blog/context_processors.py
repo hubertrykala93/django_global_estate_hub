@@ -56,21 +56,8 @@ def popular_tags(request) -> dict:
     ----------
         dict
     """
-    articles = Article.objects.all()
-
-    result = []
-
-    for article in articles:
-        for obj in article.tags.all():
-            result.append(obj.name)
-
-    tags_dict = {}
-
-    for tag in result:
-        if tag not in tags_dict.keys():
-            tags_dict[tag] = 1
-        else:
-            tags_dict[tag] += 1
+    all_tags = [obj.name for article in Article.objects.all() for obj in article.tags.all()]
+    tags_dict = {tag: all_tags.count(tag) for tag in set(all_tags)}
 
     return {
         'popular_tags': Tag.objects.filter(

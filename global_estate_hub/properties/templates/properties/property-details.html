@@ -395,6 +395,7 @@
 
           <div class="property__reviews">
             {% for review in reviews %}
+            {% if review.active %}
             <div class="property__review">
               <div class="property__review__avatar">
                 <img src="{{ review.user.image.url }}" alt="review author's avatar">
@@ -415,6 +416,7 @@
                     {% endfor %}
               </ul>
             </div>
+            {% endif %}
             {% endfor %}
           </div>
         </div>

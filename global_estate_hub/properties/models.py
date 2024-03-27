@@ -305,7 +305,7 @@ class Property(models.Model):
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
     thumbnail = models.ImageField(upload_to='property_images', null=True)
-    images = models.ManyToManyField(to=Img, related_name='property_images', blank=True)
+    images = models.ManyToManyField(to=Img, related_name='images', blank=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
     number_of_bedrooms = models.IntegerField()
@@ -327,12 +327,11 @@ class Property(models.Model):
     listing_status = models.ForeignKey(to=ListingStatus, on_delete=models.CASCADE, related_name='listing_statuses')
     category = models.ForeignKey(to=Category, related_name='categories', null=True, on_delete=models.CASCADE)
     amenities = models.ManyToManyField(to=Amenities, related_name='amenities')
-    education = models.ManyToManyField(to=Education, blank=True)
-    health_and_medical = models.ManyToManyField(to=HealthAndMedical, blank=True)
-    transportation = models.ManyToManyField(to=Transportation, blank=True)
-    shopping = models.ManyToManyField(to=Shopping, blank=True)
-    quantity_of_purchases = models.IntegerField(default=0, null=True, blank=True)
-    purchasing_user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True)
+    education = models.ManyToManyField(to=Education, related_name='education', blank=True)
+    health_and_medical = models.ManyToManyField(to=HealthAndMedical, related_name='health_and_medical', blank=True)
+    transportation = models.ManyToManyField(to=Transportation, related_name='transportation', blank=True)
+    shopping = models.ManyToManyField(to=Shopping, related_name='shopping', blank=True)
+    purchasing_user = models.ForeignKey(to=User, blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Property'
@@ -402,6 +401,49 @@ class Property(models.Model):
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
+    def serialize(self) -> dict:
+        """
+        Convert Property object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "title": self.title,
+            "date_posted": self.date_posted.strftime('%d/%m/%Y, %H:%M:%S'),
+            "thumbnail": self.thumbnail.url,
+            "images_id": [image.id for image in self.images.all()],
+            "year_of_built": self.year_of_built,
+            "price": self.price,
+            "number_of_bedrooms": self.number_of_bedrooms,
+            "number_of_bathrooms": self.number_of_bathrooms,
+            "square_meters": self.square_meters,
+            "parking_space": self.parking_space,
+            "postal_code": self.postal_code,
+            "city_id": self.city.id,
+            "province": self.province,
+            "country": self.country,
+            "country_code": self.country_code,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "description": self.description,
+            "video": self.video.url,
+            "is_featured": self.is_featured,
+            "favourites_id": [favourite.id for favourite in self.favourites.all()],
+            "slug": self.slug,
+            "listing_status_id": self.listing_status.id,
+            "category_id": self.category.id,
+            "amenities_id": [amenity.id for amenity in self.amenities.all()],
+            "education_id": [education.id for education in self.education.all()],
+            "health_and_medical_id": [health_and_medical.id for health_and_medical in self.health_and_medical.all()],
+            "transportation_id": [transportation.id for transportation in self.transportation.all()],
+            "shopping_id": [shopping.id for shopping in self.shopping.all()],
+            "purchasing_user_id": self.purchasing_user.id if self.purchasing_user else None,
+        }
+
 
 class TourSchedule(models.Model):
     """
@@ -458,3 +500,21 @@ class Review(models.Model):
             str
         """
         return f'Reviewed by {self.user}'
+
+    def serialize(self) -> dict:
+        """
+        Convert Review object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "date_posted": self.date_posted.strftime('%d/%m/%Y, %H:%M:%S'),
+            "user_id": self.user.id,
+            "property_id": self.property.id,
+            "rate": self.rate,
+            "content": self.content.replace('%20', ' '),
+            "active": self.active,
+        }

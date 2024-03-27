@@ -155,7 +155,7 @@ class AdminComment(MPTTModelAdmin):
     list_display = ['id', 'user', 'article', 'full_name', 'date_posted', 'comment', 'likes', 'dislikes', 'active',
                     'parent']
     list_filter = ['user', 'full_name', 'date_posted', 'likes', 'dislikes', 'active']
-    list_editable = ['likes', 'dislikes', 'active']
+    list_editable = ['user', 'likes', 'dislikes', 'active']
     list_display_links = ['id']
     actions = ['approve_comments']
     search_fields = ['user__username', 'comment']

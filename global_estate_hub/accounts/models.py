@@ -1,6 +1,3 @@
-import json
-from datetime import timedelta
-import django.db.models.query
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.utils.timezone import now
@@ -146,7 +143,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             "is_superuser": self.is_superuser,
             "is_staff": self.is_staff,
             "is_agent": self.is_agent,
-            "date_joined": self.date_joined.strftime('%m/%d/%Y %H:%M:%S'),
+            "date_joined": self.date_joined.strftime('%d/%m/%Y, %H:%M:%S'),
         }
 
 
@@ -187,6 +184,32 @@ class Individual(models.Model):
         """
         return f'{self.user.username} Individual Profile.'
 
+    def serialize(self) -> dict:
+        """
+        Convert Individual object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "phone_number": self.phone_number,
+            "gender": self.gender,
+            "country": self.country,
+            "province": self.province,
+            "city": self.city,
+            "street": self.street,
+            "postal_code": self.postal_code,
+            "website_url": self.website_url,
+            "facebook_url": self.facebook_url,
+            "instagram_url": self.instagram_url,
+            "linkedin_url": self.linkedin_url,
+        }
+
 
 class Business(models.Model):
     """
@@ -220,3 +243,28 @@ class Business(models.Model):
             str
         """
         return f'{self.company_name} Business Profile.'
+
+    def serialize(self) -> dict:
+        """
+        Convert Individual object to dict.
+
+        Returns:
+        ----------
+            dict
+        """
+        return {
+            "id": self.id,
+            "user_id": self.user.id,
+            "company_name": self.company_name,
+            "company_id": self.company_id,
+            "phone_number": self.phone_number,
+            "country": self.country,
+            "province": self.province,
+            "city": self.city,
+            "street": self.street,
+            "postal_code": self.postal_code,
+            "website_url": self.website_url,
+            "facebook_url": self.facebook_url,
+            "instagram_url": self.instagram_url,
+            "linkedin_url": self.linkedin_url,
+        }
