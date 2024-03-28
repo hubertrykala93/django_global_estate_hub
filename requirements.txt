@@ -11,7 +11,9 @@ django-js-asset==2.1.0
 django-mptt==0.15.0
 djangorestframework==3.14.0
 future==0.18.3
+gunicorn==21.2.0
 idna==3.6
+packaging==24.0
 Pillow==10.1.0
 pynliner==0.8.0
 python-dotenv==1.0.0
