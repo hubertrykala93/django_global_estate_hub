@@ -6,24 +6,50 @@
 <section class="top-agents">
     <div class="container">
         <div class="row">
-            <ul class="top-agents__list">
+
+            <div class="top-agents__list theme-accordion" data-theme-accordion data-animation-fade-from-right>
                 {% for agent in agents %}
                 {% if agent.property_count != 0 %}
-                <li class="top-agents__item">
-                    <div class="top-agents__name h4">
-                    {% if agent.account_type == 'Individual' %}{% if agent.individual.first_name and agent.individual.last_name %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.username }}{% endif %}{% else %}{% if agent.business.company_name %}{{ agent.business.company_name }}{% else %}{{ agent.username }}{% endif %}{% endif %}
+                <div class="top-agents__item accordion__item">
+                    <div class="accordion__heading" data-heading>
+                    <h4 class="accordion__title h4">
+                        {% if agent.account_type == 'Individual' %}{% if agent.individual.first_name and agent.individual.last_name %}{{ agent.individual.first_name }} {{ agent.individual.last_name }}{% else %}{{ agent.username }}{% endif %}{% else %}{% if agent.business.company_name %}{{ agent.business.company_name }}{% else %}{{ agent.username }}{% endif %}{% endif %}
+
+                        <span class="top-agents__counter">({{ agent.properties.all.count }} {% if agent.properties.all.count == 0 or agent.properties.all.count == 1 %}Property{% else %}Properties{% endif %})</span>
+                    </h4>
+        
+                    <div class="accordion__arrow">
+                        <img src="/media/icons/accordion-arrow.svg" alt="accordion arrow">
                     </div>
+                    </div>
+        
+                    <div class="accordion__content">
+                    <div class="accordion__body">
+                        <ul class="top-agents__properties-list">
+                            <!-- pętla start -->
+                            <li>
+                                <div class="top-agents__properties-list__title">
+                                    <a href="#">Urban Loft in Historic District</a>
+                                </div>
 
-                    <div class="top-agents__counter">({{ agent.properties.all.count }} {% if agent.properties.all.count == 0 or agent.properties.all.count == 1 %}Property{% else %}Properties{% endif %})</div>
+                                <a href="#" class="top-agents__properties-list__icon" target="_blank">
+                                    <span class="visually-hidden">Go to property</span>
+                                    <i class="ri-external-link-line" aria-hidden="true"></i>
+                                </a>
+                            </li>
+                            <!-- pętla koniec -->
+                        </ul>
 
-                    <a class="btn primary-btn" href="{% url 'account-details' agent.username %}">
-                        <div class="visually-hidden">See agent profile</div>
-                        <i class="ri-user-shared-line" aria-hidden="true"></i>
-                    </a>
-                </li>
+                        <a class="btn primary-btn" href="{% url 'account-details' agent.username %}">
+                            See agent's profile
+                            <i class="btn-icon right ri-user-shared-line" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                    </div>
+                </div>
                 {% endif %}
                 {% endfor %}
-            </ul>
+            </div>
         </div>
     </div>
 </section>
