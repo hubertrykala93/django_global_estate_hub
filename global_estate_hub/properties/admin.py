@@ -338,7 +338,7 @@ class AdminProperty(admin.ModelAdmin):
         'get_transportations',
         'get_shops',
         'is_featured',
-        'purchasing_user'
+        'purchasing_user',
     ]
 
     list_filter = [
