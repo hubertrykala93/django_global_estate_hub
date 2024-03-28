@@ -1,5 +1,5 @@
 import django.http.response
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Newsletter, ContactMail
 import json
@@ -95,9 +95,11 @@ def top_agents(request) -> django.http.response.HttpResponse:
     ----------
         django.http.response.HttpResponse
     """
+    agents = User.objects.annotate(property_count=Count('properties')).order_by('-property_count')
+
     return render(request=request, template_name='core/top-agents.html', context={
         'title': 'Top Agents',
-        'agents': User.objects.annotate(property_count=Count('properties')).order_by('-property_count'),
+        'agents': agents,
     })
 
 

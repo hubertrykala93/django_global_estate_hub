@@ -26,18 +26,18 @@
                     <div class="accordion__content">
                     <div class="accordion__body">
                         <ul class="top-agents__properties-list">
-                            <!-- pętla start -->
+                            {% for property in agent.properties.all %}
                             <li>
                                 <div class="top-agents__properties-list__title">
-                                    <a href="#">Urban Loft in Historic District</a>
+                                    <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
                                 </div>
 
-                                <a href="#" class="top-agents__properties-list__icon" target="_blank">
+                                <a href="{{ property.get_absolute_url }}" class="top-agents__properties-list__icon" target="_blank">
                                     <span class="visually-hidden">Go to property</span>
                                     <i class="ri-external-link-line" aria-hidden="true"></i>
                                 </a>
                             </li>
-                            <!-- pętla koniec -->
+                            {% endfor %}
                         </ul>
 
                         <a class="btn primary-btn" href="{% url 'account-details' agent.username %}">

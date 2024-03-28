@@ -861,15 +861,6 @@ def property_details(request, category_slug, property_slug) -> django.http.respo
     else:
         profile = Business.objects.get(user=property_obj.user)
 
-    import os
-
-    path = '/Users/admin/Downloads/properties_images'
-    filenames = [path + '/' + f for f in os.listdir(path=path) if f != '.DS_Store' and 'property' in f]
-    names = [f'{path}/{i}_property_detail_image.jpg' for i in range(201, 301)]
-
-    for file, name in zip(filenames, names):
-        os.rename(src=file, dst=name)
-
     return render(request=request, template_name='properties/property-details.html', context={
         'title': property_obj.title,
         'property': property_obj,

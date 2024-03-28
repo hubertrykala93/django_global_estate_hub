@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
 
@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "dbbackup",
     "rest_framework",
-    "django_filters",
     "ckeditor",
     "ckeditor_uploader",
     "mptt",
@@ -49,6 +49,9 @@ INSTALLED_APPS = [
     "blog",
     "properties",
 ]
+
+DBBACKUP_STORAGE = 'django.core.files.storage.FileSystemStorage'
+DBBACKUP_STORAGE_OPTIONS = {'location': BASE_DIR / 'backup'}
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -96,7 +99,7 @@ TEMPLATES = [
     },
 ]
 
-# Session
+# Sessions
 
 SESSION_COOKIE_AGE = 1000000
 SESSION_COOKIE_HTTPONLY = True
@@ -108,10 +111,21 @@ WSGI_APPLICATION = "global_estate_hub.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
+# }
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("PGNAME"),
+        "USER": os.environ.get("PGUSER"),
+        "PASSWORD": os.environ.get("PGPASSWORD"),
+        "HOST": os.environ.get("PGHOST"),
+        "PORT": os.environ.get("PGPORT"),
     }
 }
 
@@ -172,3 +186,12 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
+
+# Deploy settings
+SECURE_HSTS_SECONDS = 518400
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+SECURE_SSL_REDIRECT = False
