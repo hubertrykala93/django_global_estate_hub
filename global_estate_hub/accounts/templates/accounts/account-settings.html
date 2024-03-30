@@ -111,7 +111,7 @@
                                 <label for="user-firstname" class="form__label">first name</label>
                                 <div class="form__input-wrap">
                                     <input data-firstname data-input type="text" id="user-firstname"
-                                           placeholder="First name" value="{% if user.individual.first_name %}{{ user.individual.first_name }}{% endif %}">
+                                           placeholder="First name" value="{% if profile.first_name %}{{ profile.first_name }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -121,7 +121,7 @@
                                 <label for="user-lastname" class="form__label">last name</label>
                                 <div class="form__input-wrap">
                                     <input data-lastname data-input type="text" id="user-lastname"
-                                           placeholder="Last name" value="{% if user.individual.last_name %}{{ user.individual.last_name }}{% endif %}">
+                                           placeholder="Last name" value="{% if profile.last_name %}{{ profile.last_name }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -131,12 +131,12 @@
                                 <label class="form__label">gender</label>
                                 <div class="form__input-wrap form__radio-wrapper">
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="Male" {% if user.individual.gender == 'Male' %}checked{% endif %}>
+                                        <input data-gender data-input type="radio" name="gender" value="Male" {% if profile.gender == 'Male' %}checked{% endif %}>
                                         <div class="radio__label">Male</a></div>
                                     </label>
 
                                     <label>
-                                        <input data-gender data-input type="radio" name="gender" value="Female" {% if user.individual.gender == 'Female' %}checked{% endif %}>
+                                        <input data-gender data-input type="radio" name="gender" value="Female" {% if profile.gender == 'Female' %}checked{% endif %}>
                                         <div class="radio__label">Female</a></div>
                                     </label>
                                 </div>
@@ -150,7 +150,7 @@
                                 <label for="user-company-name" class="form__label">company name</label>
                                 <div class="form__input-wrap">
                                     <input data-company-name data-input type="text" id="user-company-name"
-                                           placeholder="Company Name" value="{% if user.business.company_name %}{{ user.business.company_name }}{% endif %}">
+                                           placeholder="Company Name" value="{% if profile.company_name %}{{ profile.company_name }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                                 <label for="user-company-id" class="form__label">company ID</label>
                                 <div class="form__input-wrap">
                                     <input data-company-id data-input type="text" id="user-company-id"
-                                           placeholder="Company ID" value="{% if user.business.company_id %}{{ user.business.company_id }}{% endif %}">
+                                           placeholder="Company ID" value="{% if profile.company_id %}{{ profile.company_id }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -172,7 +172,7 @@
                                 <label for="user-phone" class="form__label">phone number</label>
                                 <div class="form__input-wrap">
                                     <input data-phone data-input type="text" id="user-phone"
-                                           placeholder="Phone Number" value="{% if user.individual and user.individual.phone_number %}{{ user.individual.phone_number }}{% elif user.business and user.business.phone_number %}{{ user.business.phone_number }}{% endif %}">
+                                           placeholder="Phone Number" value="{% if profile.phone_number %}{{ profile.phone_number }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -198,7 +198,7 @@
                                 <label for="user-country" class="form__label">country</label>
                                 <div class="form__input-wrap">
                                     <input data-country data-input type="text" id="user-country"
-                                           placeholder="Country" value="{% if request.user.individual.country %}{{ request.user.individual.country }}{% elif request.user.business.country %}{{ request.user.business.country }}{% endif %}">
+                                           placeholder="Country" value="{% if profile.country %}{{ profile.country }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -208,7 +208,7 @@
                                 <label for="user-province" class="form__label">province</label>
                                 <div class="form__input-wrap">
                                     <input data-province data-input type="text" id="user-province"
-                                           placeholder="Province" value="{% if request.user.individual.province %}{{ request.user.individual.province }}{% elif request.user.business.province %}{{ request.user.business.province }}{% endif %}">
+                                           placeholder="Province" value="{% if profile.province %}{{ profile.province }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -218,7 +218,7 @@
                                 <label for="user-city" class="form__label">city</label>
                                 <div class="form__input-wrap">
                                     <input data-city data-input type="text" id="user-city"
-                                           placeholder="City" value="{% if request.user.individual.city %}{{ request.user.individual.city }}{% elif request.user.business.city %}{{ request.user.business.city }}{% endif %}">
+                                           placeholder="City" value="{% if profile.city %}{{ profile.city }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -228,7 +228,7 @@
                                 <label for="user-street" class="form__label">street</label>
                                 <div class="form__input-wrap">
                                     <input data-street data-input type="text" id="user-street"
-                                           placeholder="Street" value="{% if request.user.individual.street %}{{ request.user.individual.street }}{% elif request.user.business.street %}{{ request.user.business.street }}{% endif %}">
+                                           placeholder="Street" value="{% if profile.street %}{{ profile.street }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -238,7 +238,7 @@
                                 <label for="user-postal-code" class="form__label">postal code</label>
                                 <div class="form__input-wrap">
                                     <input data-postal-code data-input type="text" id="user-postal-code"
-                                           placeholder="Postal code" value="{% if request.user.individual.postal_code %}{{ request.user.individual.postal_code }}{% elif request.user.business.postal_code %}{{ request.user.business.postal_code }}{% endif %}">
+                                           placeholder="Postal code" value="{% if profile.postal_code %}{{ profile.postal_code }}{{ profile.postal_code }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -263,7 +263,7 @@
                                 <label for="user-website-url" class="form__label">Website URL</label>
                                 <div class="form__input-wrap">
                                     <input data-website-url data-input type="text" id="user-website-url"
-                                           placeholder="https://www.your-website-URL.com" value="{% if request.user.individual.website_url %}{{ request.user.individual.website_url }}{% elif request.user.business.website_url %}{{ request.user.business.website_url }}{% endif %}">
+                                           placeholder="https://www.your-website-URL.com" value="{% if profile.website_url %}{{ profile.website_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -273,7 +273,7 @@
                                 <label for="user-facebook-url" class="form__label">Facebook URL</label>
                                 <div class="form__input-wrap">
                                     <input data-facebook-url data-input type="text" id="user-facebook-url"
-                                           placeholder="https://www.your-facebook-URL.com" value="{% if request.user.individual.facebook_url %}{{ request.user.individual.facebook_url }}{% elif request.user.business.facebook_url %}{{ request.user.business.facebook_url }}{% endif %}">
+                                           placeholder="https://www.your-facebook-URL.com" value="{% if profile.facebook_url %}{{ profile.facebook_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -283,7 +283,7 @@
                                 <label for="user-instagram-url" class="form__label">Instagram URL</label>
                                 <div class="form__input-wrap">
                                     <input data-instagram-url data-input type="text" id="user-instagram-url"
-                                           placeholder="https://www.your-instagram-URL.com" value="{% if request.user.individual.instagram_url %}{{ request.user.individual.instagram_url }}{% elif request.user.business.instagram_url %}{{ request.user.business.instagram_url }}{% endif %}">
+                                           placeholder="https://www.your-instagram-URL.com" value="{% if profile.instagram_url %}{{ profile.instagram_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>
@@ -293,7 +293,7 @@
                                 <label for="user-linkedin-url" class="form__label">LinkedIn URL</label>
                                 <div class="form__input-wrap">
                                     <input data-linkedin-url data-input type="text" id="user-linkedin-url"
-                                           placeholder="https://www.your-linkedin-URL.com" value="{% if request.user.individual.linkedin_url %}{{ request.user.individual.linkedin_url }}{% elif request.user.business.linkedin_url %}{{ request.user.business.linkedin_url }}{% endif %}">
+                                           placeholder="https://www.your-linkedin-URL.com" value="{% if profile.linkedin_url %}{{ profile.linkedin_url }}{% endif %}">
                                 </div>
                             </div>
                         </div>

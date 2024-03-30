@@ -404,8 +404,15 @@ def account_settings(request) -> django.http.response.HttpResponse:
     ----------
         django.http.response.HttpResponse
     """
+    if request.user.account_type == 'Individual':
+        profile = Individual.objects.get(user=request.user)
+
+    else:
+        profile = Business.objects.get(user=request.user)
+
     return render(request=request, template_name='accounts/account-settings.html', context={
         'title': 'Account Settings',
+        'profile': profile,
     })
 
 
