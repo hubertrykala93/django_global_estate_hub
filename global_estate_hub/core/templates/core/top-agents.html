@@ -9,7 +9,7 @@
 
             <div class="top-agents__list theme-accordion" data-theme-accordion data-animation-fade-from-right>
                 {% for agent in agents %}
-                {% if agent.property_count != 0 %}
+                {% if agent.property_count > 1 %}
                 <div class="top-agents__item accordion__item">
                     <div class="accordion__heading" data-heading>
                     <h4 class="accordion__title h4">
@@ -27,16 +27,16 @@
                     <div class="accordion__body">
                         <ul class="top-agents__properties-list">
                             {% for property in agent.properties.all %}
-                            <li>
-                                <div class="top-agents__properties-list__title">
-                                    <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
-                                </div>
+                                <li>
+                                    <div class="top-agents__properties-list__title">
+                                        <a href="{{ property.get_absolute_url }}">{{ property.title }}</a>
+                                    </div>
 
-                                <a href="{{ property.get_absolute_url }}" class="top-agents__properties-list__icon" target="_blank">
-                                    <span class="visually-hidden">Go to property</span>
-                                    <i class="ri-external-link-line" aria-hidden="true"></i>
-                                </a>
-                            </li>
+                                    <a href="{{ property.get_absolute_url }}" class="top-agents__properties-list__icon" target="_blank">
+                                        <span class="visually-hidden">Go to property</span>
+                                        <i class="ri-external-link-line" aria-hidden="true"></i>
+                                    </a>
+                                </li>
                             {% endfor %}
                         </ul>
 
