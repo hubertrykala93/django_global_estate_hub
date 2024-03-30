@@ -136,7 +136,6 @@ class PropertySerializer(serializers.Serializer):
     health_and_medical = HealthAndMedicalSerializer(read_only=True, many=True)
     transportation = TransportationSerializer(read_only=True, many=True)
     shopping = ShoppingSerializer(read_only=True, many=True)
-    quantity_of_purchases = serializers.IntegerField()
     purchasing_user = UserSerializer()
 
     class Meta:
