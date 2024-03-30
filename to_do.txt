@@ -1,3 +1,10 @@
+Jak się zalogować na admina:
+Logujesz się na stronie /login
+login: homeseeker22@example.com
+hasło: !1Qwerty
+przechodzisz potem na zakładkę /admin
+i jesteś zalogowany.
+
 title 1 str, nie może być puste, nie może mieć mniej niż 10 liter, nie moze miec wiecej niz 100 liter
 images 1 [request.FILES], nie moze byc puste, rozszerzenie (jpg, jpeg, png, webp), nie wiekszy niz 1mb
 year_of_built str, nie moze byc puste, nie moze byc liczba ujemna, dlugosc 4 znaki, nie wiekszy niz dzisiejsza data, czy jest numberem
