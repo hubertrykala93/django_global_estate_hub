@@ -3,6 +3,11 @@ from accounts.models import User, Individual, Business
 
 
 class UserSerializer(serializers.ModelSerializer):
+    account_type = serializers.ChoiceField(choices=(
+        ('Individual', 'Individual'),
+        ('Business', 'Business'),
+    ))
+
     class Meta:
         model = User
         fields = ['id', 'date_joined', 'username', 'email', 'image', 'account_type', 'is_verified', 'is_agent',

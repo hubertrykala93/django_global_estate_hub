@@ -17,9 +17,9 @@ def api_endpoints(request):
             "Search User by Is Verified": "api/v1/users?is_verified=is_verified",
             "Search User by Account Type": "api/v1/users?account_type=account_type",
             "User Details": "api/v1/users/pk",
-            # "User Create": "api/v1/users/create",
-            # "User Update": "api/v1/users/pk/update",
-            # "User Delete": "api/v1/users/pk/delete",
+            "User Create": "api/v1/users/create",
+            "User Update": "api/v1/users/pk/update",
+            "User Delete": "api/v1/users/pk/delete",
             "All Profiles": "api/v1/users/profiles",
             # "Search User Profile by Gender": "api/v1/users/profiles?gender=gender",
             # "Search User Profile by Country": "api/v1/users/profiles?country=country",
@@ -62,6 +62,28 @@ class UsersAPIView(ListAPIView):
 
     def get_view_description(self, html=False):
         return 'API view with all registered users on the Global Estate Hub platform.'
+
+
+class UserCreateAPIView(CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UserUpdateAPIView(RetrieveUpdateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class UserDeleteAPIView(RetrieveDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class ProfilesAPIView(ListAPIView):
