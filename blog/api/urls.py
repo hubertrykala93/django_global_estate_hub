@@ -2,6 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path(route='api/articles', view=views.ArticleAPIView.as_view(), name='api-articles'),
-    path(route='api/article-comments', view=views.CommentAPIView.as_view(), name='api-article-comments'),
+    path(route='api/v1/articles', view=views.ArticlesAPIView.as_view(), name='api-articles'),
+    path(route='api/v1/articles/<int:pk>', view=views.ArticleDetailsAPIView.as_view(),
+         name='api-articles-article-details'),
+    path(route='api/v1/articles/create', view=views.ArticleCreateAPIView.as_view(), name='api-articles-article-create'),
+    path(route='api/v1/comments', view=views.CommentsAPIView.as_view(), name='api-comments'),
+    path(route='api/v1/comments/<int:pk>', view=views.CommentDetailsAPIView.as_view(),
+         name='api-comments-comment-details'),
 ]

@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'date_joined', 'username', 'email', 'image', 'account_type', 'is_verified', 'is_agent',
+        fields = ['id', 'date_joined', 'username', 'email', 'account_type', 'image', 'is_verified', 'is_agent',
                   'last_login']
 
 
@@ -23,21 +23,15 @@ class UserUsernameSerializer(serializers.Serializer):
 
 
 class IndividualProfileSerializer(serializers.ModelSerializer):
-    """
-    Individual Model Serializer.
-    """
-    user = UserSerializer()
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Individual
         fields = '__all__'
 
 
-class BusinessProfileSerializer(serializers.Serializer):
-    """
-    Business Model Serializer
-    """
-    user = UserSerializer()
+class BusinessProfileSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Business
