@@ -1,5 +1,322 @@
 {% extends 'core/base.html' %}
+{% load static %}
 
 {% block title %}{{ title }}{% endblock %}
 
-{% block content %}{% endblock %}
+{% block content %}
+<div class="add-property">
+  <div class="container">
+    <div class="row">
+      <form data-add-property-form class="theme-form add-property__form">
+
+        <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1;">
+            <label>leave this field blank to prove your humanity
+                <input type="text" name="url" value="" autocomplete="off" tabindex="-1">
+            </label>
+        </div>
+
+        <h3 class="h2">Basic information</h3>
+        <br>
+
+        <div class="form__row">
+            <div class="form__field">
+                <label for="title" class="form__label">property title</label>
+                <div class="form__input-wrap">
+                    <input data-title data-input name="title" type="text" id="title">
+                </div>
+            </div>
+
+            <div class="form__field">
+              <label for="price" class="form__label">price</label>
+              <div class="form__input-wrap">
+                <input data-price data-input type="text" id="price" name="price" placeholder="$">
+              </div>
+            </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="description" class="form__label">description</label>
+              <div class="form__input-wrap">
+                <textarea data-description name="description" id="description"></textarea>
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label class="form__label">status</label>
+              <div class="form__input-wrap form__radio-wrapper">
+                  <label>
+                      <input data-status data-input type="radio" name="status" value="rent">
+                      <div class="radio__label">Rent</div>
+                  </label>
+
+                  <label>
+                      <input data-status data-input type="radio" name="status" value="sell">
+                      <div class="radio__label">Sell</div>
+                  </label>
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label class="form__label">category</label>
+              <div class="form__input-wrap form__checkbox-wrapper">
+                  <label>
+                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category1">
+                      <div class="checkbox__label">category 1</div>
+                  </label>
+
+                  <label>
+                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category2">
+                      <div class="checkbox__label">category 2</div>
+                  </label>
+
+                  <label>
+                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category3">
+                      <div class="checkbox__label">category 3</div>
+                  </label>
+              </div>
+          </div>
+        </div>
+
+        <h3 class="h2">Media </h3>
+        <br>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="images" class="form__label">property images</label>
+              <div class="form__input-wrap">
+                <input data-images type="file" id="images" name="images" accept="image/png, image/jpeg, image/jpg, image/webp" multiple/>
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="video" class="form__label">video</label>
+              <div class="form__input-wrap">
+                <input data-video type="file" id="video" name="video" accept="video/mp4"/>
+              </div>
+          </div>
+        </div>
+
+        <h3 class="h2">Additional information </h3>
+        <br>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="year_of_built" class="form__label">year of built</label>
+              <div class="form__input-wrap">
+                <input data-year data-input type="text" id="year_of_built" name="year_of_built">
+              </div>
+          </div>
+
+          <div class="form__field">
+              <label for="number_of_bedrooms" class="form__label">number of bedrooms</label>
+              <div class="form__input-wrap">
+                <input data-bedrooms data-input type="text" id="number_of_bedrooms" name="number_of_bedrooms">
+              </div>
+          </div>
+
+          <div class="form__field">
+            <label for="number_of_bathrooms" class="form__label">number of bathrooms</label>
+            <div class="form__input-wrap">
+              <input data-bathrooms data-input type="text" id="number_of_bathrooms" name="number_of_bathrooms">
+            </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="square_meters" class="form__label">square meters</label>
+              <div class="form__input-wrap">
+                <input data-square-meters data-input type="text" id="square_meters" name="square_meters">
+              </div>
+          </div>
+
+          <div class="form__field">
+              <label for="parking_space" class="form__label">parking space</label>
+              <div class="form__input-wrap">
+                <input data-parking-space data-input type="text" id="parking_space" name="parking_space">
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="postal_code" class="form__label">postal code</label>
+              <div class="form__input-wrap">
+                <input data-postal-code data-input type="text" id="postal_code" name="postal_code">
+              </div>
+          </div>
+
+          <div class="form__field">
+              <label for="city" class="form__label">city</label>
+              <div class="form__input-wrap">
+                <input data-city data-input type="text" id="city" name="city">
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label for="province" class="form__label">province</label>
+              <div class="form__input-wrap">
+                <input data-province data-input type="text" id="province" name="province">
+              </div>
+          </div>
+
+          <div class="form__field">
+              <label for="country" class="form__label">country</label>
+              <div class="form__input-wrap">
+                <input data-country data-input type="text" id="country" name="country">
+              </div>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="form__field">
+              <label class="form__label">amenities</label>
+              <div class="form__input-wrap form__checkbox-wrapper">
+                  <label>
+                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 1">
+                      <div class="checkbox__label">amenity 1</div>
+                  </label>
+
+                  <label>
+                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 2">
+                      <div class="checkbox__label">amenity 2</div>
+                  </label>
+
+                  <label>
+                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 3">
+                      <div class="checkbox__label">amenity 3</div>
+                  </label>
+              </div>
+          </div>
+        </div>
+
+        <h3 class="h2">Whats nearby?</h3>
+        <p>Indicate useful places located in the nearby area from the provided categories</p>
+        <br>
+        <h4 class="h4">Education</h4>
+        <br>
+
+        <div class="add-property__form__multiple-rows" data-multiple="education">
+          <div class="form__row">
+            <div class="form__field">
+                <label for="education-name" class="form__label">name</label>
+                <div class="form__input-wrap">
+                  <input data-education-name data-input type="text" id="education-name" name="education-name">
+                </div>
+            </div>
+
+            <div class="form__field">
+                <label for="education-distance" class="form__label">distance</label>
+                <div class="form__input-wrap">
+                  <input data-education-distance data-input type="text" id="education-distance" name="education-distance">
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="add-property__form__add-btn" data-add-item>
+            <span class="visually-hidden">Add new item</span>
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+
+        <h4 class="h4">Health</h4>
+        <br>
+
+        <div class="add-property__form__multiple-rows" data-multiple="health">
+          <div class="form__row">
+            <div class="form__field">
+                <label for="health-name" class="form__label">name</label>
+                <div class="form__input-wrap">
+                  <input data-health-name data-input type="text" id="health-name" name="health-name">
+                </div>
+            </div>
+
+            <div class="form__field">
+                <label for="health-distance" class="form__label">distance</label>
+                <div class="form__input-wrap">
+                  <input data-health-distance data-input type="text" id="health-distance" name="health-distance">
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="add-property__form__add-btn" data-add-item>
+            <span class="visually-hidden">Add new item</span>
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+
+        <h4 class="h4">Transportation</h4>
+        <br>
+
+        <div class="add-property__form__multiple-rows" data-multiple="transportation">
+          <div class="form__row">
+            <div class="form__field">
+                <label for="transportation-name" class="form__label">name</label>
+                <div class="form__input-wrap">
+                  <input data-transportation-name data-input type="text" id="transportation-name" name="transportation-name">
+                </div>
+            </div>
+
+            <div class="form__field">
+                <label for="transportation-distance" class="form__label">distance</label>
+                <div class="form__input-wrap">
+                  <input data-transportation-distance data-input type="text" id="transportation-distance" name="transportation-distance">
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="add-property__form__add-btn" data-add-item>
+            <span class="visually-hidden">Add new item</span>
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+
+        <h4 class="h4">Shopping</h4>
+        <br>
+
+        <div class="add-property__form__multiple-rows" data-multiple="shopping">
+          <div class="form__row">
+            <div class="form__field">
+                <label for="shopping-name" class="form__label">name</label>
+                <div class="form__input-wrap">
+                  <input data-shopping-name data-input type="text" id="shopping-name" name="shopping-name">
+                </div>
+            </div>
+
+            <div class="form__field">
+                <label for="shopping-distance" class="form__label">distance</label>
+                <div class="form__input-wrap">
+                  <input data-shopping-distance data-input type="text" id="shopping-distance" name="shopping-distance">
+                </div>
+            </div>
+          </div>
+
+          <button type="button" class="add-property__form__add-btn" data-add-item>
+            <span class="visually-hidden">Add new item</span>
+            <i class="ri-add-line"></i>
+          </button>
+        </div>
+
+        <div class="form__row submit-row">
+            <div class="form__field form__submit">
+                <button class="btn secondary-btn" type="submit">Add property</button>
+            </div>
+        </div>
+    </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block page_scripts %}
+<script src="{% static 'js/add-property.js' %}"></script>
+{% endblock %}

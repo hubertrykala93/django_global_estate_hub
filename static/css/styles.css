@@ -4378,6 +4378,44 @@ section.properties {
 	color: var(--clr-stars);
 }
 
+/*----------------------------------*\
+  #ADD PROPERTY
+\*----------------------------------*/
+.add-property {
+    padding: var(--section-block-space-400) 0;
+}
+
+.add-property .add-property__form .add-property__form__multiple-rows {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-bottom: 3rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--clr-border);
+    position: relative;
+}
+
+.add-property .add-property__form .add-property__form__multiple-rows .form__row {
+    margin-bottom: 1.6rem;
+    width: 100%;
+}
+
+.add-property .add-property__form .add-property__form__multiple-rows .add-property__form__add-btn {
+    font-size: 2rem;
+    color: var(--clr-primary);
+    order: 2;
+    transition: color .4s;
+}
+
+.add-property .add-property__form .add-property__form__multiple-rows .add-property__form__add-btn > * {
+    pointer-events: none;
+}
+
+.add-property .add-property__form .add-property__form__multiple-rows .add-property__form__add-btn:hover,
+.add-property .add-property__form .add-property__form__multiple-rows .add-property__form__add-btn:focus-visible{
+    color: var(--clr-secondary);
+}
+
 
 /*----------------------------------*\
   #TOP AGENTS
@@ -5758,6 +5796,20 @@ section.properties {
 
     .property .property__amenities {
         grid-template-columns: repeat(4, 1fr);
+    }
+
+    /*----------------------------------*\
+      #ADD PROPERTY
+    \*----------------------------------*/
+    .add-property .add-property__form .add-property__form__multiple-rows {
+        padding-right: 3rem;
+    }
+
+    .add-property .add-property__form .add-property__form__multiple-rows .add-property__form__add-btn {
+        position: absolute;
+        right: 0;
+        bottom: 4.6rem;
+        z-index: 2;
     }
 
 

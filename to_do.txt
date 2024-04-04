@@ -5,24 +5,24 @@ hasło: !1Qwerty
 przechodzisz potem na zakładkę /admin
 i jesteś zalogowany.
 
-title 1 str, nie może być puste, nie może mieć mniej niż 10 liter, nie moze miec wiecej niz 100 liter
-images 1 [request.FILES], nie moze byc puste, rozszerzenie (jpg, jpeg, png, webp), nie wiekszy niz 1mb
-year_of_built str, nie moze byc puste, nie moze byc liczba ujemna, dlugosc 4 znaki, nie wiekszy niz dzisiejsza data, czy jest numberem
-price 1 str, nie moze byc pusty, nie moze byc liczba ujemna, wieksze od 0, czy jest numberem
-number_of_bedrooms 1 str, >= 0, i czy jest calkowita, czy jest numberem
-number_of_bathrooms 1 str, >= 0, i czy jest calkowita, czy jest numberem
-square_meters 1 str, moze byc float, >0, czy jest numberem
-parking_space 1 str, >= 0, i czy jest calkowita, czy jest numberem
-postal_code 1 str, regex
-city 1 str, czy jest stringiem,
-province 1 str, czy jest stringiem
-country 1 str, czy jest stringiem
-description 1 str,
-video 0 [request.FILES], mp4, max 5 mb
-listing_status 1 str, radio
-category 1 [{nazwa:dystans}], checkbox
-amenities 0 [{nazwa:dystans}], checkbox
-education 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
-health_and_medical 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
-transportation 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
-shopping 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
+a title 1 str, nie może być puste, nie może mieć mniej niż 10 liter, nie moze miec wiecej niz 100 liter
+a images 1 [request.FILES], nie moze byc puste, rozszerzenie (jpg, jpeg, png, webp), nie wiekszy niz 1mb
+a year_of_built str, nie moze byc puste, nie moze byc liczba ujemna, dlugosc 4 znaki, nie wiekszy niz dzisiejsza data, czy jest numberem
+a price 1 str, nie moze byc pusty, nie moze byc liczba ujemna, wieksze od 0, czy jest numberem
+a number_of_bedrooms 1 str, >= 0, i czy jest calkowita, czy jest numberem
+a number_of_bathrooms 1 str, >= 0, i czy jest calkowita, czy jest numberem
+a square_meters 1 str, moze byc float, >0, czy jest numberem
+a parking_space 1 str, >= 0, i czy jest calkowita, czy jest numberem
+a postal_code 1 str, regex
+a city 1 str, czy jest stringiem,
+a province 1 str, czy jest stringiem
+a country 1 str, czy jest stringiem
+a description 1 str,
+a video 0 [request.FILES], mp4, max 5 mb
+a listing_status 1 str, radio
+a category 1 [], checkbox
+a amenities 0 [], checkbox
+a education 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
+a health_and_medical 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
+a transportation 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
+a shopping 0 [{nazwa:dystans}], nazwa: str, nazwa > 5, dystans int lub float, ma być number
