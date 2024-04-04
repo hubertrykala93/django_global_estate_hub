@@ -1,72 +1,43 @@
-from blog.models import Category, Tag, Article, Comment, CommentLike, CommentDislike
+from blog.models import Category, Tag, Article, Comment
 from rest_framework import serializers
-from accounts.api.serializers import UserSerializer, UserUsernameSerializer
 
 
-class CategorySerializer(serializers.Serializer):
-    """
-    Category Model Serializer.
-    """
-    id = serializers.ReadOnlyField()
-    name = serializers.CharField()
-    slug = serializers.SlugField()
-
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = '__all__'
 
 
-class TagSerializer(serializers.Serializer):
-    """
-    Tag Model Serializer.
-    """
-    id = serializers.ReadOnlyField()
-    name = serializers.CharField()
-    slug = serializers.SlugField()
-
+class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = '__all__'
 
 
-class ArticleSerializer(serializers.Serializer):
-    """
-    Article Model Serializer.
-    """
-    id = serializers.ReadOnlyField
-    user = UserSerializer()
-    image = serializers.ImageField()
-    date_posted = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    title = serializers.CharField()
-    content = serializers.CharField()
-    category = CategorySerializer()
-    tags = TagSerializer(many=True)
-    slug = serializers.SlugField()
+class ArticleSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Article
+        fields = ['id', 'user', 'image', 'date_posted', 'title', 'content', 'category', 'tags', 'slug']
+        read_only_fields = ['id', 'date_posted']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance=instance)
+
+        category_serializer = CategorySerializer(instance=instance.category)
+        representation['category'] = category_serializer.data
+
+        tags_serializer = TagSerializer(instance=instance.tags.all(), many=True)
+        representation['tags'] = tags_serializer.data
+
+        return representation
 
 
-class ArticleTitleSerializer(serializers.Serializer):
-    id = serializers.ReadOnlyField()
-    title = serializers.CharField()
-
-    class Meta:
-        model = Article
-
-
-class CommentSerializer(serializers.Serializer):
-    """
-    Comment Model Serializer.
-    """
-    id = serializers.ReadOnlyField()
-    user = UserUsernameSerializer()
-    article = ArticleTitleSerializer()
-    full_name = serializers.CharField()
-    date_posted = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
-    comment = serializers.CharField()
-    likes = serializers.IntegerField()
-    dislikes = serializers.IntegerField()
-    # parent = serializers.SerializerMethodField(read_only=True, method_name='get_children_comments')
-    active = serializers.BooleanField()
+class CommentSerializer(serializers.ModelSerializer):
+    user = serializers.ReadOnlyField(source='user.username')
+    article = serializers.ReadOnlyField(source='article.title')
 
     class Meta:
         model = Comment
+        fields = '__all__'

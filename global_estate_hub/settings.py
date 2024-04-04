@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "dbbackup",
     "rest_framework",
+    "django_filters",
     "ckeditor",
     "ckeditor_uploader",
     "mptt",
@@ -173,6 +174,7 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
 }
 
 # Deploy settings
