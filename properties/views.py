@@ -797,7 +797,19 @@ def add_property(request) -> django.http.response.HttpResponse:
 def create_property(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
-        print([data[key][0] for key in data])
+        title, price, description, listing_status, categories, images, video, year_of_built, number_of_bedrooms, \
+            number_of_bathrooms, square_meters, parking_space, postal_code, country, province, city, amenities, \
+            educations, health_and_medicals, transportations, shoppings = [data[key][0] for key in data]
+        print(data['images'])
+        print(data['video'])
+
+        if request.FILES:
+            print('Files.')
+        else:
+            print('No Files.')
+
+        # for i, key in enumerate([data[key][0] for key in data]):
+        #     print(i, key)
 
         return JsonResponse(data={}, safe=False)
 
