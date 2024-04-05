@@ -64,20 +64,12 @@
           <div class="form__field">
               <label class="form__label">category</label>
               <div class="form__input-wrap form__checkbox-wrapper">
+                  {% for category in categories %}
                   <label>
-                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category1">
-                      <div class="checkbox__label">category 1</div>
+                      <input data-checkbox data-category data-input type="checkbox" name="category" value="{{ category }}">
+                      <div class="checkbox__label">{{ category }}</div>
                   </label>
-
-                  <label>
-                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category2">
-                      <div class="checkbox__label">category 2</div>
-                  </label>
-
-                  <label>
-                      <input data-checkbox data-category data-input type="checkbox" name="category" value="category3">
-                      <div class="checkbox__label">category 3</div>
-                  </label>
+                  {% endfor %}
               </div>
           </div>
         </div>
@@ -181,20 +173,12 @@
           <div class="form__field">
               <label class="form__label">amenities</label>
               <div class="form__input-wrap form__checkbox-wrapper">
+                  {% for amenity in amenities %}
                   <label>
-                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 1">
-                      <div class="checkbox__label">amenity 1</div>
+                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="{{ amenity }}">
+                      <div class="checkbox__label">{{ amenity }}</div>
                   </label>
-
-                  <label>
-                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 2">
-                      <div class="checkbox__label">amenity 2</div>
-                  </label>
-
-                  <label>
-                      <input data-checkbox data-amenity data-input type="checkbox" name="amenities" value="amenity 3">
-                      <div class="checkbox__label">amenity 3</div>
-                  </label>
+                  {% endfor %}
               </div>
           </div>
         </div>

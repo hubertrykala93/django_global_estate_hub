@@ -53,7 +53,7 @@ const submitForm = (e) => {
 
   const ajaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'add-new-propertyx', true)
+    xhr.open('POST', 'create-property', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")

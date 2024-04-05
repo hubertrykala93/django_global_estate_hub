@@ -5,7 +5,7 @@ import json
 import re
 import os
 from accounts.models import User, Individual, Business
-from .models import Property, ListingStatus, Category, City, Review, TourSchedule
+from .models import Property, ListingStatus, Category, City, Review, TourSchedule, Amenities
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.core.mail import EmailMultiAlternatives
@@ -789,7 +789,17 @@ def add_property(request) -> django.http.response.HttpResponse:
     """
     return render(request=request, template_name='properties/add-property.html', context={
         'title': 'Add Property',
+        'categories': Category.objects.all().order_by('name'),
+        'amenities': Amenities.objects.all().order_by('name'),
     })
+
+
+def create_property(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode('utf-8'))
+        print([data[key][0] for key in data])
+
+        return JsonResponse(data={}, safe=False)
 
 
 def add_to_favourites(request) -> django.http.response.JsonResponse:

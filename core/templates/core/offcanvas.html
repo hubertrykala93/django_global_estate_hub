@@ -10,7 +10,7 @@
     </div>
 
     {% if user.is_authenticated %}
-    <a href="#" class="btn secondary-btn">Add property</a>
+    <a href="{% url 'add-property' %}" class="btn secondary-btn">Add property</a>
     {% endif %}
 
     <button id="offcanvas-close" data-close-offcanvas>
