@@ -797,21 +797,103 @@ def add_property(request) -> django.http.response.HttpResponse:
 def create_property(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode('utf-8'))
+        images = data.pop('images')
+        video = data.pop('video')
+
         title, price, description, listing_status, categories, images, video, year_of_built, number_of_bedrooms, \
             number_of_bathrooms, square_meters, parking_space, postal_code, country, province, city, amenities, \
             educations, health_and_medicals, transportations, shoppings = [data[key][0] for key in data]
-        print(data['images'])
-        print(data['video'])
 
-        if request.FILES:
-            print('Files.')
-        else:
-            print('No Files.')
+        title_field, price_field, description_field, listing_status_field, categories_field, images_field, video_field, \
+            year_of_built_field, number_of_bedrooms_field, number_of_bathrooms_field, square_meters_field, \
+            parking_space_field, postal_code_field, country_field, province_field, city_field, amenities_field, \
+            education_field, health_and_medicals_field, transportations_field, shoppings_field = [data[key][1] for key
+                                                                                                  in data]
 
-        # for i, key in enumerate([data[key][0] for key in data]):
-        #     print(i, key)
+        title_label, price_label, description_label, listing_status_label, categories_label, images_label, video_label, \
+            year_of_built_label, number_of_bathrooms_label, number_of_bathrooms_label, square_meters_label, \
+            parking_space_label, postal_code_label, country_label, province_label, city_label, amenities_label, \
+            education_label, health_and_medicals_label, transportations_label, shoppings_label = [data[key][2] for key
+                                                                                                  in data]
 
-        return JsonResponse(data={}, safe=False)
+        """
+        Description, listing_status, category nie potrzeba walidacji.
+        Images, video -> czekam.
+        
+        Walidacja zrobiona dla title, price,
+        """
+
+        response = [
+            # title
+            {
+                "valid":
+                    False if not title else
+                    False if len(title) < 10 else
+                    False if len(title) > 100 else
+                    True,
+                "field": title_field,
+                "message":
+                    f"The {title_label} is required." if not title else
+                    f"The {title_label} must be at least 10 characters long." if len(
+                        title) < 10 else
+                    f"The {title_label} must be a maximum of 100 characters long." if len(
+                        title) > 100 else
+                    "",
+            },
+            # price
+            {
+                "valid":
+                    False if not price else
+                    False if not price.isdigit() and price[0] != '-' and ',' not in price and '.' not in price else
+                    False if (price.isdigit() and int(price) <= 0) or price[0] == '-' and price[1:].isdigit() else
+                    False if price.isdigit() and price[0] == '0' else
+                    False if price[0] == '-' and price[1:].isalnum() else
+                    False if ',' in price or '.' in price and price[0] != '-' else
+                    False if price[0] == '-' and ',' in price[1:] or '.' in price[1:] else
+                    True,
+                "field": price_field,
+                "message":
+                    f"The property {price_label} is required." if not price else
+                    f"The property {price_label} must be a number." if not price.isdigit() and price[
+                        0] != '-' and ',' not in price and '.' not in price else
+                    f"The property {price_label} must be greater than 0." if (price.isdigit() and int(price) <= 0) or
+                                                                             price[0] == '-' and price[
+                                                                                                 1:].isdigit() else
+                    f"The property {price_label} cannot start with 0." if price.isdigit() and price[0] == '0' else
+                    f"The property {price_label} must be a number." if price[0] == '-' and price[1:].isalnum() else
+                    f"The property {price_label} must be an integer." if ',' in price or '.' in price and price[
+                        0] != '-' else
+                    f"The property {price_label} must be greater than 0." if price[0] == '-' and ',' in price[
+                                                                                                        1:] or '.' in price[
+                                                                                                                      1:] else
+                    "",
+            },
+            # year of built
+            {
+                "valid":
+                    False if not year_of_built else
+                    False if year_of_built.isalnum() else
+                    False if year_of_built.isdigit() and datetime.strptime(year_of_built,
+                                                                           '%Y').year > datetime.now().year else
+                    True,
+                "field": year_of_built_field,
+                "message":
+                    f"The property {year_of_built_label} is required." if not year_of_built else
+                    f"The property {year_of_built_label} must be a number." if year_of_built.isalnum() else
+                    f"The given {year_of_built_label} cannot be greater than the current year." if year_of_built.isdigit() and datetime.strptime(
+                        year_of_built, '%Y').year > datetime.now().year else
+                    "",
+            }
+        ]
+        # print(data['images'])
+        # print(data['video'])
+        #
+        # if request.FILES:
+        #     print('Files.')
+        # else:
+        #     print('No Files.')
+
+        return JsonResponse(data=response, safe=False)
 
 
 def add_to_favourites(request) -> django.http.response.JsonResponse:
