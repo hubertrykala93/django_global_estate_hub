@@ -16,11 +16,11 @@ i jesteś zalogowany.
     nie wiekszy niz 1mb
 
 3. year_of_built str,
-#     nie moze byc puste,
-#     nie moze byc liczba ujemna,
-#     wieksze od 0, dlugosc 4 znaki,
-#     nie wiekszy niz dzisiejsza data,
+    nie moze byc puste,
     czy jest numberem
+    nie moze byc liczba ujemna,
+    wieksze od 0, dlugosc 4 znaki,
+    nie wiekszy niz dzisiejsza data,
     czy jest całkowita
     nie moze sie zaczynac od 0 czyli 0100
 
@@ -52,18 +52,22 @@ i jesteś zalogowany.
     czy jest numberem
 
 8. postal_code 1 str,
-    regex
+    regex -> do postal_codu nie uzywalismy regexa wczesniej wiec niech tylko zostanie walidacja czy nie jest pusty
 
 9. city 1 str,
     czy jest stringiem,
+    city ma sie skladac tylko z liter
 
 10. province 1 str,
     czy jest stringiem
+    province ma sie skladac tylko z liter
 
 11. country 1 str,
     czy jest stringiem
+    country ma sie skladac tylko z liter
 
 12. description 1 str,
+    nie może być puste
 
 13. video 0 [request.FILES],
     mp4,

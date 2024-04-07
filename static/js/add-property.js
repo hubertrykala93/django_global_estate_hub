@@ -55,7 +55,6 @@ const submitForm = (e) => {
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'create-property', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
     xhr.send(JSON.stringify(data))
 
@@ -104,7 +103,12 @@ const submitForm = (e) => {
     "shopping": [createNearbyItemsArray(formData.getAll('shopping-name'), formData.getAll('shopping-distance')), "data-shopping-name", "shopping"],
   }
 
-  console.log("wysłane ", data)
+//  const data = new FormData()
+//  data.append('images', $formElements['images'].files[0])
+
+//  console.log("wysłane ", data.get('images'))
+//  console.log($formElements['images'].files)
+
   ajaxRequest(data)
 }
 
