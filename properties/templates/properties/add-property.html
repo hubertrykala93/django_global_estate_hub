@@ -252,18 +252,14 @@
                     </button>
 
                     <ul class="custom__select__dropdown" role="listbox" id="select-country">
+
+                        {% for country in countries %}
                         <li role="option">
-                            <input data-option type="radio" value="Miasto 1" id="miasto" name="city">
-                            <label for="miasto">country 1</label>
+                            <input data-option type="radio" value="{{ country.country_name }}" id="{{ country.country_slug }}" name="country">
+                            <label for="{{ country.country_slug }}">{{ country.country_name }}</label>
                         </li>
-                        <li role="option">
-                            <input data-option type="radio" value="Miasto 2" id="miasto" name="city">
-                            <label for="miasto">country 2</label>
-                        </li>
-                        <li role="option">
-                            <input data-option type="radio" value="Miasto 3" id="miasto" name="city">
-                            <label for="miasto">country 3</label>
-                        </li>
+                        {% endfor %}
+
                     </ul>
 
                 </div>

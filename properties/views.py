@@ -795,21 +795,32 @@ def add_property(request) -> django.http.response.HttpResponse:
 
     def get_countries():
         url = 'https://raw.githubusercontent.com/stefangabos/world_countries/master/data/countries/en/countries.json'
-        response_json = requests.get(url=url).json()
+        response = requests.get(url=url)
 
-        to_remove = ['id', 'alpha3']
+        if response.status_code == 200:
+            response_json = response.json()
 
-        for key in to_remove:
+            to_remove = ['id', 'alpha3']
+
+            for key in to_remove:
+                for d in response_json:
+                    if key in d.keys():
+                        d.pop(key)
+
             for d in response_json:
-                if key in d.keys():
-                    d.pop(key)
+                if 'country_code' != 'alpha2' and 'country_name' != 'name':
+                    d['country_code'] = d['alpha2']
+                    d['country_name'] = d['name']
+                    del d['alpha2']
+                    del d['name']
 
-        print(response_json)
+            for d in response_json:
+                d['country_code'] = d['country_code'].upper()
 
-        # if response.status_code == 200:
-        #     countries = [country['name'] for country in response.json()]
-        #
-        #     return countries
+            for d in response_json:
+                d['country_slug'] = '-'.join(d['country_name'].lower().split())
+
+            return response_json
 
     print(get_countries())
 
