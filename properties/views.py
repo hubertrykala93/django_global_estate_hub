@@ -15,6 +15,11 @@ from unidecode import unidecode
 from datetime import datetime
 from datetime import timedelta
 from django.db.models import Min, Max
+import requests
+import pandas as pd
+import ssl
+
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def property_pagination(request, object_list, per_page) -> django.core.paginator.Page:
@@ -787,31 +792,189 @@ def add_property(request) -> django.http.response.HttpResponse:
     ----------
         django.http.response.HttpResponse
     """
+
+    def get_countries():
+        url = 'https://raw.githubusercontent.com/stefangabos/world_countries/master/data/countries/en/countries.json'
+        response_json = requests.get(url=url).json()
+
+        to_remove = ['id', 'alpha3']
+
+        for key in to_remove:
+            for d in response_json:
+                if key in d.keys():
+                    d.pop(key)
+
+        print(response_json)
+
+        # if response.status_code == 200:
+        #     countries = [country['name'] for country in response.json()]
+        #
+        #     return countries
+
+    print(get_countries())
+
+    # def get_cities():
+    #     url = 'https://raw.githubusercontent.com/datasets/world-cities/master/data/world-cities.csv'
+    #     dataframe = pd.read_csv(filepath_or_buffer=url, encoding='utf-8')
+    #     dataframe = dataframe.reindex(columns=['country', 'subcountry', 'name', 'geoname_id'])
+    #     dataframe.columns = ['country', 'province', 'city', 'geoname_id']
+    #
+    #     return dataframe.drop(columns=['geoname_id'])
+
     return render(request=request, template_name='properties/add-property.html', context={
         'title': 'Add Property',
         'categories': Category.objects.all().order_by('name'),
         'amenities': Amenities.objects.all().order_by('name'),
+        'countries': get_countries(),
     })
 
 
 def create_property(request):
     if request.method == 'POST':
-        data = json.loads(s=request.body.decode('utf-8'))
-        title, price, description, listing_status, categories, images, video, year_of_built, number_of_bedrooms, \
-            number_of_bathrooms, square_meters, parking_space, postal_code, country, province, city, amenities, \
+        data = json.loads(s=request.body.decode(encoding='utf-8'))
+        images = data.pop('images')
+        video = data.pop('video')
+
+        title, price, description, listing_status, categories, year_of_built, number_of_bedrooms, \
+            number_of_bathrooms, square_meters, parking_space, postal_code, city, province, country, amenities, \
             educations, health_and_medicals, transportations, shoppings = [data[key][0] for key in data]
-        print(data['images'])
-        print(data['video'])
 
-        if request.FILES:
-            print('Files.')
-        else:
-            print('No Files.')
+        title_field, price_field, description_field, listing_status_field, categories_field, \
+            year_of_built_field, number_of_bedrooms_field, number_of_bathrooms_field, square_meters_field, \
+            parking_space_field, postal_code_field, city_field, province_field, country_field, amenities_field, \
+            education_field, health_and_medicals_field, transportations_field, shoppings_field = [data[key][1] for key
+                                                                                                  in data]
 
-        # for i, key in enumerate([data[key][0] for key in data]):
-        #     print(i, key)
+        title_label, price_label, description_label, listing_status_label, categories_label, \
+            year_of_built_label, number_of_bedrooms_label, number_of_bathrooms_label, square_meters_label, \
+            parking_space_label, postal_code_label, city_label, province_label, country_label, amenities_label, \
+            education_label, health_and_medicals_label, transportations_label, shoppings_label = [data[key][2] for key
+                                                                                                  in data]
 
-        return JsonResponse(data={}, safe=False)
+        """
+        Description, listing_status, category nie potrzeba walidacji.
+        Images, video -> czekam.
+
+        Walidacja zrobiona dla title, price,
+        """
+
+        response = [
+            {
+                "valid":
+                    False if not title or len(title) < 10 or len(title) > 100 else True,
+                "field": title_field,
+                "message":
+                    f"The property {title_label} is required." if not title else
+                    f"The property {title_label} must be at least 10 characters long." if len(title) < 10 else
+                    f"The property {title_label} must be a maximum of 100 characters long." if len(title) > 100 else
+                    "",
+            },
+            {
+                "valid":
+                    False if not price else
+                    False if price[0] != '-' and not price.isdigit() else
+                    False if price[0] == '-' and not price.isdigit() and price[1:].isdigit() else
+                    False if len(price) == 1 and price.isdigit() and price == '0' else
+                    False if len(price) > 1 and price.isdigit() and price[0] == '0' else
+                    True,
+                "field": price_field,
+                "message":
+                    f"The property {price_label} is required." if not price else
+                    f"The property {price_label} must be a number." if price[0] != '-' and not price.isdigit() else
+                    f"The property {price_label} must be greater than 0." if price[
+                                                                                 0] == '-' and not price.isdigit() and price[
+                                                                                                                       1:].isdigit() else
+                    f"The property {price_label} must be greater than 0." if len(
+                        price) == 1 and price.isdigit() and price == '0' else
+                    f"The property {price_label} cannot start with 0." if len(price) > 1 and price.isdigit() and price[
+                        0] == '0' else
+                    "",
+            },
+            {
+                "valid":
+                    False if not description else
+                    True,
+                "field": description_field,
+                "message":
+                    f"The property {description_label} is required." if not description else
+                    "",
+            },
+            {
+                "valid":
+                    False if not year_of_built else
+                    False if len(year_of_built) != 4 and not year_of_built.isdigit() else
+                    False if len(year_of_built) != 4 and year_of_built.isdigit() else
+                    False if len(year_of_built) == 4 and not year_of_built.isdigit() else
+                    False if len(year_of_built) != 4 and year_of_built[0] == '-' and year_of_built[1:].isdigit() else
+                    False if len(year_of_built) == 4 and year_of_built[0] == '0' and year_of_built[1:].isdigit() else
+                    False if datetime.now().year < datetime.strptime(year_of_built, '%Y').year else
+                    True,
+                "field": year_of_built_field,
+                "message":
+                    f"The property {year_of_built_label} is required." if not year_of_built else
+                    f"The actual {year_of_built_label} of the property is required, and the property {year_of_built_label} should consist solely of digits." if len(
+                        year_of_built) != 4 and not year_of_built.isdigit() else
+                    f"The actual {year_of_built_label} of the property is required." if len(
+                        year_of_built) != 4 and year_of_built.isdigit() else
+                    f"The property {year_of_built_label} must consist of digits." if len(
+                        year_of_built) == 4 and not year_of_built.isdigit() else
+                    f"The property {year_of_built_label} cannot start with 0." if len(year_of_built) == 4 and
+                                                                                  year_of_built[
+                                                                                      0] == '0' and year_of_built[
+                                                                                                    1:].isdigit() else
+                    f"The property {year_of_built_label} cannot be greater than actual year." if datetime.now().year < datetime.strptime(
+                        year_of_built, '%Y').year else
+                    "",
+            },
+            {
+                "valid":
+                    False if not number_of_bedrooms else
+                    False if number_of_bedrooms[0] == '-' and number_of_bedrooms[1:].isdecimal() else
+                    False if not number_of_bedrooms.isdecimal() else
+                    True,
+                "field": number_of_bedrooms_field,
+                "message":
+                    f"The property {number_of_bedrooms_label} is required." if not number_of_bedrooms else
+                    f"The property {number_of_bedrooms_label} must be greater than or equal 0." if number_of_bedrooms[
+                                                                                                       0] == '-' and number_of_bedrooms[
+                                                                                                                     1:].isdecimal() else
+                    f"The property {number_of_bedrooms_label} must consist of positive digits." if not number_of_bedrooms.isdecimal() else
+                    "",
+            },
+            {
+                "valid":
+                    False if not number_of_bathrooms else
+                    False if number_of_bathrooms[0] == '-' and number_of_bathrooms[1:].isdecimal() else
+                    False if not number_of_bathrooms.isdecimal() else
+                    True,
+                "field": number_of_bathrooms_field,
+                "message":
+                    f"The property {number_of_bathrooms_label} is required." if not number_of_bathrooms else
+                    f"The property {number_of_bathrooms_label} must be greater than or equal 0." if number_of_bathrooms[
+                                                                                                        0] == '-' and number_of_bathrooms[
+                                                                                                                      1:].isdecimal() else
+                    f"The property {number_of_bathrooms_label} must consist of positive digits." if not number_of_bathrooms.isdecimal() else
+                    "",
+            },
+            {
+                "valid":
+                    False if not square_meters else
+                    False if square_meters[0] == '-' and not square_meters[
+                                                             1:].isdigit() and not '.' or ',' in square_meters else
+                    True,
+                "field": square_meters_field,
+                "message":
+                    f"The property {square_meters_label} is required." if not square_meters else
+                    f"The property {square_meters_label} must be greater than 0." if square_meters[
+                                                                                         0] == '-' and not square_meters[
+                                                                                                           1:].isdigit() and not '.' or ',' in square_meters else
+                    "",
+            }
+        ]
+        print(square_meters[0])
+        print(response)
+
+        return JsonResponse(data=response, safe=False)
 
 
 def add_to_favourites(request) -> django.http.response.JsonResponse:

@@ -431,7 +431,9 @@ def upload_avatar(request) -> django.http.response.JsonResponse:
         django.http.response.JsonResponse
     """
     if request.method == 'POST':
+        print(request.POST)
         if request.FILES:
+            print(request.headers['Content-Type'])
             file = request.FILES['file']
 
             if file.size > 1000000:
