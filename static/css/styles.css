@@ -4416,6 +4416,10 @@ section.properties {
     color: var(--clr-secondary);
 }
 
+.add-property .add-property__form .custom__select .custom__select__button {
+    line-height: 53px;
+}
+
 
 /*----------------------------------*\
   #TOP AGENTS
