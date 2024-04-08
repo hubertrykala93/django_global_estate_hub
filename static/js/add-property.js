@@ -112,5 +112,33 @@ const submitForm = (e) => {
   ajaxRequest(data)
 }
 
+const selectAjaxRequest = (data) =>{
+  const xhr = new XMLHttpRequest()
+  xhr.open('POST', 'set-country', true)
+  xhr.setRequestHeader('X-CSRFToken', csrfToken)
+  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+  xhr.send(JSON.stringify(data))
+
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        const response = JSON.parse(this.responseText)
+        // serverResponse(response)
+        console.log("odebrane: ", response);
+    }
+  }
+}
+
+const selectHandler = (e) => {
+  if (e.target.name === 'country') {
+    const data = {
+      "country": e.target.value
+    }
+    console.log("wysłane: ", data);
+    selectAjaxRequest(data)
+  }
+}
+
 $addPropertyForm.addEventListener('click', multipleRowItems)
 $addPropertyForm.addEventListener('submit', submitForm)
+$addPropertyForm.addEventListener('change', selectHandler)
