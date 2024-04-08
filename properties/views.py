@@ -822,7 +822,17 @@ def add_property(request) -> django.http.response.HttpResponse:
 
             return response_json
 
-    print(get_countries())
+    # print(get_countries())
+
+    import datadotworld as dw
+    results = dw.query(
+        'jonloyens/intermediate-data-world',
+        'SELECT * FROM fatal_police_shootings_data')
+    results_df = results.dataframe
+
+    import requests
+
+    print(requests.get(url='https://dr5hn.linked.data.world/d/country-state-city/file/cities.json').content)
 
     # def get_cities():
     #     url = 'https://raw.githubusercontent.com/datasets/world-cities/master/data/world-cities.csv'
