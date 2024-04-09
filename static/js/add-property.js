@@ -121,7 +121,7 @@ const getSelectedOptionValue = (inputs) => {
   return false
 } 
 
-const updateLocationOptions = (dropdownEl, itemsArr) => {
+const updateLocationOptions = (dropdownEl, itemsArr, name) => {
   const $dropdownParent = $addPropertyForm.querySelector(`[${dropdownEl}]`)
   if (itemsArr.length === 0) { $dropdownParent.innerHTML = '' }
 
@@ -129,7 +129,7 @@ const updateLocationOptions = (dropdownEl, itemsArr) => {
   itemsArr.forEach(item => {
     list+= `
     <li role="option">
-      <input data-option type="radio" value="${item.name}" id="${item.slug}" name="province">
+      <input data-option type="radio" value="${item.name}" id="${item.slug}" name="${name}">
       <label for="${item.slug}">${item.name}</label>
     </li>
     `
@@ -150,8 +150,8 @@ const selectAjaxRequest = (data) =>{
         const response = JSON.parse(this.responseText)
         // serverResponse(response)
         console.log("odebrane: ", response);
-        updateLocationOptions('data-provinces-list', response.provinces)
-        updateLocationOptions('data-cities-list', response.cities)
+        updateLocationOptions('data-provinces-list', response.provinces, 'province')
+        updateLocationOptions('data-cities-list', response.cities, 'city')
     }
   }
 }
