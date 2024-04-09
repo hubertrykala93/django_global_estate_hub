@@ -792,62 +792,41 @@ def add_property(request) -> django.http.response.HttpResponse:
     ----------
         django.http.response.HttpResponse
     """
+    country_response = requests.request(method='GET', url='https://api.countrystatecity.in/v1/countries', headers={
+        "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ=="
+    })
 
-    def get_countries():
-        url = 'https://raw.githubusercontent.com/stefangabos/world_countries/master/data/countries/en/countries.json'
-        response = requests.get(url=url)
-
-        if response.status_code == 200:
-            response_json = response.json()
-
-            to_remove = ['id', 'alpha3']
-
-            for key in to_remove:
-                for d in response_json:
-                    if key in d.keys():
-                        d.pop(key)
-
-            for d in response_json:
-                if 'country_code' != 'alpha2' and 'country_name' != 'name':
-                    d['country_code'] = d['alpha2']
-                    d['country_name'] = d['name']
-                    del d['alpha2']
-                    del d['name']
-
-            for d in response_json:
-                d['country_code'] = d['country_code'].upper()
-
-            for d in response_json:
-                d['country_slug'] = '-'.join(d['country_name'].lower().split())
-
-            return response_json
-
-    # print(get_countries())
-
-    import datadotworld as dw
-    results = dw.query(
-        'jonloyens/intermediate-data-world',
-        'SELECT * FROM fatal_police_shootings_data')
-    results_df = results.dataframe
-
-    import requests
-
-    print(requests.get(url='https://dr5hn.linked.data.world/d/country-state-city/file/cities.json').content)
-
-    # def get_cities():
-    #     url = 'https://raw.githubusercontent.com/datasets/world-cities/master/data/world-cities.csv'
-    #     dataframe = pd.read_csv(filepath_or_buffer=url, encoding='utf-8')
-    #     dataframe = dataframe.reindex(columns=['country', 'subcountry', 'name', 'geoname_id'])
-    #     dataframe.columns = ['country', 'province', 'city', 'geoname_id']
-    #
-    #     return dataframe.drop(columns=['geoname_id'])
+    countries = sorted(
+        [{'name': country.title(), 'slug': '-'.join(country.lower().replace('(', '').replace(')', '').split())}
+         for country in [unidecode(data['name']) for data in country_response.json()]], key=lambda d: d['name'])
 
     return render(request=request, template_name='properties/add-property.html', context={
         'title': 'Add Property',
         'categories': Category.objects.all().order_by('name'),
         'amenities': Amenities.objects.all().order_by('name'),
-        'countries': get_countries(),
+        'countries': countries,
     })
+
+
+def set_country(request):
+    if request.method == 'POST':
+        data = json.loads(s=request.body.decode(encoding='utf-8'))
+
+        country_response = requests.request(method='GET', url='https://api.countrystatecity.in/v1/countries', headers={
+            "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ=="
+        })
+
+        province_response = requests.request(method='GET', url='https://api.countrystatecity.in/v1/states', headers={
+            "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ==",
+        })
+
+        code = [d['iso2'] for d in country_response.json() if d['name'].title() == data['country']][0]
+        provinces = sorted([{'name': unidecode(d['name'].title()), 'slug': '-'.join(unidecode(
+            d['name'].lower()).replace('(', '').replace(')', '').replace('`', '').replace("'", '').split())} for d in
+                            province_response.json() if
+                            d['country_code'] == code], key=lambda d: d['name'])
+
+        return JsonResponse(data=provinces, safe=False)
 
 
 def create_property(request):
@@ -871,6 +850,7 @@ def create_property(request):
             parking_space_label, postal_code_label, city_label, province_label, country_label, amenities_label, \
             education_label, health_and_medicals_label, transportations_label, shoppings_label = [data[key][2] for key
                                                                                                   in data]
+        print(data['country'])
 
         """
         Description, listing_status, category nie potrzeba walidacji.

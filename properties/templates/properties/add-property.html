@@ -150,7 +150,7 @@
           
 
           <div class="form__field">
-            <label for="city" class="form__label">country</label>
+            <label for="country" class="form__label">country</label>
             <div class="form__input-wrap form__select-wrapper">
                 <div class="custom__select" data-custom-select>
                     <button
@@ -172,8 +172,8 @@
 
                         {% for country in countries %}
                         <li role="option">
-                            <input data-option type="radio" value="{{ country.country_name }}" id="{{ country.country_slug }}" name="country">
-                            <label for="{{ country.country_slug }}">{{ country.country_name }}</label>
+                            <input data-option type="radio" value="{{ country.name }}" id="{{ country.slug }}" name="country">
+                            <label for="{{ country.slug }}">{{ country.name }}</label>
                         </li>
                         {% endfor %}
 
@@ -184,7 +184,7 @@
           </div>
 
           <div class="form__field">
-            <label for="city" class="form__label">province</label>
+            <label for="province" class="form__label">province</label>
             <div class="form__input-wrap form__select-wrapper">
                 <div class="custom__select" data-custom-select>
                     <button
@@ -203,18 +203,14 @@
                     </button>
 
                     <ul class="custom__select__dropdown" role="listbox" id="select-province">
+
+                        {% for province in provinces %}
                         <li role="option">
-                            <input data-option type="radio" value="Miasto 1" id="miasto" name="city">
-                            <label for="miasto">Province 1</label>
+                            <input data-option type="radio" value="{{ province.name }}" id="{{ province.slug }}" name="province">
+                            <label for="{{ province.slug }}">{{ province.name }}</label>
                         </li>
-                        <li role="option">
-                            <input data-option type="radio" value="Miasto 2" id="miasto" name="city">
-                            <label for="miasto">Province 2</label>
-                        </li>
-                        <li role="option">
-                            <input data-option type="radio" value="Miasto 3" id="miasto" name="city">
-                            <label for="miasto">Province 3</label>
-                        </li>
+                        {% endfor %}
+
                     </ul>
 
                 </div>
