@@ -121,6 +121,22 @@ const getSelectedOptionValue = (inputs) => {
   return false
 } 
 
+const updateLocationOptions = (dropdownEl, itemsArr) => {
+  const $dropdownParent = $addPropertyForm.querySelector(`[${dropdownEl}]`)
+  if (itemsArr.length === 0) { $dropdownParent.innerHTML = '' }
+
+  let list = ''
+  itemsArr.forEach(item => {
+    list+= `
+    <li role="option">
+      <input data-option type="radio" value="${item.name}" id="${item.slug}" name="province">
+      <label for="${item.slug}">${item.name}</label>
+    </li>
+    `
+  })
+  $dropdownParent.insertAdjacentHTML('beforeend', list)
+}
+
 const selectAjaxRequest = (data) =>{
   const xhr = new XMLHttpRequest()
   xhr.open('POST', 'set-location', true)
@@ -134,6 +150,8 @@ const selectAjaxRequest = (data) =>{
         const response = JSON.parse(this.responseText)
         // serverResponse(response)
         console.log("odebrane: ", response);
+        updateLocationOptions('data-provinces-list', response.provinces)
+        updateLocationOptions('data-cities-list', response.cities)
     }
   }
 }
