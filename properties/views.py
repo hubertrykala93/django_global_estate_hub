@@ -16,10 +16,6 @@ from datetime import datetime
 from datetime import timedelta
 from django.db.models import Min, Max
 import requests
-import pandas as pd
-import ssl
-
-ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def property_pagination(request, object_list, per_page) -> django.core.paginator.Page:
@@ -810,21 +806,33 @@ def add_property(request) -> django.http.response.HttpResponse:
 
 def set_location(request):
     if request.method == 'POST':
+        print(request.session.items())
         data = json.loads(s=request.body.decode(encoding='utf-8'))
-        print(data)
 
-        if data['country']:
-            country_response = requests.request(method='GET', url='https://api.countrystatecity.in/v1/countries',
-                                                headers={
-                                                    "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ=="
-                                                })
-            code = [d['iso2'] for d in country_response.json() if d['name'].title() == data['country']][0]
+        country_response = requests.request(method='GET', url='https://api.countrystatecity.in/v1/countries',
+                                            headers={
+                                                "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ=="
+                                            })
 
-            province_response = requests.request(method='GET',
-                                                 url=f'https://api.countrystatecity.in/v1/countries/{code}/states',
-                                                 headers={
-                                                     "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ==",
-                                                 })
+        country_code = [d['iso2'] for d in country_response.json() if d['name'].title() == data['country']][0]
+
+        # provinces by country
+        province_response = requests.request(method='GET',
+                                             url=f'https://api.countrystatecity.in/v1/countries/{country_code}/states',
+                                             headers={
+                                                 "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ==",
+                                             })
+
+        print(province_response.json())
+        # cities by country
+        cities_response = requests.request(method='GET',
+                                           url=f'https://api.countrystatecity.in/v1/countries/{country_code}/cities',
+                                           headers={
+                                               "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ==",
+                                           })
+
+        if data['province'] is False:
+            print('Country in data and Province is False.')
 
             unique_provinces = set([unidecode(d['name'].title()) for d in province_response.json()])
 
@@ -837,12 +845,6 @@ def set_location(request):
                 }
                 for province in unique_provinces
             ], key=lambda d: d['name'])
-
-            cities_response = requests.request(method='GET',
-                                               url=f'https://api.countrystatecity.in/v1/countries/{code}/cities',
-                                               headers={
-                                                   "X-CSCAPI-KEY": "T05jNG1pSjlhZnE3SWM3c0RLcVpNV2NBTWJKVWFhcVZFWVZ4VE9zaQ==",
-                                               })
 
             unique_cities = list(set([unidecode(d['name'].title()) for d in cities_response.json()]))
 
@@ -860,6 +862,46 @@ def set_location(request):
                 "provinces": provinces,
                 "cities": cities,
             })
+
+        else:
+            print('Country in data and Province in data.')
+            return JsonResponse(data={})
+
+        # if data['country'] and data['province'] is False:
+        #     print('Country in data and Province is False.')
+        #
+        #     unique_provinces = set([unidecode(d['name'].title()) for d in province_response.json()])
+        #
+        #     provinces = sorted([
+        #         {
+        #             "name": province,
+        #             "slug": '-'.join(
+        #                 province.lower().replace('(', '').replace(')', '').replace('`', '').replace("'",
+        #                                                                                             '').split())
+        #         }
+        #         for province in unique_provinces
+        #     ], key=lambda d: d['name'])
+        #
+        #     unique_cities = list(set([unidecode(d['name'].title()) for d in cities_response.json()]))
+        #
+        #     cities = sorted([
+        #         {
+        #             "name": city,
+        #             "slug": '-'.join(
+        #                 city.lower().replace('(', '').replace(')', '').replace('`', '').replace("'", '').split()
+        #             )
+        #         }
+        #         for city in unique_cities
+        #     ], key=lambda d: d['name'])
+        #
+        #     return JsonResponse(data={
+        #         "provinces": provinces,
+        #         "cities": cities,
+        #     })
+        #
+        # else:
+        #     print('Country in data and Province in data.')
+        #     return JsonResponse(data={})
 
 
 def create_property(request):
