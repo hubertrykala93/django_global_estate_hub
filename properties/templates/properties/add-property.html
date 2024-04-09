@@ -150,7 +150,7 @@
           
 
           <div class="form__field">
-            <label for="country" class="form__label">country</label>
+            <label class="form__label">country</label>
             <div class="form__input-wrap form__select-wrapper">
                 <div class="custom__select" data-custom-select>
                     <button
@@ -184,7 +184,7 @@
           </div>
 
           <div class="form__field">
-            <label for="province" class="form__label">province</label>
+            <label class="form__label">province</label>
             <div class="form__input-wrap form__select-wrapper">
                 <div class="custom__select" data-custom-select>
                     <button
@@ -202,15 +202,16 @@
                         <i class="custom__select__button__arrow ri-arrow-down-s-line" aria-hidden="true"></i>
                     </button>
 
-                    <ul class="custom__select__dropdown" role="listbox" id="select-province">
+                    <ul class="custom__select__dropdown" role="listbox" id="select-province" data-provinces-list>
+                      <li role="option">
+                          <input data-option type="radio" value="xxx" id="xxx" name="province">
+                          <label for="xxx">xxx</label>
+                      </li>
 
-                        {% for province in provinces %}
-                        <li role="option">
-                            <input data-option type="radio" value="{{ province.name }}" id="{{ province.slug }}" name="province">
-                            <label for="{{ province.slug }}">{{ province.name }}</label>
-                        </li>
-                        {% endfor %}
-
+                      <li role="option">
+                          <input data-option type="radio" value="yyy" id="yyy" name="province">
+                          <label for="yyy">yyy</label>
+                      </li>
                     </ul>
 
                 </div>
@@ -220,7 +221,7 @@
 
         <div class="form__row">
           <div class="form__field">
-            <label for="city" class="form__label">city</label>
+            <label class="form__label">city</label>
             <div class="form__input-wrap form__select-wrapper">
                 <div class="custom__select" data-custom-select>
                     <button
