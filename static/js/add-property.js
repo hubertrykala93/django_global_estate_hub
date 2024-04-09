@@ -112,9 +112,18 @@ const submitForm = (e) => {
   ajaxRequest(data)
 }
 
+const getSelectedOptionValue = (inputs) => {
+  if (!inputs.length) { return false }
+
+  for (let i = 0; i < inputs.length; i++) {
+    if (inputs[i].checked) { return inputs[i].value}
+  }
+  return false
+} 
+
 const selectAjaxRequest = (data) =>{
   const xhr = new XMLHttpRequest()
-  xhr.open('POST', 'set-country', true)
+  xhr.open('POST', 'set-location', true)
   xhr.setRequestHeader('X-CSRFToken', csrfToken)
   xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8')
   xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
@@ -130,9 +139,13 @@ const selectAjaxRequest = (data) =>{
 }
 
 const selectHandler = (e) => {
-  if (e.target.name === 'country') {
+  if (e.target.name === 'country' || e.target.name === 'province') {
+    const $countryInputs = $addPropertyForm.querySelectorAll('[name="country"]')
+    const $provinceInputs = $addPropertyForm.querySelectorAll('[name="province"]')
+
     const data = {
-      "country": e.target.value
+      "country": getSelectedOptionValue($countryInputs),
+      "province" : getSelectedOptionValue($provinceInputs)
     }
     console.log("wysłane: ", data);
     selectAjaxRequest(data)
