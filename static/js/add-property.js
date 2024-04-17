@@ -121,6 +121,20 @@ const getSelectedOptionValue = (inputs) => {
   return false
 } 
 
+//Location settings
+
+const clearSelectChoice = (changedTarget) => {
+  const $provincePlaceholder = $addPropertyForm.querySelector('[data-province-placeholder]')
+  const $cityPlaceholder = $addPropertyForm.querySelector('[data-city-placeholder]')
+  if (changedTarget === 'country') {
+    $provincePlaceholder.textContent = 'Choose Province'
+    $cityPlaceholder.textContent = 'Choose City'
+  } else if (changedTarget === 'province') {
+    $cityPlaceholder.textContent = 'Choose City'
+  }
+
+}
+
 const updateLocationOptions = (dropdownEl, itemsArr, name) => {
   const $dropdownParent = $addPropertyForm.querySelector(`[${dropdownEl}]`)
   $dropdownParent.innerHTML = ''
@@ -148,7 +162,6 @@ const selectAjaxRequest = (data) =>{
   xhr.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
         const response = JSON.parse(this.responseText)
-        // serverResponse(response)
         console.log("odebrane: ", response);
         updateLocationOptions('data-provinces-list', response.provinces, 'province')
         updateLocationOptions('data-cities-list', response.cities, 'city')
@@ -165,11 +178,14 @@ const selectHandler = (e) => {
       "country": getSelectedOptionValue($countryInputs),
       "province" : getSelectedOptionValue($provinceInputs)
     }
+
     console.log("wysłane: ", data);
+    clearSelectChoice(e.target.name)
     selectAjaxRequest(data)
   }
 }
 
+//Event listeners
 $addPropertyForm.addEventListener('click', multipleRowItems)
 $addPropertyForm.addEventListener('submit', submitForm)
 $addPropertyForm.addEventListener('change', selectHandler)
