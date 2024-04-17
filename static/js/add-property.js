@@ -85,7 +85,8 @@ const submitForm = (e) => {
     "description": [formData.get('description').trim(), "data-description", $formElements['description'].parentElement.parentElement.querySelector('.form__label').textContent],
     "listing_status": [formData.get('status'), "data-status", $formElements['status'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
     "category": [formData.getAll('category'), "data-category", $formElements['category'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
-    "images": [$formElements['images'].files, "data-images", $formElements['images'].parentElement.parentElement.querySelector('.form__label').textContent],
+    "thumbnail": [$formElements['thumbnail'].files, "data-thumbnail", $formElements['thumbnail'].parentElement.parentElement.querySelector('.form__label').textContent],
+    "gallery": [$formElements['gallery'].files, "data-gallery", $formElements['gallery'].parentElement.parentElement.querySelector('.form__label').textContent],
     "video": [$formElements['video'].files, "data-video", $formElements['video'].parentElement.parentElement.querySelector('.form__label').textContent],
     "year_of_built": [formData.get('year_of_built').trim(), "data-year", $formElements['year_of_built'].parentElement.parentElement.querySelector('.form__label').textContent],
     "number_of_bedrooms": [formData.get('number_of_bedrooms').trim(), "data-bedrooms", $formElements['number_of_bedrooms'].parentElement.parentElement.querySelector('.form__label').textContent],
@@ -93,9 +94,9 @@ const submitForm = (e) => {
     "square_meters": [formData.get('square_meters').trim(), "data-square-meters", $formElements['square_meters'].parentElement.parentElement.querySelector('.form__label').textContent],
     "parking_space": [formData.get('parking_space').trim(), "data-parking-space", $formElements['parking_space'].parentElement.parentElement.querySelector('.form__label').textContent],
     "postal_code": [formData.get('postal_code').trim(), "data-postal-code", $formElements['postal_code'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "city": [formData.get('city').trim(), "data-city", $formElements['city'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "province": [formData.get('province').trim(), "data-province", $formElements['province'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "country": [formData.get('country').trim(), "data-country", $formElements['country'].parentElement.parentElement.querySelector('.form__label').textContent],
+    "city": [formData.get('city'), "data-city", 'city'],
+    "province": [formData.get('province'), "data-province", 'province'],
+    "country": [formData.get('country'), "data-country", 'country'],
     "amenities": [formData.getAll('amenities'), "data-amenity", $formElements['amenities'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
     "education": [createNearbyItemsArray(formData.getAll('education-name'), formData.getAll('education-distance')), "data-education-name", "education"],
     "health_and_medical": [createNearbyItemsArray(formData.getAll('health-name'), formData.getAll('health-distance')), "data-health-name", "health"],
@@ -106,7 +107,7 @@ const submitForm = (e) => {
 //  const data = new FormData()
 //  data.append('images', $formElements['images'].files[0])
 
-//  console.log("wysłane ", data.get('images'))
+ console.log("wysłane ", data)
 //  console.log($formElements['images'].files)
 
   ajaxRequest(data)
@@ -122,6 +123,7 @@ const getSelectedOptionValue = (inputs) => {
 } 
 
 //Location settings
+let chosenProvince = ''
 
 const clearSelectChoice = (changedTarget) => {
   const $provincePlaceholder = $addPropertyForm.querySelector('[data-province-placeholder]')
@@ -129,10 +131,11 @@ const clearSelectChoice = (changedTarget) => {
   if (changedTarget === 'country') {
     $provincePlaceholder.textContent = 'Choose Province'
     $cityPlaceholder.textContent = 'Choose City'
+    $addPropertyForm.querySelector('[data-provinces-list]').innerHTML = ''
   } else if (changedTarget === 'province') {
     $cityPlaceholder.textContent = 'Choose City'
   }
-
+  $addPropertyForm.querySelector('[data-cities-list]').innerHTML = ''
 }
 
 const updateLocationOptions = (dropdownEl, itemsArr, name) => {
@@ -141,12 +144,21 @@ const updateLocationOptions = (dropdownEl, itemsArr, name) => {
 
   let list = ''
   itemsArr.forEach(item => {
+    if (item.name === chosenProvince) {
+      list+= `
+        <li role="option">
+          <input data-option type="radio" value="${item.name}" id="${item.slug}" name="${name}" checked>
+          <label for="${item.slug}">${item.name}</label>
+        </li>
+      `
+    } else {
     list+= `
-    <li role="option">
-      <input data-option type="radio" value="${item.name}" id="${item.slug}" name="${name}">
-      <label for="${item.slug}">${item.name}</label>
-    </li>
-    `
+        <li role="option">
+          <input data-option type="radio" value="${item.name}" id="${item.slug}" name="${name}">
+          <label for="${item.slug}">${item.name}</label>
+        </li>
+      `
+    }
   })
   $dropdownParent.insertAdjacentHTML('beforeend', list)
 }
@@ -171,16 +183,19 @@ const selectAjaxRequest = (data) =>{
 
 const selectHandler = (e) => {
   if (e.target.name === 'country' || e.target.name === 'province') {
+    clearSelectChoice(e.target.name)
+    
     const $countryInputs = $addPropertyForm.querySelectorAll('[name="country"]')
     const $provinceInputs = $addPropertyForm.querySelectorAll('[name="province"]')
-
+    
     const data = {
       "country": getSelectedOptionValue($countryInputs),
       "province" : getSelectedOptionValue($provinceInputs)
     }
-
+    
+    chosenProvince = data.province
+    
     console.log("wysłane: ", data);
-    clearSelectChoice(e.target.name)
     selectAjaxRequest(data)
   }
 }
