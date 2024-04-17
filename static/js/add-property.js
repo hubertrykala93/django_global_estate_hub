@@ -123,7 +123,7 @@ const getSelectedOptionValue = (inputs) => {
 
 const updateLocationOptions = (dropdownEl, itemsArr, name) => {
   const $dropdownParent = $addPropertyForm.querySelector(`[${dropdownEl}]`)
-  if (itemsArr.length === 0) { $dropdownParent.innerHTML = '' }
+  $dropdownParent.innerHTML = ''
 
   let list = ''
   itemsArr.forEach(item => {

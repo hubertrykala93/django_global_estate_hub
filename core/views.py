@@ -432,52 +432,35 @@ def properties_results(request) -> django.http.response.JsonResponse or django.h
     elif request.method == 'GET':
         queryset = []
         request.session['sorted_type'] = 'Newest Properties'
-        print(request.session.items())
 
         if 'properties-order' in request.GET:
-            print('Properties Order in request GET.')
             if 'filters' in request.session:
-                print('Properties Order in request GET and filters in request session.')
                 if 'Newest Properties' in request.GET.get('properties-order'):
-                    print(
-                        'Properties Order in request GET and filters in request session and Newest Properties in request GET Properties Order.')
                     request.session['sorted_type'] = 'Newest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
                 elif 'Oldest Properties' in request.GET.get('properties-order'):
-                    print(
-                        'Properties Order in request GET and filters in request session and Oldest Properties in request GET Properties Order.')
                     request.session['sorted_type'] = 'Oldest Properties'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('date_posted'))
 
                 elif 'Price Ascending' in request.GET.get('properties-order'):
-                    print(request.session['filters'])
-                    print(
-                        'Properties Order in request GET and filters in request session and Price Ascending in request GET Properties Order.')
                     request.session['sorted_type'] = 'Price Ascending'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('price'))
 
                 elif 'Price Descending' in request.GET.get('properties-order'):
-                    print(
-                        'Properties Order in request GET and filters in request session and Price Descending in request GET Properties Order.')
                     request.session['sorted_type'] = 'Price Descending'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-price'))
 
                 elif 'Featured' in request.GET.get('properties-order'):
-                    print(
-                        'Properties Order in request GET and filters in request session and Featured in request GET Properties Order.')
                     request.session['sorted_type'] = 'Featured'
                     queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-is_featured'))
 
         else:
-            print('No Properties Order in request GET.')
             if 'filters' in request.session:
-                print('No Properties Order in request GET and filters in request session.')
                 request.session['sorted_type'] = 'Newest Properties'
                 queryset.extend(Property.objects.filter(**request.session['filters']).order_by('-date_posted'))
 
             else:
-                print('No Properties Order in request GET and not filters in request session.')
                 request.session['sorted_type'] = 'Newest Properties'
                 request.session['filters'] = {
                     'listing_status_id': ListingStatus.objects.get(slug='rent').id

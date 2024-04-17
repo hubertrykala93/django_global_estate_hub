@@ -862,8 +862,10 @@ def set_location(request):
             })
 
         else:
+            print(data)
             print('Country in data and Province in data.')
-
+            print([d['iso2'] for d in province_response.json() if
+             unidecode(d['name']).title() == data['province']])
             province_code = [d['iso2'] for d in province_response.json() if
                              unidecode(d['name']).title() == data['province']][0]
 
@@ -886,13 +888,6 @@ def set_location(request):
                 }
                 for city in unique_cities
             ], key=lambda d: d['name'])
-
-            print(
-                {
-                    "provinces": provinces,
-                    "cities": cities,
-                }
-            )
 
             return JsonResponse(data={
                 "provinces": provinces,
