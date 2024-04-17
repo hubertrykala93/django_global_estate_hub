@@ -842,8 +842,6 @@ def set_location(request):
         ], key=lambda d: d['name'])
 
         if data['province'] is False:
-            print('Country in data and Province is False.')
-
             unique_cities = list(set([unidecode(d['name'].title()) for d in cities_response.json()]))
 
             cities = sorted([
@@ -862,10 +860,6 @@ def set_location(request):
             })
 
         else:
-            print(data)
-            print('Country in data and Province in data.')
-            print([d['iso2'] for d in province_response.json() if
-             unidecode(d['name']).title() == data['province']])
             province_code = [d['iso2'] for d in province_response.json() if
                              unidecode(d['name']).title() == data['province']][0]
 
@@ -916,8 +910,6 @@ def create_property(request):
             parking_space_label, postal_code_label, city_label, province_label, country_label, amenities_label, \
             education_label, health_and_medicals_label, transportations_label, shoppings_label = [data[key][2] for key
                                                                                                   in data]
-        print(data['country'])
-
         """
         Description, listing_status, category nie potrzeba walidacji.
         Images, video -> czekam.
@@ -1038,8 +1030,6 @@ def create_property(request):
                     "",
             }
         ]
-        print(square_meters[0])
-        print(response)
 
         return JsonResponse(data=response, safe=False)
 
