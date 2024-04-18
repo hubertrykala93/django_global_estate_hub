@@ -49,7 +49,7 @@ const multipleRowItems = (e) => {
 const submitForm = (e) => {
   e.preventDefault()
   const $formElements = $addPropertyForm.elements
-  const formData = new FormData($addPropertyForm)
+  const data = new FormData()
 
   const ajaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
@@ -79,35 +79,36 @@ const submitForm = (e) => {
     return arr
   }
 
-  const data = {
-    "title": [formData.get('title').trim(), "data-title", $formElements['title'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "price": [formData.get('price').trim(), "data-price", $formElements['price'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "description": [formData.get('description').trim(), "data-description", $formElements['description'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "listing_status": [formData.get('status'), "data-status", $formElements['status'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
-    "category": [formData.getAll('category'), "data-category", $formElements['category'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
-    "thumbnail": [$formElements['thumbnail'].files, "data-thumbnail", $formElements['thumbnail'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "gallery": [$formElements['gallery'].files, "data-gallery", $formElements['gallery'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "video": [$formElements['video'].files, "data-video", $formElements['video'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "year_of_built": [formData.get('year_of_built').trim(), "data-year", $formElements['year_of_built'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "number_of_bedrooms": [formData.get('number_of_bedrooms').trim(), "data-bedrooms", $formElements['number_of_bedrooms'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "number_of_bathrooms": [formData.get('number_of_bathrooms').trim(), "data-bathrooms", $formElements['number_of_bathrooms'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "square_meters": [formData.get('square_meters').trim(), "data-square-meters", $formElements['square_meters'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "parking_space": [formData.get('parking_space').trim(), "data-parking-space", $formElements['parking_space'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "postal_code": [formData.get('postal_code').trim(), "data-postal-code", $formElements['postal_code'].parentElement.parentElement.querySelector('.form__label').textContent],
-    "city": [formData.get('city'), "data-city", 'city'],
-    "province": [formData.get('province'), "data-province", 'province'],
-    "country": [formData.get('country'), "data-country", 'country'],
-    "amenities": [formData.getAll('amenities'), "data-amenity", $formElements['amenities'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
-    "education": [createNearbyItemsArray(formData.getAll('education-name'), formData.getAll('education-distance')), "data-education-name", "education"],
-    "health_and_medical": [createNearbyItemsArray(formData.getAll('health-name'), formData.getAll('health-distance')), "data-health-name", "health"],
-    "transportation": [createNearbyItemsArray(formData.getAll('transportation-name'), formData.getAll('transportation-distance')), "data-transportation-name", "transportation"],
-    "shopping": [createNearbyItemsArray(formData.getAll('shopping-name'), formData.getAll('shopping-distance')), "data-shopping-name", "shopping"],
-  }
+  // const data = {
+  //   "title": [formData.get('title').trim(), "data-title", $formElements['title'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "price": [formData.get('price').trim(), "data-price", $formElements['price'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "description": [formData.get('description').trim(), "data-description", $formElements['description'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "listing_status": [formData.get('status'), "data-status", $formElements['status'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "category": [formData.getAll('category'), "data-category", $formElements['category'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "thumbnail": [$formElements['thumbnail'].files, "data-thumbnail", $formElements['thumbnail'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "gallery": [$formElements['gallery'].files, "data-gallery", $formElements['gallery'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "video": [$formElements['video'].files, "data-video", $formElements['video'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "year_of_built": [formData.get('year_of_built').trim(), "data-year", $formElements['year_of_built'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "number_of_bedrooms": [formData.get('number_of_bedrooms').trim(), "data-bedrooms", $formElements['number_of_bedrooms'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "number_of_bathrooms": [formData.get('number_of_bathrooms').trim(), "data-bathrooms", $formElements['number_of_bathrooms'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "square_meters": [formData.get('square_meters').trim(), "data-square-meters", $formElements['square_meters'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "parking_space": [formData.get('parking_space').trim(), "data-parking-space", $formElements['parking_space'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "postal_code": [formData.get('postal_code').trim(), "data-postal-code", $formElements['postal_code'].parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "city": [formData.get('city'), "data-city", 'city'],
+  //   "province": [formData.get('province'), "data-province", 'province'],
+  //   "country": [formData.get('country'), "data-country", 'country'],
+  //   "amenities": [formData.getAll('amenities'), "data-amenity", $formElements['amenities'][0].parentElement.parentElement.parentElement.querySelector('.form__label').textContent],
+  //   "education": [createNearbyItemsArray(formData.getAll('education-name'), formData.getAll('education-distance')), "data-education-name", "education"],
+  //   "health_and_medical": [createNearbyItemsArray(formData.getAll('health-name'), formData.getAll('health-distance')), "data-health-name", "health"],
+  //   "transportation": [createNearbyItemsArray(formData.getAll('transportation-name'), formData.getAll('transportation-distance')), "data-transportation-name", "transportation"],
+  //   "shopping": [createNearbyItemsArray(formData.getAll('shopping-name'), formData.getAll('shopping-distance')), "data-shopping-name", "shopping"],
+  // }
 
-//  const data = new FormData()
-//  data.append('images', $formElements['images'].files[0])
 
- console.log("wysłane ", data)
+  data.append('thumbnail', document.getElementsByName('thumbnail')[0].files[0])
+  console.log(data.get('thumbnail'));
+
+  console.log("wysłane ", data)
 //  console.log($formElements['images'].files)
 
   ajaxRequest(data)
