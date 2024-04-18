@@ -49,14 +49,14 @@ const multipleRowItems = (e) => {
 const submitForm = (e) => {
   e.preventDefault()
   const $formElements = $addPropertyForm.elements
-  const data = new FormData()
+  const data = new FormData($addPropertyForm)
 
   const ajaxRequest = (data) =>{
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'create-property', true)
     xhr.setRequestHeader('X-CSRFToken', csrfToken)
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-    xhr.send(JSON.stringify(data))
+    xhr.send(data)
 
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
@@ -105,7 +105,8 @@ const submitForm = (e) => {
   // }
 
 
-  data.append('thumbnail', document.getElementsByName('thumbnail')[0].files[0])
+  
+  // data.append('thumbnail', $formElements['thumbnail'].files[0])
   console.log(data.get('thumbnail'));
 
   console.log("wysłane ", data)
