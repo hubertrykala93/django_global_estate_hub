@@ -892,8 +892,13 @@ def set_location(request):
 def create_property(request):
     if request.method == 'POST':
         data = json.loads(s=request.body.decode(encoding='utf-8'))
-        images = data.pop('images')
+        thumbnail = data.pop('thumbnail')
+        gallery = data.pop('gallery')
         video = data.pop('video')
+        print(f'Request FILES: {request.FILES}')
+        print(f'Thumbnail: {thumbnail}')
+        print(f'Gallery: {gallery}')
+        print(f'Video: {video}')
 
         title, price, description, listing_status, categories, year_of_built, number_of_bedrooms, \
             number_of_bathrooms, square_meters, parking_space, postal_code, city, province, country, amenities, \
@@ -914,8 +919,11 @@ def create_property(request):
         Description, listing_status, category nie potrzeba walidacji.
         Images, video -> czekam.
 
-        Walidacja zrobiona dla title, price,
+        Walidacja zrobiona dla title, price, description, year of built, number of bedrooms, number of bathrooms
         """
+
+        def validate_property_area(input_text):
+            return True if (lambda x: x > 0 and str(x) == input_text)(float(input_text)) else False
 
         response = [
             {
@@ -1015,20 +1023,17 @@ def create_property(request):
                     f"The property {number_of_bathrooms_label} must consist of positive digits." if not number_of_bathrooms.isdecimal() else
                     "",
             },
-            {
-                "valid":
-                    False if not square_meters else
-                    False if square_meters[0] == '-' and not square_meters[
-                                                             1:].isdigit() and not '.' or ',' in square_meters else
-                    True,
-                "field": square_meters_field,
-                "message":
-                    f"The property {square_meters_label} is required." if not square_meters else
-                    f"The property {square_meters_label} must be greater than 0." if square_meters[
-                                                                                         0] == '-' and not square_meters[
-                                                                                                           1:].isdigit() and not '.' or ',' in square_meters else
-                    "",
-            }
+            # {
+            #     "valid": False if not square_meters or float(square_meters) <= 0 or str(
+            #         float(square_meters)) != square_meters else True,
+            #     "field": square_meters_field,
+            #     "message": (
+            #         f"The property area is required." if not square_meters else
+            #         f"The property area must be greater than 0." if float(square_meters) <= 0 else
+            #         f"The property area must be a valid number." if str(float(square_meters)) != square_meters else
+            #         ""
+            #     )
+            # }
         ]
 
         return JsonResponse(data=response, safe=False)
