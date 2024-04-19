@@ -16,6 +16,7 @@ from datetime import datetime
 from datetime import timedelta
 from django.db.models import Min, Max
 import requests
+import uuid
 
 
 def property_pagination(request, object_list, per_page) -> django.core.paginator.Page:
@@ -1211,9 +1212,56 @@ def create_property(request):
         )
 
         # education
-        response.update(
-            {
-                "education":
+        education = []
+
+        if len(request.POST.getlist('education-name')) == 1 and len(request.POST.getlist('education-name')[0]) != 1:
+            print('One Education.')
+            response.update(
+                {
+                    "education":
+                        {
+                            "education_name":
+                                {
+                                    "valid":
+                                        False if education_distance and not education_name else
+                                        False if education_name and len(education_name) <= 5 else
+                                        True,
+                                    "message":
+                                        "If you have provided the distance to an educational institution, you must also provide its name." if education_distance and not education_name else
+                                        "The education name must be at least 5 characters long." if education_name and len(
+                                            education_name) <= 5 else
+                                        "",
+                                },
+                            "education_distance":
+                                {
+                                    "valid":
+                                        False if education_name and not education_distance else
+                                        False if education_distance and education_distance[
+                                            0] == '-' and education_distance[
+                                                          1:].isdigit() else
+                                        False if education_distance and not education_distance.replace(',',
+                                                                                                       '').isdigit() else
+                                        True,
+                                    "message":
+                                        "If you have provided the name of an educational institution, you must also provide the distance to it." if education_name and not education_distance else
+                                        "The education distance must be greater than or equal 0." if education_distance and
+                                                                                                     education_distance[
+                                                                                                         0] == '-' and education_distance[
+                                                                                                                       1:].isdigit() else
+                                        "The education distance must consist of positive digits." if education_distance and not education_distance.replace(
+                                            ',', '').isdigit() else
+                                        "",
+                                }
+                        }
+                }
+            )
+
+        elif len(request.POST.getlist('education-name')) > 1 and all(
+                [True if len(name) != 0 else False for name in request.POST.getlist('education-name')]):
+            print('More Educations.')
+            for education_name, education_distance in zip(request.POST.getlist('education-name'),
+                                                          request.POST.getlist('education-distance')):
+                education.append(
                     {
                         "education_name":
                             {
@@ -1231,8 +1279,9 @@ def create_property(request):
                             {
                                 "valid":
                                     False if education_name and not education_distance else
-                                    False if education_distance and education_distance[0] == '-' and education_distance[
-                                                                                                     1:].isdigit() else
+                                    False if education_distance and education_distance[
+                                        0] == '-' and education_distance[
+                                                      1:].isdigit() else
                                     False if education_distance and not education_distance.replace(',',
                                                                                                    '').isdigit() else
                                     True,
@@ -1247,8 +1296,13 @@ def create_property(request):
                                     "",
                             }
                     }
-            }
-        )
+                )
+
+            response.update(
+                {
+                    "education": education,
+                }
+            )
 
         # health and medical
         response.update(
@@ -1371,7 +1425,6 @@ def create_property(request):
                     }
             }
         )
-        print(request.FILES)
 
         if request.FILES:
             if 'thumbnail' in request.FILES:
@@ -1380,7 +1433,6 @@ def create_property(request):
                         "thumbnail":
                             {
                                 "valid":
-                                    False if not 'thumbnail' in request.FILES else
                                     False if 'thumbnail' in request.FILES and request.FILES.get(
                                         'thumbnail').size > 1000000 else
                                     False if 'thumbnail' in request.FILES and request.FILES.get(
@@ -1392,7 +1444,6 @@ def create_property(request):
                                                                                                            'svg'] else
                                     True,
                                 "message":
-                                    "The property thumbnail is required." if not 'thumbnail' in request.FILES else
                                     "The thumbnail size should not exceed 1 MB." if 'thumbnail' in request.FILES and request.FILES.get(
                                         'thumbnail').size > 1000000 else
                                     "The supported formats are jpg, jpeg, webp, png, svg." if 'thumbnail' in request.FILES and request.FILES.get(
@@ -1414,18 +1465,43 @@ def create_property(request):
                         "thumbnail":
                             {
                                 "valid":
-                                    False if not 'thumbnail' in request.FILES else
-                                    True,
+                                    False,
                                 "message":
-                                    "The property thumbnail is required." if not 'thumbnail' in request.FILES else
-                                    "",
+                                    "The property thumbnail is required.",
                             }
                     }
                 )
 
             if "gallery" in request.FILES:
-                for image in request.FILES['gallery']:
-                    print(image)
+                gallery = []
+
+                for image in request.FILES.getlist('gallery'):
+                    gallery.append(
+                        {
+                            "valid":
+                                False if image.size > 1000000 else
+                                False if image.size <= 1000000 and image.name.split(sep='.')[1] not in [
+                                    'jpg', 'jpeg', 'webp', 'png', 'svg'] else
+                                True,
+                            "message":
+                                f"The {image} size should not exceed 1 MB." if image.size > 1000000 else
+                                "The supported formats are jpg, jpeg, webp, png, svg." if image.size <= 1000000 and
+                                                                                          image.name.split(
+                                                                                              sep='.')[
+                                                                                              1] not in ['jpg',
+                                                                                                         'jpeg',
+                                                                                                         'webp',
+                                                                                                         'png',
+                                                                                                         'svg'] else
+                                ""
+                        }
+                    )
+
+                response.update(
+                    {
+                        "gallery": gallery,
+                    }
+                )
 
             else:
                 response.update(
@@ -1433,11 +1509,9 @@ def create_property(request):
                         "gallery":
                             {
                                 "valid":
-                                    False if not 'gallery' in request.FILES else
-                                    True,
+                                    False,
                                 "message":
-                                    "The property gallery is required." if not 'gallery' in request.FILES else
-                                    "",
+                                    "The property gallery is required.",
                             }
                     }
                 )
@@ -1448,13 +1522,11 @@ def create_property(request):
                         "video":
                             {
                                 "valid":
-                                    False if not 'video' in request.FILES else
                                     False if 'video' in request.FILES and request.FILES.get('video').size > 5000000 else
                                     False if 'video' in request.FILES and request.FILES.get('video').size <= 5000000 and
                                              request.FILES.get('video').name.split(sep='.')[1] != 'mp4' else
                                     True,
                                 "message":
-                                    "The property video is required." if not 'video' in request.FILES else
                                     "The video size should not exceed 5 MB." if 'video' in request.FILES and request.FILES.get(
                                         'video').size > 5000000 else
                                     "The supported format is mp4." if 'video' in request.FILES and request.FILES.get(
@@ -1472,35 +1544,73 @@ def create_property(request):
                         "video":
                             {
                                 "valid":
-                                    False if not 'video' in request.FILES else
-                                    True,
+                                    False,
                                 "message":
-                                    "The property video is required." if not 'video' in request.FILES else
-                                    "",
+                                    "The property video is required.",
                             }
                     }
                 )
 
-        print(response)
-
-        validation = []
-
-        for key in response:
-            if response[key]:
-                if response[key].get('valid') is not None:
-                    validation.append(response[key].get('valid'))
-
-                else:
-                    for k in response[key]:
-                        validation.append(response[key][k]['valid'])
-
-        # print(validation)
-
-        if len(set(validation)) == 1:
-            pass
-
-        else:
-            return JsonResponse(data=response)
+        # validation = []
+        #
+        # for key in response:
+        #     if response[key]:
+        #         if isinstance(response[key], dict):
+        #             if response[key].get('valid') is not None:
+        #                 validation.append(response[key].get('valid'))
+        #
+        #             else:
+        #                 for k in response[key]:
+        #                     validation.append(response[key][k]['valid'])
+        #         else:
+        #             if isinstance(response[key], list):
+        #                 for obj in response[key]:
+        #                     validation.append(obj['valid'])
+        #
+        # if len(set(validation)) == 1:
+        #     pass
+        # listing_status = ListingStatus.objects.get(name=request.POST.get('status').capitalize())
+        # category = Category.objects.get(name=request.POST.get('category').capitalize())
+        # thumbnail = request.FILES['thumbnail']
+        # thumbnail.name = str(uuid.uuid4()) + '.' + thumbnail.name.split(sep='.')[1]
+        # amenities = []
+        #
+        # if City.objects.filter(name=request.POST.get('city')).exists():
+        #     c = City.objects.get(name=request.POST.get('city'))
+        #
+        # else:
+        #     c = City(name=request.POST.get('city'),
+        #              slug='-'.join(request.POST.get('city').lower().split(' ')))
+        #     c.save()
+        #
+        # for amenity in request.POST.getlist('amenities'):
+        #     amenities.append(Amenities.objects.get(name=amenity))
+        #
+        # new_property = Property(
+        #     user=request.user,
+        #     title=title.title(),
+        #     slug='-'.join(title.lower().split(' ')),
+        #     description=description,
+        #     year_of_built=int(year_of_built),
+        #     price=float(price),
+        #     number_of_bedrooms=int(number_of_bedrooms),
+        #     number_of_bathrooms=int(number_of_bathrooms),
+        #     square_meters=square_meters,
+        #     parking_space=parking_space,
+        #     postal_code=postal_code,
+        #     country=request.POST['country'],
+        #     province=request.POST['province'],
+        #     city=c
+        # )
+        #
+        # new_property.listing_status = listing_status
+        # new_property.category = category
+        # new_property.thumbnail = thumbnail
+        #
+        # new_property.save()
+        #
+        # for amenity in amenities:
+        #     new_property.amenities.add(amenity)
 
         return JsonResponse(data=response)
 

@@ -98,7 +98,7 @@ class Education(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     distance = models.FloatField()
-    rate = models.FloatField()
+    rate = models.FloatField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Education'
@@ -122,7 +122,7 @@ class Shopping(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     distance = models.FloatField()
-    rate = models.FloatField()
+    rate = models.FloatField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Shopping'
@@ -145,7 +145,7 @@ class HealthAndMedical(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     distance = models.FloatField()
-    rate = models.FloatField()
+    rate = models.FloatField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Health & Medical'
@@ -170,7 +170,7 @@ class Transportation(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     distance = models.FloatField()
-    rate = models.FloatField()
+    rate = models.FloatField(blank=True, null=True)
 
     class Meta:
         verbose_name = 'Transportation'
@@ -192,7 +192,8 @@ class City(models.Model):
     Creating City model instance.
     """
     id = models.AutoField(primary_key=True)
-    image = models.ImageField(upload_to='property_cities_images', null=True)
+    image = models.ImageField(upload_to='property_cities_images', null=True, blank=True,
+                              default='default_city_image.jpg')
     name = models.CharField(max_length=100, null=True)
     slug = models.SlugField(max_length=100, null=True)
 
@@ -304,7 +305,7 @@ class Property(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='properties')
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
-    thumbnail = models.ImageField(upload_to='property_images', null=True)
+    thumbnail = models.ImageField(upload_to='property_images')
     images = models.ManyToManyField(to=Img, related_name='images', blank=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
@@ -313,8 +314,8 @@ class Property(models.Model):
     square_meters = models.FloatField()
     parking_space = models.IntegerField()
     postal_code = models.CharField(max_length=20, null=True, blank=True)
-    city = models.ForeignKey(to=City, on_delete=models.CASCADE, null=True, related_name='cities', blank=True)
-    province = models.CharField(max_length=100, null=True, blank=True)
+    city = models.ForeignKey(to=City, on_delete=models.CASCADE, null=True, related_name='cities')
+    province = models.CharField(max_length=100, null=True)
     country = models.CharField(max_length=100)
     country_code = models.CharField(max_length=5, null=True)
     latitude = models.FloatField(max_length=20, null=True)
