@@ -1214,84 +1214,91 @@ def create_property(request):
         # education
         education = []
 
-        if len(request.POST.getlist('education-name')) == 1 and len(request.POST.getlist('education-name')[0]) != 1:
-            print('One Education.')
+        if len(request.POST.getlist('education-name')) == 1 and request.POST.getlist('education-name')[0] != '':
+            education.append(
+                {
+                    "education_name":
+                        {
+                            "valid":
+                                False if education_distance and not education_name else
+                                False if education_name and len(education_name) <= 5 else
+                                True,
+                            "message":
+                                "If you have provided the distance to an educational institution, you must also provide its name." if education_distance and not education_name else
+                                "The education name must be at least 5 characters long." if education_name and len(
+                                    education_name) <= 5 else
+                                "",
+                        },
+                    "education_distance":
+                        {
+                            "valid":
+                                False if education_name and not education_distance else
+                                False if education_distance and education_distance[
+                                    0] == '-' and education_distance[
+                                                  1:].isdigit() else
+                                False if education_distance and not education_distance.replace(',',
+                                                                                               '').isdigit() else
+                                True,
+                            "message":
+                                "If you have provided the name of an educational institution, you must also provide the distance to it." if education_name and not education_distance else
+                                "The education distance must be greater than or equal 0." if education_distance and
+                                                                                             education_distance[
+                                                                                                 0] == '-' and education_distance[
+                                                                                                               1:].isdigit() else
+                                "The education distance must consist of positive digits." if education_distance and not education_distance.replace(
+                                    ',', '').isdigit() else
+                                "",
+                        }
+                }
+
+            )
+
             response.update(
                 {
-                    "education":
-                        {
-                            "education_name":
-                                {
-                                    "valid":
-                                        False if education_distance and not education_name else
-                                        False if education_name and len(education_name) <= 5 else
-                                        True,
-                                    "message":
-                                        "If you have provided the distance to an educational institution, you must also provide its name." if education_distance and not education_name else
-                                        "The education name must be at least 5 characters long." if education_name and len(
-                                            education_name) <= 5 else
-                                        "",
-                                },
-                            "education_distance":
-                                {
-                                    "valid":
-                                        False if education_name and not education_distance else
-                                        False if education_distance and education_distance[
-                                            0] == '-' and education_distance[
-                                                          1:].isdigit() else
-                                        False if education_distance and not education_distance.replace(',',
-                                                                                                       '').isdigit() else
-                                        True,
-                                    "message":
-                                        "If you have provided the name of an educational institution, you must also provide the distance to it." if education_name and not education_distance else
-                                        "The education distance must be greater than or equal 0." if education_distance and
-                                                                                                     education_distance[
-                                                                                                         0] == '-' and education_distance[
-                                                                                                                       1:].isdigit() else
-                                        "The education distance must consist of positive digits." if education_distance and not education_distance.replace(
-                                            ',', '').isdigit() else
-                                        "",
-                                }
-                        }
+                    "education": education,
                 }
             )
 
-        elif len(request.POST.getlist('education-name')) > 1 and all(
-                [True if len(name) != 0 else False for name in request.POST.getlist('education-name')]):
-            print('More Educations.')
-            for education_name, education_distance in zip(request.POST.getlist('education-name'),
-                                                          request.POST.getlist('education-distance')):
+        elif len(request.POST.getlist('education-name')) > 1:
+            temp_education = []
+            for name, distance in list(
+                    zip(request.POST.getlist('education-name'), request.POST.getlist('education-distance'))):
+                if name != '' or distance != '':
+                    temp_education.append((name, distance))
+
+            print(temp_education)
+            for n, d in temp_education:
                 education.append(
                     {
                         "education_name":
                             {
                                 "valid":
-                                    False if education_distance and not education_name else
-                                    False if education_name and len(education_name) <= 5 else
+                                    False if d and not n else
+                                    False if n and len(n) <= 5 else
                                     True,
                                 "message":
-                                    "If you have provided the distance to an educational institution, you must also provide its name." if education_distance and not education_name else
-                                    "The education name must be at least 5 characters long." if education_name and len(
-                                        education_name) <= 5 else
+                                    "If you have provided the distance to an educational institution, you must also provide its name." if d and not n else
+                                    "The education name must be at least 5 characters long." if n and len(
+                                        n) <= 5 else
                                     "",
                             },
                         "education_distance":
                             {
                                 "valid":
-                                    False if education_name and not education_distance else
-                                    False if education_distance and education_distance[
-                                        0] == '-' and education_distance[
+                                    False if n and not d else
+                                    False if d and d[
+                                        0] == '-' and d[
                                                       1:].isdigit() else
-                                    False if education_distance and not education_distance.replace(',',
-                                                                                                   '').isdigit() else
+                                    False if d and not d.replace(',',
+                                                                 '').isdigit() else
                                     True,
                                 "message":
-                                    "If you have provided the name of an educational institution, you must also provide the distance to it." if education_name and not education_distance else
-                                    "The education distance must be greater than or equal 0." if education_distance and
-                                                                                                 education_distance[
-                                                                                                     0] == '-' and education_distance[
+                                    "If you have provided the name of an educational institution, you must also provide the distance to it." if n and not d else
+                                    "The education distance must be greater than or equal 0." if d and
+                                                                                                 d[
+                                                                                                     0] == '-' and d[
                                                                                                                    1:].isdigit() else
-                                    "The education distance must consist of positive digits." if education_distance and not education_distance.replace(
+                                    "The education distance must consist of positive digits." if d and not d.replace(
                                         ',', '').isdigit() else
                                     "",
                             }
@@ -1305,44 +1312,103 @@ def create_property(request):
             )
 
         # health and medical
-        response.update(
-            {
-                "health_and_medical":
+        health_and_medical = []
+
+        if len(request.POST.getlist('health-name')) == 1 and request.POST.getlist('health-name')[0] != '':
+            health_and_medical.append(
+                {
+                    "health_name":
+                        {
+                            "valid":
+                                False if health_distance and not health_name else
+                                False if health_name and len(health_name) <= 5 else
+                                True,
+                            "message":
+                                "If you have provided the distance to a health and medical institution, you must also provide its name." if health_distance and not health_name else
+                                "The health and medical name must be at least 5 characters long." if health_name and len(
+                                    health_name) <= 5 else
+                                "",
+                        },
+                    "health_distance":
+                        {
+                            "valid":
+                                False if health_name and not health_distance else
+                                False if health_distance and health_distance[
+                                    0] == '-' and health_distance[
+                                                  1:].isdigit() else
+                                False if health_distance and not health_distance.replace(',',
+                                                                                         '').isdigit() else
+                                True,
+                            "message":
+                                "If you have provided the name of a health and medical institution, you must also provide the distance to it." if health_name and not health_distance else
+                                "The health and medical distance must be greater than or equal 0." if health_distance and
+                                                                                                      health_distance[
+                                                                                                          0] == '-' and health_distance[
+                                                                                                                        1:].isdigit() else
+                                "The health and medical distance must consist of positive digits." if health_distance and not health_distance.replace(
+                                    ',', '').isdigit() else
+                                "",
+                        }
+                }
+
+            )
+
+            response.update(
+                {
+                    "health_and_medical": health_and_medical,
+                }
+            )
+
+        elif len(request.POST.getlist('health-name')) > 1:
+            temp_health = []
+            for name, distance in list(
+                    zip(request.POST.getlist('health-name'), request.POST.getlist('health-distance'))):
+                if name != '' or distance != '':
+                    temp_health.append((name, distance))
+
+            for n, d in temp_health:
+                health_and_medical.append(
                     {
-                        "health_and_medical_name":
+                        "health_name":
                             {
                                 "valid":
-                                    False if health_distance and not health_name else
-                                    False if health_name and len(health_name) <= 5 else
+                                    False if d and not n else
+                                    False if n and len(n) <= 5 else
                                     True,
                                 "message":
-                                    "If you have provided the distance to a health and medical institution, you must also provide its name." if health_distance and not health_name else
-                                    "The health and medical name must be at least 5 characters long." if health_name and len(
-                                        health_name) <= 5 else
+                                    "If you have provided the distance to a health and medical institution, you must also provide its name." if d and not n else
+                                    "The health and medical name must be at least 5 characters long." if n and len(
+                                        n) <= 5 else
                                     "",
                             },
-                        "health_and_medical_distance":
+                        "health_distance":
                             {
                                 "valid":
-                                    False if health_name and not health_distance else
-                                    False if health_distance and health_distance[0] == '-' and health_distance[
-                                                                                               1:].isdigit() else
-                                    False if health_distance and not health_distance.replace(',',
-                                                                                             '').isdigit() else
+                                    False if n and not d else
+                                    False if d and d[
+                                        0] == '-' and d[
+                                                      1:].isdigit() else
+                                    False if d and not d.replace(',',
+                                                                 '').isdigit() else
                                     True,
                                 "message":
-                                    "If you have provided the name of a health and medical institution, you must also provide the distance to it." if health_name and not health_distance else
-                                    "The health and medical distance must be greater than or equal 0." if health_distance and
-                                                                                                          health_distance[
-                                                                                                              0] == '-' and health_distance[
+                                    "If you have provided the name of a health and medical institution, you must also provide the distance to it." if n and not d else
+                                    "The health and medical distance must be greater than or equal 0." if d and
+                                                                                                          d[
+                                                                                                              0] == '-' and d[
                                                                                                                             1:].isdigit() else
-                                    "The health and medical distance must consist of positive digits." if health_distance and not health_distance.replace(
+                                    "The health and medical distance must consist of positive digits." if d and not d.replace(
                                         ',', '').isdigit() else
                                     "",
                             }
                     }
-            }
-        )
+                )
+
+            response.update(
+                {
+                    "health_and_medical": health_and_medical,
+                }
+            )
 
         # transportation
         response.update(
