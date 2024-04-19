@@ -62,11 +62,11 @@ def explore_cities(request) -> dict:
     return {
         'get_cities_info': list(
             zip(
-                [city.name for city in City.objects.all().order_by('-name')],
-                [city.image.url for city in City.objects.all().order_by('-name')],
-                [city.get_absolute_url() for city in City.objects.all().order_by('-name')],
+                [city.name for city in City.objects.all().order_by('id')][:35],
+                [city.image.url for city in City.objects.all().order_by('id')][:35],
+                [city.get_absolute_url() for city in City.objects.all().order_by('id')][:35],
                 [Property.objects.filter(city=city).count() for city in
-                 City.objects.all().order_by('-name')]
+                 City.objects.all().order_by('id')][:35]
             )
         ),
     }

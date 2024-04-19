@@ -891,157 +891,618 @@ def set_location(request):
 
 def create_property(request):
     if request.method == 'POST':
-        # data = json.loads(s=request.body.decode(encoding='utf-8'))
-        # print(f'Data: {data}')
-        # thumbnail = data.pop('thumbnail')
-        # gallery = data.pop('gallery')
-        # video = data.pop('video')
-        print(f'Request POST: {request.POST}')
-        print(f'Request FILES: {request.FILES}')
-        # print(f"Request FILES Thumbnail: {request.FILES['thumbnail']}")
-        # print(f'Thumbnail: {thumbnail}')
-        # print(f'Gallery: {gallery}')
-        # print(f'Video: {video}')
+        spam_verification = request.POST['url']
+        title = request.POST['title'].strip()
+        price = request.POST['price'].strip()
+        description = request.POST['description'].strip()
+        year_of_built = request.POST['year_of_built'].strip()
+        number_of_bedrooms = request.POST['number_of_bedrooms'].strip()
+        number_of_bathrooms = request.POST['number_of_bathrooms'].strip()
+        square_meters = request.POST['square_meters'].strip()
+        parking_space = request.POST['parking_space'].strip()
+        postal_code = request.POST['postal_code'].strip()
+        education_name = request.POST['education-name'].strip()
+        education_distance = request.POST['education-distance'].strip()
+        health_name = request.POST['health-name'].strip()
+        health_distance = request.POST['health-distance'].strip()
+        transportation_name = request.POST['transportation-name'].strip()
+        transportation_distance = request.POST['transportation-distance'].strip()
+        shopping_name = request.POST['shopping-name'].strip()
+        shopping_distance = request.POST['shopping-distance'].strip()
 
-        return JsonResponse(data={}, safe=False)
+        if len(spam_verification) != 0:
+            return JsonResponse(data={
+                "valid": None,
+            }, safe=False)
 
-        # title, price, description, listing_status, categories, year_of_built, number_of_bedrooms, \
-        #     number_of_bathrooms, square_meters, parking_space, postal_code, city, province, country, amenities, \
-        #     educations, health_and_medicals, transportations, shoppings = [data[key][0] for key in data]
-        #
-        # title_field, price_field, description_field, listing_status_field, categories_field, \
-        #     year_of_built_field, number_of_bedrooms_field, number_of_bathrooms_field, square_meters_field, \
-        #     parking_space_field, postal_code_field, city_field, province_field, country_field, amenities_field, \
-        #     education_field, health_and_medicals_field, transportations_field, shoppings_field = [data[key][1] for key
-        #                                                                                           in data]
-        #
-        # title_label, price_label, description_label, listing_status_label, categories_label, \
-        #     year_of_built_label, number_of_bedrooms_label, number_of_bathrooms_label, square_meters_label, \
-        #     parking_space_label, postal_code_label, city_label, province_label, country_label, amenities_label, \
-        #     education_label, health_and_medicals_label, transportations_label, shoppings_label = [data[key][2] for key
-        #                                                                                           in data]
-        # """
-        # Description, listing_status, category nie potrzeba walidacji.
-        # Images, video -> czekam.
-        #
-        # Walidacja zrobiona dla title, price, description, year of built, number of bedrooms, number of bathrooms
-        # """
-        #
-        # def validate_property_area(input_text):
-        #     return True if (lambda x: x > 0 and str(x) == input_text)(float(input_text)) else False
-        #
-        # response = [
-        #     {
-        #         "valid":
-        #             False if not title or len(title) < 10 or len(title) > 100 else True,
-        #         "field": title_field,
-        #         "message":
-        #             f"The property {title_label} is required." if not title else
-        #             f"The property {title_label} must be at least 10 characters long." if len(title) < 10 else
-        #             f"The property {title_label} must be a maximum of 100 characters long." if len(title) > 100 else
-        #             "",
-        #     },
-        #     {
-        #         "valid":
-        #             False if not price else
-        #             False if price[0] != '-' and not price.isdigit() else
-        #             False if price[0] == '-' and not price.isdigit() and price[1:].isdigit() else
-        #             False if len(price) == 1 and price.isdigit() and price == '0' else
-        #             False if len(price) > 1 and price.isdigit() and price[0] == '0' else
-        #             True,
-        #         "field": price_field,
-        #         "message":
-        #             f"The property {price_label} is required." if not price else
-        #             f"The property {price_label} must be a number." if price[0] != '-' and not price.isdigit() else
-        #             f"The property {price_label} must be greater than 0." if price[
-        #                                                                          0] == '-' and not price.isdigit() and price[
-        #                                                                                                                1:].isdigit() else
-        #             f"The property {price_label} must be greater than 0." if len(
-        #                 price) == 1 and price.isdigit() and price == '0' else
-        #             f"The property {price_label} cannot start with 0." if len(price) > 1 and price.isdigit() and price[
-        #                 0] == '0' else
-        #             "",
-        #     },
-        #     {
-        #         "valid":
-        #             False if not description else
-        #             True,
-        #         "field": description_field,
-        #         "message":
-        #             f"The property {description_label} is required." if not description else
-        #             "",
-        #     },
-        #     {
-        #         "valid":
-        #             False if not year_of_built else
-        #             False if len(year_of_built) != 4 and not year_of_built.isdigit() else
-        #             False if len(year_of_built) != 4 and year_of_built.isdigit() else
-        #             False if len(year_of_built) == 4 and not year_of_built.isdigit() else
-        #             False if len(year_of_built) != 4 and year_of_built[0] == '-' and year_of_built[1:].isdigit() else
-        #             False if len(year_of_built) == 4 and year_of_built[0] == '0' and year_of_built[1:].isdigit() else
-        #             False if datetime.now().year < datetime.strptime(year_of_built, '%Y').year else
-        #             True,
-        #         "field": year_of_built_field,
-        #         "message":
-        #             f"The property {year_of_built_label} is required." if not year_of_built else
-        #             f"The actual {year_of_built_label} of the property is required, and the property {year_of_built_label} should consist solely of digits." if len(
-        #                 year_of_built) != 4 and not year_of_built.isdigit() else
-        #             f"The actual {year_of_built_label} of the property is required." if len(
-        #                 year_of_built) != 4 and year_of_built.isdigit() else
-        #             f"The property {year_of_built_label} must consist of digits." if len(
-        #                 year_of_built) == 4 and not year_of_built.isdigit() else
-        #             f"The property {year_of_built_label} cannot start with 0." if len(year_of_built) == 4 and
-        #                                                                           year_of_built[
-        #                                                                               0] == '0' and year_of_built[
-        #                                                                                             1:].isdigit() else
-        #             f"The property {year_of_built_label} cannot be greater than actual year." if datetime.now().year < datetime.strptime(
-        #                 year_of_built, '%Y').year else
-        #             "",
-        #     },
-        #     {
-        #         "valid":
-        #             False if not number_of_bedrooms else
-        #             False if number_of_bedrooms[0] == '-' and number_of_bedrooms[1:].isdecimal() else
-        #             False if not number_of_bedrooms.isdecimal() else
-        #             True,
-        #         "field": number_of_bedrooms_field,
-        #         "message":
-        #             f"The property {number_of_bedrooms_label} is required." if not number_of_bedrooms else
-        #             f"The property {number_of_bedrooms_label} must be greater than or equal 0." if number_of_bedrooms[
-        #                                                                                                0] == '-' and number_of_bedrooms[
-        #                                                                                                              1:].isdecimal() else
-        #             f"The property {number_of_bedrooms_label} must consist of positive digits." if not number_of_bedrooms.isdecimal() else
-        #             "",
-        #     },
-        #     {
-        #         "valid":
-        #             False if not number_of_bathrooms else
-        #             False if number_of_bathrooms[0] == '-' and number_of_bathrooms[1:].isdecimal() else
-        #             False if not number_of_bathrooms.isdecimal() else
-        #             True,
-        #         "field": number_of_bathrooms_field,
-        #         "message":
-        #             f"The property {number_of_bathrooms_label} is required." if not number_of_bathrooms else
-        #             f"The property {number_of_bathrooms_label} must be greater than or equal 0." if number_of_bathrooms[
-        #                                                                                                 0] == '-' and number_of_bathrooms[
-        #                                                                                                               1:].isdecimal() else
-        #             f"The property {number_of_bathrooms_label} must consist of positive digits." if not number_of_bathrooms.isdecimal() else
-        #             "",
-        #     },
-        #     # {
-        #     #     "valid": False if not square_meters or float(square_meters) <= 0 or str(
-        #     #         float(square_meters)) != square_meters else True,
-        #     #     "field": square_meters_field,
-        #     #     "message": (
-        #     #         f"The property area is required." if not square_meters else
-        #     #         f"The property area must be greater than 0." if float(square_meters) <= 0 else
-        #     #         f"The property area must be a valid number." if str(float(square_meters)) != square_meters else
-        #     #         ""
-        #     #     )
-        #     # }
-        # ]
+        response = {}
 
-        # return JsonResponse(data=response, safe=False)
+        # title
+        response.update(
+            {
+                "title":
+                    {
+                        "valid":
+                            False if not title or len(title) < 10 or len(title) > 100 else True,
+                        "message":
+                            "The property title is required." if not title else
+                            "The property title must be at least 10 characters long." if len(title) < 10 else
+                            "The property title must be a maximum of 100 characters long." if len(title) > 100 else
+                            "",
+                    }
+            }
+        )
+
+        # price
+        response.update(
+            {
+                "price":
+                    {
+                        "valid":
+                            False if not price else
+                            False if price[0] != '-' and not price.isdigit() else
+                            False if price[0] == '-' and not price.isdigit() and price[1:].isdigit() else
+                            False if len(price) == 1 and price.isdigit() and price == '0' else
+                            False if len(price) > 1 and price.isdigit() and price[0] == '0' else
+                            True,
+                        "message":
+                            "The property price is required." if not price else
+                            "The property price must be a number." if price[0] != '-' and not price.isdigit() else
+                            "The property price must be greater than 0." if price[
+                                                                                0] == '-' and not price.isdigit() and price[
+                                                                                                                      1:].isdigit() else
+                            "The property price must be greater than 0." if len(
+                                price) == 1 and price.isdigit() and price == '0' else
+                            "The property price cannot start with 0." if len(price) > 1 and price.isdigit() and price[
+                                0] == '0' else
+                            "",
+                    }
+            }
+        )
+
+        # description
+        response.update(
+            {
+                "description":
+                    {
+                        "valid":
+                            False if not description else
+                            True,
+                        "message":
+                            "The property description is required." if not description else
+                            "",
+                    }
+            }
+        )
+
+        # year of built
+        response.update(
+            {
+                "year_of_built":
+                    {
+                        "valid":
+                            False if not year_of_built else
+                            False if len(year_of_built) != 4 and not year_of_built.isdigit() else
+                            False if len(year_of_built) != 4 and year_of_built.isdigit() else
+                            False if len(year_of_built) == 4 and not year_of_built.isdigit() else
+                            False if len(year_of_built) != 4 and year_of_built[0] == '-' and year_of_built[
+                                                                                             1:].isdigit() else
+                            False if len(year_of_built) == 4 and year_of_built[0] == '0' and year_of_built[
+                                                                                             1:].isdigit() else
+                            False if datetime.now().year < datetime.strptime(year_of_built, '%Y').year else
+                            True,
+                        "message":
+                            "The property year of built is required." if not year_of_built else
+                            "The actual year of built of the property is required, and the property year of built should consist solely of digits." if len(
+                                year_of_built) != 4 and not year_of_built.isdigit() else
+                            "The actual year of built of the property is required." if len(
+                                year_of_built) != 4 and year_of_built.isdigit() else
+                            "The property year of built must consist of digits." if len(
+                                year_of_built) == 4 and not year_of_built.isdigit() else
+                            "The property year of built cannot start with 0." if len(year_of_built) == 4 and
+                                                                                 year_of_built[
+                                                                                     0] == '0' and year_of_built[
+                                                                                                   1:].isdigit() else
+                            "The property year of built cannot be greater than actual year." if datetime.now().year < datetime.strptime(
+                                year_of_built, '%Y').year else
+                            "",
+                    }
+            }
+        )
+
+        # number of bedrooms
+        response.update(
+            {
+                "number_of_bedrooms":
+                    {
+                        "valid":
+                            False if not number_of_bedrooms else
+                            False if number_of_bedrooms[0] == '-' and number_of_bedrooms[1:].isdecimal() else
+                            False if not number_of_bedrooms.isdecimal() else
+                            True,
+                        "message":
+                            "The property number of bedrooms is required." if not number_of_bedrooms else
+                            "The property number of bedrooms must be greater than or equal 0." if number_of_bedrooms[
+                                                                                                      0] == '-' and number_of_bedrooms[
+                                                                                                                    1:].isdecimal() else
+                            "The property number of bedrooms must consist of positive digits." if not number_of_bedrooms.isdecimal() else
+                            "",
+                    }
+            }
+        )
+
+        # number of bathrooms
+        response.update(
+            {
+                "number_of_bathrooms":
+                    {
+                        "valid":
+                            False if not number_of_bathrooms else
+                            False if number_of_bathrooms[0] == '-' and number_of_bathrooms[1:].isdecimal() else
+                            False if not number_of_bathrooms.isdecimal() else
+                            True,
+                        "message":
+                            "The property number of bathrooms is required." if not number_of_bedrooms else
+                            "The property number of bathrooms must be greater than or equal 0." if number_of_bathrooms[
+                                                                                                       0] == '-' and number_of_bathrooms[
+                                                                                                                     1:].isdecimal() else
+                            "The property number of bathrooms must consist of positive digits." if not number_of_bathrooms.isdecimal() else
+                            "",
+                    }
+            }
+        )
+
+        # square meters
+        response.update(
+            {
+                "square_meters":
+                    {
+                        "valid":
+                            False if not square_meters else
+                            False if square_meters[0] == '-' and square_meters[1:].isdecimal() else
+                            False if square_meters[0] == '-' and not square_meters[1:].isdecimal() else
+                            False if square_meters == '0' else
+                            False if ',' in square_meters and not square_meters.replace(',', '').isdigit() else
+                            True if ',' in square_meters and square_meters.replace(',', '').isdigit() else
+                            True,
+                        "message":
+                            "The property square meters is required." if not square_meters else
+                            "The property square meters must be greater than 0." if square_meters[
+                                                                                        0] == '-' and square_meters[
+                                                                                                      1:].isdecimal() else
+                            "The property square meters must consist of positive digits." if square_meters[
+                                                                                                 0] == '-' and not square_meters[
+                                                                                                                   1:].isdecimal() else
+                            "The property square meters must be greater than 0." if square_meters == '0' else
+                            "The property square meters must consist of positive digits." if ',' in square_meters and not square_meters.replace(
+                                ',', '').isdigit() else
+                            "" if ',' in square_meters and square_meters.replace(',', '').isdigit() else
+                            "",
+                    }
+            }
+        )
+
+        # parking space
+        response.update(
+            {
+                "parking_space":
+                    {
+                        "valid":
+                            False if not parking_space else
+                            False if not parking_space.isdigit() else
+                            False if parking_space[0] == '-' and parking_space[1:].isdigit() else
+                            True if parking_space == '0' else
+                            True,
+                        "message":
+                            "The property parking space is required." if not parking_space else
+                            "The property parking space must consist of positive digits." if not parking_space.isdigit() else
+                            "The property parking space must be greater than or equal 0." if parking_space[
+                                                                                                 0] == '-' and parking_space[
+                                                                                                               1:].isdigit() else
+                            "" if parking_space == '0' else
+                            "",
+                    }
+            }
+        )
+
+        # status
+        response.update(
+            {
+                "status":
+                    {
+                        "valid":
+                            True if request.POST.get('status') else
+                            False,
+                        "message":
+                            "" if request.POST.get('status') else
+                            "The property listing status is required.",
+                    }
+            }
+        )
+
+        # category
+        response.update(
+            {
+                "category":
+                    {
+                        "valid":
+                            True if request.POST.get('category') else
+                            False,
+                        "message":
+                            "" if request.POST.get('category') else
+                            "The property category is required.",
+                    }
+            }
+        )
+
+        # country
+        response.update(
+            {
+                "country":
+                    {
+                        "valid":
+                            True if request.POST.get('country') else
+                            False,
+                        "message":
+                            "" if request.POST.get('country') else
+                            "The property country is required.",
+                    }
+            }
+        )
+
+        # province
+        response.update(
+            {
+                "province":
+                    {
+                        "valid":
+                            True if request.POST.get('province') else
+                            False,
+                        "message":
+                            "" if request.POST.get('province') else
+                            "The property province is required.",
+                    }
+            }
+        )
+
+        # city
+        response.update(
+            {
+                "city":
+                    {
+                        "valid":
+                            True if request.POST.get('city') else
+                            False,
+                        "message":
+                            "" if request.POST.get('city') else
+                            "The property city is required.",
+                    }
+            }
+        )
+
+        # postal code
+        response.update(
+            {
+                "postal_code":
+                    {
+                        "valid":
+                            False if not postal_code else
+                            True,
+                        "message":
+                            "The property postal code is required." if not postal_code else
+                            "",
+                    }
+            }
+        )
+
+        # amenities
+        response.update(
+            {
+                "amenities":
+                    {
+                        "valid":
+                            True if request.POST.get('amenities') else
+                            False,
+                        "message":
+                            "" if request.POST.get('amenities') else
+                            "The property amenities is required.",
+                    }
+            }
+        )
+
+        # education
+        response.update(
+            {
+                "education":
+                    {
+                        "education_name":
+                            {
+                                "valid":
+                                    False if education_distance and not education_name else
+                                    False if education_name and len(education_name) <= 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to an educational institution, you must also provide its name." if education_distance and not education_name else
+                                    "The education name must be at least 5 characters long." if education_name and len(
+                                        education_name) <= 5 else
+                                    "",
+                            },
+                        "education_distance":
+                            {
+                                "valid":
+                                    False if education_name and not education_distance else
+                                    False if education_distance and education_distance[0] == '-' and education_distance[
+                                                                                                     1:].isdigit() else
+                                    False if education_distance and not education_distance.replace(',',
+                                                                                                   '').isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of an educational institution, you must also provide the distance to it." if education_name and not education_distance else
+                                    "The education distance must be greater than or equal 0." if education_distance and
+                                                                                                 education_distance[
+                                                                                                     0] == '-' and education_distance[
+                                                                                                                   1:].isdigit() else
+                                    "The education distance must consist of positive digits." if education_distance and not education_distance.replace(
+                                        ',', '').isdigit() else
+                                    "",
+                            }
+                    }
+            }
+        )
+
+        # health and medical
+        response.update(
+            {
+                "health_and_medical":
+                    {
+                        "health_and_medical_name":
+                            {
+                                "valid":
+                                    False if health_distance and not health_name else
+                                    False if health_name and len(health_name) <= 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to a health and medical institution, you must also provide its name." if health_distance and not health_name else
+                                    "The health and medical name must be at least 5 characters long." if health_name and len(
+                                        health_name) <= 5 else
+                                    "",
+                            },
+                        "health_and_medical_distance":
+                            {
+                                "valid":
+                                    False if health_name and not health_distance else
+                                    False if health_distance and health_distance[0] == '-' and health_distance[
+                                                                                               1:].isdigit() else
+                                    False if health_distance and not health_distance.replace(',',
+                                                                                             '').isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of a health and medical institution, you must also provide the distance to it." if health_name and not health_distance else
+                                    "The health and medical distance must be greater than or equal 0." if health_distance and
+                                                                                                          health_distance[
+                                                                                                              0] == '-' and health_distance[
+                                                                                                                            1:].isdigit() else
+                                    "The health and medical distance must consist of positive digits." if health_distance and not health_distance.replace(
+                                        ',', '').isdigit() else
+                                    "",
+                            }
+                    }
+            }
+        )
+
+        # transportation
+        response.update(
+            {
+                "transportation":
+                    {
+                        "transportation_name":
+                            {
+                                "valid":
+                                    False if transportation_distance and not transportation_name else
+                                    False if transportation_name and len(transportation_name) <= 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to the nearest transportation, you must also provide its name." if transportation_distance and not transportation_name else
+                                    "The transportation name must be at least 5 characters long." if transportation_name and len(
+                                        transportation_name) <= 5 else
+                                    "",
+                            },
+                        "transportation_distance":
+                            {
+                                "valid":
+                                    False if transportation_name and not transportation_distance else
+                                    False if transportation_distance and transportation_distance[
+                                        0] == '-' and transportation_distance[
+                                                      1:].isdigit() else
+                                    False if transportation_distance and not transportation_distance.replace(',',
+                                                                                                             '').isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of nearby transportation, you must also provide the distance to it." if transportation_name and not transportation_distance else
+                                    "The transportation distance must be greater than or equal 0." if transportation_distance and
+                                                                                                      transportation_distance[
+                                                                                                          0] == '-' and transportation_distance[
+                                                                                                                        1:].isdigit() else
+                                    "The transportation distance must consist of positive digits." if transportation_distance and not transportation_distance.replace(
+                                        ',', '').isdigit() else
+                                    "",
+                            }
+                    }
+            }
+        )
+
+        # shopping
+        response.update(
+            {
+                "shopping":
+                    {
+                        "shopping_name":
+                            {
+                                "valid":
+                                    False if shopping_distance and not transportation_name else
+                                    False if transportation_name and len(transportation_name) <= 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to the nearest store, you must also provide its name." if shopping_distance and not transportation_name else
+                                    "The transportation name must be at least 5 characters long." if transportation_name and len(
+                                        transportation_name) <= 5 else
+                                    "",
+                            },
+                        "shopping_distance":
+                            {
+                                "valid":
+                                    False if shopping_name and not shopping_distance else
+                                    False if shopping_distance and shopping_distance[
+                                        0] == '-' and shopping_distance[
+                                                      1:].isdigit() else
+                                    False if shopping_distance and not shopping_distance.replace(',',
+                                                                                                 '').isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of a nearby store, you must also provide the distance to it." if shopping_name and not shopping_distance else
+                                    "The shopping distance must be greater than or equal 0." if shopping_distance and
+                                                                                                shopping_distance[
+                                                                                                    0] == '-' and shopping_distance[
+                                                                                                                  1:].isdigit() else
+                                    "The shopping distance must consist of positive digits." if shopping_distance and not shopping_distance.replace(
+                                        ',', '').isdigit() else
+                                    "",
+                            }
+                    }
+            }
+        )
+        print(request.FILES)
+
+        if request.FILES:
+            if 'thumbnail' in request.FILES:
+                response.update(
+                    {
+                        "thumbnail":
+                            {
+                                "valid":
+                                    False if not 'thumbnail' in request.FILES else
+                                    False if 'thumbnail' in request.FILES and request.FILES.get(
+                                        'thumbnail').size > 1000000 else
+                                    False if 'thumbnail' in request.FILES and request.FILES.get(
+                                        'thumbnail').size <= 1000000 and
+                                             request.FILES.get('thumbnail').name.split(sep='.')[1] not in ['jpg',
+                                                                                                           'jpeg',
+                                                                                                           'webp',
+                                                                                                           'png',
+                                                                                                           'svg'] else
+                                    True,
+                                "message":
+                                    "The property thumbnail is required." if not 'thumbnail' in request.FILES else
+                                    "The thumbnail size should not exceed 1 MB." if 'thumbnail' in request.FILES and request.FILES.get(
+                                        'thumbnail').size > 1000000 else
+                                    "The supported formats are jpg, jpeg, webp, png, svg." if 'thumbnail' in request.FILES and request.FILES.get(
+                                        'thumbnail').size <= 1000000 and request.FILES.get('thumbnail').name.split(
+                                        sep='.')[
+                                                                                                  1] not in ['jpg',
+                                                                                                             'jpeg',
+                                                                                                             'webp',
+                                                                                                             'png',
+                                                                                                             'svg'] else
+                                    ""
+                            }
+                    }
+                )
+
+            else:
+                response.update(
+                    {
+                        "thumbnail":
+                            {
+                                "valid":
+                                    False if not 'thumbnail' in request.FILES else
+                                    True,
+                                "message":
+                                    "The property thumbnail is required." if not 'thumbnail' in request.FILES else
+                                    "",
+                            }
+                    }
+                )
+
+            if "gallery" in request.FILES:
+                for image in request.FILES['gallery']:
+                    print(image)
+
+            else:
+                response.update(
+                    {
+                        "gallery":
+                            {
+                                "valid":
+                                    False if not 'gallery' in request.FILES else
+                                    True,
+                                "message":
+                                    "The property gallery is required." if not 'gallery' in request.FILES else
+                                    "",
+                            }
+                    }
+                )
+
+            if 'video' in request.FILES:
+                response.update(
+                    {
+                        "video":
+                            {
+                                "valid":
+                                    False if not 'video' in request.FILES else
+                                    False if 'video' in request.FILES and request.FILES.get('video').size > 5000000 else
+                                    False if 'video' in request.FILES and request.FILES.get('video').size <= 5000000 and
+                                             request.FILES.get('video').name.split(sep='.')[1] != 'mp4' else
+                                    True,
+                                "message":
+                                    "The property video is required." if not 'video' in request.FILES else
+                                    "The video size should not exceed 5 MB." if 'video' in request.FILES and request.FILES.get(
+                                        'video').size > 5000000 else
+                                    "The supported format is mp4." if 'video' in request.FILES and request.FILES.get(
+                                        'video').size <= 5000000 and
+                                                                      request.FILES.get('video').name.split(sep='.')[
+                                                                          1] != 'mp4' else
+                                    "",
+                            }
+                    }
+                )
+
+            else:
+                response.update(
+                    {
+                        "video":
+                            {
+                                "valid":
+                                    False if not 'video' in request.FILES else
+                                    True,
+                                "message":
+                                    "The property video is required." if not 'video' in request.FILES else
+                                    "",
+                            }
+                    }
+                )
+
+        print(response)
+
+        validation = []
+
+        for key in response:
+            if response[key]:
+                if response[key].get('valid') is not None:
+                    validation.append(response[key].get('valid'))
+
+                else:
+                    for k in response[key]:
+                        validation.append(response[key][k]['valid'])
+
+        # print(validation)
+
+        if len(set(validation)) == 1:
+            pass
+
+        else:
+            return JsonResponse(data=response)
+
+        return JsonResponse(data=response)
 
 
 def add_to_favourites(request) -> django.http.response.JsonResponse:
