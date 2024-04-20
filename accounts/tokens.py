@@ -20,7 +20,11 @@ class TokenGenerator(PasswordResetTokenGenerator):
         ----------
             str
         """
-        return six.text_type(user.pk) + six.text_type(timestamp) + six.text_type(user.is_verified)
+        return (
+            six.text_type(user.pk)
+            + six.text_type(timestamp)
+            + six.text_type(user.is_verified)
+        )
 
 
 token_generator = TokenGenerator()

@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.simple_tag(name='url_replace')
+@register.simple_tag(name="url_replace")
 def url_replace(request, page, number) -> str:
     """
     Template tag for pagination.

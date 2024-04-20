@@ -10,8 +10,13 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="property", name="images",),
-        migrations.DeleteModel(name="Image",),
+        migrations.RemoveField(
+            model_name="property",
+            name="images",
+        ),
+        migrations.DeleteModel(
+            name="Image",
+        ),
         migrations.AddField(
             model_name="property",
             name="images",

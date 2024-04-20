@@ -81,8 +81,13 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "User", "verbose_name_plural": "Accounts",},
-            managers=[("objects", accounts.models.CustomUserManager()),],
+            options={
+                "verbose_name": "User",
+                "verbose_name_plural": "Accounts",
+            },
+            managers=[
+                ("objects", accounts.models.CustomUserManager()),
+            ],
         ),
         migrations.CreateModel(
             name="OneTimePassword",

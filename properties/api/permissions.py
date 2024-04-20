@@ -5,8 +5,9 @@ class AdminOnly(permissions.BasePermission):
     """
     The function only allows administrators of the Global Estate Hub website to access the properties API.
     """
+
     message = {
-        'message': 'Access is granted only to administrators of the Global Estate Hub page.',
+        "message": "Access is granted only to administrators of the Global Estate Hub page.",
     }
 
     def has_permission(self, request, view):

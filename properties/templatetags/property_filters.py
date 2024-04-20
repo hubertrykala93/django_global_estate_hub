@@ -4,7 +4,7 @@ from unidecode import unidecode
 register = template.Library()
 
 
-@register.filter(name='convert_to_int')
+@register.filter(name="convert_to_int")
 def convert_to_int(value) -> int:
     """
     Converts float to integer.
@@ -20,7 +20,7 @@ def convert_to_int(value) -> int:
     return int(value)
 
 
-@register.filter(name='rate_converter')
+@register.filter(name="rate_converter")
 def rate_converter(value) -> int:
     """
     Rounds and converts the value to an integer.
@@ -36,7 +36,7 @@ def rate_converter(value) -> int:
     return int(round(number=value))
 
 
-@register.filter(name='unicode_filter')
+@register.filter(name="unicode_filter")
 def unicode_filter(value) -> str:
     """
     Translates non-English letters into English letters.

@@ -77,7 +77,10 @@ class Migration(migrations.Migration):
                 ),
                 ("slug", models.SlugField(max_length=100, null=True)),
             ],
-            options={"verbose_name": "Category", "verbose_name_plural": "Categories",},
+            options={
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
+            },
         ),
         migrations.CreateModel(
             name="Comment",
@@ -134,7 +137,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "Comment", "verbose_name_plural": "Comments",},
+            options={
+                "verbose_name": "Comment",
+                "verbose_name_plural": "Comments",
+            },
         ),
         migrations.CreateModel(
             name="Tag",
@@ -151,7 +157,10 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=100)),
                 ("slug", models.SlugField(max_length=100, null=True)),
             ],
-            options={"verbose_name": "Tag", "verbose_name_plural": "Tags",},
+            options={
+                "verbose_name": "Tag",
+                "verbose_name_plural": "Tags",
+            },
         ),
         migrations.CreateModel(
             name="CommentLike",

@@ -21,9 +21,8 @@ def create_profile(sender, instance, created, **kwargs) -> None:
     """
 
     if created:
-        if instance.account_type == 'Individual':
+        if instance.account_type == "Individual":
             Individual.objects.create(user=instance).save()
 
-
-        elif instance.account_type == 'Business':
+        elif instance.account_type == "Business":
             Business.objects.create(user=instance).save()

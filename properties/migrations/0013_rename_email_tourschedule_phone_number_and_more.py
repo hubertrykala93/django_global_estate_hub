@@ -12,9 +12,14 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RenameField(
-            model_name="tourschedule", old_name="email", new_name="phone_number",
+            model_name="tourschedule",
+            old_name="email",
+            new_name="phone_number",
         ),
-        migrations.RemoveField(model_name="review", name="full_name",),
+        migrations.RemoveField(
+            model_name="review",
+            name="full_name",
+        ),
         migrations.AlterField(
             model_name="amenities",
             name="image",
@@ -26,6 +31,8 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="review", name="active", field=models.BooleanField(default=True),
+            model_name="review",
+            name="active",
+            field=models.BooleanField(default=True),
         ),
     ]

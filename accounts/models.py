@@ -12,7 +12,7 @@ class CustomUserManager(UserManager):
 
     def _create_user(self, username, email, password, **extra_fields):
         if not email:
-            raise ValueError('You have not provided a valid e-mail address.')
+            raise ValueError("You have not provided a valid e-mail address.")
 
         email = self.normalize_email(email=email)
         user = self.model(username=username, email=email, **extra_fields)
@@ -22,36 +22,48 @@ class CustomUserManager(UserManager):
         return user
 
     def create_user(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', False)
-        extra_fields.setdefault('is_superuser', False)
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
 
-        return self._create_user(username=username, email=email, password=password, **extra_fields)
+        return self._create_user(
+            username=username, email=email, password=password, **extra_fields
+        )
 
     def create_superuser(self, username, email=None, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
 
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
 
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
 
-        return self._create_user(username=username, email=email, password=password, **extra_fields)
+        return self._create_user(
+            username=username, email=email, password=password, **extra_fields
+        )
 
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
     Creating custom User model instance.
     """
+
     id = models.AutoField(primary_key=True, editable=False)
     username = models.CharField(max_length=50, unique=True, blank=True, null=True)
     email = models.EmailField(max_length=100, unique=True, null=True)
-    image = models.ImageField(default='default_profile_image.jpg', upload_to='profile_images')
-    account_type = models.CharField(default='Individual', max_length=100, choices=(
-        ('Individual', 'Individual'),
-        ('Business', 'Business'),
-    ), blank=True)
+    image = models.ImageField(
+        default="default_profile_image.jpg", upload_to="profile_images"
+    )
+    account_type = models.CharField(
+        default="Individual",
+        max_length=100,
+        choices=(
+            ("Individual", "Individual"),
+            ("Business", "Business"),
+        ),
+        blank=True,
+    )
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -61,13 +73,13 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    USERNAME_FIELD = 'email'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    USERNAME_FIELD = "email"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["username"]
 
     class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Accounts'
+        verbose_name = "User"
+        verbose_name_plural = "Accounts"
 
     def __str__(self) -> str:
         """
@@ -96,8 +108,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
         img = Image.open(fp=self.image.path)
 
-        if img.mode == 'RGBA':
-            img.convert(mode='RGB')
+        if img.mode == "RGBA":
+            img.convert(mode="RGB")
 
         if img.width > 300 or img.height > 300:
             img.thumbnail(size=(300, 300))
@@ -143,7 +155,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             "is_superuser": self.is_superuser,
             "is_staff": self.is_staff,
             "is_agent": self.is_agent,
-            "date_joined": self.date_joined.strftime('%d/%m/%Y, %H:%M:%S'),
+            "date_joined": self.date_joined.strftime("%d/%m/%Y, %H:%M:%S"),
         }
 
 
@@ -151,15 +163,15 @@ class Individual(models.Model):
     """
     Creating IndividualProfile model instance.
     """
+
     id = models.AutoField(primary_key=True, editable=False)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='user')
+    user = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name="user")
     first_name = models.CharField(max_length=100, null=True, blank=True)
     last_name = models.CharField(max_length=100, null=True, blank=True)
     phone_number = models.CharField(max_length=150, null=True, blank=True)
-    gender = models.CharField(max_length=100, choices=(
-        ('Male', 'Male'),
-        ('Female', 'Female')
-    ), blank=True)
+    gender = models.CharField(
+        max_length=100, choices=(("Male", "Male"), ("Female", "Female")), blank=True
+    )
     country = models.CharField(max_length=100, null=True, blank=True)
     province = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
@@ -171,8 +183,8 @@ class Individual(models.Model):
     linkedin_url = models.URLField(max_length=200, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Individual Profile'
-        verbose_name_plural = 'Individual Profiles'
+        verbose_name = "Individual Profile"
+        verbose_name_plural = "Individual Profiles"
 
     def __str__(self) -> str:
         """
@@ -182,7 +194,7 @@ class Individual(models.Model):
         ----------
             str
         """
-        return f'{self.user.username} Individual Profile.'
+        return f"{self.user.username} Individual Profile."
 
     def serialize(self) -> dict:
         """
@@ -215,6 +227,7 @@ class Business(models.Model):
     """
     Creating BusinessProfile model instance.
     """
+
     id = models.AutoField(primary_key=True, editable=False)
     user = models.OneToOneField(to=User, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=100, null=True, blank=True)
@@ -231,8 +244,8 @@ class Business(models.Model):
     linkedin_url = models.URLField(max_length=200, null=True, blank=True)
 
     class Meta:
-        verbose_name = 'Business Profile'
-        verbose_name_plural = 'Business Profiles'
+        verbose_name = "Business Profile"
+        verbose_name_plural = "Business Profiles"
 
     def __str__(self) -> str:
         """
@@ -242,7 +255,7 @@ class Business(models.Model):
         ----------
             str
         """
-        return f'{self.company_name} Business Profile.'
+        return f"{self.company_name} Business Profile."
 
     def serialize(self) -> dict:
         """

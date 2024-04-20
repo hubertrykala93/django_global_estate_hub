@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
@@ -21,19 +22,21 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path(route='ckeditor', view=include(arg='ckeditor_uploader.urls')),
-    path(route='', view=include(arg='core.urls')),
-    path(route='', view=include(arg='accounts.urls')),
-    path(route='', view=include(arg='blog.urls')),
-    path(route='', view=include(arg='properties.urls')),
-    path(route='', view=include(arg='properties.api.urls')),
-    path(route='', view=include(arg='accounts.api.urls')),
-    path(route='', view=include(arg='core.api.urls')),
-    path(route='', view=include(arg='blog.api.urls')),
+    path(route="ckeditor", view=include(arg="ckeditor_uploader.urls")),
+    path(route="", view=include(arg="core.urls")),
+    path(route="", view=include(arg="accounts.urls")),
+    path(route="", view=include(arg="blog.urls")),
+    path(route="", view=include(arg="properties.urls")),
+    path(route="", view=include(arg="properties.api.urls")),
+    path(route="", view=include(arg="accounts.api.urls")),
+    path(route="", view=include(arg="core.api.urls")),
+    path(route="", view=include(arg="blog.api.urls")),
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(prefix=settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(
+        prefix=settings.STATIC_URL, document_root=settings.STATIC_ROOT
+    )
 
 if settings.DEBUG:
     urlpatterns += static(prefix=settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

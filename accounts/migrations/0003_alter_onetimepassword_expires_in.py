@@ -7,13 +7,17 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('accounts', '0002_alter_onetimepassword_expires_in'),
+        ("accounts", "0002_alter_onetimepassword_expires_in"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='onetimepassword',
-            name='expires_in',
-            field=models.DateTimeField(default=datetime.datetime(2023, 12, 30, 15, 51, 36, 250140, tzinfo=datetime.timezone.utc)),
+            model_name="onetimepassword",
+            name="expires_in",
+            field=models.DateTimeField(
+                default=datetime.datetime(
+                    2023, 12, 30, 15, 51, 36, 250140, tzinfo=datetime.timezone.utc
+                )
+            ),
         ),
     ]

@@ -15,9 +15,7 @@ def generate_token(request) -> dict:
     ----------
         dict
     """
-    return {
-        'csrf_token': get_token(request=request)
-    }
+    return {"csrf_token": get_token(request=request)}
 
 
 def properties_types(request) -> dict:
@@ -34,13 +32,24 @@ def properties_types(request) -> dict:
         dict
     """
     return {
-        'get_category_properties_info': list(
+        "get_category_properties_info": list(
             zip(
-                [category.name for category in Category.objects.all().order_by('-name')],
-                [category.image.url for category in Category.objects.all().order_by('-name')],
-                [category.get_absolute_url() for category in Category.objects.all().order_by('-name')],
-                [Property.objects.filter(category=category).count() for category in
-                 Category.objects.all().order_by('-name')]
+                [
+                    category.name
+                    for category in Category.objects.all().order_by("-name")
+                ],
+                [
+                    category.image.url
+                    for category in Category.objects.all().order_by("-name")
+                ],
+                [
+                    category.get_absolute_url()
+                    for category in Category.objects.all().order_by("-name")
+                ],
+                [
+                    Property.objects.filter(category=category).count()
+                    for category in Category.objects.all().order_by("-name")
+                ],
             )
         ),
     }
@@ -60,13 +69,17 @@ def explore_cities(request) -> dict:
         dict
     """
     return {
-        'get_cities_info': list(
+        "get_cities_info": list(
             zip(
-                [city.name for city in City.objects.all().order_by('id')][:35],
-                [city.image.url for city in City.objects.all().order_by('id')][:35],
-                [city.get_absolute_url() for city in City.objects.all().order_by('id')][:35],
-                [Property.objects.filter(city=city).count() for city in
-                 City.objects.all().order_by('id')][:35]
+                [city.name for city in City.objects.all().order_by("id")][:35],
+                [city.image.url for city in City.objects.all().order_by("id")][:35],
+                [city.get_absolute_url() for city in City.objects.all().order_by("id")][
+                    :35
+                ],
+                [
+                    Property.objects.filter(city=city).count()
+                    for city in City.objects.all().order_by("id")
+                ][:35],
             )
         ),
     }
@@ -85,6 +98,8 @@ def discover_cities(request) -> dict:
         dict
     """
     return {
-        'discover_cities': [City.objects.get(name=obj.city.name) for obj in
-                            Property.objects.annotate(city_count=Count('city'))][:8],
+        "discover_cities": [
+            City.objects.get(name=obj.city.name)
+            for obj in Property.objects.annotate(city_count=Count("city"))
+        ][:8],
     }

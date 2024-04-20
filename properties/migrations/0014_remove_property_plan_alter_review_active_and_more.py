@@ -10,12 +10,19 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="property", name="plan",),
+        migrations.RemoveField(
+            model_name="property",
+            name="plan",
+        ),
         migrations.AlterField(
             model_name="review",
             name="active",
             field=models.BooleanField(default=False),
         ),
-        migrations.DeleteModel(name="OfferContact",),
-        migrations.DeleteModel(name="Plan",),
+        migrations.DeleteModel(
+            name="OfferContact",
+        ),
+        migrations.DeleteModel(
+            name="Plan",
+        ),
     ]

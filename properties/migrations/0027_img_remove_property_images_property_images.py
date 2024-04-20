@@ -21,9 +21,15 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "Image", "verbose_name_plural": "Images",},
+            options={
+                "verbose_name": "Image",
+                "verbose_name_plural": "Images",
+            },
         ),
-        migrations.RemoveField(model_name="property", name="images",),
+        migrations.RemoveField(
+            model_name="property",
+            name="images",
+        ),
         migrations.AddField(
             model_name="property",
             name="images",

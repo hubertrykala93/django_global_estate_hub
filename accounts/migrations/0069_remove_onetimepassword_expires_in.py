@@ -10,5 +10,8 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="onetimepassword", name="expires_in",),
+        migrations.RemoveField(
+            model_name="onetimepassword",
+            name="expires_in",
+        ),
     ]

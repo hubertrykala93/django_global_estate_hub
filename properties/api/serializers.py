@@ -1,6 +1,17 @@
 from rest_framework import serializers
-from properties.models import ListingStatus, Category, Amenities, Education, Shopping, HealthAndMedical, Transportation, \
-    City, Property, TourSchedule, Review
+from properties.models import (
+    ListingStatus,
+    Category,
+    Amenities,
+    Education,
+    Shopping,
+    HealthAndMedical,
+    Transportation,
+    City,
+    Property,
+    TourSchedule,
+    Review,
+)
 from accounts.api.serializers import UserSerializer, UserUsernameSerializer
 
 
@@ -8,6 +19,7 @@ class ListingStatusSerializer(serializers.Serializer):
     """
     ListingStatus Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     slug = serializers.SlugField()
@@ -20,6 +32,7 @@ class CategorySerializer(serializers.Serializer):
     """
     Category Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     slug = serializers.SlugField()
@@ -32,6 +45,7 @@ class AmenitiesSerializer(serializers.Serializer):
     """
     Amenities Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     slug = serializers.CharField()
@@ -44,6 +58,7 @@ class EducationSerializer(serializers.Serializer):
     """
     Education Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     distance = serializers.FloatField()
@@ -57,6 +72,7 @@ class ShoppingSerializer(serializers.Serializer):
     """
     Shopping Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     distance = serializers.FloatField()
@@ -70,6 +86,7 @@ class HealthAndMedicalSerializer(serializers.Serializer):
     """
     HealthAndMedical Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     distance = serializers.FloatField()
@@ -83,6 +100,7 @@ class TransportationSerializer(serializers.Serializer):
     """
     Transportation Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     distance = serializers.FloatField()
@@ -96,6 +114,7 @@ class CitySerializer(serializers.Serializer):
     """
     City Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     name = serializers.CharField()
     slug = serializers.SlugField()
@@ -108,10 +127,11 @@ class PropertySerializer(serializers.Serializer):
     """
     Property Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     user = UserSerializer()
     title = serializers.CharField()
-    date_posted = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     thumbnail = serializers.ImageField()
     year_of_built = serializers.IntegerField()
     price = serializers.FloatField()
@@ -154,10 +174,11 @@ class TourScheduleSerializer(serializers.Serializer):
     """
     TourSchedule Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
     customer = UserUsernameSerializer()
     property = PropertyTitleSerializer()
-    date_sent = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    date_sent = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     date = serializers.CharField()
     time = serializers.CharField()
     name = serializers.CharField()
@@ -172,8 +193,9 @@ class ReviewSerializer(serializers.Serializer):
     """
     Review Model Serializer.
     """
+
     id = serializers.ReadOnlyField()
-    date_posted = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S')
+    date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     user = UserUsernameSerializer()
     property = PropertyTitleSerializer()
     rate = serializers.IntegerField()

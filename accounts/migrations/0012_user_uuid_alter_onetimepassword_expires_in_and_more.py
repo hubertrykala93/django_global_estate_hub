@@ -12,7 +12,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="user", name="uuid", field=models.UUIDField(null=True),
+            model_name="user",
+            name="uuid",
+            field=models.UUIDField(null=True),
         ),
         migrations.AlterField(
             model_name="onetimepassword",

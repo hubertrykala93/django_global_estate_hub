@@ -10,6 +10,12 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="property", name="purchasing_user",),
-        migrations.RemoveField(model_name="property", name="quantity_of_purchases",),
+        migrations.RemoveField(
+            model_name="property",
+            name="purchasing_user",
+        ),
+        migrations.RemoveField(
+            model_name="property",
+            name="quantity_of_purchases",
+        ),
     ]

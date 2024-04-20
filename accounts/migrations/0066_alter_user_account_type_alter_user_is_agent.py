@@ -21,6 +21,8 @@ class Migration(migrations.Migration):
             ),
         ),
         migrations.AlterField(
-            model_name="user", name="is_agent", field=models.BooleanField(default=True),
+            model_name="user",
+            name="is_agent",
+            field=models.BooleanField(default=True),
         ),
     ]
