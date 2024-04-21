@@ -185,26 +185,6 @@ class Article(models.Model):
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
-    def serialize(self) -> dict:
-        """
-        Convert Article object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "user_id": self.user.id,
-            "image": self.image.url,
-            "date_posted": self.date_posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "title": self.title,
-            "content": self.content,
-            "category_id": self.category.id,
-            "tags_id": [tag.id for tag in self.tags.all()],
-            "slug": self.slug,
-        }
-
 
 class Comment(MPTTModel):
     """
@@ -257,27 +237,6 @@ class Comment(MPTTModel):
             if self.full_name
             else f"Comment by {self.user}."
         )
-
-    def serialize(self) -> dict:
-        """
-        Convert Article object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "user_id": self.user.id,
-            "article_id": self.article.id,
-            "full_name": self.full_name,
-            "date_posted": self.date_posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "comment": self.comment,
-            "likes": self.likes,
-            "dislikes": self.dislikes,
-            "parent": self.parent.id if self.parent else None,
-            "active": self.active,
-        }
 
 
 class CommentLike(models.Model):

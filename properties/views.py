@@ -72,7 +72,7 @@ def properties_context() -> dict:
         dict
     """
     return {
-        "listing_statuses": ListingStatus.objects.all().order_by("name"),
+        "listing_statuses": ListingStatus.objects.get_by_name(),
         "categories": Property.objects.filter(
             listing_status_id=ListingStatus.objects.get(name="Rent").id
         )
@@ -130,7 +130,7 @@ def sidebar_context(**kwargs) -> dict:
         dict
     """
     return {
-        "listing_statuses": ListingStatus.objects.all().order_by("name"),
+        "listing_statuses": ListingStatus.objects.get_by_name(),
         "categories": Property.objects.filter(
             listing_status_id=kwargs["listing_status_id"]
         )
@@ -203,49 +203,49 @@ def properties(request) -> django.http.response.HttpResponse:
                 if "Newest Properties" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("-date_posted")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="-date_posted"
+                        )
                     )
 
                 elif "Oldest Properties" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("date_posted")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="date_posted"
+                        )
                     )
 
                 elif "Price Ascending" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("price")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="price"
+                        )
                     )
 
                 elif "Price Descending" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("-price")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="-price"
+                        )
                     )
 
                 elif "Featured" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("-is_featured")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="-is_featured"
+                        )
                     )
 
                 else:
                     request.session["sorted_type"] = "Newest Properties"
                     queryset.extend(
-                        Property.objects.filter(
-                            title__icontains=request.session["keyword"]
-                        ).order_by("-date_posted")
+                        Property.objects.get_by_keyword(
+                            keyword=request.session["keyword"], order_by="-date_posted"
+                        )
                     )
 
             elif "filters" in request.session:
@@ -257,8 +257,8 @@ def properties(request) -> django.http.response.HttpResponse:
 
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-date_posted"
+                        Property.objects.get_by_filters(
+                            "-date_posted", **request.session["filters"]
                         )
                     )
 
@@ -268,8 +268,8 @@ def properties(request) -> django.http.response.HttpResponse:
 
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "date_posted"
+                        Property.objects.get_by_filters(
+                            "date_posted", **request.session["filters"]
                         )
                     )
 
@@ -279,8 +279,8 @@ def properties(request) -> django.http.response.HttpResponse:
 
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "price"
+                        Property.objects.get_by_filters(
+                            "price", **request.session["filters"]
                         )
                     )
 
@@ -290,16 +290,16 @@ def properties(request) -> django.http.response.HttpResponse:
 
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-price"
+                        Property.objects.get_by_filters(
+                            "-price", **request.session["filters"]
                         )
                     )
 
                 elif "Featured" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = request.GET.get("properties-order")
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-is_featured"
+                        Property.objects.get_by_filters(
+                            "-is_featured", **request.session["filters"]
                         )
                     )
 
@@ -309,8 +309,8 @@ def properties(request) -> django.http.response.HttpResponse:
 
                     request.session["sorted_type"] = "Newest Properties"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-date_posted"
+                        Property.objects.get_by_filters(
+                            "-date_posted", **request.session["filters"]
                         )
                     )
 
@@ -350,9 +350,9 @@ def properties(request) -> django.http.response.HttpResponse:
             request.session["sorted_type"] = "Newest Properties"
             request.session["keyword"] = request.GET.get("keyword")
             queryset.extend(
-                Property.objects.filter(
-                    title__icontains=request.GET.get("keyword")
-                ).order_by("-date_posted")
+                Property.objects.get_by_keyword(
+                    keyword=request.GET.get("keyword"), order_by="-date_posted"
+                )
             )
 
         elif (

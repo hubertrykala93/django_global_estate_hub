@@ -136,28 +136,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
-    def serialize(self) -> dict:
-        """
-        Convert User object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "username": self.username,
-            "email": self.email,
-            "image": self.image.url,
-            "account_type": self.account_type,
-            "is_verified": self.is_verified,
-            "is_active": self.is_active,
-            "is_superuser": self.is_superuser,
-            "is_staff": self.is_staff,
-            "is_agent": self.is_agent,
-            "date_joined": self.date_joined.strftime("%d/%m/%Y, %H:%M:%S"),
-        }
-
 
 class Individual(models.Model):
     """
@@ -196,32 +174,6 @@ class Individual(models.Model):
         """
         return f"{self.user.username} Individual Profile."
 
-    def serialize(self) -> dict:
-        """
-        Convert Individual object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "user_id": self.user.id,
-            "first_name": self.first_name,
-            "last_name": self.last_name,
-            "phone_number": self.phone_number,
-            "gender": self.gender,
-            "country": self.country,
-            "province": self.province,
-            "city": self.city,
-            "street": self.street,
-            "postal_code": self.postal_code,
-            "website_url": self.website_url,
-            "facebook_url": self.facebook_url,
-            "instagram_url": self.instagram_url,
-            "linkedin_url": self.linkedin_url,
-        }
-
 
 class Business(models.Model):
     """
@@ -256,28 +208,3 @@ class Business(models.Model):
             str
         """
         return f"{self.company_name} Business Profile."
-
-    def serialize(self) -> dict:
-        """
-        Convert Individual object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "user_id": self.user.id,
-            "company_name": self.company_name,
-            "company_id": self.company_id,
-            "phone_number": self.phone_number,
-            "country": self.country,
-            "province": self.province,
-            "city": self.city,
-            "street": self.street,
-            "postal_code": self.postal_code,
-            "website_url": self.website_url,
-            "facebook_url": self.facebook_url,
-            "instagram_url": self.instagram_url,
-            "linkedin_url": self.linkedin_url,
-        }

@@ -631,40 +631,40 @@ def properties_results(
                 if "Newest Properties" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = "Newest Properties"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-date_posted"
+                        Property.objects.get_by_filters(
+                            "-date_posted", **request.session["filters"]
                         )
                     )
 
                 elif "Oldest Properties" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = "Oldest Properties"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "date_posted"
+                        Property.objects.get_by_filters(
+                            "date_posted", **request.session["filters"]
                         )
                     )
 
                 elif "Price Ascending" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = "Price Ascending"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "price"
+                        Property.objects.get_by_filters(
+                            "price", **request.session["filters"]
                         )
                     )
 
                 elif "Price Descending" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = "Price Descending"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-price"
+                        Property.objects.get_by_filters(
+                            "-price", **request.session["filters"]
                         )
                     )
 
                 elif "Featured" in request.GET.get("properties-order"):
                     request.session["sorted_type"] = "Featured"
                     queryset.extend(
-                        Property.objects.filter(**request.session["filters"]).order_by(
-                            "-is_featured"
+                        Property.objects.get_by_filters(
+                            "-is_featured", **request.session["filters"]
                         )
                     )
 
@@ -672,8 +672,8 @@ def properties_results(
             if "filters" in request.session:
                 request.session["sorted_type"] = "Newest Properties"
                 queryset.extend(
-                    Property.objects.filter(**request.session["filters"]).order_by(
-                        "-date_posted"
+                    Property.objects.get_by_filters(
+                        "-date_posted", **request.session["filters"]
                     )
                 )
 
@@ -683,8 +683,8 @@ def properties_results(
                     "listing_status_id": ListingStatus.objects.get(slug="rent").id
                 }
                 queryset.extend(
-                    Property.objects.filter(**request.session["filters"]).order_by(
-                        "-date_posted"
+                    Property.objects.get_by_filters(
+                        "-date_posted", **request.session["filters"]
                     )
                 )
 

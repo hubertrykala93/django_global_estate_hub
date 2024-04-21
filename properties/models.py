@@ -7,6 +7,11 @@ from PIL import Image
 from uuid import uuid4
 
 
+class ListingStatusManager(models.Manager):
+    def get_by_name(self):
+        return self.order_by("name")
+
+
 class ListingStatus(models.Model):
     """
     Creating ListingStatus model instance.
@@ -15,6 +20,8 @@ class ListingStatus(models.Model):
     id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=100)
     slug = models.SlugField(max_length=100, unique=True)
+
+    objects = ListingStatusManager()
 
     class Meta:
         verbose_name = "Listing Status"
@@ -322,6 +329,14 @@ class Img(models.Model):
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
 
+class PropertyManager(models.Manager):
+    def get_by_keyword(self, keyword, order_by):
+        return self.filter(title__icontains=keyword).order_by(order_by)
+
+    def get_by_filters(self, *order_by, **filters):
+        return self.filter(**filters).order_by(*order_by)
+
+
 class Property(models.Model):
     """
     Creating Property model instance.
@@ -375,6 +390,8 @@ class Property(models.Model):
     purchasing_user = models.ForeignKey(
         to=User, blank=True, null=True, on_delete=models.CASCADE
     )
+
+    objects = PropertyManager()
 
     class Meta:
         verbose_name = "Property"
@@ -447,56 +464,6 @@ class Property(models.Model):
         """
         return f"{uuid4()}" + f".{self.image.path.split(sep='.')[-1]}"
 
-    def serialize(self) -> dict:
-        """
-        Convert Property object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "user_id": self.user.id,
-            "title": self.title,
-            "date_posted": self.date_posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "thumbnail": self.thumbnail.url,
-            "images_id": [image.id for image in self.images.all()],
-            "year_of_built": self.year_of_built,
-            "price": self.price,
-            "number_of_bedrooms": self.number_of_bedrooms,
-            "number_of_bathrooms": self.number_of_bathrooms,
-            "square_meters": self.square_meters,
-            "parking_space": self.parking_space,
-            "postal_code": self.postal_code,
-            "city_id": self.city.id,
-            "province": self.province,
-            "country": self.country,
-            "country_code": self.country_code,
-            "latitude": self.latitude,
-            "longitude": self.longitude,
-            "description": self.description,
-            "video": self.video.url,
-            "is_featured": self.is_featured,
-            "favourites_id": [favourite.id for favourite in self.favourites.all()],
-            "slug": self.slug,
-            "listing_status_id": self.listing_status.id,
-            "category_id": self.category.id,
-            "amenities_id": [amenity.id for amenity in self.amenities.all()],
-            "education_id": [education.id for education in self.education.all()],
-            "health_and_medical_id": [
-                health_and_medical.id
-                for health_and_medical in self.health_and_medical.all()
-            ],
-            "transportation_id": [
-                transportation.id for transportation in self.transportation.all()
-            ],
-            "shopping_id": [shopping.id for shopping in self.shopping.all()],
-            "purchasing_user_id": (
-                self.purchasing_user.id if self.purchasing_user else None
-            ),
-        }
-
 
 class TourSchedule(models.Model):
     """
@@ -557,21 +524,3 @@ class Review(models.Model):
             str
         """
         return f"Reviewed by {self.user}"
-
-    def serialize(self) -> dict:
-        """
-        Convert Review object to dict.
-
-        Returns:
-        ----------
-            dict
-        """
-        return {
-            "id": self.id,
-            "date_posted": self.date_posted.strftime("%d/%m/%Y, %H:%M:%S"),
-            "user_id": self.user.id,
-            "property_id": self.property.id,
-            "rate": self.rate,
-            "content": self.content.replace("%20", " "),
-            "active": self.active,
-        }
