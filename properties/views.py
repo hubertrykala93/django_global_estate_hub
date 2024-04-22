@@ -356,17 +356,17 @@ def properties(request) -> django.http.response.HttpResponse:
             )
 
         elif (
-            "status" in request.GET
-            or "category" in request.GET
-            or "min_price" in request.GET
-            or "max_price" in request.GET
-            or "min_bedrooms" in request.GET
-            or "max_bedrooms" in request.GET
-            or "min_bathrooms" in request.GET
-            or "max_bathrooms" in request.GET
-            or "location" in request.GET
-            or "min_square" in request.GET
-            or "max_square" in request.GET
+                "status" in request.GET
+                or "category" in request.GET
+                or "min_price" in request.GET
+                or "max_price" in request.GET
+                or "min_bedrooms" in request.GET
+                or "max_bedrooms" in request.GET
+                or "min_bathrooms" in request.GET
+                or "max_bathrooms" in request.GET
+                or "location" in request.GET
+                or "min_square" in request.GET
+                or "max_square" in request.GET
         ):
 
             if request.session.get("keyword"):
@@ -1176,6 +1176,7 @@ def set_location(request):
 
 
 def create_property(request):
+    response = {}
     if request.method == "POST":
         spam_verification = request.POST["url"]
         title = request.POST["title"].strip()
@@ -1203,8 +1204,6 @@ def create_property(request):
                 },
                 safe=False,
             )
-
-        response = {}
 
         # title
         response.update(
@@ -1245,18 +1244,18 @@ def create_property(request):
                             else (
                                 False
                                 if price[0] == "-"
-                                and not price.isdigit()
-                                and price[1:].isdigit()
+                                   and not price.isdigit()
+                                   and price[1:].isdigit()
                                 else (
                                     False
                                     if len(price) == 1
-                                    and price.isdigit()
-                                    and price == "0"
+                                       and price.isdigit()
+                                       and price == "0"
                                     else (
                                         False
                                         if len(price) > 1
-                                        and price.isdigit()
-                                        and price[0] == "0"
+                                           and price.isdigit()
+                                           and price[0] == "0"
                                         else True
                                     )
                                 )
@@ -1272,18 +1271,18 @@ def create_property(request):
                             else (
                                 "The property price must be greater than 0."
                                 if price[0] == "-"
-                                and not price.isdigit()
-                                and price[1:].isdigit()
+                                   and not price.isdigit()
+                                   and price[1:].isdigit()
                                 else (
                                     "The property price must be greater than 0."
                                     if len(price) == 1
-                                    and price.isdigit()
-                                    and price == "0"
+                                       and price.isdigit()
+                                       and price == "0"
                                     else (
                                         "The property price cannot start with 0."
                                         if len(price) > 1
-                                        and price.isdigit()
-                                        and price[0] == "0"
+                                           and price.isdigit()
+                                           and price[0] == "0"
                                         else ""
                                     )
                                 )
@@ -1324,21 +1323,21 @@ def create_property(request):
                                 else (
                                     False
                                     if len(year_of_built) == 4
-                                    and not year_of_built.isdigit()
+                                       and not year_of_built.isdigit()
                                     else (
                                         False
                                         if len(year_of_built) != 4
-                                        and year_of_built[0] == "-"
-                                        and year_of_built[1:].isdigit()
+                                           and year_of_built[0] == "-"
+                                           and year_of_built[1:].isdigit()
                                         else (
                                             False
                                             if len(year_of_built) == 4
-                                            and year_of_built[0] == "0"
-                                            and year_of_built[1:].isdigit()
+                                               and year_of_built[0] == "0"
+                                               and year_of_built[1:].isdigit()
                                             else (
                                                 False
                                                 if datetime.now().year
-                                                < datetime.strptime(
+                                                   < datetime.strptime(
                                                     year_of_built, "%Y"
                                                 ).year
                                                 else True
@@ -1361,16 +1360,16 @@ def create_property(request):
                                 else (
                                     "The property year of built must consist of digits."
                                     if len(year_of_built) == 4
-                                    and not year_of_built.isdigit()
+                                       and not year_of_built.isdigit()
                                     else (
                                         "The property year of built cannot start with 0."
                                         if len(year_of_built) == 4
-                                        and year_of_built[0] == "0"
-                                        and year_of_built[1:].isdigit()
+                                           and year_of_built[0] == "0"
+                                           and year_of_built[1:].isdigit()
                                         else (
                                             "The property year of built cannot be greater than actual year."
                                             if datetime.now().year
-                                            < datetime.strptime(
+                                               < datetime.strptime(
                                                 year_of_built, "%Y"
                                             ).year
                                             else ""
@@ -1394,7 +1393,7 @@ def create_property(request):
                         else (
                             False
                             if number_of_bedrooms[0] == "-"
-                            and number_of_bedrooms[1:].isdecimal()
+                               and number_of_bedrooms[1:].isdecimal()
                             else False if not number_of_bedrooms.isdecimal() else True
                         )
                     ),
@@ -1404,7 +1403,7 @@ def create_property(request):
                         else (
                             "The property number of bedrooms must be greater than or equal 0."
                             if number_of_bedrooms[0] == "-"
-                            and number_of_bedrooms[1:].isdecimal()
+                               and number_of_bedrooms[1:].isdecimal()
                             else (
                                 "The property number of bedrooms must consist of positive digits."
                                 if not number_of_bedrooms.isdecimal()
@@ -1426,7 +1425,7 @@ def create_property(request):
                         else (
                             False
                             if number_of_bathrooms[0] == "-"
-                            and number_of_bathrooms[1:].isdecimal()
+                               and number_of_bathrooms[1:].isdecimal()
                             else False if not number_of_bathrooms.isdecimal() else True
                         )
                     ),
@@ -1436,7 +1435,7 @@ def create_property(request):
                         else (
                             "The property number of bathrooms must be greater than or equal 0."
                             if number_of_bathrooms[0] == "-"
-                            and number_of_bathrooms[1:].isdecimal()
+                               and number_of_bathrooms[1:].isdecimal()
                             else (
                                 "The property number of bathrooms must consist of positive digits."
                                 if not number_of_bathrooms.isdecimal()
@@ -1461,18 +1460,18 @@ def create_property(request):
                             else (
                                 False
                                 if square_meters[0] == "-"
-                                and not square_meters[1:].isdecimal()
+                                   and not square_meters[1:].isdecimal()
                                 else (
                                     False
                                     if square_meters == "0"
                                     else (
                                         False
                                         if "," in square_meters
-                                        and not square_meters.replace(",", "").isdigit()
+                                           and not square_meters.replace(",", "").isdigit()
                                         else (
                                             True
                                             if "," in square_meters
-                                            and square_meters.replace(",", "").isdigit()
+                                               and square_meters.replace(",", "").isdigit()
                                             else True
                                         )
                                     )
@@ -1489,18 +1488,18 @@ def create_property(request):
                             else (
                                 "The property square meters must consist of positive digits."
                                 if square_meters[0] == "-"
-                                and not square_meters[1:].isdecimal()
+                                   and not square_meters[1:].isdecimal()
                                 else (
                                     "The property square meters must be greater than 0."
                                     if square_meters == "0"
                                     else (
                                         "The property square meters must consist of positive digits."
                                         if "," in square_meters
-                                        and not square_meters.replace(",", "").isdigit()
+                                           and not square_meters.replace(",", "").isdigit()
                                         else (
                                             ""
                                             if "," in square_meters
-                                            and square_meters.replace(",", "").isdigit()
+                                               and square_meters.replace(",", "").isdigit()
                                             else ""
                                         )
                                     )
@@ -1525,7 +1524,7 @@ def create_property(request):
                             else (
                                 False
                                 if parking_space[0] == "-"
-                                and parking_space[1:].isdigit()
+                                   and parking_space[1:].isdigit()
                                 else True if parking_space == "0" else True
                             )
                         )
@@ -1539,7 +1538,7 @@ def create_property(request):
                             else (
                                 "The property parking space must be greater than or equal 0."
                                 if parking_space[0] == "-"
-                                and parking_space[1:].isdigit()
+                                   and parking_space[1:].isdigit()
                                 else "" if parking_space == "0" else ""
                             )
                         )
@@ -1654,30 +1653,30 @@ def create_property(request):
                             "valid": (
                                 False
                                 if "thumbnail" in request.FILES
-                                and request.FILES.get("thumbnail").size > 1000000
+                                   and request.FILES.get("thumbnail").size > 1000000
                                 else (
                                     False
                                     if "thumbnail" in request.FILES
-                                    and request.FILES.get("thumbnail").size <= 1000000
-                                    and request.FILES.get("thumbnail").name.split(
+                                       and request.FILES.get("thumbnail").size <= 1000000
+                                       and request.FILES.get("thumbnail").name.split(
                                         sep="."
                                     )[1]
-                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else True
                                 )
                             ),
                             "message": (
                                 "The thumbnail size should not exceed 1 MB."
                                 if "thumbnail" in request.FILES
-                                and request.FILES.get("thumbnail").size > 1000000
+                                   and request.FILES.get("thumbnail").size > 1000000
                                 else (
                                     "The supported formats are jpg, jpeg, webp, png, svg."
                                     if "thumbnail" in request.FILES
-                                    and request.FILES.get("thumbnail").size <= 1000000
-                                    and request.FILES.get("thumbnail").name.split(
+                                       and request.FILES.get("thumbnail").size <= 1000000
+                                       and request.FILES.get("thumbnail").name.split(
                                         sep="."
                                     )[1]
-                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else ""
                                 )
                             ),
@@ -1707,8 +1706,8 @@ def create_property(request):
                                 else (
                                     False
                                     if image.size <= 1000000
-                                    and image.name.split(sep=".")[1]
-                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                       and image.name.split(sep=".")[1]
+                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else True
                                 )
                             ),
@@ -1718,8 +1717,8 @@ def create_property(request):
                                 else (
                                     "The supported formats are jpg, jpeg, webp, png, svg."
                                     if image.size <= 1000000
-                                    and image.name.split(sep=".")[1]
-                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                       and image.name.split(sep=".")[1]
+                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else ""
                                 )
                             ),
@@ -1749,30 +1748,30 @@ def create_property(request):
                             "valid": (
                                 False
                                 if "video" in request.FILES
-                                and request.FILES.get("video").size > 5000000
+                                   and request.FILES.get("video").size > 5000000
                                 else (
                                     False
                                     if "video" in request.FILES
-                                    and request.FILES.get("video").size <= 5000000
-                                    and request.FILES.get("video").name.split(sep=".")[
-                                        1
-                                    ]
-                                    != "mp4"
+                                       and request.FILES.get("video").size <= 5000000
+                                       and request.FILES.get("video").name.split(sep=".")[
+                                           1
+                                       ]
+                                       != "mp4"
                                     else True
                                 )
                             ),
                             "message": (
                                 "The video size should not exceed 5 MB."
                                 if "video" in request.FILES
-                                and request.FILES.get("video").size > 5000000
+                                   and request.FILES.get("video").size > 5000000
                                 else (
                                     "The supported format is mp4."
                                     if "video" in request.FILES
-                                    and request.FILES.get("video").size <= 5000000
-                                    and request.FILES.get("video").name.split(sep=".")[
-                                        1
-                                    ]
-                                    != "mp4"
+                                       and request.FILES.get("video").size <= 5000000
+                                       and request.FILES.get("video").name.split(sep=".")[
+                                           1
+                                       ]
+                                       != "mp4"
                                     else ""
                                 )
                             ),
@@ -1812,11 +1811,11 @@ def create_property(request):
         education = []
 
         if (
-            len(request.POST.getlist("education-name")) == 1
-            and request.POST.getlist("education-name")[0] != ""
+                len(request.POST.getlist("education-name")) == 1
+                and request.POST.getlist("education-name")[0] != ""
         ) or (
-            len(request.POST.getlist("education-distance")) == 1
-            and request.POST.getlist("education-distance")[0] != ""
+                len(request.POST.getlist("education-distance")) == 1
+                and request.POST.getlist("education-distance")[0] != ""
         ):
             education.append(
                 {
@@ -1847,12 +1846,12 @@ def create_property(request):
                             else (
                                 False
                                 if education_distance
-                                and education_distance[0] == "-"
-                                and education_distance[1:].isdigit()
+                                   and education_distance[0] == "-"
+                                   and education_distance[1:].isdigit()
                                 else (
                                     False
                                     if education_distance
-                                    and not education_distance.replace(
+                                       and not education_distance.replace(
                                         ",", ""
                                     ).isdigit()
                                     else True
@@ -1865,12 +1864,12 @@ def create_property(request):
                             else (
                                 "The education distance must be greater than or equal 0."
                                 if education_distance
-                                and education_distance[0] == "-"
-                                and education_distance[1:].isdigit()
+                                   and education_distance[0] == "-"
+                                   and education_distance[1:].isdigit()
                                 else (
                                     "The education distance must consist of positive digits."
                                     if education_distance
-                                    and not education_distance.replace(
+                                       and not education_distance.replace(
                                         ",", ""
                                     ).isdigit()
                                     else ""
@@ -1889,68 +1888,46 @@ def create_property(request):
 
         elif len(request.POST.getlist("education-name")) > 1:
             temp_education = []
-            for name, distance in list(
-                zip(
-                    request.POST.getlist("education-name"),
-                    request.POST.getlist("education-distance"),
-                )
-            ):
-                if name != "" or distance != "":
-                    temp_education.append((name, distance))
 
-            for n, d in temp_education:
-                education.append(
+            for name, distance in zip(request.POST.getlist('education-name'),
+                                      request.POST.getlist('education-distance')):
+                temp_education.append(
                     {
-                        "education_name": {
-                            "valid": (
-                                False
-                                if d and not n
-                                else False if n and len(n) <= 5 else True
-                            ),
-                            "message": (
-                                "If you have provided the distance to an educational institution, you must also provide its name."
-                                if d and not n
-                                else (
-                                    "The education name must be at least 5 characters long."
-                                    if n and len(n) <= 5
-                                    else ""
-                                )
-                            ),
-                        },
-                        "education_distance": {
-                            "valid": (
-                                False
-                                if n and not d
-                                else (
-                                    False
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        False
-                                        if d and not d.replace(",", "").isdigit()
-                                        else True
-                                    )
-                                )
-                            ),
-                            "message": (
-                                "If you have provided the name of an educational institution, you must also provide the distance to it."
-                                if n and not d
-                                else (
-                                    "The education distance must be greater than or equal 0."
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        "The education distance must consist of positive digits."
-                                        if d and not d.replace(",", "").isdigit()
-                                        else ""
-                                    )
-                                )
-                            ),
-                        },
+                        "education_name":
+                            {
+                                "valid":
+                                    False if distance and not name else
+                                    False if name and len(name) < 5 else
+                                    True,
+                                "message":
+                                    "If you've provided the distance to an educational institution, you must also provide its name." if distance and not name else
+                                    "The education name must be at least 5 characters long." if name and len(
+                                        name) < 5 else
+                                    "",
+                            },
+                        "education_distance":
+                            {
+                                "valid":
+                                    False if name and not distance else
+                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
+                                    False if distance and not distance.replace(",", "").isdigit() else
+                                    True,
+                                "message":
+                                    "If you've provided the name of an educational institution, you must also provide the distance to it." if name and not distance else
+                                    "The education distance must be greater than or equal 0." if distance and
+                                                                                                 distance[
+                                                                                                     0] == '-' and distance[
+                                                                                                                   1:].isdigit() else
+                                    "The education distance must consist of positive digits." if distance and not distance.replace(
+                                        ",", "").isdigit() else
+                                    "",
+                            }
                     }
                 )
 
             response.update(
                 {
-                    "education": education,
+                    "education": temp_education
                 }
             )
 
@@ -1958,11 +1935,11 @@ def create_property(request):
         health_and_medical = []
 
         if (
-            len(request.POST.getlist("health-name")) == 1
-            and request.POST.getlist("health-name")[0] != ""
+                len(request.POST.getlist("health-name")) == 1
+                and request.POST.getlist("health-name")[0] != ""
         ) or (
-            len(request.POST.getlist("health-distance")) == 1
-            and request.POST.getlist("health-distance")[0] != ""
+                len(request.POST.getlist("health-distance")) == 1
+                and request.POST.getlist("health-distance")[0] != ""
         ):
             health_and_medical.append(
                 {
@@ -1971,11 +1948,13 @@ def create_property(request):
                             False
                             if health_distance and not health_name
                             else (
-                                False if health_name and len(health_name) <= 5 else True
+                                False
+                                if health_name and len(health_name) <= 5
+                                else True
                             )
                         ),
                         "message": (
-                            "If you have provided the distance to a health and medical institution, you must also provide its name."
+                            "If you have provided the distance to the nearest medical facility, you must also provide its name."
                             if health_distance and not health_name
                             else (
                                 "The health and medical name must be at least 5 characters long."
@@ -1991,28 +1970,32 @@ def create_property(request):
                             else (
                                 False
                                 if health_distance
-                                and health_distance[0] == "-"
-                                and health_distance[1:].isdigit()
+                                   and health_distance[0] == "-"
+                                   and health_distance[1:].isdigit()
                                 else (
                                     False
                                     if health_distance
-                                    and not health_distance.replace(",", "").isdigit()
+                                       and not health_distance.replace(
+                                        ",", ""
+                                    ).isdigit()
                                     else True
                                 )
                             )
                         ),
                         "message": (
-                            "If you have provided the name of a health and medical institution, you must also provide the distance to it."
+                            "If you have provided the name of the nearest medical facility, you must also provide the distance to it."
                             if health_name and not health_distance
                             else (
                                 "The health and medical distance must be greater than or equal 0."
                                 if health_distance
-                                and health_distance[0] == "-"
-                                and health_distance[1:].isdigit()
+                                   and health_distance[0] == "-"
+                                   and health_distance[1:].isdigit()
                                 else (
                                     "The health and medical distance must consist of positive digits."
                                     if health_distance
-                                    and not health_distance.replace(",", "").isdigit()
+                                       and not health_distance.replace(
+                                        ",", ""
+                                    ).isdigit()
                                     else ""
                                 )
                             )
@@ -2029,68 +2012,46 @@ def create_property(request):
 
         elif len(request.POST.getlist("health-name")) > 1:
             temp_health = []
-            for name, distance in list(
-                zip(
-                    request.POST.getlist("health-name"),
-                    request.POST.getlist("health-distance"),
-                )
-            ):
-                if name != "" or distance != "":
-                    temp_health.append((name, distance))
 
-            for n, d in temp_health:
-                health_and_medical.append(
+            for name, distance in zip(request.POST.getlist('health-name'),
+                                      request.POST.getlist('health-distance')):
+                temp_health.append(
                     {
-                        "health_name": {
-                            "valid": (
-                                False
-                                if d and not n
-                                else False if n and len(n) <= 5 else True
-                            ),
-                            "message": (
-                                "If you have provided the distance to a health and medical institution, you must also provide its name."
-                                if d and not n
-                                else (
-                                    "The health and medical name must be at least 5 characters long."
-                                    if n and len(n) <= 5
-                                    else ""
-                                )
-                            ),
-                        },
-                        "health_distance": {
-                            "valid": (
-                                False
-                                if n and not d
-                                else (
-                                    False
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        False
-                                        if d and not d.replace(",", "").isdigit()
-                                        else True
-                                    )
-                                )
-                            ),
-                            "message": (
-                                "If you have provided the name of a health and medical institution, you must also provide the distance to it."
-                                if n and not d
-                                else (
-                                    "The health and medical distance must be greater than or equal 0."
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        "The health and medical distance must consist of positive digits."
-                                        if d and not d.replace(",", "").isdigit()
-                                        else ""
-                                    )
-                                )
-                            ),
-                        },
+                        "health_name":
+                            {
+                                "valid":
+                                    False if distance and not name else
+                                    False if name and len(name) < 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to the nearest medical facility, you must also provide its name." if distance and not name else
+                                    "The health and medical name must be at least 5 characters long." if name and len(
+                                        name) < 5 else
+                                    "",
+                            },
+                        "health_distance":
+                            {
+                                "valid":
+                                    False if name and not distance else
+                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
+                                    False if distance and not distance.replace(",", "").isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of the nearest medical facility, you must also provide the distance to it." if name and not distance else
+                                    "The health and medical distance must be greater than or equal 0." if distance and
+                                                                                                          distance[
+                                                                                                              0] == '-' and distance[
+                                                                                                                            1:].isdigit() else
+                                    "The health and medical distance must consist of positive digits." if distance and not distance.replace(
+                                        ",", "").isdigit() else
+                                    "",
+                            }
                     }
                 )
 
             response.update(
                 {
-                    "health_and_medical": health_and_medical,
+                    "health_and_medical": temp_health
                 }
             )
 
@@ -2098,12 +2059,11 @@ def create_property(request):
         transportation = []
 
         if (
-            (
                 len(request.POST.getlist("transportation-name")) == 1
                 and request.POST.getlist("transportation-name")[0] != ""
-            )
-            or len(request.POST.getlist("transportation-distance")) == 1
-            and request.POST.getlist("transportation-distance")[0] != ""
+        ) or (
+                len(request.POST.getlist("transportation-distance")) == 1
+                and request.POST.getlist("transportation-distance")[0] != ""
         ):
             transportation.append(
                 {
@@ -2118,7 +2078,7 @@ def create_property(request):
                             )
                         ),
                         "message": (
-                            "If you have provided the distance to the nearest transportation, you must also provide its name."
+                            "If you have provided the distance to a nearby transportation facility, you must also provide its name."
                             if transportation_distance and not transportation_name
                             else (
                                 "The transportation name must be at least 5 characters long."
@@ -2134,12 +2094,12 @@ def create_property(request):
                             else (
                                 False
                                 if transportation_distance
-                                and transportation_distance[0] == "-"
-                                and transportation_distance[1:].isdigit()
+                                   and transportation_distance[0] == "-"
+                                   and transportation_distance[1:].isdigit()
                                 else (
                                     False
                                     if transportation_distance
-                                    and not transportation_distance.replace(
+                                       and not transportation_distance.replace(
                                         ",", ""
                                     ).isdigit()
                                     else True
@@ -2147,17 +2107,17 @@ def create_property(request):
                             )
                         ),
                         "message": (
-                            "If you have provided the name of nearby transportation, you must also provide the distance to it."
+                            "If you have provided the name of a nearby transportation facility, you must also provide the distance to it."
                             if transportation_name and not transportation_distance
                             else (
                                 "The transportation distance must be greater than or equal 0."
                                 if transportation_distance
-                                and transportation_distance[0] == "-"
-                                and transportation_distance[1:].isdigit()
+                                   and transportation_distance[0] == "-"
+                                   and transportation_distance[1:].isdigit()
                                 else (
                                     "The transportation distance must consist of positive digits."
                                     if transportation_distance
-                                    and not transportation_distance.replace(
+                                       and not transportation_distance.replace(
                                         ",", ""
                                     ).isdigit()
                                     else ""
@@ -2176,68 +2136,46 @@ def create_property(request):
 
         elif len(request.POST.getlist("transportation-name")) > 1:
             temp_transportation = []
-            for name, distance in list(
-                zip(
-                    request.POST.getlist("transportation-name"),
-                    request.POST.getlist("transportation-distance"),
-                )
-            ):
-                if name != "" or distance != "":
-                    temp_transportation.append((name, distance))
 
-            for n, d in temp_transportation:
-                transportation.append(
+            for name, distance in zip(request.POST.getlist('transportation-name'),
+                                      request.POST.getlist('transportation-distance')):
+                temp_transportation.append(
                     {
-                        "transportation_name": {
-                            "valid": (
-                                False
-                                if d and not n
-                                else False if n and len(n) <= 5 else True
-                            ),
-                            "message": (
-                                "If you have provided the distance to the nearest transportation, you must also provide its name."
-                                if d and not n
-                                else (
-                                    "The transportation name must be at least 5 characters long."
-                                    if n and len(n) <= 5
-                                    else ""
-                                )
-                            ),
-                        },
-                        "transportation_distance": {
-                            "valid": (
-                                False
-                                if n and not d
-                                else (
-                                    False
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        False
-                                        if d and not d.replace(",", "").isdigit()
-                                        else True
-                                    )
-                                )
-                            ),
-                            "message": (
-                                "If you have provided the name of nearby transportation, you must also provide the distance to it."
-                                if n and not d
-                                else (
-                                    "The transportation distance must be greater than or equal 0."
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        "The transportation distance must consist of positive digits."
-                                        if d and not d.replace(",", "").isdigit()
-                                        else ""
-                                    )
-                                )
-                            ),
-                        },
+                        "transportation_name":
+                            {
+                                "valid":
+                                    False if distance and not name else
+                                    False if name and len(name) < 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to a nearby transportation facility, you must also provide its name." if distance and not name else
+                                    "The transportation name must be at least 5 characters long." if name and len(
+                                        name) < 5 else
+                                    "",
+                            },
+                        "transportation_distance":
+                            {
+                                "valid":
+                                    False if name and not distance else
+                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
+                                    False if distance and not distance.replace(",", "").isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of a nearby transportation facility, you must also provide the distance to it." if name and not distance else
+                                    "The transportation distance must be greater than or equal 0." if distance and
+                                                                                                      distance[
+                                                                                                          0] == '-' and distance[
+                                                                                                                        1:].isdigit() else
+                                    "The transportation distance must consist of positive digits." if distance and not distance.replace(
+                                        ",", "").isdigit() else
+                                    "",
+                            }
                     }
                 )
 
             response.update(
                 {
-                    "health_and_medical": health_and_medical,
+                    "transportation": temp_transportation
                 }
             )
 
@@ -2245,12 +2183,11 @@ def create_property(request):
         shopping = []
 
         if (
-            (
                 len(request.POST.getlist("shopping-name")) == 1
                 and request.POST.getlist("shopping-name")[0] != ""
-            )
-            or len(request.POST.getlist("shopping-distance")) == 1
-            and request.POST.getlist("shopping-distance")[0] != ""
+        ) or (
+                len(request.POST.getlist("shopping-distance")) == 1
+                and request.POST.getlist("shopping-distance")[0] != ""
         ):
             shopping.append(
                 {
@@ -2265,10 +2202,10 @@ def create_property(request):
                             )
                         ),
                         "message": (
-                            "If you have provided the distance to the nearest store, you must also provide its name."
+                            "If you have provided the distance to a nearby store, you must also provide its name."
                             if shopping_distance and not shopping_name
                             else (
-                                "The shop name must be at least 5 characters long."
+                                "The shopping name must be at least 5 characters long."
                                 if shopping_name and len(shopping_name) <= 5
                                 else ""
                             )
@@ -2281,12 +2218,14 @@ def create_property(request):
                             else (
                                 False
                                 if shopping_distance
-                                and shopping_distance[0] == "-"
-                                and shopping_distance[1:].isdigit()
+                                   and shopping_distance[0] == "-"
+                                   and shopping_distance[1:].isdigit()
                                 else (
                                     False
                                     if shopping_distance
-                                    and not shopping_distance.replace(",", "").isdigit()
+                                       and not shopping_distance.replace(
+                                        ",", ""
+                                    ).isdigit()
                                     else True
                                 )
                             )
@@ -2295,14 +2234,16 @@ def create_property(request):
                             "If you have provided the name of a nearby store, you must also provide the distance to it."
                             if shopping_name and not shopping_distance
                             else (
-                                "The shop distance must be greater than or equal 0."
+                                "The shopping distance must be greater than or equal 0."
                                 if shopping_distance
-                                and shopping_distance[0] == "-"
-                                and shopping_distance[1:].isdigit()
+                                   and shopping_distance[0] == "-"
+                                   and shopping_distance[1:].isdigit()
                                 else (
-                                    "The shop distance must consist of positive digits."
+                                    "The shopping distance must consist of positive digits."
                                     if shopping_distance
-                                    and not shopping_distance.replace(",", "").isdigit()
+                                       and not shopping_distance.replace(
+                                        ",", ""
+                                    ).isdigit()
                                     else ""
                                 )
                             )
@@ -2319,68 +2260,46 @@ def create_property(request):
 
         elif len(request.POST.getlist("shopping-name")) > 1:
             temp_shopping = []
-            for name, distance in list(
-                zip(
-                    request.POST.getlist("shopping-name"),
-                    request.POST.getlist("shopping-distance"),
-                )
-            ):
-                if name != "" or distance != "":
-                    temp_shopping.append((name, distance))
 
-            for n, d in temp_shopping:
-                shopping.append(
+            for name, distance in zip(request.POST.getlist('shopping-name'),
+                                      request.POST.getlist('shopping-distance')):
+                temp_shopping.append(
                     {
-                        "shopping_name": {
-                            "valid": (
-                                False
-                                if d and not n
-                                else False if n and len(n) <= 5 else True
-                            ),
-                            "message": (
-                                "If you have provided the distance to the nearest store, you must also provide its name."
-                                if d and not n
-                                else (
-                                    "The transportation name must be at least 5 characters long."
-                                    if n and len(n) <= 5
-                                    else ""
-                                )
-                            ),
-                        },
-                        "shopping_distance": {
-                            "valid": (
-                                False
-                                if n and not d
-                                else (
-                                    False
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        False
-                                        if d and not d.replace(",", "").isdigit()
-                                        else True
-                                    )
-                                )
-                            ),
-                            "message": (
-                                "If you have provided the name of a nearby store, you must also provide the distance to it."
-                                if n and not d
-                                else (
-                                    "The shop distance must be greater than or equal 0."
-                                    if d and d[0] == "-" and d[1:].isdigit()
-                                    else (
-                                        "The shop distance must consist of positive digits."
-                                        if d and not d.replace(",", "").isdigit()
-                                        else ""
-                                    )
-                                )
-                            ),
-                        },
+                        "shopping_name":
+                            {
+                                "valid":
+                                    False if distance and not name else
+                                    False if name and len(name) < 5 else
+                                    True,
+                                "message":
+                                    "If you have provided the distance to a nearby store, you must also provide its name." if distance and not name else
+                                    "The shopping name must be at least 5 characters long." if name and len(
+                                        name) < 5 else
+                                    "",
+                            },
+                        "shopping_distance":
+                            {
+                                "valid":
+                                    False if name and not distance else
+                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
+                                    False if distance and not distance.replace(",", "").isdigit() else
+                                    True,
+                                "message":
+                                    "If you have provided the name of a nearby store, you must also provide the distance to it." if name and not distance else
+                                    "The shopping distance must be greater than or equal 0." if distance and
+                                                                                                distance[
+                                                                                                    0] == '-' and distance[
+                                                                                                                  1:].isdigit() else
+                                    "The shopping distance must consist of positive digits." if distance and not distance.replace(
+                                        ",", "").isdigit() else
+                                    "",
+                            }
                     }
                 )
 
             response.update(
                 {
-                    "shopping": shopping,
+                    "shopping": temp_shopping
                 }
             )
 
@@ -2402,7 +2321,7 @@ def create_property(request):
                                     if item[0] == "valid":
                                         validation.append(item[1])
 
-        if len(set(validation)) == 1:
+        if len(set(validation)) == 1 and validation[0] != False:
             listing_status = ListingStatus.objects.get(
                 name=request.POST.get("status").capitalize()
             )
@@ -2483,8 +2402,8 @@ def create_property(request):
             else:
                 temporary_education = []
                 for n, d in zip(
-                    request.POST.getlist("education-name"),
-                    request.POST.getlist("education-distance"),
+                        request.POST.getlist("education-name"),
+                        request.POST.getlist("education-distance"),
                 ):
                     if len(n) > 0:
                         temporary_education.append((n, d))
@@ -2508,8 +2427,8 @@ def create_property(request):
             else:
                 temporary_health = []
                 for n, d in zip(
-                    request.POST.getlist("health-name"),
-                    request.POST.getlist("health-distance"),
+                        request.POST.getlist("health-name"),
+                        request.POST.getlist("health-distance"),
                 ):
                     if len(n) > 0:
                         temporary_health.append((n, d))
@@ -2533,8 +2452,8 @@ def create_property(request):
             else:
                 temporary_transp = []
                 for n, d in zip(
-                    request.POST.getlist("transportation-name"),
-                    request.POST.getlist("transportation-distance"),
+                        request.POST.getlist("transportation-name"),
+                        request.POST.getlist("transportation-distance"),
                 ):
                     if len(n) > 0:
                         temporary_transp.append((n, d))
@@ -2558,8 +2477,8 @@ def create_property(request):
             else:
                 temporary_shops = []
                 for n, d in zip(
-                    request.POST.getlist("shopping-name"),
-                    request.POST.getlist("shopping-distance"),
+                        request.POST.getlist("shopping-name"),
+                        request.POST.getlist("shopping-distance"),
                 ):
                     if len(n) > 0:
                         temporary_shops.append((n, d))
@@ -2627,7 +2546,7 @@ def add_to_favourites(request) -> django.http.response.JsonResponse:
 
 
 def property_details(
-    request, category_slug, property_slug
+        request, category_slug, property_slug
 ) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the property-details template.
@@ -2671,7 +2590,7 @@ def property_details(
 
 
 def add_review(
-    request, category_slug, property_slug
+        request, category_slug, property_slug
 ) -> django.http.response.JsonResponse:
     """
     The function handles a form for adding reviews to properties.
@@ -2738,7 +2657,7 @@ def add_review(
 
 
 def schedule_tour(
-    request, category_slug, property_slug
+        request, category_slug, property_slug
 ) -> django.http.response.JsonResponse:
     """
     The function handles a form for scheduling a visit with a property seller or landlord.

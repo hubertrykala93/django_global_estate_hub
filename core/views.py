@@ -41,8 +41,8 @@ def index(request) -> django.http.response.HttpResponse:
             [
                 obj.city
                 for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name="Rent")
-                )
+                listing_status=ListingStatus.objects.get(name="Rent")
+            )
             ]
         ),
         key=lambda x: x.name,
@@ -52,8 +52,8 @@ def index(request) -> django.http.response.HttpResponse:
             [
                 obj.category
                 for obj in Property.objects.filter(
-                    listing_status=ListingStatus.objects.get(name="Rent")
-                )
+                listing_status=ListingStatus.objects.get(name="Rent")
+            )
             ]
         ),
         key=lambda x: x.name,
@@ -100,7 +100,7 @@ def index(request) -> django.http.response.HttpResponse:
                 )
             )
         )
-        > 1
+           > 1
         else len(
             list(
                 set(
@@ -224,7 +224,7 @@ def newsletter(request) -> django.http.response.JsonResponse:
                             pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
                             string=email,
                         )
-                        and Newsletter.objects.filter(email=email).exists()
+                           and Newsletter.objects.filter(email=email).exists()
                         else True
                     )
                 )
@@ -244,7 +244,7 @@ def newsletter(request) -> django.http.response.JsonResponse:
                             pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
                             string=email,
                         )
-                        and Newsletter.objects.filter(email=email).exists()
+                           and Newsletter.objects.filter(email=email).exists()
                         else "Congratulations! You have successfully subscribed to our newsletter."
                     )
                 )
@@ -281,7 +281,7 @@ def newsletter(request) -> django.http.response.JsonResponse:
                     data={
                         "valid": False,
                         "message": "Unfortunately, we were unable to sign up your email for our newsletter. "
-                        "Please try again.",
+                                   "Please try again.",
                     }
                 )
 
@@ -537,7 +537,7 @@ def send_message(request) -> django.http.response.JsonResponse:
 
 
 def properties_results(
-    request,
+        request,
 ) -> django.http.response.JsonResponse or django.http.response.HttpResponse:
     """
     A function handling two request methods, POST and GET. During a POST request, the function handles
@@ -565,10 +565,10 @@ def properties_results(
         response = {}
 
         if (
-            "chosenStatus" in data
-            or "chosenLocation" in data
-            or "chosenCategory" in data
-            or "chosenYear" in data
+                "chosenStatus" in data
+                or "chosenLocation" in data
+                or "chosenCategory" in data
+                or "chosenYear" in data
         ):
             if len(data["chosenStatus"]) != 0:
                 filters["listing_status_id"] = ListingStatus.objects.get(
