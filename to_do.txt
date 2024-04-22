@@ -7,7 +7,8 @@ i jesteś zalogowany.
 
 
 Hubert:
-niezaznaczenie statusu przy submicie wywala błąd
+pole gallery żeby zwracało obiekt z 2 kluczami jak wszędzie
+obsługa ajaxa /create-property-success
 
 1. title 1 str,
     nie może być puste,

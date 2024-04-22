@@ -46,6 +46,22 @@ const multipleRowItems = (e) => {
   
 }
 
+const ajaxSuccess = () =>{
+  const xhr = new XMLHttpRequest()
+  xhr.open('POST', 'create-property-success', true)
+  xhr.setRequestHeader('X-CSRFToken', csrfToken)
+  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
+  xhr.send({
+    "success": true
+  })
+
+  // xhr.onreadystatechange = function () {
+  //   if (this.readyState == 4 && this.status == 200) {
+  //       const response = JSON.parse(this.responseText)
+  //   }
+  // }
+}
+
 const serverResponse = (response) => {
   console.log(response);
 
@@ -87,23 +103,55 @@ const serverResponse = (response) => {
         return 'data-postal-code'
       case 'amenities':
         return 'data-amenity'
+      case 'education_name':
+        return 'data-education-name'
+      case 'education_distance':
+        return 'data-education-distance'
+      case 'health_name':
+        return 'data-health-name'
+      case 'health_distance':
+        return 'data-health-distance'
+      case 'transportation_name':
+        return 'data-transportation-name'
+      case 'transportation_distance':
+        return 'data-transportation-distance'
+      case 'shopping_name':
+        return 'data-shopping-name'
+      case 'shopping_distance':
+        return 'data-shopping-distance'
     }
   }
 
-  const loopThroughResponse = (response, validator) => {
+  const loopThroughResponse = (response) => {
     let allValid = true
     for (const [key, value] of Object.entries(response)) {
-      const fieldName = getFieldName(key)
-      console.log(key)
-      if (!value.valid) { 
-        showInfo(value.valid, value.message, $addPropertyForm, fieldName)
-        allValid = false 
+      if (Array.isArray(value)) {
+        console.log(value)
+        value.forEach((itemObj, index) => {
+          for (const [key, value] of Object.entries(itemObj)) {
+            const fieldName = getFieldName(key)
+            if (!value.valid) { 
+              showInfo(value.valid, value.message, $addPropertyForm, fieldName + (index + 1))
+              allValid = false 
+            } else {
+              removeInfo($addPropertyForm, fieldName + (index + 1))
+            }
+          }
+        })
       } else {
-        removeInfo($addPropertyForm, fieldName)
+        const fieldName = getFieldName(key)
+        if (!value.valid) { 
+          showInfo(value.valid, value.message, $addPropertyForm, fieldName)
+          allValid = false 
+        } else {
+          removeInfo($addPropertyForm, fieldName)
+        }
       }
     }
 
-    if (allValid) { console.log('wszystko ok'); }
+    if (allValid) { 
+      ajaxSuccess()
+     }
   }
 
   loopThroughResponse(response)
