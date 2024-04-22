@@ -7,27 +7,30 @@ class AdminNewsletter(admin.ModelAdmin):
     """
     Admin options and functionalities for Newsletter model.
     """
-    list_display = ['id', 'email', 'subscribed_at']
-    list_filter = ['subscribed_at']
-    list_editable = ['email']
-    list_display_links = ['id']
-    search_fields = ['email']
-    ordering = ['subscribed_at']
+
+    list_display = ["id", "email", "subscribed_at"]
+    list_filter = ["subscribed_at"]
+    list_editable = ["email"]
+    list_display_links = ["id"]
+    search_fields = ["email"]
+    ordering = ["subscribed_at"]
     fieldsets = [
         [
-            'Subscribed Date:', {
-            'fields': [
-                'subscribed_at',
-            ]
-        }
+            "Subscribed Date:",
+            {
+                "fields": [
+                    "subscribed_at",
+                ]
+            },
         ],
         [
-            'E-mail Subscriber:', {
-            'fields': [
-                'email',
-            ]
-        }
-        ]
+            "E-mail Subscriber:",
+            {
+                "fields": [
+                    "email",
+                ]
+            },
+        ],
     ]
 
 
@@ -36,33 +39,37 @@ class AdminContactMail(admin.ModelAdmin):
     """
     Admin options and functionalities for ContactMail model.
     """
-    list_display = ['id', 'date_sent', 'full_name', 'phone_number', 'email', 'content']
-    list_filter = ['date_sent', 'full_name', 'email']
-    list_display_links = ['id']
-    search_fields = ['full_name', 'email']
-    ordering = ['date_sent']
+
+    list_display = ["id", "date_sent", "full_name", "phone_number", "email", "content"]
+    list_filter = ["date_sent", "full_name", "email"]
+    list_display_links = ["id"]
+    search_fields = ["full_name", "email"]
+    ordering = ["date_sent"]
     fieldsets = [
         [
-            'Date Sent:', {
-            'fields': [
-                'date_sent',
-            ]
-        }
+            "Date Sent:",
+            {
+                "fields": [
+                    "date_sent",
+                ]
+            },
         ],
         [
-            'Sender Informations:', {
-            'fields': [
-                'full_name',
-                'email',
-                'phone_number',
-            ]
-        }
+            "Sender Informations:",
+            {
+                "fields": [
+                    "full_name",
+                    "email",
+                    "phone_number",
+                ]
+            },
         ],
         [
-            'E-mail Content', {
-            'fields': [
-                'content',
-            ]
-        }
-        ]
+            "E-mail Content",
+            {
+                "fields": [
+                    "content",
+                ]
+            },
+        ],
     ]

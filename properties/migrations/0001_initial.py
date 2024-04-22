@@ -25,7 +25,10 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=100)),
                 ("slug", models.CharField(max_length=100)),
             ],
-            options={"verbose_name": "Amenity", "verbose_name_plural": "Amenities",},
+            options={
+                "verbose_name": "Amenity",
+                "verbose_name_plural": "Amenities",
+            },
         ),
         migrations.CreateModel(
             name="Category",
@@ -37,7 +40,10 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=100)),
                 ("slug", models.SlugField(max_length=100, unique=True)),
             ],
-            options={"verbose_name": "Category", "verbose_name_plural": "Categories",},
+            options={
+                "verbose_name": "Category",
+                "verbose_name_plural": "Categories",
+            },
         ),
         migrations.CreateModel(
             name="City",
@@ -46,7 +52,10 @@ class Migration(migrations.Migration):
                 ("name", models.CharField(max_length=100, null=True)),
                 ("slug", models.SlugField(max_length=100, null=True)),
             ],
-            options={"verbose_name": "City", "verbose_name_plural": "Cities",},
+            options={
+                "verbose_name": "City",
+                "verbose_name_plural": "Cities",
+            },
         ),
         migrations.CreateModel(
             name="Education",
@@ -56,7 +65,10 @@ class Migration(migrations.Migration):
                 ("distance", models.FloatField()),
                 ("rate", models.FloatField()),
             ],
-            options={"verbose_name": "Education", "verbose_name_plural": "Educations",},
+            options={
+                "verbose_name": "Education",
+                "verbose_name_plural": "Educations",
+            },
         ),
         migrations.CreateModel(
             name="HealthAndMedical",
@@ -104,7 +116,10 @@ class Migration(migrations.Migration):
                 ("number_of_bedrooms", models.IntegerField()),
                 ("number_of_bathrooms", models.IntegerField()),
             ],
-            options={"verbose_name": "Plan", "verbose_name_plural": "Plans",},
+            options={
+                "verbose_name": "Plan",
+                "verbose_name_plural": "Plans",
+            },
         ),
         migrations.CreateModel(
             name="Property",
@@ -219,7 +234,9 @@ class Migration(migrations.Migration):
                 ("distance", models.FloatField()),
                 ("rate", models.FloatField()),
             ],
-            options={"verbose_name": "Shopping",},
+            options={
+                "verbose_name": "Shopping",
+            },
         ),
         migrations.CreateModel(
             name="Transportation",
@@ -295,7 +312,10 @@ class Migration(migrations.Migration):
                     ),
                 ),
             ],
-            options={"verbose_name": "Review", "verbose_name_plural": "Reviews",},
+            options={
+                "verbose_name": "Review",
+                "verbose_name_plural": "Reviews",
+            },
         ),
         migrations.AddField(
             model_name="property",

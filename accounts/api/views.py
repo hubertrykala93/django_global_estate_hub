@@ -1,7 +1,16 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView, \
-    RetrieveDestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    RetrieveAPIView,
+    CreateAPIView,
+    RetrieveUpdateAPIView,
+    RetrieveDestroyAPIView,
+)
 from accounts.models import User, Individual, Business
-from .serializers import UserSerializer, IndividualProfileSerializer, BusinessProfileSerializer
+from .serializers import (
+    UserSerializer,
+    IndividualProfileSerializer,
+    BusinessProfileSerializer,
+)
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
@@ -9,7 +18,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.permissions import IsAuthenticated
 
 
-@api_view(http_method_names=['GET'])
+@api_view(http_method_names=["GET"])
 def api_endpoints(request):
     return Response(
         data={
@@ -52,17 +61,18 @@ def api_endpoints(request):
             # "All Disliked Comments": "api/v1/blog/comments/disliked",
             # "Search Comment by Is Active": "api/v1/blog/comments?active=is_active",
         },
-        status=status.HTTP_200_OK)
+        status=status.HTTP_200_OK,
+    )
 
 
 class UsersAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['is_agent', 'is_verified', 'account_type']
-    
+    filterset_fields = ["is_agent", "is_verified", "account_type"]
+
     def get_view_name(self):
-        return 'Registered Users'
+        return "Registered Users"
 
 
 class UserDetailsAPIView(RetrieveAPIView):
@@ -70,7 +80,7 @@ class UserDetailsAPIView(RetrieveAPIView):
     serializer_class = UserSerializer
 
     def get_view_name(self):
-        return 'User Detail'
+        return "User Detail"
 
 
 class UserCreateAPIView(CreateAPIView):
@@ -78,7 +88,7 @@ class UserCreateAPIView(CreateAPIView):
     serializer_class = UserSerializer
 
     def get_view_name(self):
-        return 'Creating a New User'
+        return "Creating a New User"
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
@@ -93,7 +103,7 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = UserSerializer
 
     def get_view_name(self):
-        return 'Updating an Existing User.'
+        return "Updating an Existing User."
 
 
 class UserDeleteAPIView(RetrieveDestroyAPIView):
@@ -101,27 +111,27 @@ class UserDeleteAPIView(RetrieveDestroyAPIView):
     serializer_class = UserSerializer
 
     def get_view_name(self):
-        return 'Deleting an Existing User.'
+        return "Deleting an Existing User."
 
 
 class IndividualProfileAPIView(ListAPIView):
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['gender', 'country', 'province', 'city']
+    filterset_fields = ["gender", "country", "province", "city"]
 
     def get_view_name(self):
-        return 'User Individual Profiles'
+        return "User Individual Profiles"
 
 
 class BusinessProfileAPIView(ListAPIView):
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['country', 'province', 'city']
+    filterset_fields = ["country", "province", "city"]
 
     def get_view_name(self):
-        return 'User Business Profiles'
+        return "User Business Profiles"
 
 
 class UserIndividualProfileDetailsAPIView(RetrieveAPIView):
@@ -129,7 +139,7 @@ class UserIndividualProfileDetailsAPIView(RetrieveAPIView):
     serializer_class = IndividualProfileSerializer
 
     def get_view_name(self):
-        return 'User Individual Profile Details'
+        return "User Individual Profile Details"
 
 
 class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
@@ -137,7 +147,7 @@ class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = IndividualProfileSerializer
 
     def get_view_name(self):
-        return 'User Individual Profile Update'
+        return "User Individual Profile Update"
 
 
 class UserIndividualProfileDeleteAPIView(RetrieveDestroyAPIView):
@@ -145,7 +155,7 @@ class UserIndividualProfileDeleteAPIView(RetrieveDestroyAPIView):
     serializer_class = IndividualProfileSerializer
 
     def get_view_name(self):
-        return 'User Individual Profile Delete'
+        return "User Individual Profile Delete"
 
 
 class UserBusinessProfileDetailsAPIView(RetrieveAPIView):
@@ -153,7 +163,7 @@ class UserBusinessProfileDetailsAPIView(RetrieveAPIView):
     serializer_class = BusinessProfileSerializer
 
     def get_view_name(self):
-        return 'User Business Profile Details'
+        return "User Business Profile Details"
 
 
 class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
@@ -161,7 +171,7 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = BusinessProfileSerializer
 
     def get_view_name(self):
-        return 'User Business Profile Update'
+        return "User Business Profile Update"
 
 
 class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
@@ -169,4 +179,4 @@ class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
     serializer_class = BusinessProfileSerializer
 
     def get_view_name(self):
-        return 'User Business Profile Delete'
+        return "User Business Profile Delete"

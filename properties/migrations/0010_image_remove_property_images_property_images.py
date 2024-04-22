@@ -30,7 +30,10 @@ class Migration(migrations.Migration):
                 ),
             ],
         ),
-        migrations.RemoveField(model_name="property", name="images",),
+        migrations.RemoveField(
+            model_name="property",
+            name="images",
+        ),
         migrations.AddField(
             model_name="property",
             name="images",

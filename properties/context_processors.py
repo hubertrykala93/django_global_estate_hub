@@ -14,5 +14,7 @@ def featured_properties(request) -> dict:
         dict
     """
     return {
-        "featured_properties": Property.objects.filter(is_featured=True).order_by('-date_posted')[:3]
+        "featured_properties": Property.objects.filter(is_featured=True).order_by(
+            "-date_posted"
+        )[:3]
     }
