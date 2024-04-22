@@ -1037,6 +1037,12 @@ def add_property(request) -> django.http.response.HttpResponse:
 
 def set_location(request):
     if request.method == "POST":
+        if request.session.get("country_code"):
+            request.session.pop("country_code")
+
+        if request.session.get("province_code"):
+            request.session.pop("province_code")
+
         data = json.loads(s=request.body.decode(encoding="utf-8"))
 
         country_response = requests.request(
@@ -1130,6 +1136,8 @@ def set_location(request):
                 for d in province_response.json()
                 if unidecode(d["name"]).title() == data["province"]
             ][0]
+
+            request.session['province_code'] = province_code
 
             # cities by country and province
             province_response_by_country_and_province = requests.request(
@@ -1589,34 +1597,6 @@ def create_property(request):
             }
         )
 
-        # province
-        response.update(
-            {
-                "province": {
-                    "valid": True if request.POST.get("province") else False,
-                    "message": (
-                        ""
-                        if request.POST.get("province")
-                        else "The property province is required."
-                    ),
-                }
-            }
-        )
-
-        # city
-        response.update(
-            {
-                "city": {
-                    "valid": True if request.POST.get("city") else False,
-                    "message": (
-                        ""
-                        if request.POST.get("city")
-                        else "The property city is required."
-                    ),
-                }
-            }
-        )
-
         # postal code
         response.update(
             {
@@ -1889,47 +1869,66 @@ def create_property(request):
         elif len(request.POST.getlist("education-name")) > 1:
             temp_education = []
 
-            for name, distance in zip(request.POST.getlist('education-name'),
-                                      request.POST.getlist('education-distance')):
+            for name, distance in zip(
+                    request.POST.getlist("education-name"),
+                    request.POST.getlist("education-distance"),
+            ):
                 temp_education.append(
                     {
-                        "education_name":
-                            {
-                                "valid":
-                                    False if distance and not name else
-                                    False if name and len(name) < 5 else
-                                    True,
-                                "message":
-                                    "If you've provided the distance to an educational institution, you must also provide its name." if distance and not name else
-                                    "The education name must be at least 5 characters long." if name and len(
-                                        name) < 5 else
-                                    "",
-                            },
-                        "education_distance":
-                            {
-                                "valid":
-                                    False if name and not distance else
-                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
-                                    False if distance and not distance.replace(",", "").isdigit() else
-                                    True,
-                                "message":
-                                    "If you've provided the name of an educational institution, you must also provide the distance to it." if name and not distance else
-                                    "The education distance must be greater than or equal 0." if distance and
-                                                                                                 distance[
-                                                                                                     0] == '-' and distance[
-                                                                                                                   1:].isdigit() else
-                                    "The education distance must consist of positive digits." if distance and not distance.replace(
-                                        ",", "").isdigit() else
-                                    "",
-                            }
+                        "education_name": {
+                            "valid": (
+                                False
+                                if distance and not name
+                                else False if name and len(name) < 5 else True
+                            ),
+                            "message": (
+                                "If you've provided the distance to an educational institution, you must also provide its name."
+                                if distance and not name
+                                else (
+                                    "The education name must be at least 5 characters long."
+                                    if name and len(name) < 5
+                                    else ""
+                                )
+                            ),
+                        },
+                        "education_distance": {
+                            "valid": (
+                                False
+                                if name and not distance
+                                else (
+                                    False
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        False
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else True
+                                    )
+                                )
+                            ),
+                            "message": (
+                                "If you've provided the name of an educational institution, you must also provide the distance to it."
+                                if name and not distance
+                                else (
+                                    "The education distance must be greater than or equal 0."
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        "The education distance must consist of positive digits."
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else ""
+                                    )
+                                )
+                            ),
+                        },
                     }
                 )
 
-            response.update(
-                {
-                    "education": temp_education
-                }
-            )
+            response.update({"education": temp_education})
 
         # health and medical
         health_and_medical = []
@@ -1948,9 +1947,7 @@ def create_property(request):
                             False
                             if health_distance and not health_name
                             else (
-                                False
-                                if health_name and len(health_name) <= 5
-                                else True
+                                False if health_name and len(health_name) <= 5 else True
                             )
                         ),
                         "message": (
@@ -1975,9 +1972,7 @@ def create_property(request):
                                 else (
                                     False
                                     if health_distance
-                                       and not health_distance.replace(
-                                        ",", ""
-                                    ).isdigit()
+                                       and not health_distance.replace(",", "").isdigit()
                                     else True
                                 )
                             )
@@ -1993,9 +1988,7 @@ def create_property(request):
                                 else (
                                     "The health and medical distance must consist of positive digits."
                                     if health_distance
-                                       and not health_distance.replace(
-                                        ",", ""
-                                    ).isdigit()
+                                       and not health_distance.replace(",", "").isdigit()
                                     else ""
                                 )
                             )
@@ -2013,47 +2006,66 @@ def create_property(request):
         elif len(request.POST.getlist("health-name")) > 1:
             temp_health = []
 
-            for name, distance in zip(request.POST.getlist('health-name'),
-                                      request.POST.getlist('health-distance')):
+            for name, distance in zip(
+                    request.POST.getlist("health-name"),
+                    request.POST.getlist("health-distance"),
+            ):
                 temp_health.append(
                     {
-                        "health_name":
-                            {
-                                "valid":
-                                    False if distance and not name else
-                                    False if name and len(name) < 5 else
-                                    True,
-                                "message":
-                                    "If you have provided the distance to the nearest medical facility, you must also provide its name." if distance and not name else
-                                    "The health and medical name must be at least 5 characters long." if name and len(
-                                        name) < 5 else
-                                    "",
-                            },
-                        "health_distance":
-                            {
-                                "valid":
-                                    False if name and not distance else
-                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
-                                    False if distance and not distance.replace(",", "").isdigit() else
-                                    True,
-                                "message":
-                                    "If you have provided the name of the nearest medical facility, you must also provide the distance to it." if name and not distance else
-                                    "The health and medical distance must be greater than or equal 0." if distance and
-                                                                                                          distance[
-                                                                                                              0] == '-' and distance[
-                                                                                                                            1:].isdigit() else
-                                    "The health and medical distance must consist of positive digits." if distance and not distance.replace(
-                                        ",", "").isdigit() else
-                                    "",
-                            }
+                        "health_name": {
+                            "valid": (
+                                False
+                                if distance and not name
+                                else False if name and len(name) < 5 else True
+                            ),
+                            "message": (
+                                "If you have provided the distance to the nearest medical facility, you must also provide its name."
+                                if distance and not name
+                                else (
+                                    "The health and medical name must be at least 5 characters long."
+                                    if name and len(name) < 5
+                                    else ""
+                                )
+                            ),
+                        },
+                        "health_distance": {
+                            "valid": (
+                                False
+                                if name and not distance
+                                else (
+                                    False
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        False
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else True
+                                    )
+                                )
+                            ),
+                            "message": (
+                                "If you have provided the name of the nearest medical facility, you must also provide the distance to it."
+                                if name and not distance
+                                else (
+                                    "The health and medical distance must be greater than or equal 0."
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        "The health and medical distance must consist of positive digits."
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else ""
+                                    )
+                                )
+                            ),
+                        },
                     }
                 )
 
-            response.update(
-                {
-                    "health_and_medical": temp_health
-                }
-            )
+            response.update({"health_and_medical": temp_health})
 
         # transportation
         transportation = []
@@ -2137,47 +2149,66 @@ def create_property(request):
         elif len(request.POST.getlist("transportation-name")) > 1:
             temp_transportation = []
 
-            for name, distance in zip(request.POST.getlist('transportation-name'),
-                                      request.POST.getlist('transportation-distance')):
+            for name, distance in zip(
+                    request.POST.getlist("transportation-name"),
+                    request.POST.getlist("transportation-distance"),
+            ):
                 temp_transportation.append(
                     {
-                        "transportation_name":
-                            {
-                                "valid":
-                                    False if distance and not name else
-                                    False if name and len(name) < 5 else
-                                    True,
-                                "message":
-                                    "If you have provided the distance to a nearby transportation facility, you must also provide its name." if distance and not name else
-                                    "The transportation name must be at least 5 characters long." if name and len(
-                                        name) < 5 else
-                                    "",
-                            },
-                        "transportation_distance":
-                            {
-                                "valid":
-                                    False if name and not distance else
-                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
-                                    False if distance and not distance.replace(",", "").isdigit() else
-                                    True,
-                                "message":
-                                    "If you have provided the name of a nearby transportation facility, you must also provide the distance to it." if name and not distance else
-                                    "The transportation distance must be greater than or equal 0." if distance and
-                                                                                                      distance[
-                                                                                                          0] == '-' and distance[
-                                                                                                                        1:].isdigit() else
-                                    "The transportation distance must consist of positive digits." if distance and not distance.replace(
-                                        ",", "").isdigit() else
-                                    "",
-                            }
+                        "transportation_name": {
+                            "valid": (
+                                False
+                                if distance and not name
+                                else False if name and len(name) < 5 else True
+                            ),
+                            "message": (
+                                "If you have provided the distance to a nearby transportation facility, you must also provide its name."
+                                if distance and not name
+                                else (
+                                    "The transportation name must be at least 5 characters long."
+                                    if name and len(name) < 5
+                                    else ""
+                                )
+                            ),
+                        },
+                        "transportation_distance": {
+                            "valid": (
+                                False
+                                if name and not distance
+                                else (
+                                    False
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        False
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else True
+                                    )
+                                )
+                            ),
+                            "message": (
+                                "If you have provided the name of a nearby transportation facility, you must also provide the distance to it."
+                                if name and not distance
+                                else (
+                                    "The transportation distance must be greater than or equal 0."
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        "The transportation distance must consist of positive digits."
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else ""
+                                    )
+                                )
+                            ),
+                        },
                     }
                 )
 
-            response.update(
-                {
-                    "transportation": temp_transportation
-                }
-            )
+            response.update({"transportation": temp_transportation})
 
         # shopping
         shopping = []
@@ -2223,9 +2254,7 @@ def create_property(request):
                                 else (
                                     False
                                     if shopping_distance
-                                       and not shopping_distance.replace(
-                                        ",", ""
-                                    ).isdigit()
+                                       and not shopping_distance.replace(",", "").isdigit()
                                     else True
                                 )
                             )
@@ -2241,9 +2270,7 @@ def create_property(request):
                                 else (
                                     "The shopping distance must consist of positive digits."
                                     if shopping_distance
-                                       and not shopping_distance.replace(
-                                        ",", ""
-                                    ).isdigit()
+                                       and not shopping_distance.replace(",", "").isdigit()
                                     else ""
                                 )
                             )
@@ -2261,47 +2288,66 @@ def create_property(request):
         elif len(request.POST.getlist("shopping-name")) > 1:
             temp_shopping = []
 
-            for name, distance in zip(request.POST.getlist('shopping-name'),
-                                      request.POST.getlist('shopping-distance')):
+            for name, distance in zip(
+                    request.POST.getlist("shopping-name"),
+                    request.POST.getlist("shopping-distance"),
+            ):
                 temp_shopping.append(
                     {
-                        "shopping_name":
-                            {
-                                "valid":
-                                    False if distance and not name else
-                                    False if name and len(name) < 5 else
-                                    True,
-                                "message":
-                                    "If you have provided the distance to a nearby store, you must also provide its name." if distance and not name else
-                                    "The shopping name must be at least 5 characters long." if name and len(
-                                        name) < 5 else
-                                    "",
-                            },
-                        "shopping_distance":
-                            {
-                                "valid":
-                                    False if name and not distance else
-                                    False if distance and distance[0] == "-" and distance[1:].isdigit() else
-                                    False if distance and not distance.replace(",", "").isdigit() else
-                                    True,
-                                "message":
-                                    "If you have provided the name of a nearby store, you must also provide the distance to it." if name and not distance else
-                                    "The shopping distance must be greater than or equal 0." if distance and
-                                                                                                distance[
-                                                                                                    0] == '-' and distance[
-                                                                                                                  1:].isdigit() else
-                                    "The shopping distance must consist of positive digits." if distance and not distance.replace(
-                                        ",", "").isdigit() else
-                                    "",
-                            }
+                        "shopping_name": {
+                            "valid": (
+                                False
+                                if distance and not name
+                                else False if name and len(name) < 5 else True
+                            ),
+                            "message": (
+                                "If you have provided the distance to a nearby store, you must also provide its name."
+                                if distance and not name
+                                else (
+                                    "The shopping name must be at least 5 characters long."
+                                    if name and len(name) < 5
+                                    else ""
+                                )
+                            ),
+                        },
+                        "shopping_distance": {
+                            "valid": (
+                                False
+                                if name and not distance
+                                else (
+                                    False
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        False
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else True
+                                    )
+                                )
+                            ),
+                            "message": (
+                                "If you have provided the name of a nearby store, you must also provide the distance to it."
+                                if name and not distance
+                                else (
+                                    "The shopping distance must be greater than or equal 0."
+                                    if distance
+                                       and distance[0] == "-"
+                                       and distance[1:].isdigit()
+                                    else (
+                                        "The shopping distance must consist of positive digits."
+                                        if distance
+                                           and not distance.replace(",", "").isdigit()
+                                        else ""
+                                    )
+                                )
+                            ),
+                        },
                     }
                 )
 
-            response.update(
-                {
-                    "shopping": temp_shopping
-                }
-            )
+            response.update({"shopping": temp_shopping})
 
         validation = []
 
@@ -2333,165 +2379,185 @@ def create_property(request):
             thumbnail.name = str(uuid.uuid4()) + "." + thumbnail.name.split(sep=".")[1]
             video.name = str(uuid.uuid4()) + "." + video.name.split(sep=".")[1]
 
-            if City.objects.filter(name=request.POST.get("city")).exists():
-                c = City.objects.get(name=request.POST.get("city"))
+            if request.POST.get("city"):
+                if City.objects.filter(name=request.POST.get("city")).exists():
+                    c = City.objects.get(name=request.POST.get("city"))
 
-            else:
-                c = City(
-                    name=request.POST.get("city"),
-                    slug="-".join(request.POST.get("city").lower().split(" ")),
-                )
-                c.save()
-
-            new_property = Property(
-                user=request.user,
-                title=title.title(),
-                slug="-".join(title.lower().split(" ")),
-                description=description,
-                year_of_built=int(year_of_built),
-                price=float(price),
-                number_of_bedrooms=int(number_of_bedrooms),
-                number_of_bathrooms=int(number_of_bathrooms),
-                square_meters=square_meters,
-                parking_space=parking_space,
-                postal_code=postal_code,
-                country=request.POST["country"],
-                country_code=request.session["country_code"],
-                province=request.POST["province"],
-                city=c,
-            )
-
-            new_property.listing_status = listing_status
-            new_property.category = category
-            new_property.thumbnail = thumbnail
-            new_property.video = video
-
-            new_property.save()
-
-            # save amenities
-            amenities = []
-
-            for amenity in request.POST.getlist("amenities"):
-                amenities.append(Amenities.objects.get(name=amenity))
-
-            for amenity in amenities:
-                new_property.amenities.add(amenity)
-
-            # save image gallery
-            gallery = request.FILES.getlist("gallery")
-            gallery_images = []
-
-            for image in gallery:
-                image.name = str(uuid.uuid4()) + "." + image.name.split(sep=".")[1]
-                gallery_images.append(image)
-
-            for image in gallery_images:
-                image = Img(image=image)
-                image.save()
-                new_property.images.add(image)
-
-            # save education
-            if len(request.POST.getlist("education-name")) == 1:
-                edu = Education(
-                    name=request.POST["education-name"],
-                    distance=int(request.POST["education-distance"]),
-                    rate=randint(a=1, b=5),
-                )
-                edu.save()
-                new_property.education.add(edu)
-            else:
-                temporary_education = []
-                for n, d in zip(
-                        request.POST.getlist("education-name"),
-                        request.POST.getlist("education-distance"),
-                ):
-                    if len(n) > 0:
-                        temporary_education.append((n, d))
-
-                for item in temporary_education:
-                    edu = Education(
-                        name=item[0], distance=item[1], rate=randint(a=1, b=5)
+                else:
+                    c = City(
+                        name=request.POST.get("city"),
+                        slug="-".join(request.POST.get("city").lower().split(" ")),
                     )
-                    edu.save()
-                    new_property.education.add(edu)
+                    c.save()
 
-            # save health and medical
-            if len(request.POST.getlist("health-name")) == 1:
-                health = HealthAndMedical(
-                    name=request.POST["health-name"],
-                    distance=int(request.POST["health-distance"]),
-                    rate=randint(a=1, b=5),
+                new_property = Property(
+                    user=request.user,
+                    title=title.title(),
+                    slug="-".join(title.lower().split(" ")),
+                    description=description,
+                    year_of_built=int(year_of_built),
+                    price=float(price),
+                    number_of_bedrooms=int(number_of_bedrooms),
+                    number_of_bathrooms=int(number_of_bathrooms),
+                    square_meters=square_meters,
+                    parking_space=parking_space,
+                    postal_code=postal_code,
+                    country=request.POST["country"],
+                    country_code=request.session["country_code"],
+                    province=request.POST["province"],
+                    city=c,
                 )
-                health.save()
-                new_property.health_and_medical.add(health)
-            else:
-                temporary_health = []
-                for n, d in zip(
-                        request.POST.getlist("health-name"),
-                        request.POST.getlist("health-distance"),
-                ):
-                    if len(n) > 0:
-                        temporary_health.append((n, d))
 
-                for item in temporary_health:
-                    health = HealthAndMedical(
-                        name=item[0], distance=item[1], rate=randint(a=1, b=5)
-                    )
-                    health.save()
-                    new_property.health_and_medical.add(health)
+                new_property.listing_status = listing_status
+                new_property.category = category
+                new_property.thumbnail = thumbnail
+                new_property.video = video
 
-            # save transportation
-            if len(request.POST.getlist("transportation-name")) == 1:
-                transp = Transportation(
-                    name=request.POST["transportation-name"],
-                    distance=int(request.POST["transportation-distance"]),
-                    rate=randint(a=1, b=5),
-                )
-                transp.save()
-                new_property.transportation.add(transp)
-            else:
-                temporary_transp = []
-                for n, d in zip(
-                        request.POST.getlist("transportation-name"),
-                        request.POST.getlist("transportation-distance"),
-                ):
-                    if len(n) > 0:
-                        temporary_transp.append((n, d))
+                new_property.save()
 
-                for item in temporary_transp:
-                    transp = Transportation(
-                        name=item[0], distance=item[1], rate=randint(a=1, b=5)
-                    )
-                    transp.save()
-                    new_property.transportation.add(transp)
+                # # save amenities
+                # amenities = []
+                #
+                # for amenity in request.POST.getlist("amenities"):
+                #     amenities.append(Amenities.objects.get(name=amenity))
+                #
+                # for amenity in amenities:
+                #     new_property.amenities.add(amenity)
 
-            # save shopping
-            if len(request.POST.getlist("shopping-name")) == 1:
-                shop = Shopping(
-                    name=request.POST["shopping-name"],
-                    distance=int(request.POST["shopping-distance"]),
-                    rate=randint(a=1, b=5),
-                )
-                shop.save()
-                new_property.shopping.add(shop)
-            else:
-                temporary_shops = []
-                for n, d in zip(
-                        request.POST.getlist("shopping-name"),
-                        request.POST.getlist("shopping-distance"),
-                ):
-                    if len(n) > 0:
-                        temporary_shops.append((n, d))
+                # # save image gallery
+                # gallery = request.FILES.getlist("gallery")
+                # gallery_images = []
+                #
+                # for image in gallery:
+                #     image.name = str(uuid.uuid4()) + "." + image.name.split(sep=".")[1]
+                #     gallery_images.append(image)
+                #
+                # for image in gallery_images:
+                #     image = Img(image=image)
+                #     image.save()
+                #     new_property.images.add(image)
 
-                for item in temporary_shops:
-                    shop = Shopping(
-                        name=item[0], distance=item[1], rate=randint(a=1, b=5)
-                    )
-                    shop.save()
-                    new_property.shopping.add(shop)
+                # save education, health and medical, transportation, shopping
+                nearbies = ["education", "health", "transportation", "shopping"]
+                temporary_folders = [[], [], [], []]
+                classes = [Education, HealthAndMedical, Transportation, Shopping]
 
-            if request.session.get("country_code"):
-                request.session.pop("country_code")
+                for nearby, folder, cls in zip(nearbies, temporary_folders, classes):
+                    if len(request.POST.getlist(f"{nearby}-name")) == 1:
+                        cls(
+                            name=request.POST[f"{nearby}-name"],
+                            distance=int(request.POST[f"{nearby}-distance"]),
+                            rate=randint(a=1, b=5),
+                        ).save()
+
+                    else:
+                        pass
+
+                # # save education
+                # if len(request.POST.getlist("education-name")) == 1:
+                #     edu = Education(
+                #         name=request.POST["education-name"],
+                #         distance=int(request.POST["education-distance"]),
+                #         rate=randint(a=1, b=5),
+                #     )
+                #     edu.save()
+                #     new_property.education.add(edu)
+                # else:
+                #     temporary_education = []
+                #     for n, d in zip(
+                #             request.POST.getlist("education-name"),
+                #             request.POST.getlist("education-distance"),
+                #     ):
+                #         if len(n) > 0:
+                #             temporary_education.append((n, d))
+                #
+                #     for item in temporary_education:
+                #         edu = Education(
+                #             name=item[0], distance=item[1], rate=randint(a=1, b=5)
+                #         )
+                #         edu.save()
+                #         new_property.education.add(edu)
+                #
+                # # save health and medical
+                # if len(request.POST.getlist("health-name")) == 1:
+                #     health = HealthAndMedical(
+                #         name=request.POST["health-name"],
+                #         distance=int(request.POST["health-distance"]),
+                #         rate=randint(a=1, b=5),
+                #     )
+                #     health.save()
+                #     new_property.health_and_medical.add(health)
+                # else:
+                #     temporary_health = []
+                #     for n, d in zip(
+                #             request.POST.getlist("health-name"),
+                #             request.POST.getlist("health-distance"),
+                #     ):
+                #         if len(n) > 0:
+                #             temporary_health.append((n, d))
+                #
+                #     for item in temporary_health:
+                #         health = HealthAndMedical(
+                #             name=item[0], distance=item[1], rate=randint(a=1, b=5)
+                #         )
+                #         health.save()
+                #         new_property.health_and_medical.add(health)
+                #
+                # # save transportation
+                # if len(request.POST.getlist("transportation-name")) == 1:
+                #     transp = Transportation(
+                #         name=request.POST["transportation-name"],
+                #         distance=int(request.POST["transportation-distance"]),
+                #         rate=randint(a=1, b=5),
+                #     )
+                #     transp.save()
+                #     new_property.transportation.add(transp)
+                # else:
+                #     temporary_transp = []
+                #     for n, d in zip(
+                #             request.POST.getlist("transportation-name"),
+                #             request.POST.getlist("transportation-distance"),
+                #     ):
+                #         if len(n) > 0:
+                #             temporary_transp.append((n, d))
+                #
+                #     for item in temporary_transp:
+                #         transp = Transportation(
+                #             name=item[0], distance=item[1], rate=randint(a=1, b=5)
+                #         )
+                #         transp.save()
+                #         new_property.transportation.add(transp)
+                #
+                # # save shopping
+                # if len(request.POST.getlist("shopping-name")) == 1:
+                #     shop = Shopping(
+                #         name=request.POST["shopping-name"],
+                #         distance=int(request.POST["shopping-distance"]),
+                #         rate=randint(a=1, b=5),
+                #     )
+                #     shop.save()
+                #     new_property.shopping.add(shop)
+                # else:
+                #     temporary_shops = []
+                #     for n, d in zip(
+                #             request.POST.getlist("shopping-name"),
+                #             request.POST.getlist("shopping-distance"),
+                #     ):
+                #         if len(n) > 0:
+                #             temporary_shops.append((n, d))
+                #
+                #     for item in temporary_shops:
+                #         shop = Shopping(
+                #             name=item[0], distance=item[1], rate=randint(a=1, b=5)
+                #         )
+                #         shop.save()
+                #         new_property.shopping.add(shop)
+
+                if request.session.get("province_code"):
+                    request.session.pop("province_code")
+
+                if request.session.get("country_code"):
+                    request.session.pop("country_code")
 
         return JsonResponse(data=response)
 

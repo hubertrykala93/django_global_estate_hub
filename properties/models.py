@@ -358,9 +358,9 @@ class Property(models.Model):
     parking_space = models.IntegerField()
     postal_code = models.CharField(max_length=20, null=True, blank=True)
     city = models.ForeignKey(
-        to=City, on_delete=models.CASCADE, null=True, related_name="cities"
+        to=City, on_delete=models.CASCADE, null=True, related_name="cities", blank=True
     )
-    province = models.CharField(max_length=100, null=True)
+    province = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100)
     country_code = models.CharField(max_length=5, null=True)
     latitude = models.FloatField(max_length=20, null=True)
