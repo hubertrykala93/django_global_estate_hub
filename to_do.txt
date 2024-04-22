@@ -5,6 +5,10 @@ hasło: !1Qwerty
 przechodzisz potem na zakładkę /admin
 i jesteś zalogowany.
 
+
+Hubert:
+niezaznaczenie statusu przy submicie wywala błąd
+
 1. title 1 str,
     nie może być puste,
     nie może mieć mniej niż 10 liter,
