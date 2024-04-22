@@ -55,11 +55,11 @@ const ajaxSuccess = () =>{
     "success": true
   })
 
-  // xhr.onreadystatechange = function () {
-  //   if (this.readyState == 4 && this.status == 200) {
-  //       const response = JSON.parse(this.responseText)
-  //   }
-  // }
+//   xhr.onreadystatechange = function () {
+//     if (this.readyState == 4 && this.status == 200) {
+//         const response = JSON.parse(this.responseText)
+//     }
+//   }
 }
 
 const serverResponse = (response) => {

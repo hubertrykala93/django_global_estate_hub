@@ -7,8 +7,11 @@ i jesteś zalogowany.
 
 
 Hubert:
-pole gallery żeby zwracało obiekt z 2 kluczami jak wszędzie
 obsługa ajaxa /create-property-success
+poprawić wiadomości,
+do każdego request.POST bez zmiennej dodać strip
+na sam koniec odkomentować settingsy z sesjami
+na sam koniec odkomentować session set expiry w account log_in
 
 1. title 1 str,
     nie może być puste,
