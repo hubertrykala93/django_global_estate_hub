@@ -5,6 +5,7 @@ import json
 import re
 import os
 from accounts.models import User, Individual, Business
+from django.contrib import messages
 from .models import (
     Property,
     ListingStatus,
@@ -2041,6 +2042,9 @@ def create_property(request):
                                 obj.save()
 
                                 field.add(obj)
+
+        messages.success(request=request,
+                         message=f"The {request.session['property_title']} listing has been successfully added. Check out its details at {new_property.get_absolute_url()}.")
 
         return JsonResponse(data=response)
 
