@@ -790,6 +790,14 @@ def properties(request) -> django.http.response.HttpResponse:
             queryset.extend(Property.objects.all().order_by("-date_posted"))
 
     else:
+        print(request.session["new_property"])
+
+        if request.session.get("country_code"):
+            request.session.pop("country_code")
+
+        if request.session.get("province_code"):
+            request.session.pop("province_code")
+
         if request.session.get("sorted_type"):
             request.session.pop("sorted_type")
 
@@ -801,6 +809,8 @@ def properties(request) -> django.http.response.HttpResponse:
 
         if request.session.get("checked_filters"):
             request.session.pop("checked_filters")
+
+        print(request.session.items())
 
         request.session["sorted_type"] = "Newest Properties"
         queryset.extend(Property.objects.all().order_by("-date_posted"))
@@ -1300,7 +1310,7 @@ def create_property(request):
                 "description": {
                     "valid": False if not description else True,
                     "message": (
-                        "The description is required."
+                        "The 'description' field is required."
                         if not description
                         else ""
                     ),
@@ -1350,7 +1360,7 @@ def create_property(request):
                         )
                     ),
                     "message": (
-                        "Year of built is required."
+                        "The 'year of built' field is required."
                         if not year_of_built
                         else (
                             "The actual year of built is required, and the year of built should consist solely of digits."
@@ -1399,7 +1409,7 @@ def create_property(request):
                         )
                     ),
                     "message": (
-                        "The number of bedrooms is required."
+                        "The 'number of bedrooms' field is required."
                         if not number_of_bedrooms
                         else (
                             "The number of bedrooms must be greater than or equal 0."
@@ -1431,7 +1441,7 @@ def create_property(request):
                         )
                     ),
                     "message": (
-                        "The number of bathrooms is required."
+                        "The 'number of bathrooms' field is required."
                         if not number_of_bedrooms
                         else (
                             "The number of bathrooms must be greater than or equal 0."
@@ -1481,20 +1491,20 @@ def create_property(request):
                         )
                     ),
                     "message": (
-                        "Square meters is required."
+                        "The 'square meters' field is required."
                         if not square_meters
                         else (
-                            "Square meters must be greater than 0."
+                            "The square meters must be greater than 0."
                             if square_meters[0] == "-" and square_meters[1:].isdecimal()
                             else (
-                                "Square meters must consist of positive digits."
+                                "The square meters must consist of positive digits."
                                 if square_meters[0] == "-"
                                    and not square_meters[1:].isdecimal()
                                 else (
-                                    "Square meters must be greater than 0."
+                                    "The square meters must be greater than 0."
                                     if square_meters == "0"
                                     else (
-                                        "Square meters must consist of positive digits."
+                                        "The square meters must consist of positive digits."
                                         if "," in square_meters
                                            and not square_meters.replace(",", "").isdigit()
                                         else (
@@ -1531,13 +1541,13 @@ def create_property(request):
                         )
                     ),
                     "message": (
-                        "Parking space is required."
+                        "The 'parking space' field is required."
                         if not parking_space
                         else (
-                            "Parking space must consist of positive digits."
+                            "The parking space must consist of positive digits."
                             if not parking_space.isdigit()
                             else (
-                                "Parking space must be greater than or equal 0."
+                                "The parking space must be greater than or equal 0."
                                 if parking_space[0] == "-"
                                    and parking_space[1:].isdigit()
                                 else "" if parking_space == "0" else ""
@@ -1556,7 +1566,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("status")
-                        else "The listing status is required."
+                        else "The status is required."
                     ),
                 }
             }
@@ -1570,7 +1580,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("category")
-                        else "The property category is required."
+                        else "The category is required."
                     ),
                 }
             }
@@ -1584,7 +1594,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("country")
-                        else "The property country is required."
+                        else "The country is required."
                     ),
                 }
             }
@@ -1596,7 +1606,7 @@ def create_property(request):
                 "postal_code": {
                     "valid": False if not postal_code else True,
                     "message": (
-                        "The property postal code is required."
+                        "The 'postal code' field is required."
                         if not postal_code
                         else ""
                     ),
@@ -1612,7 +1622,7 @@ def create_property(request):
                         False if len(request.POST.getlist("amenities")) == 0 else
                         True,
                     "message":
-                        "The property amenities is required." if len(request.POST.getlist("amenities")) == 0 else
+                        "Amenities are required." if len(request.POST.getlist("amenities")) == 0 else
                         "",
                 }
             }
@@ -1988,8 +1998,6 @@ def create_property(request):
                     city=c,
                 )
 
-                request.session["property_title"] = title.title()
-
                 new_property.listing_status = listing_status
                 new_property.category = category
                 new_property.thumbnail = thumbnail
@@ -2002,52 +2010,54 @@ def create_property(request):
                     Amenities.objects.get(name=amenity) for amenity in request.POST.getlist("amenities")
                 ]
 
-                [new_property.amenities.add(amenity) for amenity in amenities]
+                # [new_property.amenities.add(amenity) for amenity in amenities]
 
                 # save image gallery
                 gallery_images = [setattr(image, 'name', str(uuid.uuid4()) + '.' + image.name.split('.')[-1]) or image
                                   for image in request.FILES.getlist('gallery')]
 
-                for image in gallery_images:
-                    image = Img(image=image)
-                    image.save()
-                    new_property.images.add(image)
+                # for image in gallery_images:
+                #     image = Img(image=image)
+                #     image.save()
+                #     new_property.images.add(image)
 
-                # save education, health and medical, transportation, shopping
-                nearbies = ["education", "health", "transportation", "shopping"]
-                temporary_folders = [[], [], [], []]
-                classes = [Education, HealthAndMedical, Transportation, Shopping]
-                fields = [new_property.education, new_property.health_and_medical, new_property.transportation,
-                          new_property.shopping]
+                # # save education, health and medical, transportation, shopping
+                # nearbies = ["education", "health", "transportation", "shopping"]
+                # temporary_folders = [[], [], [], []]
+                # classes = [Education, HealthAndMedical, Transportation, Shopping]
+                # fields = [new_property.education, new_property.health_and_medical, new_property.transportation,
+                #           new_property.shopping]
+                #
+                # for nearby, folder, cls, field in zip(nearbies, temporary_folders, classes, fields):
+                #     if len(request.POST.getlist(f"{nearby}-name")) == 1 and len(
+                #             request.POST.get(f"{nearby}-name")) != 0:
+                #         obj = cls(
+                #             name=request.POST[f"{nearby}-name"],
+                #             distance=int(request.POST[f"{nearby}-distance"]),
+                #             rate=randint(a=1, b=5),
+                #         )
+                #         obj.save()
+                #
+                #         field.add(obj)
+                #
+                #     else:
+                #         for n, d in zip(request.POST.get(f"{nearby}-name"), request.POST.get(f"{nearby}-distance")):
+                #             if len(n) > 0:
+                #                 folder.append((n, d))
+                #
+                #             for item in folder:
+                #                 obj = cls(name=item[0], distance=item[1], rate=randint(a=1, b=5))
+                #                 obj.save()
+                #
+                #                 field.add(obj)
 
-                for nearby, folder, cls, field in zip(nearbies, temporary_folders, classes, fields):
-                    if len(request.POST.getlist(f"{nearby}-name")) == 1 and len(
-                            request.POST.get(f"{nearby}-name")) != 0:
-                        obj = cls(
-                            name=request.POST[f"{nearby}-name"],
-                            distance=int(request.POST[f"{nearby}-distance"]),
-                            rate=randint(a=1, b=5),
-                        )
-                        obj.save()
-
-                        field.add(obj)
-
-                    else:
-                        for n, d in zip(request.POST.get(f"{nearby}-name"), request.POST.get(f"{nearby}-distance")):
-                            if len(n) > 0:
-                                folder.append((n, d))
-
-                            for item in folder:
-                                obj = cls(name=item[0], distance=item[1], rate=randint(a=1, b=5))
-                                obj.save()
-
-                                field.add(obj)
-
-                messages.success(request=request,
-                                 message=f"The {request.session['property_title']} listing has been successfully added. Check out its details at {new_property.get_absolute_url()}.")
+                request.session["new_property"] = {
+                    "title": title.title(),
+                    "url": new_property.get_absolute_url(),
+                }
 
                 return JsonResponse(data={
-                    "url": new_property.get_absolute_url() + '.html',
+                    "url": 'properties',
                 })
 
         return JsonResponse(data=response)

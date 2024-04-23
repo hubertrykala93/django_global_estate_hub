@@ -3,6 +3,14 @@
 
 {% block title %}{{ title }}{% endblock %}
 
+{% block messages %}
+{% if request.session.new_property %}
+<div class="messages">
+    The <a href="{{ request.session.new_property.url }}">{{ request.session.new_property.title }}</a> has been successfully added.
+</div>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="properties" data-properties>
     <div class="container">
