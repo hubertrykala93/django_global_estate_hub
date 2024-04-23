@@ -790,7 +790,6 @@ def properties(request) -> django.http.response.HttpResponse:
             queryset.extend(Property.objects.all().order_by("-date_posted"))
 
     else:
-        print(request.session["new_property"])
 
         if request.session.get("country_code"):
             request.session.pop("country_code")

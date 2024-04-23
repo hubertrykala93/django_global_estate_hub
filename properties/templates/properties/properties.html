@@ -5,11 +5,18 @@
 
 {% block messages %}
 {% if request.session.new_property %}
-<div class="messages">
-    The <a href="{{ request.session.new_property.url }}">{{ request.session.new_property.title }}</a> has been successfully added.
+<div class="message message--info">
+    <div class="container">
+        <div class="row">
+            <div class="message__content">
+                The <a href="{{ request.session.new_property.url }}">{{ request.session.new_property.title }}</a> has been successfully added.
+            </div>
+        </div>
+    </div>
 </div>
 {% endif %}
 {% endblock %}
+
 
 {% block content %}
 <section class="properties" data-properties>

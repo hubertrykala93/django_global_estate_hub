@@ -931,11 +931,19 @@ form .form__field.form__form{
     background-color: var(--clr-info-bg);
 }
 
-.message .message__content{
+.message .message__content {
     color: var(--clr-white);
-    font-weight: 500;
-    font-size: 1.6rem;
 }
+
+.message .message__content a {
+    font-weight: 500;
+}
+
+.message .message__content a:hover,
+.message .message__content a:focus-visible {
+    color: var(--clr-primary-alt);
+}
+
 
 
 /*----------------------------------*\
