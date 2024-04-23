@@ -2043,8 +2043,12 @@ def create_property(request):
 
                                 field.add(obj)
 
-        messages.success(request=request,
-                         message=f"The {request.session['property_title']} listing has been successfully added. Check out its details at {new_property.get_absolute_url()}.")
+                messages.success(request=request,
+                                 message=f"The {request.session['property_title']} listing has been successfully added. Check out its details at {new_property.get_absolute_url()}.")
+
+                return JsonResponse(data={
+                    "url": new_property.get_absolute_url() + '.html',
+                })
 
         return JsonResponse(data=response)
 
