@@ -47,6 +47,7 @@ const multipleRowItems = (e) => {
 }
 
 const ajaxSuccess = () =>{
+  console.log('success');
   const xhr = new XMLHttpRequest()
   xhr.open('POST', 'create-property-success', true)
   xhr.setRequestHeader('X-CSRFToken', csrfToken)
@@ -55,15 +56,20 @@ const ajaxSuccess = () =>{
     "success": true
   })
 
-//   xhr.onreadystatechange = function () {
-//     if (this.readyState == 4 && this.status == 200) {
-//         const response = JSON.parse(this.responseText)
-//     }
-//   }
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+        const response = JSON.parse(this.responseText)
+        console.log(response);
+        window.location.href = response;
+    }
+  }
 }
 
 const serverResponse = (response) => {
-  console.log(response);
+  if (response.hasOwnProperty('url')) {
+    window.location.href = response.url
+    return false
+  }
 
   const getFieldName = (key) => {
     switch (key) {
@@ -126,7 +132,6 @@ const serverResponse = (response) => {
     let allValid = true
     for (const [key, value] of Object.entries(response)) {
       if (Array.isArray(value)) {
-        console.log(value)
         value.forEach((itemObj, index) => {
           for (const [key, value] of Object.entries(itemObj)) {
             const fieldName = getFieldName(key)
