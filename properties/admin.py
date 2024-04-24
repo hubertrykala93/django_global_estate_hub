@@ -296,7 +296,7 @@ class AdminCity(admin.ModelAdmin):
     list_editable = ["name", "slug", "image"]
     prepopulated_fields = {"slug": ["name"]}
     search_fields = ["name"]
-    ordering = ["id"]
+    ordering = ["-id"]
     fieldsets = [
         [
             "City Image:",
@@ -403,7 +403,7 @@ class AdminProperty(admin.ModelAdmin):
     list_display_links = ["id"]
     prepopulated_fields = {"slug": ["title"]}
     search_fields = ["user__username", "title"]
-    ordering = ["id"]
+    ordering = ["-id"]
     actions = ["make_featured", "remove_featured"]
     fieldsets = [
         [

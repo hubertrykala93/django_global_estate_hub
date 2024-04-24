@@ -790,7 +790,8 @@ def properties(request) -> django.http.response.HttpResponse:
             queryset.extend(Property.objects.all().order_by("-date_posted"))
 
     else:
-        print(request.session["new_property"])
+        # if request.session.get("new_property"):
+        #     request.session.pop("new_property")
 
         if request.session.get("country_code"):
             request.session.pop("country_code")
@@ -809,8 +810,6 @@ def properties(request) -> django.http.response.HttpResponse:
 
         if request.session.get("checked_filters"):
             request.session.pop("checked_filters")
-
-        print(request.session.items())
 
         request.session["sorted_type"] = "Newest Properties"
         queryset.extend(Property.objects.all().order_by("-date_posted"))
@@ -1194,6 +1193,10 @@ def set_location(request):
             )
 
 
+def save_data_to_model():
+    pass
+
+
 def create_property(request):
     response = {}
     if request.method == "POST":
@@ -1221,9 +1224,11 @@ def create_property(request):
             {
                 "title": {
                     "valid": (
-                        False
-                        if not title or len(title) < 10 or len(title) > 100
-                        else True
+                        False if not title else
+                        False if len(title) < 10 else
+                        False if len(title) > 100 else
+                        False if Property.objects.filter(title=title).exists() else
+                        True
                     ),
                     "message": (
                         "The 'title' field is required."
@@ -1234,7 +1239,8 @@ def create_property(request):
                             else (
                                 "The title must consist of no more than 100 characters."
                                 if len(title) > 100
-                                else ""
+                                else "An offer with this name already exists." if Property.objects.filter(
+                                    title=title).exists() else ""
                             )
                         )
                     ),
@@ -1494,17 +1500,17 @@ def create_property(request):
                         "The 'square meters' field is required."
                         if not square_meters
                         else (
-                            "The square meters must be greater than 0."
+                            "Square meters must be greater than 0."
                             if square_meters[0] == "-" and square_meters[1:].isdecimal()
                             else (
-                                "The square meters must consist of positive digits."
+                                "Square meters must consist of positive digits."
                                 if square_meters[0] == "-"
                                    and not square_meters[1:].isdecimal()
                                 else (
-                                    "The square meters must be greater than 0."
+                                    "Square meters must be greater than 0."
                                     if square_meters == "0"
                                     else (
-                                        "The square meters must consist of positive digits."
+                                        "Square meters must consist of positive digits."
                                         if "," in square_meters
                                            and not square_meters.replace(",", "").isdigit()
                                         else (
@@ -1544,10 +1550,10 @@ def create_property(request):
                         "The 'parking space' field is required."
                         if not parking_space
                         else (
-                            "The parking space must consist of positive digits."
+                            "Parking space must consist of positive digits."
                             if not parking_space.isdigit()
                             else (
-                                "The parking space must be greater than or equal 0."
+                                "Parking space must be greater than or equal 0."
                                 if parking_space[0] == "-"
                                    and parking_space[1:].isdigit()
                                 else "" if parking_space == "0" else ""
@@ -1566,7 +1572,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("status")
-                        else "The status is required."
+                        else "Status is required."
                     ),
                 }
             }
@@ -1580,7 +1586,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("category")
-                        else "The category is required."
+                        else "Category is required."
                     ),
                 }
             }
@@ -1594,7 +1600,7 @@ def create_property(request):
                     "message": (
                         ""
                         if request.POST.get("country")
-                        else "The country is required."
+                        else "Country is required."
                     ),
                 }
             }
@@ -1649,11 +1655,11 @@ def create_property(request):
                                 )
                             ),
                             "message": (
-                                "The thumbnail size should not exceed 1 MB."
+                                "The thumbnail size cannot exceed 1 MB."
                                 if "thumbnail" in request.FILES
                                    and request.FILES.get("thumbnail").size > 1000000
                                 else (
-                                    "The supported formats are jpg, jpeg, webp, png, svg."
+                                    "The thumbnail must be in JPG, JPEG, SVG, PNG, or WEBP format."
                                     if "thumbnail" in request.FILES
                                        and request.FILES.get("thumbnail").size <= 1000000
                                        and request.FILES.get("thumbnail").name.split(
@@ -1672,7 +1678,7 @@ def create_property(request):
                     {
                         "thumbnail": {
                             "valid": False,
-                            "message": "The property thumbnail is required.",
+                            "message": "A thumbnail is required.",
                         }
                     }
                 )
@@ -1708,7 +1714,7 @@ def create_property(request):
                         {
                             "gallery": {
                                 "valid": False,
-                                "message": "The size should not exceed 1MB and supported formats are jpg, jpeg, webp, png, svg.",
+                                "message": "The size of the photos cannot exceed 1 MB, and the photos must be in JPG, JPEG, PNG, SVG, or WEBP format.",
                             }
                         }
                     )
@@ -1718,7 +1724,7 @@ def create_property(request):
                     {
                         "gallery": {
                             "valid": False,
-                            "message": "The property gallery is required.",
+                            "message": "The photo gallery is required.",
                         }
                     }
                 )
@@ -1743,11 +1749,11 @@ def create_property(request):
                                 )
                             ),
                             "message": (
-                                "The video size should not exceed 5 MB."
+                                "The video size cannot exceed 5 MB."
                                 if "video" in request.FILES
                                    and request.FILES.get("video").size > 5000000
                                 else (
-                                    "The supported format is mp4."
+                                    "The video must be in MP4 format."
                                     if "video" in request.FILES
                                        and request.FILES.get("video").size <= 5000000
                                        and request.FILES.get("video").name.split(sep=".")[
@@ -1766,7 +1772,7 @@ def create_property(request):
                     {
                         "video": {
                             "valid": False,
-                            "message": "The property video is required.",
+                            "message": "Video is required.",
                         }
                     }
                 )
@@ -1776,15 +1782,15 @@ def create_property(request):
                 {
                     "thumbnail": {
                         "valid": False,
-                        "message": "The property thumbnail is required.",
+                        "message": "A thumbnail is required.",
                     },
                     "gallery": {
                         "valid": False,
-                        "message": "The property gallery is required.",
+                        "message": "The photo gallery is required.",
                     },
                     "video": {
                         "valid": False,
-                        "message": "The property video is required.",
+                        "message": "Video is required.",
                     },
                 }
             )
@@ -1807,23 +1813,23 @@ def create_property(request):
                         f"{nearby}_name": {
                             "valid": (
                                 False
-                                if request.POST.get(f"{nearby}-distance")
-                                   and not request.POST.get(f"{nearby}-name")
+                                if request.POST.get(f"{nearby}-distance").strip()
+                                   and not request.POST.get(f"{nearby}-name").strip()
                                 else (
                                     False
-                                    if request.POST.get(f"{nearby}-name")
-                                       and len(request.POST.get(f"{nearby}-name")) <= 5
+                                    if request.POST.get(f"{nearby}-name").strip()
+                                       and len(request.POST.get(f"{nearby}-name").strip()) <= 5
                                     else True
                                 )
                             ),
                             "message": (
                                 "If you have provided a distance, you must also provide a name."
-                                if request.POST.get(f"{nearby}-distance")
-                                   and not request.POST.get(f"{nearby}-name")
+                                if request.POST.get(f"{nearby}-distance").strip()
+                                   and not request.POST.get(f"{nearby}-name").strip()
                                 else (
                                     "The name must be at least 5 characters long."
-                                    if request.POST.get(f"{nearby}-name")
-                                       and len(request.POST.get(f"{nearby}-name")) <= 5
+                                    if request.POST.get(f"{nearby}-name").strip()
+                                       and len(request.POST.get(f"{nearby}-name").strip()) <= 5
                                     else ""
                                 )
                             ),
@@ -1831,19 +1837,19 @@ def create_property(request):
                         f"{nearby}_distance": {
                             "valid": (
                                 False
-                                if request.POST.get(f"{nearby}-name")
-                                   and not request.POST.get(f"{nearby}-distance")
+                                if request.POST.get(f"{nearby}-name").strip()
+                                   and not request.POST.get(f"{nearby}-distance").strip()
                                 else (
                                     False
-                                    if request.POST.get(f"{nearby}-distance")
-                                       and request.POST.get(f"{nearby}-distance")[0] == "-"
-                                       and request.POST.get(f"{nearby}-distance")[
+                                    if request.POST.get(f"{nearby}-distance").strip()
+                                       and request.POST.get(f"{nearby}-distance").strip()[0] == "-"
+                                       and request.POST.get(f"{nearby}-distance").strip()[
                                            1:
                                            ].isdigit()
                                     else (
                                         False
-                                        if request.POST.get(f"{nearby}-distance")
-                                           and not request.POST.get(f"{nearby}-distance")
+                                        if request.POST.get(f"{nearby}-distance").strip()
+                                           and not request.POST.get(f"{nearby}-distance").strip()
                                         .replace(",", "")
                                         .isdigit()
                                         else True
@@ -1852,19 +1858,19 @@ def create_property(request):
                             ),
                             "message": (
                                 "If you have provided the name, you must also provide the distance to it."
-                                if request.POST.get(f"{nearby}-name")
-                                   and not request.POST.get(f"{nearby}-distance")
+                                if request.POST.get(f"{nearby}-name").strip()
+                                   and not request.POST.get(f"{nearby}-distance").strip()
                                 else (
                                     "The distance must be greater than or equal 0."
-                                    if request.POST.get(f"{nearby}-distance")
-                                       and request.POST.get(f"{nearby}-distance")[0] == "-"
-                                       and request.POST.get(f"{nearby}-distance")[
+                                    if request.POST.get(f"{nearby}-distance").strip()
+                                       and request.POST.get(f"{nearby}-distance").strip()[0] == "-"
+                                       and request.POST.get(f"{nearby}-distance").strip()[
                                            1:
                                            ].isdigit()
                                     else (
                                         "The distance must consist of positive digits."
-                                        if request.POST.get(f"{nearby}-distance")
-                                           and not request.POST.get(f"{nearby}-distance")
+                                        if request.POST.get(f"{nearby}-distance").strip()
+                                           and not request.POST.get(f"{nearby}-distance").strip()
                                         .replace(",", "")
                                         .isdigit()
                                         else ""
@@ -1890,15 +1896,15 @@ def create_property(request):
                             f"{nearby}_name": {
                                 "valid": (
                                     False
-                                    if d and not n
-                                    else False if n and len(n) < 5 else True
+                                    if d.strip() and not n.strip()
+                                    else False if n.strip() and len(n.strip()) < 5 else True
                                 ),
                                 "message": (
                                     "If you have provided a distance, you must also provide a name."
-                                    if d and not n
+                                    if d.strip() and not n.strip()
                                     else (
                                         "The name must be at least 5 characters long."
-                                        if n and len(n) < 5
+                                        if n.strip() and len(n.strip()) < 5
                                         else ""
                                     )
                                 ),
@@ -1906,26 +1912,26 @@ def create_property(request):
                             f"{nearby}_distance": {
                                 "valid": (
                                     False
-                                    if n and not d
+                                    if n.strip() and not d.strip()
                                     else (
                                         False
-                                        if d and d[0] == "-" and d[1:].isdigit()
+                                        if d.strip() and d.strip()[0] == "-" and d.strip()[1:].isdigit()
                                         else (
                                             False
-                                            if d and not d.replace(",", "").isdigit()
+                                            if d.strip() and not d.strip().replace(",", "").isdigit()
                                             else True
                                         )
                                     )
                                 ),
                                 "message": (
                                     "If you've provided the name, you must also provide the distance to it."
-                                    if n and not d
+                                    if n.strip() and not d.strip()
                                     else (
                                         "The distance must be greater than or equal 0."
-                                        if d and d[0] == "-" and d[1:].isdigit()
+                                        if d.strip() and d.strip()[0] == "-" and d.strip()[1:].isdigit()
                                         else (
                                             "The distance must consist of positive digits."
-                                            if d and not d.replace(",", "").isdigit()
+                                            if d.strip() and not d.strip().replace(",", "").isdigit()
                                             else ""
                                         )
                                     )
@@ -1958,114 +1964,164 @@ def create_property(request):
                                         validation.append(item[1])
 
         if len(set(validation)) == 1 and validation[0] is not False:
-            listing_status = ListingStatus.objects.get(
-                name=request.POST.get("status").capitalize()
-            )
-            category = Category.objects.get(
-                name=request.POST.get("category").capitalize()
-            )
-            thumbnail = request.FILES["thumbnail"]
-            thumbnail.name = str(uuid.uuid4()) + "." + thumbnail.name.split(sep=".")[1]
-            video = request.FILES["video"]
-            video.name = str(uuid.uuid4()) + "." + video.name.split(sep=".")[1]
+            filters = {
+                "user": request.user,
+                "title": title.title(),
+                "slug": "-".join(unidecode(title).lower().split(" ")),
+                "description": description,
+                "year_of_built": int(year_of_built),
+                "price": float(price),
+                "number_of_bedrooms": int(number_of_bedrooms),
+                "number_of_bathrooms": int(number_of_bathrooms),
+                "square_meters": float(square_meters),
+                "parking_space": int(parking_space),
+                "postal_code": postal_code,
+                "country": request.POST["country"],
+                "country_code": request.session["country_code"],
+                "listing_status_id": ListingStatus.objects.get(name=request.POST.get("status").capitalize()).id,
+                "category_id": Category.objects.get(name=request.POST.get("category").capitalize()).id,
+            }
 
-            if request.POST.get("city"):
-                if City.objects.filter(name=request.POST.get("city")).exists():
-                    c = City.objects.get(name=request.POST.get("city"))
+            geolocations_api = requests.get(
+                url=f"https://api.geoapify.com/v1/geocode/search?text={request.POST['city']}&lang=en&limit=10&type=city&apiKey=52f8adced4b040d6a58ec4b7015ea9c1").json()[
+                "features"]
+
+            if request.POST.get("province"):
+                filters["province"] = request.POST["province"]
+
+                if request.POST.get("city"):
+                    if City.objects.filter(name=request.POST.get("city")).exists():
+                        city_id = City.objects.get(name=request.POST.get("city")).id
+                        filters["city_id"] = city_id
+
+                    else:
+                        city = City(
+                            name=request.POST.get("city"),
+                            slug="-".join(request.POST.get("city").lower().split(" "))
+                        )
+                        filters["city"] = city
+                        city.save()
+
+                        for feature in geolocations_api:
+                            if feature["properties"]["city"] == request.POST.get("city"):
+                                filters["longitude"] = feature["properties"]["lon"]
+                                filters["latitude"] = feature["properties"]["lat"]
 
                 else:
-                    c = City(
-                        name=request.POST.get("city"),
-                        slug="-".join(request.POST.get("city").lower().split(" ")),
-                    )
-                    c.save()
+                    if City.objects.filter(name=request.POST.get("province")).exists():
+                        city_id = City.objects.get(name=request.POST.get("province")).id
 
-                new_property = Property(
-                    user=request.user,
-                    title=title.title(),
-                    slug="-".join(title.lower().split(" ")),
-                    description=description,
-                    year_of_built=int(year_of_built),
-                    price=float(price),
-                    number_of_bedrooms=int(number_of_bedrooms),
-                    number_of_bathrooms=int(number_of_bathrooms),
-                    square_meters=square_meters,
-                    parking_space=parking_space,
-                    postal_code=postal_code,
-                    country=request.POST["country"],
-                    country_code=request.session["country_code"],
-                    province=request.POST["province"],
-                    city=c,
-                )
+                        filters["city_id"] = city_id
 
-                new_property.listing_status = listing_status
-                new_property.category = category
-                new_property.thumbnail = thumbnail
-                new_property.video = video
+                    else:
+                        city = City(name=request.POST.get("province"),
+                                    slug="-".join(request.POST.get("province").lower().split(" ")))
+                        filters["city"] = city
+                        city.save()
 
-                new_property.save()
+            else:
+                filters["province"] = request.POST.get("country")
 
-                # save amenities
+                if request.POST.get("city"):
+                    if City.objects.filter(name=request.POST.get("city")).exists():
+                        city_id = City.objects.get(name=request.POST.get("city")).id
+                        filters["city_id"] = city_id
+
+                    else:
+                        city = City(
+                            name=request.POST.get("city"),
+                            slug="-".join(request.POST.get("city").lower().split(" "))
+                        )
+                        filters["city"] = city
+                        city.save()
+
+                else:
+                    if City.objects.filter(name=request.POST.get("country")).exists():
+                        city_id = City.objects.get(name=request.POST.get("country")).id
+
+                        filters["city_id"] = city_id
+
+                    else:
+                        city = City(name=request.POST.get("country"),
+                                    slug="-".join(request.POST.get("country").lower().split(" ")))
+                        filters["city"] = city
+                        city.save()
+
+            if request.FILES["thumbnail"]:
+                thumbnail = request.FILES["thumbnail"]
+                thumbnail.name = str(uuid.uuid4()) + "." + thumbnail.name.split(sep=".")[1]
+                filters["thumbnail"] = thumbnail
+
+            if request.FILES["video"]:
+                video = request.FILES["video"]
+                video.name = str(uuid.uuid4()) + "." + video.name.split(sep=".")[1]
+                filters["video"] = video
+
+            new_property = Property(**filters)
+            new_property.save()
+
+            if request.POST.get("amenities"):
                 amenities = [
                     Amenities.objects.get(name=amenity) for amenity in request.POST.getlist("amenities")
                 ]
 
-                # [new_property.amenities.add(amenity) for amenity in amenities]
+                for amenity in amenities:
+                    new_property.amenities.add(amenity)
 
-                # save image gallery
-                gallery_images = [setattr(image, 'name', str(uuid.uuid4()) + '.' + image.name.split('.')[-1]) or image
-                                  for image in request.FILES.getlist('gallery')]
+            if request.FILES["gallery"]:
+                gallery_images = [
+                    setattr(image, 'name', str(uuid.uuid4()) + '.' + image.name.split('.')[-1]) or image
+                    for image in request.FILES.getlist('gallery')]
 
-                # for image in gallery_images:
-                #     image = Img(image=image)
-                #     image.save()
-                #     new_property.images.add(image)
+                for image in gallery_images:
+                    image = Img(image=image)
+                    # image.save()
+                    # new_property.images.add(image)
 
-                # # save education, health and medical, transportation, shopping
-                # nearbies = ["education", "health", "transportation", "shopping"]
-                # temporary_folders = [[], [], [], []]
-                # classes = [Education, HealthAndMedical, Transportation, Shopping]
-                # fields = [new_property.education, new_property.health_and_medical, new_property.transportation,
-                #           new_property.shopping]
-                #
-                # for nearby, folder, cls, field in zip(nearbies, temporary_folders, classes, fields):
-                #     if len(request.POST.getlist(f"{nearby}-name")) == 1 and len(
-                #             request.POST.get(f"{nearby}-name")) != 0:
-                #         obj = cls(
-                #             name=request.POST[f"{nearby}-name"],
-                #             distance=int(request.POST[f"{nearby}-distance"]),
-                #             rate=randint(a=1, b=5),
-                #         )
-                #         obj.save()
-                #
-                #         field.add(obj)
-                #
-                #     else:
-                #         for n, d in zip(request.POST.get(f"{nearby}-name"), request.POST.get(f"{nearby}-distance")):
-                #             if len(n) > 0:
-                #                 folder.append((n, d))
-                #
-                #             for item in folder:
-                #                 obj = cls(name=item[0], distance=item[1], rate=randint(a=1, b=5))
-                #                 obj.save()
-                #
-                #                 field.add(obj)
+            # save education, health and medical, transportation, shopping
+            if request.POST.get("education-name") or request.POST.get("health-name") or request.POST.get(
+                    "transportation-name") or request.POST.get("shopping-name"):
+                nearbies = ["education", "health", "transportation", "shopping"]
+                temporary_folders = [[], [], [], []]
+                classes = [Education, HealthAndMedical, Transportation, Shopping]
+                fields = [new_property.education, new_property.health_and_medical, new_property.transportation,
+                          new_property.shopping]
 
-                request.session["new_property"] = {
-                    "title": title.title(),
-                    "url": new_property.get_absolute_url(),
-                }
+                for nearby, folder, cls, field in zip(nearbies, temporary_folders, classes, fields):
+                    if len(request.POST.getlist(f"{nearby}-name")) == 1 and len(
+                            request.POST.get(f"{nearby}-name")) != 0:
+                        obj = cls(
+                            name=request.POST[f"{nearby}-name"],
+                            distance=int(request.POST[f"{nearby}-distance"]),
+                            rate=randint(a=1, b=5),
+                        )
+                        # obj.save()
+                        #
+                        # field.add(obj)
 
-                return JsonResponse(data={
-                    "url": 'properties',
-                })
+                    else:
+                        for n, d in zip(request.POST.getlist(f"{nearby}-name"),
+                                        request.POST.getlist(f"{nearby}-distance")):
+                            if len(n) > 0:
+                                if not (n, d) in folder:
+                                    folder.append((n, d))
+
+                        for item in folder:
+                            obj = cls(name=item[0], distance=int(item[1]), rate=randint(a=1, b=5))
+                            # obj.save()
+                            #
+                            # field.add(obj)
+
+            request.session["new_property"] = {
+                "title": title.title(),
+                "url": new_property.get_absolute_url(),
+            }
+
+            return JsonResponse(data={
+                "url": 'properties',
+            })
 
         return JsonResponse(data=response)
-
-
-def create_property_success(request):
-    if request.method == "POST":
-        return JsonResponse(data={})
 
 
 def add_to_favourites(request) -> django.http.response.JsonResponse:

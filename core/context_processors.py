@@ -74,7 +74,7 @@ def explore_cities(request) -> dict:
                 [city.name for city in City.objects.all().order_by("id")][:35],
                 [city.image.url for city in City.objects.all().order_by("id")][:35],
                 [city.get_absolute_url() for city in City.objects.all().order_by("id")][
-                    :35
+                :35
                 ],
                 [
                     Property.objects.filter(city=city).count()
@@ -98,8 +98,6 @@ def discover_cities(request) -> dict:
         dict
     """
     return {
-        "discover_cities": [
-            City.objects.get(name=obj.city.name)
-            for obj in Property.objects.annotate(city_count=Count("city"))
-        ][:8],
+        "discover_cities":
+            [City.objects.get(name=obj.city.name) for obj in Property.objects.annotate(city_count=Count("city"))][:8],
     }
