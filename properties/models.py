@@ -220,7 +220,7 @@ class City(models.Model):
         blank=True,
         default="default_city_image.jpg",
     )
-    name = models.CharField(max_length=100, null=True)
+    name = models.CharField(default="", max_length=100, blank=True)
     slug = models.SlugField(max_length=100, null=True)
 
     class Meta:
@@ -348,7 +348,7 @@ class Property(models.Model):
     )
     title = models.CharField(max_length=100, unique=True)
     date_posted = models.DateTimeField(auto_now_add=True, editable=False)
-    thumbnail = models.ImageField(upload_to="property_images")
+    thumbnail = models.ImageField(upload_to="property_images", null=True)
     images = models.ManyToManyField(to=Img, related_name="images", blank=True)
     year_of_built = models.IntegerField()
     price = models.FloatField(default=1, null=True)
@@ -357,10 +357,10 @@ class Property(models.Model):
     square_meters = models.FloatField()
     parking_space = models.IntegerField()
     postal_code = models.CharField(max_length=20, null=True, blank=True)
-    city = models.ForeignKey(
-        to=City, on_delete=models.CASCADE, null=True, related_name="cities", blank=True
-    )
-    province = models.CharField(max_length=100, null=True, blank=True)
+    city = models.ForeignKey(default="",
+                             to=City, on_delete=models.CASCADE, related_name="cities", null=True, blank=True
+                             )
+    province = models.CharField(default="", max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100)
     country_code = models.CharField(max_length=5, null=True)
     latitude = models.FloatField(max_length=20, null=True)

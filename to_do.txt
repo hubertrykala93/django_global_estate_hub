@@ -7,8 +7,6 @@ i jesteś zalogowany.
 
 
 Hubert:
-poprawić wiadomości,
-do każdego request.POST bez zmiennej dodać strip
 na sam koniec odkomentować settingsy z sesjami
 na sam koniec odkomentować session set expiry w account log_in
 

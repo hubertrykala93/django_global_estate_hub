@@ -68,7 +68,7 @@ const ajaxSuccess = () =>{
 const serverResponse = (response) => {
   console.log('odebrany', response);
   if (response.hasOwnProperty('url')) {
-    // window.location.href = response.url
+     window.location.href = response.url
     return false
   }
 

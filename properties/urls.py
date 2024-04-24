@@ -40,9 +40,4 @@ urlpatterns = [
         view=properties_views.create_property,
         name="create-property",
     ),
-    path(
-        route="create-property-success",
-        view=properties_views.create_property_success,
-        name="create-property-success",
-    ),
 ]
