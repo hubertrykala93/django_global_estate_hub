@@ -6,11 +6,23 @@
    * Forms reusable functions
     */
 
+/**
+ * Removes message from a particular input in form
+ * @param {HTMLElement} form - form element where you want to remove info message
+ * @param {string} field - data selector of nearest input
+ */
 const removeInfo = (form, field)=>{
   const $messageNode = form.querySelector(`[${field}]`).closest('.form__field').querySelector('.info')
   if ($messageNode) { $messageNode.remove() }
 }
 
+/**
+ * Shows message to a particular input in form
+ * @param {boolean} isValid - is error or success message
+ * @param {string} message - content of message
+ * @param {HTMLElement} $form - form element where you want to add info message
+ * @param {string} field - data selector of input under which you want to place the message
+ */
 const showInfo = (isValid, message, $form, field)=> {
   const $inputParentField = $form.querySelector(`[${field}]`).closest('.form__field')
   let $messageNode = $inputParentField.querySelector('.info')
@@ -38,6 +50,12 @@ const showInfo = (isValid, message, $form, field)=> {
   $messageNode.textContent = message
 }
 
+/**
+ * Validates form input values before sending with Ajax
+ * @param {HTMLElement} form - form element where you want to valid inputs
+ * @param {Object} data - set of inputs values
+ * @returns {boolean} - true if all valid / false if anything invalid 
+ */
 const clientValidation = (form, data) => {
   let isAllValid = true
 
@@ -119,6 +137,10 @@ const clientValidation = (form, data) => {
   }
 }
 
+/**
+ * Clears all inputs values in form
+ * @param {HTMLElement} form - form element where you want to clear inputs
+ */
 const clearFormValues = (form) => {
   const allInputs = form.querySelectorAll('[data-input]')
 
@@ -131,6 +153,12 @@ const clearFormValues = (form) => {
   }
 }
 
+/**
+ * Shows message under form when it is submited correctly
+ * @param {HTMLElement} form - form element under which you want to show message
+ * @param {string} message - message to show
+ * @param {boolean} hide - if true message disappear after 2000 miliseconds
+ */
 const successfullySentMessage = (form, message, hide)=>{
   const messageContainer = document.createElement('div')
   messageContainer.classList.add('form__sent-message')
@@ -144,6 +172,12 @@ const successfullySentMessage = (form, message, hide)=>{
   }
 }
 
+/**
+ * Returns value of checked radio element in form
+ * @param {HTMLElement} form - form element where radio elements are placed
+ * @param {string} radioDataAttr - data selector of radio set to get
+ * @returns {string} - if checked radio element is found it returns its value, if not - returns empty string
+ */
 const getRadioValue = (form, radioDataAttr) => {
   const radios = form.querySelectorAll(`[${radioDataAttr}]`)
 
@@ -155,6 +189,11 @@ const getRadioValue = (form, radioDataAttr) => {
   return ''
 }
 
+/**
+ * Decodes comment before adding to DOM
+ * @param {string} comment - comment content
+ * @returns {string}
+ */
 const decodeCommentIntoText = (comment) => {
   return decodeURIComponent(comment).replace(/\n/g, '<br>').replace(/\s/g, ' ')
 }
@@ -195,8 +234,6 @@ if ( $customSelects.length ) {
     const $selectBtn = select.querySelector('[data-custom-select-btn]')
 
     $selectBtn.addEventListener('click', () => {
-      // closeAllSelects()
-
       toggleSelect(select, $selectBtn)
     })
 

@@ -46,30 +46,10 @@ const multipleRowItems = (e) => {
   
 }
 
-const ajaxSuccess = () =>{
-  console.log('success');
-  const xhr = new XMLHttpRequest()
-  xhr.open('POST', 'create-property-success', true)
-  xhr.setRequestHeader('X-CSRFToken', csrfToken)
-  xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest")
-  xhr.send({
-    "success": true
-  })
-
-  xhr.onreadystatechange = function () {
-    if (this.readyState == 4 && this.status == 200) {
-        const response = JSON.parse(this.responseText)
-        console.log(response);
-        window.location.href = response;
-    }
-  }
-}
-
 const serverResponse = (response) => {
-  console.log('odebrany', response);
   if (response.hasOwnProperty('url')) {
      window.location.href = response.url
-    return false
+     return
   }
 
   const getFieldName = (key) => {
@@ -130,7 +110,6 @@ const serverResponse = (response) => {
   }
 
   const loopThroughResponse = (response) => {
-    let allValid = true
     for (const [key, value] of Object.entries(response)) {
       if (Array.isArray(value)) {
         value.forEach((itemObj, index) => {
@@ -138,7 +117,6 @@ const serverResponse = (response) => {
             const fieldName = getFieldName(key)
             if (!value.valid) { 
               showInfo(value.valid, value.message, $addPropertyForm, fieldName + (index + 1))
-              allValid = false 
             } else {
               removeInfo($addPropertyForm, fieldName + (index + 1))
             }
@@ -148,16 +126,11 @@ const serverResponse = (response) => {
         const fieldName = getFieldName(key)
         if (!value.valid) { 
           showInfo(value.valid, value.message, $addPropertyForm, fieldName)
-          allValid = false 
         } else {
           removeInfo($addPropertyForm, fieldName)
         }
       }
     }
-
-    if (allValid) { 
-      ajaxSuccess()
-     }
   }
 
   loopThroughResponse(response)
