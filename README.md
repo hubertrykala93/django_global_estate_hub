@@ -3,6 +3,12 @@
 </p>
 <img src="https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/712f1c95-eab5-457c-9ba7-d0eb09709f38">
 
+## Live Preview
+
+[ Global Estate Hub](https://globalestatehub.onrender.com)
+
+<br/>
+
 ## Global Estate Hub
 
 Global Estate Hub is an online platform that enables users to browse property listings for both rental and sale purposes. This project aims to create a central hub for real estate advertisements from around the world, providing users with easy access to a wide range of information about available properties on the market.
@@ -76,3 +82,10 @@ Run the project.
 ```
 
 And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
+
+<br/>
+
+## Authors
+
+- [Hubert Rykała - Backend Developer](https://github.com/hubertrykala93)
+- [Szymon Lewandowski - Frontend Developer](https://github.com/Szymon-Levy)
