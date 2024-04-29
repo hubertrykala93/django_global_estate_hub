@@ -11,19 +11,6 @@ Global Estate Hub is an online platform that enables users to browse property li
 
 <br/>
 
-## Table of Contents
-
-* [Live Preview](#live-preview)
-* [Features](#features)
-* [Implemented Languages & Frameworks](#implemented-languages-and-frameworks)
-* [File Structure](#file-structure)
-* [Branches](#branches)
-* [Installation](#installation)
-* [Authors](#authors)
-* [Screenshots and Videos](#screenshots-and-videos)
-
-<br/>
-
 ## Live Preview
 
 [ Global Estate Hub](https://globalestatehub.onrender.com)
