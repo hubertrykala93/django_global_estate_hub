@@ -241,6 +241,7 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 - [Hubert Rykała - Backend Developer](https://github.com/hubertrykala93)
 - [Szymon Lewandowski - Frontend Developer](https://github.com/Szymon-Levy)
 
+<br/>
   
 ## Screenshots and Videos
 
