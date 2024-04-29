@@ -115,4 +115,22 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 
 ![sign_up](https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c71ad3b1-8360-4657-89f3-7ea0a5ee1ef6)
 
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c7c6c3e4-10b3-4084-ac9a-50324acb62ea
+
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/083530fc-18f1-4a21-8906-7e995666e38c
+
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/ea3cbc5c-343e-47ba-afbd-f883eb1d8b0f
+
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/ad4a8ead-3682-4198-b5e6-d72f650daf8c
+
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/bceef524-69b3-4def-858c-2010673893c4
+
+
+
+
+
+
+
+
+
 
