@@ -18,7 +18,7 @@ Global Estate Hub is an online platform that enables users to browse property li
 * [Implemented Languages & Frameworks](#implemented-languages-and-frameworks)
 * [Installation](#installation)
 * [Authors](#authors)
-* [Screenshots](#screenshots)
+* [Screenshots and Videos](#screenshots-and-videos)
 
 <br/>
 
@@ -107,3 +107,12 @@ And then navigate to ```http://127.0.0.1:8000``` or ```http://localhost:8000```.
 
 - [Hubert Rykała - Backend Developer](https://github.com/hubertrykala93)
 - [Szymon Lewandowski - Frontend Developer](https://github.com/Szymon-Levy)
+
+  
+## Screenshots and Videos
+
+![login](https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/01781d87-672a-4166-8c9b-c0b256fcb54e)
+
+![sign_up](https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c71ad3b1-8360-4657-89f3-7ea0a5ee1ef6)
+
+
