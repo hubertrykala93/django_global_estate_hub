@@ -7,7 +7,11 @@
 
 [ Global Estate Hub](https://globalestatehub.onrender.com)
 
-[![Demo CountPages alpha]](https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889)
+<video controls loop autoplay>
+  <source src="https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889" type="video/mp4" />
+</video>
+
+https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889
 
 <br/>
 
