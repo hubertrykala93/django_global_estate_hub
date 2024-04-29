@@ -5,9 +5,20 @@
 
 <br/>
 
+## Global Estate Hub
+
+Global Estate Hub is an online platform that enables users to browse property listings for both rental and sale purposes. This project aims to create a central hub for real estate advertisements from around the world, providing users with easy access to a wide range of information about available properties on the market.
+
+<br/>
+
 ## Table of Contents
 
+* [Live Preview](#live-preview)
+* [Features](#features)
+* [Implemented Languages & Frameworks](#implemented-languages-&-frameworks)
 * [Installation](#installation)
+* [Authors](#authors)
+* [Screenshots](#screenshots)
 
 <br/>
 
@@ -19,12 +30,6 @@ https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1b
 
 Login: homeseeker22@<i></i>example.com<br/>
 Password: !1Qwerty
-
-<br/>
-
-## Global Estate Hub
-
-Global Estate Hub is an online platform that enables users to browse property listings for both rental and sale purposes. This project aims to create a central hub for real estate advertisements from around the world, providing users with easy access to a wide range of information about available properties on the market.
 
 <br/>
 
