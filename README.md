@@ -73,7 +73,7 @@ Password: !1Qwerty
 
 ## Installation
 
-Clone the GitHub repository.
+Install Python 3.10 and clone the GitHub repository.
 
 ```bash
 $ git clone https://github.com/hubertrykala93/django_global_estate_hub.git
