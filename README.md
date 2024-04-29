@@ -3,6 +3,14 @@
 </p>
 <img src="https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/712f1c95-eab5-457c-9ba7-d0eb09709f38">
 
+<br/>
+
+## Table of Contents
+
+- [Features](## Live Preview)
+
+<br/>
+
 ## Live Preview
 
 [ Global Estate Hub](https://globalestatehub.onrender.com)
