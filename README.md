@@ -7,7 +7,7 @@
 
 ## Table of Contents
 
-- [Features](## Live Preview)
+* [Installation](#installation)
 
 <br/>
 
