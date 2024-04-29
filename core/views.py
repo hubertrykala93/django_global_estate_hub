@@ -156,7 +156,7 @@ def index(request) -> django.http.response.HttpResponse:
 
 def top_agents(request) -> django.http.response.HttpResponse:
     """
-    Returns an HttpResponse with the top agents template.
+    Returns an HttpResponse with the top agent's template.
 
     Parameters
     ----------
