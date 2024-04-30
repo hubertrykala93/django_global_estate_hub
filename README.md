@@ -40,7 +40,6 @@ Password: !1Qwerty
 - Ability to add a new real estate listing.
 - Property sorting options.
 - Property search by keyword.
-- Property search by keyword.
 - Ability to contact and schedule a meeting with the agent offering a specific property.
 - Review system for property listings.
 
