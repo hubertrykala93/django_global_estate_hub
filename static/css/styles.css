@@ -4147,6 +4147,7 @@ section.properties {
 }
 
 .property .property__video video {
+    width: 100%;
     max-width: 100%;
 }
 
@@ -5177,9 +5178,11 @@ section.properties {
     .properties .properties-cards__row--list .property-card__wrapper .property-card__image {
         flex: 0 0 270px;
         height: auto;
+        position: relative;
     }
 
     .properties .properties-cards__row--list .property-card__wrapper .property-card__image img{
+        position: absolute;
         width: 100%;
         height: 100%;
     }
