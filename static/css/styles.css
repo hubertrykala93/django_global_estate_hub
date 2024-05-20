@@ -3627,7 +3627,6 @@ section.properties {
 
 .property-card__wrapper .property-card__image img {
     width: 100%;
-    height: 100%;
     transition: transform .4s;
 }
 
@@ -5184,6 +5183,10 @@ section.properties {
     .properties .properties-cards__row--list .property-card__wrapper .property-card__image img{
         position: absolute;
         width: 100%;
+        height: 100%;
+    }
+
+    .property-card__wrapper .property-card__image img {
         height: 100%;
     }
 
