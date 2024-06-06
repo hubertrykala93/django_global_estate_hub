@@ -39,7 +39,8 @@ ALLOWED_HOSTS = [
     "http://mytasktrackerapp.com/",
     "mytasktrackerapp.com",
     "www.mytasktrackerapp.com",
-    "*"]
+    "*",
+]
 
 # Application definition
 
@@ -61,9 +62,6 @@ INSTALLED_APPS = [
     "blog",
     "properties",
 ]
-
-DBBACKUP_STORAGE = "django.core.files.storage.FileSystemStorage"
-DBBACKUP_STORAGE_OPTIONS = {"location": BASE_DIR / "backup"}
 
 AUTH_USER_MODEL = "accounts.User"
 
