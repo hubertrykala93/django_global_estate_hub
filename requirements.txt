@@ -15,7 +15,6 @@ datapackage==1.15.4
 deptry==0.16.1
 Django==4.2.7
 django-ckeditor==6.7.0
-django-dbbackup==4.1.0
 django-filter==23.5
 django-js-asset==2.1.0
 django-mptt==0.15.0

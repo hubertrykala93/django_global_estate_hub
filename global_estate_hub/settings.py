@@ -28,19 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "195.242.116.113",
-    "127.0.0.1",
-    "localhost",
-    "s129.cyber-folks.pl",
-    "https://cyberfolks.pl",
-    "www.cyberfolks.pl",
-    "cyberfolks.pl",
-    "http://mytasktrackerapp.com/",
-    "mytasktrackerapp.com",
-    "www.mytasktrackerapp.com",
-    "*",
-]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split()
 
 # Application definition
 
@@ -51,7 +39,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "dbbackup",
     "rest_framework",
     "django_filters",
     "ckeditor",
@@ -124,7 +111,7 @@ WSGI_APPLICATION = "global_estate_hub.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
     }
 }
 
