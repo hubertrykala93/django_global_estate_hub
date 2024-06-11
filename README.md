@@ -13,7 +13,7 @@ Global Estate Hub is an online platform that enables users to browse property li
 
 ## Live Preview
 
-[ Global Estate Hub](https://globalestatehub.onrender.com)
+[ Global Estate Hub](https://globalestatehub.com.pl)
 
 https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889
 
