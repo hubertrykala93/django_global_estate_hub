@@ -3,12 +3,14 @@ from accounts.models import User, Individual, Business
 
 
 class UserSerializer(serializers.ModelSerializer):
+    date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     account_type = serializers.ChoiceField(
         choices=(
             ("Individual", "Individual"),
             ("Business", "Business"),
         )
     )
+    last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = User

@@ -3,10 +3,8 @@ from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
     CreateAPIView,
-    RetrieveUpdateAPIView,
-    RetrieveDestroyAPIView,
 )
-from blog.models import Article, Comment, Tag
+from blog.models import Article, Comment
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
@@ -31,41 +29,11 @@ class ArticleDetailsAPIView(RetrieveAPIView):
         return "Article Details"
 
 
-class ArticleCreateAPIView(CreateAPIView):
-    queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
-
-    def get_view_name(self):
-        return "Article Create"
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        tags_data = data.pop("tags", None)
-        image = data.pop("image", None)
-        print(data)
-
-        serializer = self.serializer_class(data=request.data)
-
-        if serializer.is_valid():
-            if image:
-                serializer.validated_data["image"] = image
-
-            self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
-
-            return Response(
-                data=serializer.data, status=status.HTTP_201_CREATED, headers=headers
-            )
-
-        else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
 class CommentsAPIView(ListAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["level", "active"]
+    filterset_fields = ["level", "active", "user__username", "user__id", "article__id", "article__slug"]
 
     def get_view_name(self):
         return "All Comments"

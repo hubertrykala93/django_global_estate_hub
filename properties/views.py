@@ -2388,6 +2388,7 @@ def schedule_tour(
 
     if request.method == "POST":
         data = json.loads(s=request.body.decode("utf-8"))
+        print(data)
         date, time, name, phone_number, message = [
             i[0] for i in [data[key] for key in data][:-1]
         ]

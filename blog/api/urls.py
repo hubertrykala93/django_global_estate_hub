@@ -13,11 +13,6 @@ urlpatterns = [
         name="api-articles-article-details",
     ),
     path(
-        route="api/v1/articles/create",
-        view=views.ArticleCreateAPIView.as_view(),
-        name="api-articles-article-create",
-    ),
-    path(
         route="api/v1/comments",
         view=views.CommentsAPIView.as_view(),
         name="api-comments",
