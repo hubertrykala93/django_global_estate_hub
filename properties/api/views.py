@@ -9,7 +9,7 @@ class PropertyAPIView(ListAPIView):
     serializer_class = PropertySerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
-        "user__id": ["exact"],
+        "user": ["exact"],
         "user__username": ["exact"],
         "year_of_built": ["lte", "gte", "exact", "lt", "gt"],
         "price": ["lte", "gte", "exact", "lt", "gt"],
@@ -30,32 +30,56 @@ class PropertyAPIView(ListAPIView):
     def get_view_name(self) -> str:
         return "Global Estate Hub Properties"
 
-    def get_view_description(self, html=False):
-        return "API view with all properties on the Global Estate Hub platform."
-
 
 class PropertyDetailAPIView(RetrieveAPIView):
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
 
+    def get_view_name(self):
+        return "Property Details"
+
 
 class TourScheduleAPIView(ListAPIView):
     queryset = TourSchedule.objects.all()
     serializer_class = TourScheduleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        "property": ["exact"],
+        "property__title": ["exact"],
+        "customer": ["exact"],
+        "customer__username": ["exact"],
+    }
 
     def get_view_name(self):
         return "Global Estate Hub Tour Schedules"
 
-    def get_view_description(self, html=False):
-        return "API view with all tour schedules on the Global Estate Hub platform."
+
+class TourScheduleDetailAPIView(RetrieveAPIView):
+    queryset = TourSchedule.objects.all()
+    serializer_class = TourScheduleSerializer
+
+    def get_view_name(self):
+        return "Tour Schedule Details"
 
 
 class ReviewAPIView(ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        "property": ["exact"],
+        "property__title": ["exact"],
+        "user": ["exact"],
+        "user__username": ["exact"],
+    }
 
     def get_view_name(self):
         return "Global Estate Hub Reviews"
 
-    def get_view_description(self, html=False):
-        return "API view with all reviews on the Global Estate Hub platform."
+
+class ReviewDetailAPIView(RetrieveAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+
+    def get_view_name(self):
+        return "Review Details"

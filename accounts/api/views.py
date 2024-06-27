@@ -15,10 +15,14 @@ class UsersAPIView(ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["is_agent", "is_verified", "account_type"]
+    filterset_fields = {
+        "is_agent": ["exact"],
+        "is_verified": ["exact"],
+        "account_type": ["exact"],
+    }
 
     def get_view_name(self):
-        return "Registered Users"
+        return "Global Estate Hub Registered Users"
 
 
 class UserDetailsAPIView(RetrieveAPIView):
@@ -33,20 +37,29 @@ class IndividualProfileAPIView(ListAPIView):
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["gender", "country", "province", "city"]
+    filterset_fields = {
+        "gender": ["exact"],
+        "country": ["exact"],
+        "province": ["exact"],
+        "city": ["exact"],
+    }
 
     def get_view_name(self):
-        return "User Individual Profiles"
+        return "Global Estate Hub Individual Profiles"
 
 
 class BusinessProfileAPIView(ListAPIView):
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
     filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["country", "province", "city"]
+    filterset_fields = {
+        "country": ["exact"],
+        "province": ["exact"],
+        "city": ["exact"],
+    }
 
     def get_view_name(self):
-        return "User Business Profiles"
+        return "Global Estate Hub Business Profiles"
 
 
 class UserIndividualProfileDetailsAPIView(RetrieveAPIView):

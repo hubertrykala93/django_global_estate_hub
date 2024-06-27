@@ -523,7 +523,7 @@ def authorization(request) -> JsonResponse:
                     user=user,
                     backend="django.contrib.auth.backends.ModelBackend",
                 )
-                # request.session.set_expiry(600)
+                request.session.set_expiry(600)
 
                 return JsonResponse(data=response, safe=False)
 

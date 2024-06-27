@@ -12,7 +12,7 @@ from properties.models import (
     TourSchedule,
     Review,
 )
-from accounts.api.serializers import UserSerializer, UserUsernameSerializer
+from accounts.api.serializers import UserUsernameSerializer
 
 
 class ListingStatusSerializer(serializers.ModelSerializer):
@@ -22,7 +22,7 @@ class ListingStatusSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ListingStatus
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -32,7 +32,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        exclude = ['image']
+        exclude = ["image"]
 
 
 class AmenitiesSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class AmenitiesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Amenities
-        exclude = ['image']
+        exclude = ["image"]
 
 
 class EducationSerializer(serializers.ModelSerializer):
@@ -52,7 +52,7 @@ class EducationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Education
-        fields = '__all__'
+        fields = "__all__"
 
 
 class ShoppingSerializer(serializers.ModelSerializer):
@@ -62,7 +62,7 @@ class ShoppingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Shopping
-        fields = '__all__'
+        fields = "__all__"
 
 
 class HealthAndMedicalSerializer(serializers.ModelSerializer):
@@ -72,7 +72,7 @@ class HealthAndMedicalSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = HealthAndMedical
-        fields = '__all__'
+        fields = "__all__"
 
 
 class TransportationSerializer(serializers.ModelSerializer):
@@ -82,7 +82,7 @@ class TransportationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Transportation
-        fields = '__all__'
+        fields = "__all__"
 
 
 class CitySerializer(serializers.ModelSerializer):
@@ -92,14 +92,14 @@ class CitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = City
-        exclude = ['image']
+        exclude = ["image"]
 
 
 class PropertySerializer(serializers.ModelSerializer):
     """
     Property Model Serializer.
     """
-    
+
     date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     user = UserUsernameSerializer()
     city = CitySerializer()
@@ -122,7 +122,7 @@ class PropertyTitleSerializer(serializers.ModelSerializer):
         fields = ["id", "title"]
 
 
-class TourScheduleSerializer(serializers.Serializer):
+class TourScheduleSerializer(serializers.ModelSerializer):
     """
     TourSchedule Model Serializer.
     """
@@ -130,24 +130,21 @@ class TourScheduleSerializer(serializers.Serializer):
     customer = UserUsernameSerializer()
     property = PropertyTitleSerializer()
     date_sent = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
-    date = serializers.CharField()
-    time = serializers.CharField()
-    name = serializers.CharField()
-    phone_number = serializers.CharField()
-    message = serializers.CharField()
 
     class Meta:
         model = TourSchedule
+        fields = "__all__"
 
 
 class ReviewSerializer(serializers.ModelSerializer):
     """
     Review Model Serializer.
     """
+
     date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
     user = UserUsernameSerializer()
     property = PropertyTitleSerializer()
 
     class Meta:
         model = Review
-        fields = '__all__'
+        fields = "__all__"

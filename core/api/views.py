@@ -28,13 +28,17 @@ def api_endpoints(request):
             "Search User Comments by User ID": "api/v1/comments?user__id=user_id",
             "Search User Comments by User Username": "api/v1/comments?user__username=user_username",
             "All articles": "api/v1/articles",
-            "Search Article by Category": "api/v1/articles?category__name=category_name",
-            "Search Article by Tag": "api/v1/articles?tag=tag_name&tag=tag_name",
             "Article Details": "api/v1/article/pk",
-            "Article Comments": "api/v1/comments/article__id=article_id",
+            "Article Comments by Article ID": "api/v1/comments/article__id=article_id",
+            "Article Comments by Article Title": "api/v1/comments/article__title=article_title",
+            "Article Comments by User ID": "api/v1/comments/user__id=user_id",
+            "Article Comments by User Username": "api/v1/comments/user__username=user_username",
+            "Search Article by Category ID": "api/v1/articles?category__id=category_id",
+            "Search Article by Category Name": "api/v1/articles?category__name=category_name",
             "All Comments": "api/v1/comments",
             "Comment Details": "api/v1/comments/pk",
-            "Search Comment by Is Active": "api/v1/blog/comments?active=is_active",
+            "Search Comments by Is Active": "api/v1/blog/comments?active=is_active",
+            "Search Comments by Level": "api/v1/blog/comments?level=level",
             "All Properties": "api/v1/properties",
             "Property Details": "api/v1/property/pk",
             "Search User Properties by User ID": "api/v1/properties?user__id=user_id",
@@ -77,8 +81,19 @@ def api_endpoints(request):
             "Search Property by Listing Status ID": "api/v1/properties?listing_status=listing_status_id",
             "Search Property by Listing Status Name": "api/v1/properties?listing_status__name=listing_status_name",
             "Search Property by Category ID": "api/v1/properties?category=category_id",
-            "Search Property by Category Name": "api/v1/properties?category__name=category_name"
-
+            "Search Property by Category Name": "api/v1/properties?category__name=category_name",
+            "All Reviews": "api/v1/properties/reviews",
+            "Review Details": "api/v1/properties/reviews/pk",
+            "All Tour Schedules": "api/v1/properties/tour-schedules",
+            "Tour Schedule Details": "api/v1/properties/tour-schedules/pk",
+            "Property Reviews by Property ID": "api/v1/properties/reviews?property=property_id",
+            "Property Reviews by Property Title": "api/v1/properties/reviews?property__title=property_title",
+            "Property Reviews by User ID": "api/v1/properties/reviews?user=user_id",
+            "Property Reviews by User Username": "api/v1/properties/reviews?user__username=user_username",
+            "Property Tour Schedules by Property ID": "api/v1/properties/tour-schedules?property=property_id",
+            "Property Tour Schedules by Property Title": "api/v1/properties/tour-schedules?property__title=property_title",
+            "Property Tour Schedules by Customer ID": "api/v1/properties/tour-schedules?customer=user_id",
+            "Property Tour Schedules by Customer Username": "api/v1/properties/tour-schedules?customer__username=user_username",
         },
         status=status.HTTP_200_OK,
     )
@@ -90,6 +105,3 @@ class NewsletterAPIView(ListAPIView):
 
     def get_view_name(self):
         return "Global Estate Hub Newsletters"
-
-    def get_view_description(self, html=False):
-        return "API view with all newsletters on the Global Estate Hub platform."
