@@ -16,8 +16,8 @@ class UsersAPIView(ListAPIView):
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
+        "is_active": ["exact"],
         "is_agent": ["exact"],
-        "is_verified": ["exact"],
         "account_type": ["exact"],
     }
 

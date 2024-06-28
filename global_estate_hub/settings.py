@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "rest_framework.authtoken",
     "django_filters",
     "ckeditor",
     "ckeditor_uploader",
@@ -179,9 +180,6 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend"
     ],
-    # "DEFAULT_RENDERER_CLASSES": [
-    #     "rest_framework.renderers.JSONOpenAPIRenderer",
-    # ],
 }
 
 # Deploy settings
