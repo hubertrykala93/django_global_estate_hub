@@ -23,7 +23,6 @@ class ArticlesAPIView(ListAPIView):
 class ArticleDetailsAPIView(RetrieveAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-    lookup_field = "pk"
 
     def get_view_name(self):
         return "Article Details"

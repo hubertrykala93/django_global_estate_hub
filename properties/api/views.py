@@ -39,7 +39,7 @@ class PropertyDetailAPIView(RetrieveAPIView):
         return "Property Details"
 
 
-class TourScheduleAPIView(ListAPIView):
+class TourSchedulesAPIView(ListAPIView):
     queryset = TourSchedule.objects.all()
     serializer_class = TourScheduleSerializer
     filter_backends = [DjangoFilterBackend]
@@ -62,7 +62,7 @@ class TourScheduleDetailAPIView(RetrieveAPIView):
         return "Tour Schedule Details"
 
 
-class ReviewAPIView(ListAPIView):
+class ReviewsAPIView(ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = [DjangoFilterBackend]
