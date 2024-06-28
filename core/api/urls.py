@@ -6,6 +6,6 @@ urlpatterns = [
     path(
         route="api/v1/newsletters",
         view=views.NewsletterAPIView.as_view(),
-        name="api-newsletters",
+        name="api-v1-newsletters",
     ),
 ]
