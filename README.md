@@ -24,7 +24,7 @@ Password: admin
 
 You can log in to the website via https://globalestatehub.com.pl/login using the following credentials:
 
-Login: admin@<i></i>gmail.com<br/>
+Login: homeseeker22@<i></i>example.com<br/>
 Password: !1Qwerty
 
 <br/>
