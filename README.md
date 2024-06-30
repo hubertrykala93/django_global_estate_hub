@@ -22,7 +22,7 @@ You can log in to the [Admin Panel](https://globalestatehub.com.pl/admin) with t
 Login: admin@<i></i>gmail.com<br/>
 Password: admin
 
-You can log in to the website via [Login](https://globalestatehub.com.pl/login){:target="_blank"} using the following credentials:
+You can log in to the website via [Login{:target="_blank"}](https://globalestatehub.com.pl/login) using the following credentials:
 
 Login: homeseeker22@<i></i>example.com<br/>
 Password: !1Qwerty
