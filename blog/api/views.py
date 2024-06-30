@@ -33,9 +33,9 @@ class CommentsAPIView(ListAPIView):
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
     filterset_fields = {
-        "user": ["exact"],
+        "user__id": ["exact"],
         "user__username": ["exact"],
-        "article": ["exact"],
+        "article__id": ["exact"],
         "article__title": ["exact"],
         "active": ["exact"],
         "level": ["exact"],

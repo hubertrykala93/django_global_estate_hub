@@ -16,14 +16,6 @@ class AdminNewsletter(admin.ModelAdmin):
     ordering = ["subscribed_at"]
     fieldsets = [
         [
-            "Subscribed Date:",
-            {
-                "fields": [
-                    "subscribed_at",
-                ]
-            },
-        ],
-        [
             "E-mail Subscriber:",
             {
                 "fields": [

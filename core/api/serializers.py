@@ -7,7 +7,7 @@ class NewsletterSerializer(serializers.ModelSerializer):
     Newsletter Model Serializer.
     """
 
-    subscribed_at = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S")
+    subscribed_at = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
 
     class Meta:
         model = Newsletter

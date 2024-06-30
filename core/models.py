@@ -8,7 +8,7 @@ class Newsletter(models.Model):
     """
 
     id = models.AutoField(primary_key=True, editable=False)
-    subscribed_at = models.DateTimeField(default=now)
+    subscribed_at = models.DateTimeField(auto_now_add=True)
     email = models.EmailField(max_length=200, unique=True, null=True)
 
     class Meta:
