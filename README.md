@@ -17,8 +17,8 @@ Global Estate Hub is an online platform that enables users to browse property li
 
 https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889
 
-Login: homeseeker22@<i></i>example.com<br/>
-Password: !1Qwerty
+Login: admin@<i></i>gmail.com<br/>
+Password: admin
 
 <br/>
 
