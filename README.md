@@ -17,8 +17,15 @@ Global Estate Hub is an online platform that enables users to browse property li
 
 https://github.com/hubertrykala93/django_global_estate_hub/assets/94188186/c8d1be33-6094-4002-98bd-28fd13870889
 
+You can log in to the admin panel with the following credentials:
+
 Login: admin@<i></i>gmail.com<br/>
 Password: admin
+
+You can log in to the website via https://globalestatehub.com.pl/login using the following credentials:
+
+Login: admin@<i></i>gmail.com<br/>
+Password: !1Qwerty
 
 <br/>
 
