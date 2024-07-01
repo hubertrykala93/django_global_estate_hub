@@ -216,24 +216,47 @@ django_global_estate_hub
 | :-------- | :------- | :------------------------- |
 | `GET` | `api/v1` | All endpoints. |
 | `GET` | `api/v1/newsletters` | Retrieve all newsletters. |
+| `GET` | `api/v1/newsletters/<int:pk>` | Retrieve newsletter with a specific ID. |
+| `POST` | `api/v1/newsletters/create-newsletter` | Create a new newsletter. |
+| `PATCH/PUT` | `api/v1/newsletters/update-newsletter/<int:pk>` | Update newsletter with specific ID. |
+| `DELETE` | `api/v1/newsletters/delete-newsletter/<int:pk>` | Deleting newsletter with specific ID. |
+| `GET` | `api/v1/newsletters?ordering=subscribed_at` | Sorts newsletters by subscribed at using the chosen method (ascending, descending) and retrieves them. |
+| `GET` | `api/v1/newsletters?ordering=email` | Sorts newsletters by email using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/users` | Retrieve all users. |
 | `GET` | `api/v1/users/<int:pk>` | Retrieve user with a specific ID. |
+| `POST` | `api/v1/newsletters/create-user` | Create a new user. |
+| `PATCH/PUT` | `api/v1/newsletters/update-user/<int:pk>` | Update user with specific ID. |
+| `DELETE` | `api/v1/newsletters/delete-user/<int:pk>` | Deleting user with specific ID. |
+| `GET` | `api/v1/users?ordering=date_joined` | Sorts users by date joined using the chosen method (ascending, descending) and retrieves them. |
+| `GET` | `api/v1/users?ordering=username` | Sorts users by username using the chosen method (ascending, descending) and retrieves them. |
+| `GET` | `api/v1/users?ordering=email` | Sorts users by email using the chosen method (ascending, descending) and retrieves them. |
+| `GET` | `api/v1/users?ordering=last_login` | Sorts users by last login using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/users?account_type={account_type}` | Retrieve all users with a specific account type. |
 | `GET` | `api/v1/users?is_agent={is_agent}` | Retrieve all users who are agents. |
 | `GET` | `api/v1/users?is_verified={is_verified}` | Retrieve all verified users. |
 | `GET` | `api/v1/users/individuals` | Retrieve all individual profiles. |
 | `GET` | `api/v1/users/individuals/<int:pk>` | Retrieve user's individual profile with a specific ID. |
+| `PATCH/PUT` | `api/v1/users/individuals/update-profile/<int:pk>` | Update individual profile with a specific ID. |
+| `DELETE` | `api/v1/users/individuals/delete-profile/<int:pk>` | Deleting individual profile with a specific ID. |
 | `GET` | `api/v1/users/individuals?gender={gender}` | Retrieve all individual user profiles with a specific gender. |
 | `GET` | `api/v1/users/individuals?country={country}` | Retrieve all individual user profiles with a specific country. |
 | `GET` | `api/v1/users/individuals?province={province}` | Retrieve all individual user profiles with a specific province. |
 | `GET` | `api/v1/users/individuals?city={city}` | Retrieve all individual user profiles with a specific city. |
 | `GET` | `api/v1/users/business` | Retrieve all business profiles. |
 | `GET` | `api/v1/users/business/<int:pk>` | Retrieve user's business profile with a specific ID. |
+| `PATCH/PUT` | `api/v1/users/business/update-profile/<int:pk>` | Update business profile with a specific ID. |
+| `DELETE` | `api/v1/users/business/delete-profile/<int:pk>` | Deleting business profile with a specific ID. |
 | `GET` | `api/v1/users/business?country={country}` | Retrieve all business user profiles with a specific country. |
 | `GET` | `api/v1/users/business?province={province}` | Retrieve all business user profiles with a specific province. |
 | `GET` | `api/v1/users/business?city={city}` | Retrieve all business user profiles with a specific city. |
 | `GET` | `api/v1/articles` | Retrieve all articles. |
 | `GET` | `api/v1/articles/<int:pk>` | Retrieve article with a specific ID. |
+| `POST` | `api/v1/articles/create-article` | Create a new article. |
+| `PATCH/PUT` | `api/v1/articles/update-article/<int:pk>` | Update article with specific ID. |
+| `DELETE` | `api/v1/articles/delete-article/<int:pk>` | Deleting article with specific ID. |
+| `GET` | `api/v1/articles?search={keyword}` | Search and retrieve articles by title and content using a keyword. |
+| `GET` | `api/v1/articles?ordering=date_posted` | Sorts articles by date_posted at using the chosen method (ascending, descending) and retrieves them. |
+| `GET` | `api/v1/articles?ordering=title` | Sorts articles by title at using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/articles?category__id={category.id}` | Retrieve all articles with a specific category ID. |
 | `GET` | `api/v1/articles?category__name={category.name}` | Retrieve all articles with a specific category name. |
 | `GET` | `api/v1/comments` | Retrieve all comments. |
@@ -246,7 +269,7 @@ django_global_estate_hub
 | `GET` | `api/v1/users/comments?article__title={article.title}` | Retrieve comments under an article with a specific title. |
 | `GET` | `api/v1/properties` | Retrieve all properties. |
 | `GET` | `api/v1/properties/<int:pk>` | Retrieve property with a specific ID. |
-| `GET` | `api/v1/properties/search={keyword}` | Search and retrieve properties by title using a keyword. |
+| `GET` | `api/v1/properties?search={keyword}` | Search and retrieve properties by title using a keyword. |
 | `GET` | `api/v1/properties/ordering=title` | Sorts properties by title using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/properties/ordering=price` | Sorts properties by price using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/properties/ordering=featured` | Sorts properties by featured using the chosen method (ascending, descending) and retrieves them. |
