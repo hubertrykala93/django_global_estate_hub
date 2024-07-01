@@ -3,18 +3,38 @@ from properties.models import Property
 
 
 class PropertyFilter(django_filters.FilterSet):
-    min_year = django_filters.NumberFilter(field_name="year_of_built", lookup_expr="gte")
-    max_year = django_filters.NumberFilter(field_name="year_of_built", lookup_expr="lte")
+    min_year = django_filters.NumberFilter(
+        field_name="year_of_built", lookup_expr="gte"
+    )
+    max_year = django_filters.NumberFilter(
+        field_name="year_of_built", lookup_expr="lte"
+    )
     min_price = django_filters.NumberFilter(field_name="price", lookup_expr="gte")
     max_price = django_filters.NumberFilter(field_name="price", lookup_expr="lte")
-    min_bedrooms = django_filters.NumberFilter(field_name="number_of_bedrooms", lookup_expr="gte")
-    max_bedrooms = django_filters.NumberFilter(field_name="number_of_bedrooms", lookup_expr="lte")
-    min_bathrooms = django_filters.NumberFilter(field_name="number_of_bathrooms", lookup_expr="gte")
-    max_bathrooms = django_filters.NumberFilter(field_name="number_of_bathrooms", lookup_expr="lte")
-    min_square = django_filters.NumberFilter(field_name="square_meters", lookup_expr="gte")
-    max_square = django_filters.NumberFilter(field_name="square_meters", lookup_expr="lte")
-    min_space = django_filters.NumberFilter(field_name="parking_space", lookup_expr="gte")
-    max_space = django_filters.NumberFilter(field_name="parking_space", lookup_expr="lte")
+    min_bedrooms = django_filters.NumberFilter(
+        field_name="number_of_bedrooms", lookup_expr="gte"
+    )
+    max_bedrooms = django_filters.NumberFilter(
+        field_name="number_of_bedrooms", lookup_expr="lte"
+    )
+    min_bathrooms = django_filters.NumberFilter(
+        field_name="number_of_bathrooms", lookup_expr="gte"
+    )
+    max_bathrooms = django_filters.NumberFilter(
+        field_name="number_of_bathrooms", lookup_expr="lte"
+    )
+    min_square = django_filters.NumberFilter(
+        field_name="square_meters", lookup_expr="gte"
+    )
+    max_square = django_filters.NumberFilter(
+        field_name="square_meters", lookup_expr="lte"
+    )
+    min_space = django_filters.NumberFilter(
+        field_name="parking_space", lookup_expr="gte"
+    )
+    max_space = django_filters.NumberFilter(
+        field_name="parking_space", lookup_expr="lte"
+    )
 
     class Meta:
         model = Property

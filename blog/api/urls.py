@@ -3,6 +3,16 @@ from . import views
 
 urlpatterns = [
     path(
+        route="api/v1/articles/article-categories",
+        view=views.CategoryAPIView.as_view(),
+        name="api-v1-articles-article-categories",
+    ),
+    path(
+        route="api/v1/articles/article-tags",
+        view=views.TagsAPIView.as_view(),
+        name="api-v1-articles-article-tags",
+    ),
+    path(
         route="api/v1/articles",
         view=views.ArticlesAPIView.as_view(),
         name="api-v1-articles",
@@ -11,6 +21,21 @@ urlpatterns = [
         route="api/v1/articles/<int:pk>",
         view=views.ArticleDetailsAPIView.as_view(),
         name="api-v1-articles-article-details",
+    ),
+    path(
+        route="api/v1/articles/create-article",
+        view=views.ArticleCreateApiView.as_view(),
+        name="api-v1-articles-create-article",
+    ),
+    path(
+        route="api/v1/articles/update-article/<int:pk>",
+        view=views.ArticleUpdateAPIView.as_view(),
+        name="api-v1-articles-update-article",
+    ),
+    path(
+        route="api/v1/articles/delete-article/<int:pk>",
+        view=views.ArticleDeleteAPIView.as_view(),
+        name="api-v1-articles-delete-article",
     ),
     path(
         route="api/v1/comments",

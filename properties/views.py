@@ -357,17 +357,17 @@ def properties(request) -> django.http.response.HttpResponse:
             )
 
         elif (
-                "status" in request.GET
-                or "category" in request.GET
-                or "min_price" in request.GET
-                or "max_price" in request.GET
-                or "min_bedrooms" in request.GET
-                or "max_bedrooms" in request.GET
-                or "min_bathrooms" in request.GET
-                or "max_bathrooms" in request.GET
-                or "location" in request.GET
-                or "min_square" in request.GET
-                or "max_square" in request.GET
+            "status" in request.GET
+            or "category" in request.GET
+            or "min_price" in request.GET
+            or "max_price" in request.GET
+            or "min_bedrooms" in request.GET
+            or "max_bedrooms" in request.GET
+            or "min_bathrooms" in request.GET
+            or "max_bathrooms" in request.GET
+            or "location" in request.GET
+            or "min_square" in request.GET
+            or "max_square" in request.GET
         ):
 
             if request.session.get("keyword"):
@@ -1274,18 +1274,18 @@ def create_property(request):
                             else (
                                 False
                                 if price[0] == "-"
-                                   and not price.isdigit()
-                                   and price[1:].isdigit()
+                                and not price.isdigit()
+                                and price[1:].isdigit()
                                 else (
                                     False
                                     if len(price) == 1
-                                       and price.isdigit()
-                                       and price == "0"
+                                    and price.isdigit()
+                                    and price == "0"
                                     else (
                                         False
                                         if len(price) > 1
-                                           and price.isdigit()
-                                           and price[0] == "0"
+                                        and price.isdigit()
+                                        and price[0] == "0"
                                         else True
                                     )
                                 )
@@ -1301,18 +1301,18 @@ def create_property(request):
                             else (
                                 "The price must be greater than 0."
                                 if price[0] == "-"
-                                   and not price.isdigit()
-                                   and price[1:].isdigit()
+                                and not price.isdigit()
+                                and price[1:].isdigit()
                                 else (
                                     "The price must be greater than 0."
                                     if len(price) == 1
-                                       and price.isdigit()
-                                       and price == "0"
+                                    and price.isdigit()
+                                    and price == "0"
                                     else (
                                         "The price cannot start with 0."
                                         if len(price) > 1
-                                           and price.isdigit()
-                                           and price[0] == "0"
+                                        and price.isdigit()
+                                        and price[0] == "0"
                                         else ""
                                     )
                                 )
@@ -1353,21 +1353,21 @@ def create_property(request):
                                 else (
                                     False
                                     if len(year_of_built) == 4
-                                       and not year_of_built.isdigit()
+                                    and not year_of_built.isdigit()
                                     else (
                                         False
                                         if len(year_of_built) != 4
-                                           and year_of_built[0] == "-"
-                                           and year_of_built[1:].isdigit()
+                                        and year_of_built[0] == "-"
+                                        and year_of_built[1:].isdigit()
                                         else (
                                             False
                                             if len(year_of_built) == 4
-                                               and year_of_built[0] == "0"
-                                               and year_of_built[1:].isdigit()
+                                            and year_of_built[0] == "0"
+                                            and year_of_built[1:].isdigit()
                                             else (
                                                 False
                                                 if datetime.now().year
-                                                   < datetime.strptime(
+                                                < datetime.strptime(
                                                     year_of_built, "%Y"
                                                 ).year
                                                 else True
@@ -1390,16 +1390,16 @@ def create_property(request):
                                 else (
                                     "The year of built must consist of digits."
                                     if len(year_of_built) == 4
-                                       and not year_of_built.isdigit()
+                                    and not year_of_built.isdigit()
                                     else (
                                         "The year of built cannot start with 0."
                                         if len(year_of_built) == 4
-                                           and year_of_built[0] == "0"
-                                           and year_of_built[1:].isdigit()
+                                        and year_of_built[0] == "0"
+                                        and year_of_built[1:].isdigit()
                                         else (
                                             "The year of built cannot be greater than actual year."
                                             if datetime.now().year
-                                               < datetime.strptime(
+                                            < datetime.strptime(
                                                 year_of_built, "%Y"
                                             ).year
                                             else ""
@@ -1423,7 +1423,7 @@ def create_property(request):
                         else (
                             False
                             if number_of_bedrooms[0] == "-"
-                               and number_of_bedrooms[1:].isdecimal()
+                            and number_of_bedrooms[1:].isdecimal()
                             else False if not number_of_bedrooms.isdecimal() else True
                         )
                     ),
@@ -1433,7 +1433,7 @@ def create_property(request):
                         else (
                             "The number of bedrooms must be greater than or equal 0."
                             if number_of_bedrooms[0] == "-"
-                               and number_of_bedrooms[1:].isdecimal()
+                            and number_of_bedrooms[1:].isdecimal()
                             else (
                                 "The number of bedrooms must consist of positive digits."
                                 if not number_of_bedrooms.isdecimal()
@@ -1455,7 +1455,7 @@ def create_property(request):
                         else (
                             False
                             if number_of_bathrooms[0] == "-"
-                               and number_of_bathrooms[1:].isdecimal()
+                            and number_of_bathrooms[1:].isdecimal()
                             else False if not number_of_bathrooms.isdecimal() else True
                         )
                     ),
@@ -1465,7 +1465,7 @@ def create_property(request):
                         else (
                             "The number of bathrooms must be greater than or equal 0."
                             if number_of_bathrooms[0] == "-"
-                               and number_of_bathrooms[1:].isdecimal()
+                            and number_of_bathrooms[1:].isdecimal()
                             else (
                                 "The number of bathrooms must consist of positive digits."
                                 if not number_of_bathrooms.isdecimal()
@@ -1490,18 +1490,18 @@ def create_property(request):
                             else (
                                 False
                                 if square_meters[0] == "-"
-                                   and not square_meters[1:].isdecimal()
+                                and not square_meters[1:].isdecimal()
                                 else (
                                     False
                                     if square_meters == "0"
                                     else (
                                         False
                                         if "," in square_meters
-                                           and not square_meters.replace(",", "").isdigit()
+                                        and not square_meters.replace(",", "").isdigit()
                                         else (
                                             True
                                             if "," in square_meters
-                                               and square_meters.replace(",", "").isdigit()
+                                            and square_meters.replace(",", "").isdigit()
                                             else True
                                         )
                                     )
@@ -1518,18 +1518,18 @@ def create_property(request):
                             else (
                                 "Square meters must consist of positive digits."
                                 if square_meters[0] == "-"
-                                   and not square_meters[1:].isdecimal()
+                                and not square_meters[1:].isdecimal()
                                 else (
                                     "Square meters must be greater than 0."
                                     if square_meters == "0"
                                     else (
                                         "Square meters must consist of positive digits."
                                         if "," in square_meters
-                                           and not square_meters.replace(",", "").isdigit()
+                                        and not square_meters.replace(",", "").isdigit()
                                         else (
                                             ""
                                             if "," in square_meters
-                                               and square_meters.replace(",", "").isdigit()
+                                            and square_meters.replace(",", "").isdigit()
                                             else ""
                                         )
                                     )
@@ -1554,7 +1554,7 @@ def create_property(request):
                             else (
                                 False
                                 if parking_space[0] == "-"
-                                   and parking_space[1:].isdigit()
+                                and parking_space[1:].isdigit()
                                 else True if parking_space == "0" else True
                             )
                         )
@@ -1568,7 +1568,7 @@ def create_property(request):
                             else (
                                 "Parking space must be greater than or equal 0."
                                 if parking_space[0] == "-"
-                                   and parking_space[1:].isdigit()
+                                and parking_space[1:].isdigit()
                                 else "" if parking_space == "0" else ""
                             )
                         )
@@ -1651,30 +1651,30 @@ def create_property(request):
                             "valid": (
                                 False
                                 if "thumbnail" in request.FILES
-                                   and request.FILES.get("thumbnail").size > 1000000
+                                and request.FILES.get("thumbnail").size > 1000000
                                 else (
                                     False
                                     if "thumbnail" in request.FILES
-                                       and request.FILES.get("thumbnail").size <= 1000000
-                                       and request.FILES.get("thumbnail").name.split(
+                                    and request.FILES.get("thumbnail").size <= 1000000
+                                    and request.FILES.get("thumbnail").name.split(
                                         sep="."
                                     )[1]
-                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else True
                                 )
                             ),
                             "message": (
                                 "The thumbnail size cannot exceed 1 MB."
                                 if "thumbnail" in request.FILES
-                                   and request.FILES.get("thumbnail").size > 1000000
+                                and request.FILES.get("thumbnail").size > 1000000
                                 else (
                                     "The thumbnail must be in JPG, JPEG, SVG, PNG, or WEBP format."
                                     if "thumbnail" in request.FILES
-                                       and request.FILES.get("thumbnail").size <= 1000000
-                                       and request.FILES.get("thumbnail").name.split(
+                                    and request.FILES.get("thumbnail").size <= 1000000
+                                    and request.FILES.get("thumbnail").name.split(
                                         sep="."
                                     )[1]
-                                       not in ["jpg", "jpeg", "webp", "png", "svg"]
+                                    not in ["jpg", "jpeg", "webp", "png", "svg"]
                                     else ""
                                 )
                             ),
@@ -1745,30 +1745,30 @@ def create_property(request):
                             "valid": (
                                 False
                                 if "video" in request.FILES
-                                   and request.FILES.get("video").size > 5000000
+                                and request.FILES.get("video").size > 5000000
                                 else (
                                     False
                                     if "video" in request.FILES
-                                       and request.FILES.get("video").size <= 5000000
-                                       and request.FILES.get("video").name.split(sep=".")[
-                                           1
-                                       ]
-                                       != "mp4"
+                                    and request.FILES.get("video").size <= 5000000
+                                    and request.FILES.get("video").name.split(sep=".")[
+                                        1
+                                    ]
+                                    != "mp4"
                                     else True
                                 )
                             ),
                             "message": (
                                 "The video size cannot exceed 5 MB."
                                 if "video" in request.FILES
-                                   and request.FILES.get("video").size > 5000000
+                                and request.FILES.get("video").size > 5000000
                                 else (
                                     "The video must be in MP4 format."
                                     if "video" in request.FILES
-                                       and request.FILES.get("video").size <= 5000000
-                                       and request.FILES.get("video").name.split(sep=".")[
-                                           1
-                                       ]
-                                       != "mp4"
+                                    and request.FILES.get("video").size <= 5000000
+                                    and request.FILES.get("video").name.split(sep=".")[
+                                        1
+                                    ]
+                                    != "mp4"
                                     else ""
                                 )
                             ),
@@ -1811,11 +1811,11 @@ def create_property(request):
 
         for nearby, folder, name in zip(nearbies, temporary_folders, names):
             if (
-                    len(request.POST.getlist(f"{nearby}-name")) == 1
-                    and request.POST.getlist(f"{nearby}-name")[0] != ""
+                len(request.POST.getlist(f"{nearby}-name")) == 1
+                and request.POST.getlist(f"{nearby}-name")[0] != ""
             ) or (
-                    len(request.POST.getlist(f"{nearby}-distance")) == 1
-                    and request.POST.getlist(f"{nearby}-distance")[0] != ""
+                len(request.POST.getlist(f"{nearby}-distance")) == 1
+                and request.POST.getlist(f"{nearby}-distance")[0] != ""
             ):
                 folder.append(
                     {
@@ -1823,24 +1823,24 @@ def create_property(request):
                             "valid": (
                                 False
                                 if request.POST.get(f"{nearby}-distance").strip()
-                                   and not request.POST.get(f"{nearby}-name").strip()
+                                and not request.POST.get(f"{nearby}-name").strip()
                                 else (
                                     False
                                     if request.POST.get(f"{nearby}-name").strip()
-                                       and len(request.POST.get(f"{nearby}-name").strip())
-                                       <= 5
+                                    and len(request.POST.get(f"{nearby}-name").strip())
+                                    <= 5
                                     else True
                                 )
                             ),
                             "message": (
                                 "If you have provided a distance, you must also provide a name."
                                 if request.POST.get(f"{nearby}-distance").strip()
-                                   and not request.POST.get(f"{nearby}-name").strip()
+                                and not request.POST.get(f"{nearby}-name").strip()
                                 else (
                                     "The name must be at least 5 characters long."
                                     if request.POST.get(f"{nearby}-name").strip()
-                                       and len(request.POST.get(f"{nearby}-name").strip())
-                                       <= 5
+                                    and len(request.POST.get(f"{nearby}-name").strip())
+                                    <= 5
                                     else ""
                                 )
                             ),
@@ -1849,23 +1849,23 @@ def create_property(request):
                             "valid": (
                                 False
                                 if request.POST.get(f"{nearby}-name").strip()
-                                   and not request.POST.get(f"{nearby}-distance").strip()
+                                and not request.POST.get(f"{nearby}-distance").strip()
                                 else (
                                     False
                                     if request.POST.get(f"{nearby}-distance").strip()
-                                       and request.POST.get(f"{nearby}-distance").strip()[
-                                           0
-                                       ]
-                                       == "-"
-                                       and request.POST.get(f"{nearby}-distance")
-                                           .strip()[1:]
-                                           .isdigit()
+                                    and request.POST.get(f"{nearby}-distance").strip()[
+                                        0
+                                    ]
+                                    == "-"
+                                    and request.POST.get(f"{nearby}-distance")
+                                    .strip()[1:]
+                                    .isdigit()
                                     else (
                                         False
                                         if request.POST.get(
                                             f"{nearby}-distance"
                                         ).strip()
-                                           and not request.POST.get(f"{nearby}-distance")
+                                        and not request.POST.get(f"{nearby}-distance")
                                         .strip()
                                         .replace(",", "")
                                         .isdigit()
@@ -1876,23 +1876,23 @@ def create_property(request):
                             "message": (
                                 "If you have provided the name, you must also provide the distance to it."
                                 if request.POST.get(f"{nearby}-name").strip()
-                                   and not request.POST.get(f"{nearby}-distance").strip()
+                                and not request.POST.get(f"{nearby}-distance").strip()
                                 else (
                                     "The distance must be greater than or equal 0."
                                     if request.POST.get(f"{nearby}-distance").strip()
-                                       and request.POST.get(f"{nearby}-distance").strip()[
-                                           0
-                                       ]
-                                       == "-"
-                                       and request.POST.get(f"{nearby}-distance")
-                                           .strip()[1:]
-                                           .isdigit()
+                                    and request.POST.get(f"{nearby}-distance").strip()[
+                                        0
+                                    ]
+                                    == "-"
+                                    and request.POST.get(f"{nearby}-distance")
+                                    .strip()[1:]
+                                    .isdigit()
                                     else (
                                         "The distance must consist of positive digits."
                                         if request.POST.get(
                                             f"{nearby}-distance"
                                         ).strip()
-                                           and not request.POST.get(f"{nearby}-distance")
+                                        and not request.POST.get(f"{nearby}-distance")
                                         .strip()
                                         .replace(",", "")
                                         .isdigit()
@@ -1911,8 +1911,8 @@ def create_property(request):
 
             elif len(request.POST.getlist(f"{nearby}-name")) > 1:
                 for n, d in zip(
-                        request.POST.getlist(f"{nearby}-name"),
-                        request.POST.getlist(f"{nearby}-distance"),
+                    request.POST.getlist(f"{nearby}-name"),
+                    request.POST.getlist(f"{nearby}-distance"),
                 ):
                     folder.append(
                         {
@@ -1943,12 +1943,12 @@ def create_property(request):
                                     else (
                                         False
                                         if d.strip()
-                                           and d.strip()[0] == "-"
-                                           and d.strip()[1:].isdigit()
+                                        and d.strip()[0] == "-"
+                                        and d.strip()[1:].isdigit()
                                         else (
                                             False
                                             if d.strip()
-                                               and not d.strip().replace(",", "").isdigit()
+                                            and not d.strip().replace(",", "").isdigit()
                                             else True
                                         )
                                     )
@@ -1959,12 +1959,12 @@ def create_property(request):
                                     else (
                                         "The distance must be greater than or equal 0."
                                         if d.strip()
-                                           and d.strip()[0] == "-"
-                                           and d.strip()[1:].isdigit()
+                                        and d.strip()[0] == "-"
+                                        and d.strip()[1:].isdigit()
                                         else (
                                             "The distance must consist of positive digits."
                                             if d.strip()
-                                               and not d.strip().replace(",", "").isdigit()
+                                            and not d.strip().replace(",", "").isdigit()
                                             else ""
                                         )
                                     )
@@ -2041,7 +2041,7 @@ def create_property(request):
 
                         for feature in geolocations_api:
                             if feature["properties"]["city"] == request.POST.get(
-                                    "city"
+                                "city"
                             ):
                                 filters["longitude"] = feature["properties"]["lon"]
                                 filters["latitude"] = feature["properties"]["lat"]
@@ -2097,7 +2097,7 @@ def create_property(request):
             if request.FILES["thumbnail"]:
                 thumbnail = request.FILES["thumbnail"]
                 thumbnail.name = (
-                        str(uuid.uuid4()) + "." + thumbnail.name.split(sep=".")[1]
+                    str(uuid.uuid4()) + "." + thumbnail.name.split(sep=".")[1]
                 )
                 filters["thumbnail"] = thumbnail
 
@@ -2136,10 +2136,10 @@ def create_property(request):
 
             # save education, health and medical, transportation, shopping
             if (
-                    request.POST.get("education-name")
-                    or request.POST.get("health-name")
-                    or request.POST.get("transportation-name")
-                    or request.POST.get("shopping-name")
+                request.POST.get("education-name")
+                or request.POST.get("health-name")
+                or request.POST.get("transportation-name")
+                or request.POST.get("shopping-name")
             ):
                 nearbies = ["education", "health", "transportation", "shopping"]
                 temporary_folders = [[], [], [], []]
@@ -2152,11 +2152,11 @@ def create_property(request):
                 ]
 
                 for nearby, folder, cls, field in zip(
-                        nearbies, temporary_folders, classes, fields
+                    nearbies, temporary_folders, classes, fields
                 ):
                     if (
-                            len(request.POST.getlist(f"{nearby}-name")) == 1
-                            and len(request.POST.get(f"{nearby}-name")) != 0
+                        len(request.POST.getlist(f"{nearby}-name")) == 1
+                        and len(request.POST.get(f"{nearby}-name")) != 0
                     ):
                         obj = cls(
                             name=request.POST[f"{nearby}-name"],
@@ -2169,8 +2169,8 @@ def create_property(request):
 
                     else:
                         for n, d in zip(
-                                request.POST.getlist(f"{nearby}-name"),
-                                request.POST.getlist(f"{nearby}-distance"),
+                            request.POST.getlist(f"{nearby}-name"),
+                            request.POST.getlist(f"{nearby}-distance"),
                         ):
                             if len(n) > 0:
                                 if not (n, d) in folder:
@@ -2250,7 +2250,7 @@ def add_to_favourites(request) -> django.http.response.JsonResponse:
 
 
 def property_details(
-        request, category_slug, property_slug
+    request, category_slug, property_slug
 ) -> django.http.response.HttpResponse:
     """
     Returns an HttpResponse with the property-details template.
@@ -2294,7 +2294,7 @@ def property_details(
 
 
 def add_review(
-        request, category_slug, property_slug
+    request, category_slug, property_slug
 ) -> django.http.response.JsonResponse:
     """
     The function handles a form for adding reviews to properties.
@@ -2361,7 +2361,7 @@ def add_review(
 
 
 def schedule_tour(
-        request, category_slug, property_slug
+    request, category_slug, property_slug
 ) -> django.http.response.JsonResponse:
     """
     The function handles a form for scheduling a visit with a property seller or landlord.

@@ -468,7 +468,7 @@ def authorization(request) -> JsonResponse:
                             if not User.objects.filter(email=email).exists()
                             else (
                                 f"Your account is not yet activated. Check your email inbox"
-                                f"or register again if the activation link has expired."
+                                f" or register again if the activation link has expired."
                                 if not User.objects.get(email=email).is_verified
                                 else ""
                             )
