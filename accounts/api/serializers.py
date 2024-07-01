@@ -5,22 +5,22 @@ import re
 
 class UserSerializer(serializers.ModelSerializer):
     date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    username = serializers.CharField(max_length=100, help_text="Type your username.")
-    email = serializers.EmailField(max_length=100, help_text="Type your e-mail address.")
+    username = serializers.CharField(max_length=100, help_text="Enter the username.")
+    email = serializers.EmailField(max_length=100, help_text="Enter the email address.")
     password = serializers.CharField(
         write_only=True,
         required=False,
         style={
             "input_type": "password",
         },
-        help_text="Type your password."
+        help_text="Enter the password."
     )
     account_type = serializers.ChoiceField(
         choices=(
             ("Individual", "Individual"),
             ("Business", "Business"),
         ),
-        help_text="Choose your account type."
+        help_text="Select the account type."
     )
     image = serializers.ImageField(read_only=True)
     is_verified = serializers.BooleanField(read_only=True)

@@ -11,7 +11,7 @@ class NewsletterSerializer(serializers.ModelSerializer):
     subscribed_at = serializers.DateTimeField(
         read_only=True, format="%Y-%m-%d %H:%M:%S"
     )
-    email = serializers.CharField(max_length=100, help_text="Type your e-mail address.")
+    email = serializers.CharField(max_length=100, help_text="Enter the email address.")
 
     class Meta:
         model = Newsletter

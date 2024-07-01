@@ -13,7 +13,6 @@ from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from datetime import datetime
-from rest_framework.renderers import JSONRenderer
 
 
 @api_view(http_method_names=["GET"])
@@ -47,12 +46,16 @@ def api_endpoints(request):
                 "Profiles": {
                     "Individual Profiles": "api/v1/users/individuals",
                     "Individual Profile Details": "api/v1/users/individuals/<int:pk>",
+                    "Individual Profile Update (PATCH/PUT)": "api/v1/users/individuals/update-profile/<int:pk>",
+                    "Individual Profile Delete (DELETE)": "api/v1/users/individuals/delete-profile/<int:pk>",
                     "Individual Profiles by Gender": "api/v1/users/individuals?gender={gender}",
                     "Individual Profiles by Country": "api/v1/users/individuals?country={country}",
                     "Individual Profiles by Province": "api/v1/users/individuals?province={province}",
                     "Individual Profiles by City": "api/v1/users/individuals?city={city}",
                     "Business Profiles": "api/v1/users/business",
                     "Business Profile Details": "api/v1/users/business/<int:pk>",
+                    "Business Profile Update (PATCH/PUT)": "api/v1/users/business/update-profile/<int:pk>",
+                    "Business Profile Delete (DELETE)": "api/v1/users/business/delete-profile/<int:pk>",
                     "Business Profiles by Country": "api/v1/users/business?country={country}",
                     "Business Profiles by Province": "api/v1/users/business?province={province}",
                     "Business Profiles by City": "api/v1/users/business?city={city}",
@@ -149,6 +152,9 @@ def api_endpoints(request):
 
 
 class NewsletterAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all newsletters.
+    """
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -159,14 +165,20 @@ class NewsletterAPIView(ListAPIView):
 
 
 class NewsletterDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific newsletter.
+    """
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
 
     def get_view_name(self):
-        return "Newsletter Detail"
+        return "Newsletter Details"
 
 
 class NewsletterCreateAPIView(CreateAPIView):
+    """
+    API view allowing to create a new newsletter.
+    """
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
 
@@ -186,7 +198,7 @@ class NewsletterCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -204,14 +216,11 @@ class NewsletterCreateAPIView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Newsletter object.
+    """
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
     lookup_field = "pk"
@@ -236,7 +245,7 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -254,14 +263,11 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"Location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific newsletter.
+    """
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
 
@@ -292,3 +298,10 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+def get_success_headers(data):
+    try:
+        return {"location": str(data["id"])}
+    except (TypeError, KeyError):
+        return {}

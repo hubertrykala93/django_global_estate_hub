@@ -29,13 +29,38 @@ urlpatterns = [
         name="api-v1-users-individuals",
     ),
     path(
+        route="api/v1/users/individuals/<int:pk>",
+        view=views.UserIndividualProfileDetailsAPIView.as_view(),
+        name="api-v1-users-user-individuals-details",
+    ),
+    path(
+        route="api/v1/users/individuals/update-profile/<int:pk>",
+        view=views.UserIndividualProfileUpdateAPIView.as_view(),
+        name="api-v1-users-individuals-update-profile",
+    ),
+    path(
+        route="api/v1/users/individuals/delete-profile/<int:pk>",
+        view=views.UserIndividualProfileDeleteAPIView.as_view(),
+        name="api-v1-users-individuals-delete-profile",
+    ),
+    path(
         route="api/v1/users/business",
         view=views.BusinessProfileAPIView.as_view(),
         name="api-v1-users-business",
     ),
     path(
-        route="api/v1/users/individuals/<int:pk>",
-        view=views.UserIndividualProfileDetailsAPIView.as_view(),
-        name="api-v1-users-user-individuals-details",
+        route="api/v1/users/business/<int:pk>",
+        view=views.UserBusinessProfileDetailsAPIView.as_view(),
+        name="api-v1-users-business-details",
+    ),
+    path(
+        route="api/v1/users/business/update-profile/<int:pk>",
+        view=views.UserBusinessProfileUpdateAPIView.as_view(),
+        name="api-v1-users-business-update-profile",
+    ),
+    path(
+        route="api/v1/users/business/delete-profile/<int:pk>",
+        view=views.UserBusinessProfileDeleteAPIView.as_view(),
+        name="api-v1-users-business-delete-profile",
     ),
 ]

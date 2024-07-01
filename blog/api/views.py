@@ -16,16 +16,25 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 
 
 class CategoryAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all blog categories.
+    """
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
 
 class TagsAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all blog tags.
+    """
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
 
 class ArticlesAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all articles.
+    """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -41,6 +50,9 @@ class ArticlesAPIView(ListAPIView):
 
 
 class ArticleDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific article.
+    """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
@@ -49,8 +61,14 @@ class ArticleDetailsAPIView(RetrieveAPIView):
 
 
 class ArticleCreateApiView(CreateAPIView):
+    """
+    API view allowing to create a new article.
+    """
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+
+    def get_view_name(self):
+        return "Article Create"
 
     def perform_create(self, serializer):
         title = serializer.validated_data.get("title")
@@ -101,7 +119,7 @@ class ArticleCreateApiView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -119,17 +137,17 @@ class ArticleCreateApiView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class ArticleUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Article object.
+    """
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
     lookup_field = "pk"
+
+    def get_view_name(self):
+        return "Article Update"
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
@@ -138,7 +156,7 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -156,16 +174,16 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class ArticleDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific article.
+    """
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
+
+    def get_view_name(self):
+        return "Article Delete"
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -192,6 +210,9 @@ class ArticleDeleteAPIView(RetrieveDestroyAPIView):
 
 
 class CommentsAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all comments.
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
@@ -209,8 +230,18 @@ class CommentsAPIView(ListAPIView):
 
 
 class CommentDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific comment.
+    """
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
     def get_view_name(self):
         return "Comment Details"
+
+
+def get_success_headers(data):
+    try:
+        return {"location": str(data["id"])}
+    except (TypeError, KeyError):
+        return {}

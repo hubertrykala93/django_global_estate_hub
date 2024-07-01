@@ -19,7 +19,10 @@ from datetime import datetime
 
 
 class UsersAPIView(ListAPIView):
-    queryset = User.objects.all().order_by("-id")
+    """
+    API view allowing to retrieve all registered users.
+    """
+    queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     filterset_fields = {
@@ -34,16 +37,25 @@ class UsersAPIView(ListAPIView):
 
 
 class UserDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific user.
+    """
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
     def get_view_name(self):
-        return "User Detail"
+        return "User Details"
 
 
 class UserCreateAPIView(CreateAPIView):
+    """
+    API view allowing to create a new user.
+    """
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def get_view_name(self):
+        return "User Create"
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -81,7 +93,7 @@ class UserCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -99,17 +111,17 @@ class UserCreateAPIView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class UserUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific User object.
+    """
     serializer_class = UserSerializer
     queryset = User.objects.all()
     lookup_field = "pk"
+
+    def get_view_name(self):
+        return "User Update"
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
@@ -120,7 +132,7 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
+            headers = get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -138,16 +150,17 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-    def get_success_headers(self, data):
-        try:
-            return {"Location": str(data["id"])}
-        except (TypeError, KeyError):
-            return {}
-
 
 class UserDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific user.
+    """
     serializer_class = UserSerializer
-    queryset = User
+    queryset = User.objects.all()
+    lookup_field = "pk"
+
+    def get_view_name(self):
+        return "User Delete"
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -173,6 +186,9 @@ class UserDeleteAPIView(RetrieveDestroyAPIView):
 
 
 class IndividualProfileAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all individual profiles.
+    """
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -188,6 +204,9 @@ class IndividualProfileAPIView(ListAPIView):
 
 
 class BusinessProfileAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all business profiles.
+    """
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -202,16 +221,175 @@ class BusinessProfileAPIView(ListAPIView):
 
 
 class UserIndividualProfileDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific individual profile.
+    """
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
 
     def get_view_name(self):
-        return "User Individual Profile Details"
+        return "Individual Profile Details"
+
+
+class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Individual Profile object.
+    """
+    serializer_class = IndividualProfileSerializer
+    queryset = Individual.objects.all()
+
+    def get_view_name(self):
+        return "Individual Profile Update"
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.get("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(data=request.data, instance=instance, partial=partial)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+            headers = get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "Profile has been successfully updated.",
+                    "profile": serializer.data,
+                    "headers": headers,
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class UserIndividualProfileDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific individual profile.
+    """
+    serializer_class = IndividualProfileSerializer
+    lookup_field = "pk"
+    queryset = Individual.objects.all()
+
+    def get_view_name(self):
+        return "Individual Profile Delete"
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        temp_id = instance.id
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": "Profile has been successfully deleted.",
+                    "id": temp_id,
+                    "deleted_by": self.request.user.username,
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+
+        except Exception:
+            return Response(
+                data={
+                    "error": "There was an error while deleting the newsletter.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class UserBusinessProfileDetailsAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific business profile.
+    """
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
 
     def get_view_name(self):
-        return "User Business Profile Details"
+        return "Business Profile Details"
+
+
+class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Business Profile object.
+    """
+    serializer_class = BusinessProfileSerializer
+    queryset = Business.objects.all()
+
+    def get_view_name(self):
+        return "Business Profile Update"
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.get("partial", False)
+        instance = self.get_object()
+        serializer = self.get_serializer(data=request.data, instance=instance, partial=partial)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+            headers = get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "Profile has been successfully updated.",
+                    "profile": serializer.data,
+                    "headers": headers,
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific business profile.
+    """
+    serializer_class = BusinessProfileSerializer
+    queryset = Business.objects.all()
+    lookup_field = "pk"
+
+    def get_view_name(self):
+        return "Business Profile Delete"
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        temp_id = instance.id
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": "Profile has been successfully deleted.",
+                    "id": temp_id,
+                    "deleted_by": self.request.user.username,
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+
+        except Exception:
+            return Response(
+                data={
+                    "error": "There was an error while deleting the newsletter.",
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+def get_success_headers(data):
+    try:
+        return {"location": str(data["id"])}
+    except (TypeError, KeyError):
+        return {}
