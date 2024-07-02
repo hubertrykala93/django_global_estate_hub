@@ -23,6 +23,21 @@ urlpatterns = [
         name="api-v1-tour-schedules-details",
     ),
     path(
+        route="api/v1/tour-schedules/create-tour-schedule",
+        view=views.TourScheduleCreateAPIView.as_view(),
+        name="api-v1-tour-schedules-create-tour-schedule",
+    ),
+    path(
+        route="api/v1/tour-schedules/update-tour-schedule/<int:pk>",
+        view=views.TourScheduleUpdateAPIView.as_view(),
+        name="api-v1-tour-schedules-update-tour-schedule"
+    ),
+    path(
+        route="api/v1/tour-schedules/delete-tour-schedule/<int:pk>",
+        view=views.TourScheduleDeleteAPIView.as_view(),
+        name="api-v1-tour-schedules-delete-tour-schedule",
+    ),
+    path(
         route="api/v1/reviews",
         view=views.ReviewsAPIView.as_view(),
         name="api-v1-reviews",
@@ -31,5 +46,20 @@ urlpatterns = [
         route="api/v1/reviews/<int:pk>",
         view=views.ReviewDetailAPIView.as_view(),
         name="api-v1-review-details",
+    ),
+    path(
+        route="api/v1/reviews/create-review",
+        view=views.ReviewCreateAPIView.as_view(),
+        name="api-v1-reviews-create-review",
+    ),
+    path(
+        route="api/v1/reviews/update-review/<int:pk>",
+        view=views.ReviewUpdateAPIView.as_view(),
+        name="api-v1-reviews-update-review",
+    ),
+    path(
+        route="api/v1/reviews/delete-review/<int:pk>",
+        view=views.ReviewDeleteAPIView.as_view(),
+        name="api-v1-reviews-delete-review",
     ),
 ]

@@ -132,6 +132,9 @@ def api_endpoints(request):
                 "Reviews": {
                     "Reviews": "api/v1/reviews",
                     "Review Details": "api/v1/reviews/<int:pk>",
+                    "Create Review (POST)": "api/v1/reviews/create-review",
+                    "Update Review (PATCH/PUT)": "api/v1/reviews/update-review/<int:pk>",
+                    "Delete Review (DELETE)": "api/v1/reviews/delete-review/<int:pk>",
                     "Reviews by User ID": "api/v1/reviews?user__id={user.id}",
                     "Reviews by User Username": "api/v1/reviews?user__username={user.username}",
                     "Reviews by Property ID": "api/v1/reviews?property__id={property.id}",
@@ -140,6 +143,9 @@ def api_endpoints(request):
                 "Tour Schedules": {
                     "Tour Schedules": "api/v1/tour-schedules",
                     "Tour Schedule Details": "api/v1/tour-schedules/<int:pk>",
+                    "Create Tour Schedule (POST)": "api/v1/tour-schedules/create-tour-schedule",
+                    "Update Tour Schedule (PATCH/PUT)": "api/v1/tour-schedules/update-tour-schedule/<int:pk>",
+                    "Delete Tour Schedule (DELETE)": "api/v1/tour-schedules/delete-tour-schedule/<int:pk>",
                     "Tour Schedules by Customer ID": "api/v1/tour-schedules?customer__id={customer.id}",
                     "Tour Schedules by Customer Username": "api/v1/tour-schedules?customer__username={customer.username}",
                     "Tour Schedules by Property ID": "api/v1/tour-schedules?property__id={property.id}",
