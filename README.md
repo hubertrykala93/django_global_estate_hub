@@ -224,9 +224,9 @@ django_global_estate_hub
 | `GET` | `api/v1/newsletters?ordering=email` | Sorts newsletters by email using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/users` | Retrieve all users. |
 | `GET` | `api/v1/users/<int:pk>` | Retrieve user with a specific ID. |
-| `POST` | `api/v1/newsletters/create-user` | Create a new user. |
-| `PATCH/PUT` | `api/v1/newsletters/update-user/<int:pk>` | Update user with specific ID. |
-| `DELETE` | `api/v1/newsletters/delete-user/<int:pk>` | Deleting user with specific ID. |
+| `POST` | `api/v1/users/create-user` | Create a new user. |
+| `PATCH/PUT` | `api/v1/users/update-user/<int:pk>` | Update user with specific ID. |
+| `DELETE` | `api/v1/users/delete-user/<int:pk>` | Deleting user with specific ID. |
 | `GET` | `api/v1/users?ordering=date_joined` | Sorts users by date joined using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/users?ordering=username` | Sorts users by username using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/users?ordering=email` | Sorts users by email using the chosen method (ascending, descending) and retrieves them. |
@@ -310,12 +310,18 @@ django_global_estate_hub
 | `GET` | `api/v1/properties/is_featured={is_featured}` | Retrieve featured or non-featured properties. |
 | `GET` | `api/v1/reviews` | Retrieve all reviews. |
 | `GET` | `api/v1/reviews/<int:pk>` | Retrieve review with a specific ID. |
+| `POST` | `api/v1/reviews/create-review` | Create a new review. |
+| `PATCH/PUT` | `api/v1/reviews/update-review/<int:pk>` | Update review with specific ID. |
+| `DELETE` | `api/v1/reviews/delete-reviews/<int:pk>` | Deleting review with specific ID. |
 | `GET` | `api/v1/reviews/user__id={user.id}` | Retrieve reviews posted by a specific user ID. |
 | `GET` | `api/v1/reviews/user__username={user.username}` | Retrieve reviews posted by a specific user username. |
 | `GET` | `api/v1/reviews/property__id={property.id}` | Retrieve reviews for a property with a specific ID. |
 | `GET` | `api/v1/reviews/property__title={property.title}` | Retrieve reviews for a property with a specific property title. |
 | `GET` | `api/v1/tour-schedules` | Retrieve all tour schedules. |
 | `GET` | `api/v1/tour-schedules/<int:pk>` | Retrieve tour schedule with a specific ID. |
+| `POST` | `api/v1/tour-schedules/create-tour-schedule` | Create a new tour schedule. |
+| `PATCH/PUT` | `api/v1/tour-schedules/update-tour-schedule/<int:pk>` | Update tour schedule with specific ID. |
+| `DELETE` | `api/v1/tour-schedule/delete-tour-schedule/<int:pk>` | Deleting tour schedule with specific ID. |
 | `GET` | `api/v1/tour-schedules/customer__id={customer.id}` | Retrieve tour schedules requested by a specific user ID. |
 | `GET` | `api/v1/tour-schedules/customer__username={customer.username}` | Retrieve tour schedules requested by a specific user username. |
 | `GET` | `api/v1/tour-schedules/property__id={property.id}` | Retrieve tour schedules related to the property ID. |
