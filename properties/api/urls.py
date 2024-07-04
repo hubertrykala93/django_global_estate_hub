@@ -13,6 +13,21 @@ urlpatterns = [
         name="api-v1-properties-property-details",
     ),
     path(
+        route="api/v1/properties/create-property",
+        view=views.PropertyCreateAPIView.as_view(),
+        name="api-v1-properties-create-property",
+    ),
+    path(
+        route="api/v1/properties/update-property/<int:pk>",
+        view=views.PropertyUpdateAPIView.as_view(),
+        name="api-v1-properties-update-property",
+    ),
+    path(
+        route="api/v1/properties/delete-property/<int:pk>",
+        view=views.PropertyDeleteAPIView.as_view(),
+        name="api-v1-properties-delete-property",
+    ),
+    path(
         route="api/v1/tour-schedules",
         view=views.TourSchedulesAPIView.as_view(),
         name="api-v1-tour-schedules",
@@ -30,7 +45,7 @@ urlpatterns = [
     path(
         route="api/v1/tour-schedules/update-tour-schedule/<int:pk>",
         view=views.TourScheduleUpdateAPIView.as_view(),
-        name="api-v1-tour-schedules-update-tour-schedule"
+        name="api-v1-tour-schedules-update-tour-schedule",
     ),
     path(
         route="api/v1/tour-schedules/delete-tour-schedule/<int:pk>",

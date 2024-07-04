@@ -10,18 +10,22 @@ from rest_framework.response import Response
 from rest_framework import status
 from .serializers import (
     UserSerializer,
+    UserCreateSerializer,
+    UserUpdateSerializer,
     IndividualProfileSerializer,
     BusinessProfileSerializer,
 )
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from datetime import datetime
+from .permissions import IsAdminOrOwner
 
 
 class UsersAPIView(ListAPIView):
     """
     API view allowing to retrieve all registered users.
     """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -40,6 +44,7 @@ class UserDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific user.
     """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -51,8 +56,10 @@ class UserCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new user.
     """
-    serializer_class = UserSerializer
+
+    serializer_class = UserCreateSerializer
     queryset = User.objects.all()
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "User Create"
@@ -64,24 +71,28 @@ class UserCreateAPIView(CreateAPIView):
         if len(request.data.get("username")) < 1:
             errors.append(
                 {
-                    "field": "username",
-                    "error": "The username field cannot be empty.",
+                    "username": "The username field cannot be empty.",
                 }
             )
 
         if len(request.data.get("email")) < 1:
             errors.append(
                 {
-                    "field": "email",
-                    "error": "The e-mail field cannot be empty.",
+                    "email": "The e-mail field cannot be empty.",
                 }
             )
 
         if len(request.data.get("password")) < 1:
             errors.append(
                 {
-                    "field": "password",
-                    "error": "The password field cannot be empty."
+                    "password": "The password field cannot be empty.",
+                }
+            )
+
+        if len(request.data.get("image")) < 1:
+            errors.append(
+                {
+                    "image": "The image field cannot be empty.",
                 }
             )
 
@@ -116,9 +127,10 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific User object.
     """
-    serializer_class = UserSerializer
+
+    serializer_class = UserUpdateSerializer
     queryset = User.objects.all()
-    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "User Update"
@@ -126,7 +138,7 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
         instance = self.get_object()
-        serializer = UserSerializer(
+        serializer = UserUpdateSerializer(
             instance=instance, partial=partial, data=request.data
         )
 
@@ -155,9 +167,10 @@ class UserDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific user.
     """
+
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "User Delete"
@@ -189,6 +202,7 @@ class IndividualProfileAPIView(ListAPIView):
     """
     API view allowing to retrieve all individual profiles.
     """
+
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -207,6 +221,7 @@ class BusinessProfileAPIView(ListAPIView):
     """
     API view allowing to retrieve all business profiles.
     """
+
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
     filter_backends = [DjangoFilterBackend]
@@ -224,6 +239,7 @@ class UserIndividualProfileDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific individual profile.
     """
+
     queryset = Individual.objects.all()
     serializer_class = IndividualProfileSerializer
 
@@ -235,8 +251,10 @@ class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Individual Profile object.
     """
+
     serializer_class = IndividualProfileSerializer
     queryset = Individual.objects.all()
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Individual Profile Update"
@@ -244,7 +262,9 @@ class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
         instance = self.get_object()
-        serializer = self.get_serializer(data=request.data, instance=instance, partial=partial)
+        serializer = self.get_serializer(
+            data=request.data, instance=instance, partial=partial
+        )
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -271,9 +291,11 @@ class UserIndividualProfileDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific individual profile.
     """
+
     serializer_class = IndividualProfileSerializer
     lookup_field = "pk"
     queryset = Individual.objects.all()
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Individual Profile Delete"
@@ -308,6 +330,7 @@ class UserBusinessProfileDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific business profile.
     """
+
     queryset = Business.objects.all()
     serializer_class = BusinessProfileSerializer
 
@@ -319,8 +342,10 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Business Profile object.
     """
+
     serializer_class = BusinessProfileSerializer
     queryset = Business.objects.all()
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Business Profile Update"
@@ -328,7 +353,9 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
         instance = self.get_object()
-        serializer = self.get_serializer(data=request.data, instance=instance, partial=partial)
+        serializer = self.get_serializer(
+            data=request.data, instance=instance, partial=partial
+        )
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -355,9 +382,11 @@ class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific business profile.
     """
+
     serializer_class = BusinessProfileSerializer
     queryset = Business.objects.all()
     lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Business Profile Delete"

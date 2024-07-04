@@ -13,6 +13,7 @@ from rest_framework import status
 from rest_framework.filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from datetime import datetime
+from .permissions import IsAdminOnly
 
 
 @api_view(http_method_names=["GET"])
@@ -86,6 +87,9 @@ def api_endpoints(request):
                 "Properties": {
                     "Properties": "api/v1/properties",
                     "Property Details": "api/v1/properties/<int:pk>",
+                    "Create Property (POST)": "api/v1/properties/create-property",
+                    "Update Property (PATCH/PUT)": "api/v1/properties/update-property/<int:pk>",
+                    "Delete Property (DELETE)": "api/v1/properties/delete-property/<int:pk>",
                     "Search Property Titles using a Keyword": "api/v1/properties?search={keyword}",
                     "Sorting Properties by Title Ascending": "api/v1/properties?ordering=title",
                     "Sorting Properties by Title Descending": "api/v1/properties?ordering=-title",
@@ -161,6 +165,7 @@ class NewsletterAPIView(ListAPIView):
     """
     API view allowing to retrieve all newsletters.
     """
+
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
@@ -174,6 +179,7 @@ class NewsletterDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific newsletter.
     """
+
     queryset = Newsletter.objects.all()
     serializer_class = NewsletterSerializer
 
@@ -185,20 +191,28 @@ class NewsletterCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new newsletter.
     """
+
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Newsletter Create"
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
+        errors = []
 
         if len(request.data.get("email")) < 1:
+            errors.append(
+                {
+                    "email": "The email field cannot be empty.",
+                }
+            )
+
+        if errors:
             return Response(
-                data={
-                    "email": ["The e-mail field cannot be empty."],
-                },
+                data=errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -227,9 +241,11 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Newsletter object.
     """
+
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
     lookup_field = "pk"
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Newsletter Update"
@@ -274,8 +290,10 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific newsletter.
     """
+
     serializer_class = NewsletterSerializer
     queryset = Newsletter.objects.all()
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Newsletter Delete"

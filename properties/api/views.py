@@ -1,5 +1,10 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, RetrieveUpdateAPIView, \
-    RetrieveDestroyAPIView
+from rest_framework.generics import (
+    ListAPIView,
+    RetrieveAPIView,
+    CreateAPIView,
+    RetrieveUpdateAPIView,
+    RetrieveDestroyAPIView,
+)
 from properties.models import Property, TourSchedule, Review
 from .serializers import PropertySerializer, TourScheduleSerializer, ReviewSerializer
 from django_filters.rest_framework import DjangoFilterBackend
@@ -14,6 +19,7 @@ class PropertyAPIView(ListAPIView):
     """
     API view allowing to retrieve all properties.
     """
+
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
@@ -29,6 +35,7 @@ class PropertyDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific property.
     """
+
     queryset = Property.objects.all()
     serializer_class = PropertySerializer
 
@@ -36,10 +43,50 @@ class PropertyDetailAPIView(RetrieveAPIView):
         return "Property Details"
 
 
+from accounts.api.permissions import IsAdminOrOwner
+
+
+class PropertyCreateAPIView(CreateAPIView):
+    """
+    API view allowing to create a new property.
+    """
+
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get_view_name(self):
+        return "Property Create"
+
+
+class PropertyUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Property object.
+    """
+
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get_view_name(self):
+        return "Property Update"
+
+
+class PropertyDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific property.
+    """
+
+    queryset = Property.objects.all()
+    serializer_class = PropertySerializer
+
+    def get_view_name(self):
+        return "Property Delete"
+
+
 class TourSchedulesAPIView(ListAPIView):
     """
     API view allowing to retrieve all tour schedules.
     """
+
     queryset = TourSchedule.objects.all()
     serializer_class = TourScheduleSerializer
     filter_backends = [DjangoFilterBackend]
@@ -58,6 +105,7 @@ class TourScheduleDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific tour schedule.
     """
+
     queryset = TourSchedule.objects.all()
     serializer_class = TourScheduleSerializer
 
@@ -69,6 +117,7 @@ class ReviewsAPIView(ListAPIView):
     """
     API view allowing to retrieve all reviews.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = [DjangoFilterBackend]
@@ -87,6 +136,7 @@ class ReviewDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific review.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -98,6 +148,7 @@ class ReviewCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new review.
     """
+
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
 
@@ -155,6 +206,7 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Review object.
     """
+
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
 
@@ -164,7 +216,9 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = self.kwargs.get("partial")
         instance = self.get_object()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance=instance, data=request.data, partial=partial
+        )
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -174,7 +228,7 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
                 data={
                     "message": "The review has been updated successfully.",
                     "review": serializer.data,
-                    "headers": headers
+                    "headers": headers,
                 },
                 headers=headers,
                 status=status.HTTP_200_OK,
@@ -191,6 +245,7 @@ class ReviewDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific review.
     """
+
     serializer_class = ReviewSerializer
     queryset = Review.objects.all()
 
@@ -209,7 +264,7 @@ class ReviewDeleteAPIView(RetrieveDestroyAPIView):
                     "message": "The review has been deleted successfully.",
                     "id": temp_id,
                     "deleted_by": self.request.user.username,
-                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
                 },
                 status=status.HTTP_204_NO_CONTENT,
             )
@@ -225,6 +280,7 @@ class TourScheduleCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new tour schedule.
     """
+
     serializer_class = TourScheduleSerializer
     queryset = TourSchedule.objects.all()
 
@@ -306,6 +362,7 @@ class TourScheduleUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific TourSchedule object.
     """
+
     serializer_class = TourScheduleSerializer
     queryset = TourSchedule.objects.all()
 
@@ -315,7 +372,9 @@ class TourScheduleUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = self.kwargs.get("partial")
         instance = self.get_object()
-        serializer = self.get_serializer(instance=instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance=instance, data=request.data, partial=partial
+        )
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -342,6 +401,7 @@ class TourScheduleDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific tour schedule.
     """
+
     serializer_class = TourScheduleSerializer
     queryset = TourSchedule.objects.all()
 

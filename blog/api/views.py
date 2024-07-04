@@ -1,4 +1,9 @@
-from .serializers import ArticleSerializer, CommentSerializer, CategorySerializer, TagSerializer
+from .serializers import (
+    ArticleSerializer,
+    CommentSerializer,
+    CategorySerializer,
+    TagSerializer,
+)
 from rest_framework.generics import (
     ListAPIView,
     RetrieveAPIView,
@@ -19,6 +24,7 @@ class CategoryAPIView(ListAPIView):
     """
     API view allowing to retrieve all blog categories.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -27,6 +33,7 @@ class TagsAPIView(ListAPIView):
     """
     API view allowing to retrieve all blog tags.
     """
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
@@ -35,6 +42,7 @@ class ArticlesAPIView(ListAPIView):
     """
     API view allowing to retrieve all articles.
     """
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -53,6 +61,7 @@ class ArticleDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific article.
     """
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
@@ -64,6 +73,7 @@ class ArticleCreateApiView(CreateAPIView):
     """
     API view allowing to create a new article.
     """
+
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
@@ -128,7 +138,7 @@ class ArticleCreateApiView(CreateAPIView):
                     "headers": headers,
                 },
                 headers=headers,
-                status=status.HTTP_201_CREATED
+                status=status.HTTP_201_CREATED,
             )
 
         else:
@@ -142,6 +152,7 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Article object.
     """
+
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
     lookup_field = "pk"
@@ -152,7 +163,9 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
     def update(self, request, *args, **kwargs):
         partial = kwargs.get("partial", False)
         instance = self.get_object()
-        serializer = ArticleSerializer(instance=instance, data=request.data, partial=partial)
+        serializer = ArticleSerializer(
+            instance=instance, data=request.data, partial=partial
+        )
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -179,6 +192,7 @@ class ArticleDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific article.
     """
+
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
 
@@ -213,6 +227,7 @@ class CommentsAPIView(ListAPIView):
     """
     API view allowing to retrieve all comments.
     """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     filter_backends = [DjangoFilterBackend]
@@ -233,6 +248,7 @@ class CommentDetailsAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific comment.
     """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
