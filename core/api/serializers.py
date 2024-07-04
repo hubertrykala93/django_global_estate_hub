@@ -11,16 +11,16 @@ class NewsletterSerializer(serializers.ModelSerializer):
     subscribed_at = serializers.DateTimeField(
         read_only=True, format="%Y-%m-%d %H:%M:%S"
     )
-    email = serializers.CharField(max_length=100, help_text="Enter the email address.")
+    email = serializers.CharField(max_length=100, help_text="Enter the e-mail address.", allow_blank=True)
 
     class Meta:
         model = Newsletter
         fields = "__all__"
 
     def validate_email(self, email):
-        if email is None:
+        if email == "":
             raise serializers.ValidationError(
-                detail="The e-mail field cannot be empty."
+                detail="E-mail address is required."
             )
 
         if email and not re.match(

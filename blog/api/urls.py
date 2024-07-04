@@ -47,4 +47,9 @@ urlpatterns = [
         view=views.CommentDetailsAPIView.as_view(),
         name="api-v1-comments-comment-details",
     ),
+    path(
+        route="api/v1/comments/create-comment",
+        view=views.CommentCreateAPIView.as_view(),
+        name="api-v1-comments-create-comment",
+    ),
 ]

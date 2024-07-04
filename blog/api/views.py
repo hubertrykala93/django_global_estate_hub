@@ -1,7 +1,9 @@
 from .serializers import (
     ArticleSerializer,
     ArticleCreateSerializer,
+    ArticleUpdateSerializer,
     CommentSerializer,
+    CommentCreateSerializer,
     CategorySerializer,
     TagSerializer,
 )
@@ -19,6 +21,7 @@ from rest_framework import status
 from django.utils.text import slugify
 from datetime import datetime
 from rest_framework.filters import OrderingFilter, SearchFilter
+from .permissions import IsAdminOnly
 
 
 class CategoryAPIView(ListAPIView):
@@ -77,6 +80,7 @@ class ArticleCreateApiView(CreateAPIView):
 
     queryset = Article.objects.all()
     serializer_class = ArticleCreateSerializer
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Article Create"
@@ -88,41 +92,6 @@ class ArticleCreateApiView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        errors = []
-
-        if len(request.data.get("title")) < 1:
-            errors.append(
-                {
-                    "title": "The title field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("image")) < 1:
-            errors.append(
-                {
-                    "image": "The image field is required.",
-                }
-            )
-
-        if len(request.data.get("content")) < 1:
-            errors.append(
-                {
-                    "content": "The content field cannot be empty.",
-                }
-            )
-
-        if not request.data.get("tags"):
-            errors.append(
-                {
-                    "tags": "Select at least one tag.",
-                }
-            )
-
-        if errors:
-            return Response(
-                data=errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
@@ -150,18 +119,23 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
     API view allowing partial or full update of a specific Article object.
     """
 
-    serializer_class = ArticleSerializer
+    serializer_class = ArticleUpdateSerializer
     queryset = Article.objects.all()
     lookup_field = "pk"
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Article Update"
 
+    def perform_update(self, serializer):
+        title = serializer.validated_data.get("title")
+        slug = slugify(title)
+        serializer.save(slug=slug)
+
     def update(self, request, *args, **kwargs):
-        partial = kwargs.get("partial", False)
         instance = self.get_object()
-        serializer = ArticleSerializer(
-            instance=instance, data=request.data, partial=partial
+        serializer = self.get_serializer(
+            instance=instance, data=request.data
         )
 
         if serializer.is_valid():
@@ -192,6 +166,7 @@ class ArticleDeleteAPIView(RetrieveDestroyAPIView):
 
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Article Delete"
@@ -251,6 +226,34 @@ class CommentDetailsAPIView(RetrieveAPIView):
 
     def get_view_name(self):
         return "Comment Details"
+
+
+class CommentCreateAPIView(CreateAPIView):
+    serializer_class = CommentCreateSerializer
+    queryset = Comment.objects.all()
+    lookup_field = "pk"
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            self.perform_create(serializer=serializer)
+            headers = get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "The comment has been created successfully.",
+                    "comment": serializer.data,
+                    "headers": headers,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 def get_success_headers(data):

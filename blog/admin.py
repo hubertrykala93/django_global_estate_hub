@@ -181,6 +181,7 @@ class AdminComment(MPTTModelAdmin):
         "dislikes",
         "active",
         "parent",
+        "level",
     ]
     list_filter = ["article__title", "date_posted", "active"]
     list_editable = ["user", "likes", "dislikes", "active"]

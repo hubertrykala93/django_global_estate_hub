@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from accounts.models import User, Individual, Business
 import re
-import magic
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -260,6 +259,10 @@ class UserUpdateSerializer(serializers.ModelSerializer):
                 detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
 
         return image
+
+    def validate_account_type(self, account_type):
+        if account_type is None:
+            raise serializers.ValidationError(detail="Account type is required.")
 
     def update(self, instance, validated_data):
         if "password" in validated_data:

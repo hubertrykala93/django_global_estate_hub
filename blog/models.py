@@ -223,20 +223,11 @@ class Comment(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ["date_posted"]
 
-    def __str__(self) -> str:
+    def __str__(self):
         """
-        Returns the string representation of the commenting user if user is authenticated
-        or full name if user is anonymous and displays it in the administrator panel.
-
-        Returns
-        ----------
-            str
+        Returns a string representation of the comment ID that is the parent.
         """
-        return (
-            f"Comment by {self.full_name}."
-            if self.full_name
-            else f"Comment by {self.user}."
-        )
+        return f'{self.id}'
 
 
 class CommentLike(models.Model):
