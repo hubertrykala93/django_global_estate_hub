@@ -1,12 +1,11 @@
 from rest_framework import serializers
 from accounts.models import User, Individual, Business
 import re
+import magic
 
 
 class UserSerializer(serializers.ModelSerializer):
-    date_joined = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    image = serializers.SerializerMethodField(method_name="get_image_name")
-    last_login = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    image = serializers.SerializerMethodField(method_name="get_image_name", allow_null=True)
 
     class Meta:
         model = User
@@ -21,33 +20,35 @@ class UserSerializer(serializers.ModelSerializer):
             "is_agent",
             "last_login",
         ]
+        extra_kwargs = {
+            "date_joined": {
+                "format": "%Y-%m-%d %H:%M:%S",
+                "read_only": True,
+            },
+            "last_login": {
+                "format": "%Y-%m-%d %H:%M:%S",
+                "read_only": True,
+            }
+        }
 
     def get_image_name(self, obj):
         return obj.image.name.split("/")[-1]
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(
-        max_length=100, help_text="Enter the username.", required=False
-    )
-    email = serializers.EmailField(
-        max_length=100, help_text="Enter the email address.", required=False
-    )
-    password = serializers.CharField(
-        write_only=True,
-        required=False,
-        style={
-            "input_type": "password",
-        },
-        help_text="Enter the password.",
-    )
-    image = serializers.ImageField(required=False, help_text="Upload your photo.")
+    username = serializers.CharField(max_length=100, help_text="Enter the username.", allow_blank=True)
+    email = serializers.CharField(max_length=100, help_text="Enter the e-mail address.", allow_blank=True)
+    password = serializers.CharField(max_length=100, help_text="Enter the password", allow_blank=True, style={
+        "input_type": "password",
+    }, write_only=True)
+    image = serializers.ImageField(help_text="Upload your image.", allow_null=True)
     account_type = serializers.ChoiceField(
         choices=(
             ("Individual", "Individual"),
             ("Business", "Business"),
         ),
         help_text="Select the account type.",
+        allow_blank=True,
     )
 
     class Meta:
@@ -63,17 +64,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance=instance)
-
-        if instance.image:
-            representation["image"] = instance.image.name.split("/")[-1]
+        representation["image"] = instance.image.name.split("/")[-1]
 
         return representation
 
     def validate_username(self, username):
-        if username is None:
-            raise serializers.ValidationError(
-                detail="The username field cannot be empty."
-            )
+        if username == "":
+            raise serializers.ValidationError(detail="Username is required.")
 
         if username and len(username) < 8:
             raise serializers.ValidationError(
@@ -90,9 +87,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return username
 
     def validate_email(self, email):
-        if email is None:
+        if email == "":
             raise serializers.ValidationError(
-                detail="The e-mail field cannot be empty."
+                detail="E-mail address is required."
             )
 
         if email and not re.match(
@@ -117,9 +114,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return email
 
     def validate_password(self, password):
-        if password is None:
+        if password == "":
             raise serializers.ValidationError(
-                detail="The password field cannot be empty."
+                detail="Password is required."
             )
 
         if password and len(password) < 8:
@@ -144,20 +141,22 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_image(self, image):
         if image is None:
-            raise serializers.ValidationError(detail="The image field cannot be empty.")
+            raise serializers.ValidationError(detail="Image is required.")
+        else:
+            extension = image.name.split(".")[-1]
+            allowed_extensions = ["jpg", "jpeg", "png", "svg", "webp"]
 
-        if image and image.name.split(".")[-1] not in [
-            "jpg",
-            "jpeg",
-            "png",
-            "svg",
-            "webp",
-        ]:
-            raise serializers.ValidationError(
-                detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
-            )
+            if extension not in allowed_extensions:
+                raise serializers.ValidationError(
+                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
 
         return image
+
+    def validate_account_type(self, account_type):
+        if account_type == "":
+            raise serializers.ValidationError(detail="Account type is required.")
+
+        return account_type
 
     def create(self, validated_data):
         raw_password = validated_data.pop("password")
@@ -173,7 +172,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
         max_length=100, help_text="Enter the username.", required=False
     )
-    email = serializers.EmailField(
+    email = serializers.CharField(
         max_length=100, help_text="Enter the email address.", required=False
     )
     password = serializers.CharField(
@@ -198,7 +197,6 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance=instance)
-
         representation["image"] = instance.image.name.split("/")[-1]
 
         return representation
@@ -227,7 +225,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         if self.instance.email != email and User.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                detail="A user with this email address already exists."
+                detail="A user with this e-mail address already exists."
             )
 
         return email
@@ -254,20 +252,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         return password
 
     def validate_image(self, image):
-        if image is None:
-            print("Image is None.")
-            raise serializers.ValidationError(detail="The image field cannot be empty.")
+        extension = image.name.split(".")[-1]
+        allowed_extensions = ["jpg", "jpeg", "png", "svg", "webp"]
 
-        if image and image.name.split(".")[-1] not in [
-            "jpg",
-            "jpeg",
-            "png",
-            "svg",
-            "webp",
-        ]:
+        if extension not in allowed_extensions:
             raise serializers.ValidationError(
-                detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
-            )
+                detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
 
         return image
 

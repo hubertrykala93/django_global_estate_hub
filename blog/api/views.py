@@ -1,5 +1,6 @@
 from .serializers import (
     ArticleSerializer,
+    ArticleCreateSerializer,
     CommentSerializer,
     CategorySerializer,
     TagSerializer,
@@ -75,7 +76,7 @@ class ArticleCreateApiView(CreateAPIView):
     """
 
     queryset = Article.objects.all()
-    serializer_class = ArticleSerializer
+    serializer_class = ArticleCreateSerializer
 
     def get_view_name(self):
         return "Article Create"
@@ -92,32 +93,28 @@ class ArticleCreateApiView(CreateAPIView):
         if len(request.data.get("title")) < 1:
             errors.append(
                 {
-                    "field": "title",
-                    "error": "The title field cannot be empty.",
+                    "title": "The title field cannot be empty.",
                 }
             )
 
         if len(request.data.get("image")) < 1:
             errors.append(
                 {
-                    "field": "image",
-                    "error": "The image field is required.",
+                    "image": "The image field is required.",
                 }
             )
 
         if len(request.data.get("content")) < 1:
             errors.append(
                 {
-                    "field": "content",
-                    "error": "The content field cannot be empty.",
+                    "content": "The content field cannot be empty.",
                 }
             )
 
         if not request.data.get("tags"):
             errors.append(
                 {
-                    "field": "tags",
-                    "error": "Select at least one tag.",
+                    "tags": "Select at least one tag.",
                 }
             )
 

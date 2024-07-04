@@ -16,21 +16,47 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class ArticleSerializer(serializers.ModelSerializer):
-    date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    user = serializers.SlugRelatedField(
-        slug_field="username",
+    image = serializers.SerializerMethodField(method_name="get_image_name")
+
+    class Meta:
+        model = Article
+        fields = [
+            "id",
+            "user",
+            "date_posted",
+            "title",
+            "slug",
+            "image",
+            "content",
+            "category",
+            "tags",
+        ]
+        extra_kwargs = {
+            "date_posted": {
+                "format": "%Y-%m-%d %H:%M:%S",
+                "read_only": True,
+            }
+        }
+
+    def get_image_name(self, obj):
+        return obj.image.name.split("/")[-1]
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance=instance)
+    #
+    #     category_serializer = CategorySerializer(instance=instance.category)
+    #     representation["category"] = category_serializer.data
+    #
+    #     tag_serializer = TagSerializer(instance=instance.tags, many=True)
+    #     representation["tags"] = tag_serializer.data
+    #
+    #     return representation
+
+
+class ArticleCreateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        help_text="Select the article author.",
-        required=False,
-    )
-    title = serializers.CharField(
-        max_length=1000, help_text="Enter the article title.", required=False
-    )
-    image = serializers.ImageField(
-        help_text="Upload the main article image.", required=False
-    )
-    content = serializers.CharField(
-        max_length=10000, help_text="Enter the article content.", required=False
+        help_text="Select the article author."
     )
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
@@ -57,18 +83,27 @@ class ArticleSerializer(serializers.ModelSerializer):
             "tags",
             "slug",
         ]
-        read_only_fields = ["id", "date_posted", "slug"]
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance=instance)
-
-        category_serializer = CategorySerializer(instance=instance.category)
-        representation["category"] = category_serializer.data
-
-        tag_serializer = TagSerializer(instance=instance.tags, many=True)
-        representation["tags"] = tag_serializer.data
-
-        return representation
+        read_only_fields = ["id", "slug"]
+        extra_kwargs = {
+            "date_posted": {
+                "format": "%Y-%m-%d %H:%M:%S",
+                "read_only": True,
+            },
+            "title": {
+                "max_length": 1000,
+                "help_text": "Enter the article title.",
+                "required": False,
+            },
+            "image": {
+                "help_text": "Upload the main article image.",
+                "required": False,
+            },
+            "content": {
+                "max_length": 10000,
+                "help_text": "Enter the article content.",
+                "required": False,
+            }
+        }
 
     def validate_title(self, title):
         if title is None:

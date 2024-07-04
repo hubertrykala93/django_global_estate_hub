@@ -66,41 +66,6 @@ class UserCreateAPIView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        errors = []
-
-        if len(request.data.get("username")) < 1:
-            errors.append(
-                {
-                    "username": "The username field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("email")) < 1:
-            errors.append(
-                {
-                    "email": "The e-mail field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("password")) < 1:
-            errors.append(
-                {
-                    "password": "The password field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("image")) < 1:
-            errors.append(
-                {
-                    "image": "The image field cannot be empty.",
-                }
-            )
-
-        if errors:
-            return Response(
-                data=errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
@@ -136,10 +101,9 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
         return "User Update"
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.get("partial", False)
         instance = self.get_object()
         serializer = UserUpdateSerializer(
-            instance=instance, partial=partial, data=request.data
+            instance=instance, data=request.data
         )
 
         if serializer.is_valid():
