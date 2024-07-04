@@ -269,6 +269,9 @@ django_global_estate_hub
 | `GET` | `api/v1/users/comments?article__title={article.title}` | Retrieve comments under an article with a specific title. |
 | `GET` | `api/v1/properties` | Retrieve all properties. |
 | `GET` | `api/v1/properties/<int:pk>` | Retrieve property with a specific ID. |
+| `POST` | `api/v1/properties/create-property` | Create a new property. |
+| `PATCH/PUT` | `api/v1/properties/update-property/<int:pk>` | Update property with specific ID. |
+| `DELETE` | `api/v1/properties/delete-property/<int:pk>` | Deleting property with specific ID. |
 | `GET` | `api/v1/properties?search={keyword}` | Search and retrieve properties by title using a keyword. |
 | `GET` | `api/v1/properties/ordering=title` | Sorts properties by title using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/properties/ordering=price` | Sorts properties by price using the chosen method (ascending, descending) and retrieves them. |
