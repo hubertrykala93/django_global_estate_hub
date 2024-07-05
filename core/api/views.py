@@ -204,7 +204,7 @@ class NewsletterCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -221,6 +221,14 @@ class NewsletterCreateAPIView(CreateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
@@ -253,7 +261,7 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -270,6 +278,14 @@ class NewsletterUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
@@ -308,10 +324,3 @@ class NewsletterDeleteAPIView(RetrieveDestroyAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-
-def get_success_headers(data):
-    try:
-        return {"location": str(data["id"])}
-    except (TypeError, KeyError):
-        return {}

@@ -69,7 +69,7 @@ class UserCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -87,6 +87,14 @@ class UserCreateAPIView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
+
 
 class UserUpdateAPIView(RetrieveUpdateAPIView):
     """
@@ -102,13 +110,11 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = UserUpdateSerializer(
-            instance=instance, data=request.data
-        )
+        serializer = UserUpdateSerializer(instance=instance, data=request.data)
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -125,6 +131,14 @@ class UserUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class UserDeleteAPIView(RetrieveDestroyAPIView):
@@ -232,7 +246,7 @@ class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -249,6 +263,14 @@ class UserIndividualProfileUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class UserIndividualProfileDeleteAPIView(RetrieveDestroyAPIView):
@@ -323,7 +345,7 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -340,6 +362,14 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
@@ -379,10 +409,3 @@ class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-
-def get_success_headers(data):
-    try:
-        return {"location": str(data["id"])}
-    except (TypeError, KeyError):
-        return {}

@@ -95,7 +95,7 @@ class ArticleCreateApiView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -112,6 +112,14 @@ class ArticleCreateApiView(CreateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class ArticleUpdateAPIView(RetrieveUpdateAPIView):
@@ -134,13 +142,11 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(
-            instance=instance, data=request.data
-        )
+        serializer = self.get_serializer(instance=instance, data=request.data)
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -157,6 +163,14 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}
 
 
 class ArticleDeleteAPIView(RetrieveDestroyAPIView):
@@ -233,12 +247,43 @@ class CommentCreateAPIView(CreateAPIView):
     queryset = Comment.objects.all()
     lookup_field = "pk"
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update(
+            {
+                "article_id": self.request.data.get("article"),
+            },
+        )
+
+        if self.request.data.get("parent") != "":
+            context.update(
+                {
+                    "parent": self.request.data.get("parent"),
+                }
+            )
+
+        if self.request.data.get("user") != "":
+            context.update(
+                {
+                    "user": self.request.data.get("user")
+                }
+            )
+
+        if self.request.data.get("full_name") != "":
+            context.update(
+                {
+                    "full_name": self.request.data.get("full_name")
+                }
+            )
+
+        return context
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -255,9 +300,10 @@ class CommentCreateAPIView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-
-def get_success_headers(data):
-    try:
-        return {"location": str(data["id"])}
-    except (TypeError, KeyError):
-        return {}
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"]),
+            }
+        except (TypeError, KeyError):
+            return {}

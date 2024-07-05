@@ -49,11 +49,15 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
         required=True,
         allow_null=True,
     )
-    title = serializers.CharField(max_length=1000, help_text="Enter the article title.",
-                                  allow_blank=True)
-    content = serializers.CharField(max_length=100000, help_text="Enter the article content.",
-                                    allow_blank=True)
-    image = serializers.ImageField(help_text="Upload the main article image.", allow_null=True)
+    title = serializers.CharField(
+        max_length=1000, help_text="Enter the article title.", allow_blank=True
+    )
+    content = serializers.CharField(
+        max_length=100000, help_text="Enter the article content.", allow_blank=True
+    )
+    image = serializers.ImageField(
+        help_text="Upload the main article image.", allow_null=True
+    )
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         help_text="Select the article category.",
@@ -117,9 +121,7 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 
     def validate_content(self, content):
         if content == "":
-            raise serializers.ValidationError(
-                detail="Content is required."
-            )
+            raise serializers.ValidationError(detail="Content is required.")
 
         if content and len(content) < 10:
             raise serializers.ValidationError(
@@ -164,11 +166,21 @@ class ArticleUpdateSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True,
     )
-    title = serializers.CharField(max_length=1000, help_text="Enter the article title.", required=False,
-                                  allow_blank=True)
-    content = serializers.CharField(max_length=100000, help_text="Enter the article content.", required=False,
-                                    allow_blank=True)
-    image = serializers.ImageField(help_text="Upload the main article image.", required=False)
+    title = serializers.CharField(
+        max_length=1000,
+        help_text="Enter the article title.",
+        required=False,
+        allow_blank=True,
+    )
+    content = serializers.CharField(
+        max_length=100000,
+        help_text="Enter the article content.",
+        required=False,
+        allow_blank=True,
+    )
+    image = serializers.ImageField(
+        help_text="Upload the main article image.", required=False
+    )
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         help_text="Select the article category.",
@@ -214,10 +226,17 @@ class ArticleUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail="Title is required")
 
         if title and len(title) < 10:
-            raise serializers.ValidationError(detail="The title must be at least 10 characters long.")
+            raise serializers.ValidationError(
+                detail="The title must be at least 10 characters long."
+            )
 
-        if self.instance.title != title and Article.objects.filter(title=title).exists():
-            raise serializers.ValidationError(detail="An article with this title already exists.")
+        if (
+                self.instance.title != title
+                and Article.objects.filter(title=title).exists()
+        ):
+            raise serializers.ValidationError(
+                detail="An article with this title already exists."
+            )
 
         return title
 
@@ -251,7 +270,9 @@ class ArticleUpdateSerializer(serializers.ModelSerializer):
 
     def validate_tags(self, tags):
         if len(tags) == 0:
-            raise serializers.ValidationError(detail="You must select at least one tag.")
+            raise serializers.ValidationError(
+                detail="You must select at least one tag."
+            )
 
         return tags
 
@@ -284,13 +305,115 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        help_text="Select the comment author. If the comment author is selected, skip the 'Full Name' field.",
+        required=False,
+        allow_null=True,
+    )
+    full_name = serializers.CharField(
+        label="Full Name",
+        required=False,
+        help_text="Fill in only if you are not using the User field. The comment will be added by an anonymous user.",
+        allow_blank=True,
+    )
+    article = serializers.PrimaryKeyRelatedField(
+        queryset=Article.objects.all(),
+        help_text="Select the article to which you want to assign your comment. Your comment will be the main comment. "
+                  "If you want to assign a comment to a comment, skip this field and use the 'Parent' field.",
+        required=True,
+    )
+    comment = serializers.CharField(
+        max_length=10000,
+        help_text="Enter the comment content.",
+        allow_blank=True,
+        required=True,
+    )
+    parent = serializers.PrimaryKeyRelatedField(
+        queryset=Comment.objects.all(),
+        help_text="Select the comment to which you want to assign your comment using the 'Parent' field. "
+                  "Skip the 'Article' field.",
+        allow_null=True,
+        required=False,
+    )
+
     class Meta:
         model = Comment
         fields = [
+            "id",
             "user",
             "full_name",
             "article",
             "comment",
-            "level",
             "parent",
+            "active",
         ]
+        extra_kwargs = {
+            "active": {
+                "read_only": True,
+            }
+        }
+
+    def validate_user(self, user):
+        if user is not None:
+            if self.context.get("full_name"):
+                raise serializers.ValidationError(
+                    detail="You cannot provide both 'User' and 'Full Name'. "
+                           "If you want to create a comment for an authenticated user, "
+                           "fill in only the 'User' field and leave the 'Full Name' field empty."
+                )
+
+        if user is None and self.context.get("full_name") is None:
+            print("Nony")
+            raise serializers.ValidationError(
+                detail="You must provide one of the fields: 'User' or 'Full Name'. "
+                       "If you want to create a comment for a logged-in user, select the 'User' field. "
+                       "If you want to create a comment for an anonymous user, select the 'Full Name' field."
+            )
+
+        return user
+
+    def validate_full_name(self, full_name):
+        if self.context.get("full_name"):
+            if self.context.get("user"):
+                raise serializers.ValidationError(
+                    detail="You cannot provide both 'Full Name' and 'User'. "
+                           "If you want to create a comment for an anonymous user, "
+                           "fill in only the 'Full Name' field and leave the 'User' field empty."
+                )
+
+        return full_name
+
+    def validate_article(self, article):
+        if self.context.get("parent"):
+            if Comment.objects.get(id=int(self.context.get("parent"))).article != article:
+                raise serializers.ValidationError(
+                    detail=f"Incorrect 'Parent' for this article. "
+                           f"You can only add a reply to a comment associated with the article {article}. "
+                           f"The list of comment IDs associated with the article {article} is {[comment.id for comment in article.comments.all()]}."
+                )
+
+        return article
+
+    def validate_parent(self, parent):
+        if parent and parent.article.id != int(self.context.get("article_id")):
+            raise serializers.ValidationError(
+                detail=f"The selected parent comment does not belong to the chosen article. "
+                       f"The parent comment is associated with the article {Article.objects.get(id=parent.article.id).title}."
+            )
+
+        return parent
+
+    def validate_comment(self, comment):
+        if comment == "":
+            raise serializers.ValidationError(detail="Comment is required.")
+
+        if comment and len(comment) < 10:
+            raise serializers.ValidationError(detail="The comment should be at least 10 characters long.")
+
+        return comment
+
+    def create(self, validated_data):
+        validated_data["active"] = True
+
+        return super().create(validated_data=validated_data)

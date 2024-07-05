@@ -227,7 +227,7 @@ class Comment(MPTTModel):
         """
         Returns a string representation of the comment ID that is the parent.
         """
-        return f'{self.id}'
+        return f"{self.id}"
 
 
 class CommentLike(models.Model):

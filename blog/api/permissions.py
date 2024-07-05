@@ -7,6 +7,8 @@ class IsAdminOnly(BasePermission):
         if request.user and request.user.is_staff:
             return True
 
-        raise PermissionDenied(detail={
-            "message": "The page is accessible only to the administrator.",
-        })
+        raise PermissionDenied(
+            detail={
+                "message": "The page is accessible only to the administrator.",
+            }
+        )

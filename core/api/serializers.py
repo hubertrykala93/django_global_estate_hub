@@ -11,7 +11,9 @@ class NewsletterSerializer(serializers.ModelSerializer):
     subscribed_at = serializers.DateTimeField(
         read_only=True, format="%Y-%m-%d %H:%M:%S"
     )
-    email = serializers.CharField(max_length=100, help_text="Enter the e-mail address.", allow_blank=True)
+    email = serializers.CharField(
+        max_length=100, help_text="Enter the e-mail address.", allow_blank=True
+    )
 
     class Meta:
         model = Newsletter
@@ -19,12 +21,10 @@ class NewsletterSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         if email == "":
-            raise serializers.ValidationError(
-                detail="E-mail address is required."
-            )
+            raise serializers.ValidationError(detail="E-mail address is required.")
 
         if email and not re.match(
-                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."

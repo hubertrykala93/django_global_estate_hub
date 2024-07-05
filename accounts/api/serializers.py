@@ -4,7 +4,9 @@ import re
 
 
 class UserSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField(method_name="get_image_name", allow_null=True)
+    image = serializers.SerializerMethodField(
+        method_name="get_image_name", allow_null=True
+    )
 
     class Meta:
         model = User
@@ -27,7 +29,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_login": {
                 "format": "%Y-%m-%d %H:%M:%S",
                 "read_only": True,
-            }
+            },
         }
 
     def get_image_name(self, obj):
@@ -35,11 +37,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(max_length=100, help_text="Enter the username.", allow_blank=True)
-    email = serializers.CharField(max_length=100, help_text="Enter the e-mail address.", allow_blank=True)
-    password = serializers.CharField(max_length=100, help_text="Enter the password", allow_blank=True, style={
-        "input_type": "password",
-    }, write_only=True)
+    username = serializers.CharField(
+        max_length=100, help_text="Enter the username.", allow_blank=True
+    )
+    email = serializers.CharField(
+        max_length=100, help_text="Enter the e-mail address.", allow_blank=True
+    )
+    password = serializers.CharField(
+        max_length=100,
+        help_text="Enter the password",
+        allow_blank=True,
+        style={
+            "input_type": "password",
+        },
+        write_only=True,
+    )
     image = serializers.ImageField(help_text="Upload your image.", allow_null=True)
     account_type = serializers.ChoiceField(
         choices=(
@@ -77,9 +89,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
             )
 
         if (
-                username
-                and len(username) >= 8
-                and User.objects.filter(username=username).exists()
+            username
+            and len(username) >= 8
+            and User.objects.filter(username=username).exists()
         ):
             raise serializers.ValidationError(detail="The user already exists.")
 
@@ -87,24 +99,22 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         if email == "":
-            raise serializers.ValidationError(
-                detail="E-mail address is required."
-            )
+            raise serializers.ValidationError(detail="E-mail address is required.")
 
         if email and not re.match(
-                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."
             )
 
         if (
-                email
-                and re.match(
-            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
-            string=email,
-        )
-                and User.objects.filter(email=email).exists()
+            email
+            and re.match(
+                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
+                string=email,
+            )
+            and User.objects.filter(email=email).exists()
         ):
             raise serializers.ValidationError(
                 detail="A user with this email address already exists."
@@ -114,9 +124,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def validate_password(self, password):
         if password == "":
-            raise serializers.ValidationError(
-                detail="Password is required."
-            )
+            raise serializers.ValidationError(detail="Password is required.")
 
         if password and len(password) < 8:
             raise serializers.ValidationError(
@@ -124,16 +132,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
             )
 
         if (
-                password
-                and len(password) >= 8
-                and not re.match(
-            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-            string=password,
-        )
+            password
+            and len(password) >= 8
+            and not re.match(
+                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+                string=password,
+            )
         ):
             raise serializers.ValidationError(
                 detail="The password should be at least 8 characters long, including at least one uppercase letter,"
-                       " one lowercase letter, one digit, and one special character."
+                " one lowercase letter, one digit, and one special character."
             )
 
         return password
@@ -147,7 +155,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
             if extension not in allowed_extensions:
                 raise serializers.ValidationError(
-                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
+                )
 
         return image
 
@@ -207,8 +216,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             )
 
         if (
-                self.instance.username != username
-                and User.objects.filter(username=username).exists()
+            self.instance.username != username
+            and User.objects.filter(username=username).exists()
         ):
             raise serializers.ValidationError(detail="The user already exists.")
 
@@ -216,7 +225,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         if email and not re.match(
-                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."
@@ -236,16 +245,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             )
 
         if (
-                password
-                and len(password) >= 8
-                and not re.match(
-            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-            string=password,
-        )
+            password
+            and len(password) >= 8
+            and not re.match(
+                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+                string=password,
+            )
         ):
             raise serializers.ValidationError(
                 detail="The password should be at least 8 characters long, including at least one uppercase letter,"
-                       " one lowercase letter, one digit, and one special character."
+                " one lowercase letter, one digit, and one special character."
             )
 
         return password
@@ -256,7 +265,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
         if extension not in allowed_extensions:
             raise serializers.ValidationError(
-                detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+                detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
+            )
 
         return image
 
@@ -280,18 +290,18 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 class IndividualProfileSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field="id", read_only=True, required=False)
     first_name = serializers.CharField(
-        max_length=100, help_text="Enter your first name.",
-        required=False
+        max_length=100, help_text="Enter your first name.", required=False
     )
-    last_name = serializers.CharField(max_length=100, help_text="Enter your last name.", required=False)
+    last_name = serializers.CharField(
+        max_length=100, help_text="Enter your last name.", required=False
+    )
     phone_number = serializers.CharField(
-        max_length=100, help_text="Enter your phone number.",
-        required=False
+        max_length=100, help_text="Enter your phone number.", required=False
     )
     gender = serializers.ChoiceField(
         choices=(("Male", "Male"), ("Female", "Female")),
         help_text="Select your gender.",
-        required=False
+        required=False,
     )
     country = serializers.CharField(
         max_length=100, help_text="Enter your country of residence.", required=False
@@ -312,25 +322,25 @@ class IndividualProfileSerializer(serializers.ModelSerializer):
         label="Website URL",
         max_length=150,
         help_text="Copy the URL of your website. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     facebook_url = serializers.URLField(
         label="Facebook URL",
         max_length=150,
         help_text="Copy the URL of your Facebook profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     instagram_url = serializers.URLField(
         label="Instagram URL",
         max_length=150,
         help_text="Copy the URL of your Instagram profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     linkedin_url = serializers.URLField(
         label="LinkedIn URL",
         max_length=150,
         help_text="Copy the URL of your LinkedIn profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
 
     class Meta:
@@ -340,11 +350,14 @@ class IndividualProfileSerializer(serializers.ModelSerializer):
 
 class BusinessProfileSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(slug_field="id", read_only=True, required=False)
-    company_name = serializers.CharField(max_length=100, help_text="Enter your company name.", required=False)
-    company_id = serializers.IntegerField(max_value=100, help_text="Enter your company ID", required=False)
+    company_name = serializers.CharField(
+        max_length=100, help_text="Enter your company name.", required=False
+    )
+    company_id = serializers.IntegerField(
+        max_value=100, help_text="Enter your company ID", required=False
+    )
     phone_number = serializers.CharField(
-        max_length=100, help_text="Enter your phone number.",
-        required=False
+        max_length=100, help_text="Enter your phone number.", required=False
     )
     country = serializers.CharField(
         max_length=100, help_text="Enter your country of residence.", required=False
@@ -365,25 +378,25 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
         label="Website URL",
         max_length=150,
         help_text="Copy the URL of your website. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     facebook_url = serializers.URLField(
         label="Facebook URL",
         max_length=150,
         help_text="Copy the URL of your Facebook profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     instagram_url = serializers.URLField(
         label="Instagram URL",
         max_length=150,
         help_text="Copy the URL of your Instagram profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
     linkedin_url = serializers.URLField(
         label="LinkedIn URL",
         max_length=150,
         help_text="Copy the URL of your LinkedIn profile. The URL should start with 'http://'.",
-        required=False
+        required=False,
     )
 
     class Meta:
