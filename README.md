@@ -261,6 +261,9 @@ django_global_estate_hub
 | `GET` | `api/v1/articles?category__name={category.name}` | Retrieve all articles with a specific category name. |
 | `GET` | `api/v1/comments` | Retrieve all comments. |
 | `GET` | `api/v1/comments/<int:pk>` | Retrieve comment with a specific ID. |
+| `POST` | `api/v1/comments/create-comment` | Create a new comment. |
+| `PATCH/PUT` | `api/v1/comments/update-comment/<int:pk>` | Update comment with specific ID. |
+| `DELETE` | `api/v1/properties/delete-comment/<int:pk>` | Deleting comment with specific ID. |
 | `GET` | `api/v1/users/comments?user__id={user.id}` | Retrieve comments posted by a specific user ID. |
 | `GET` | `api/v1/users/comments?user__username={user.username}` | Retrieve comments posted by a specific user username. |
 | `GET` | `api/v1/users/comments?active={active}` | Retrieve all active comments. |
