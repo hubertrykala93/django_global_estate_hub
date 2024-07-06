@@ -38,27 +38,25 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserCreateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
-        max_length=100, help_text="Enter the username.", allow_blank=True
+        max_length=100, allow_blank=True
     )
     email = serializers.CharField(
-        max_length=100, help_text="Enter the e-mail address.", allow_blank=True
+        max_length=100, allow_blank=True
     )
     password = serializers.CharField(
         max_length=100,
-        help_text="Enter the password",
         allow_blank=True,
         style={
             "input_type": "password",
         },
         write_only=True,
     )
-    image = serializers.ImageField(help_text="Upload your image.", allow_null=True)
+    image = serializers.ImageField(allow_null=True)
     account_type = serializers.ChoiceField(
         choices=(
             ("Individual", "Individual"),
             ("Business", "Business"),
         ),
-        help_text="Select the account type.",
         allow_blank=True,
     )
 
@@ -89,9 +87,9 @@ class UserCreateSerializer(serializers.ModelSerializer):
             )
 
         if (
-            username
-            and len(username) >= 8
-            and User.objects.filter(username=username).exists()
+                username
+                and len(username) >= 8
+                and User.objects.filter(username=username).exists()
         ):
             raise serializers.ValidationError(detail="The user already exists.")
 
@@ -102,19 +100,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail="E-mail address is required.")
 
         if email and not re.match(
-            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."
             )
 
         if (
-            email
-            and re.match(
-                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
-                string=email,
-            )
-            and User.objects.filter(email=email).exists()
+                email
+                and re.match(
+            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)",
+            string=email,
+        )
+                and User.objects.filter(email=email).exists()
         ):
             raise serializers.ValidationError(
                 detail="A user with this email address already exists."
@@ -132,16 +130,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
             )
 
         if (
-            password
-            and len(password) >= 8
-            and not re.match(
-                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-                string=password,
-            )
+                password
+                and len(password) >= 8
+                and not re.match(
+            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+            string=password,
+        )
         ):
             raise serializers.ValidationError(
                 detail="The password should be at least 8 characters long, including at least one uppercase letter,"
-                " one lowercase letter, one digit, and one special character."
+                       " one lowercase letter, one digit, and one special character."
             )
 
         return password
@@ -178,10 +176,10 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(
-        max_length=100, help_text="Enter the username.", required=False
+        max_length=100, required=False
     )
     email = serializers.CharField(
-        max_length=100, help_text="Enter the email address.", required=False
+        max_length=100, required=False
     )
     password = serializers.CharField(
         write_only=True,
@@ -189,9 +187,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         style={
             "input_type": "password",
         },
-        help_text="Enter the password.",
     )
-    image = serializers.ImageField(help_text="Upload your photo.", required=False)
+    image = serializers.ImageField(required=False)
 
     class Meta:
         model = User
@@ -216,8 +213,8 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             )
 
         if (
-            self.instance.username != username
-            and User.objects.filter(username=username).exists()
+                self.instance.username != username
+                and User.objects.filter(username=username).exists()
         ):
             raise serializers.ValidationError(detail="The user already exists.")
 
@@ -225,7 +222,7 @@ class UserUpdateSerializer(serializers.ModelSerializer):
 
     def validate_email(self, email):
         if email and not re.match(
-            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."
@@ -245,16 +242,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
             )
 
         if (
-            password
-            and len(password) >= 8
-            and not re.match(
-                pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
-                string=password,
-            )
+                password
+                and len(password) >= 8
+                and not re.match(
+            pattern="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$",
+            string=password,
+        )
         ):
             raise serializers.ValidationError(
                 detail="The password should be at least 8 characters long, including at least one uppercase letter,"
-                " one lowercase letter, one digit, and one special character."
+                       " one lowercase letter, one digit, and one special character."
             )
 
         return password

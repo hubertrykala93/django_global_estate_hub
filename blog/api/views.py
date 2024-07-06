@@ -5,8 +5,8 @@ from .serializers import (
     CommentSerializer,
     CommentCreateSerializer,
     CommentUpdateSerializer,
-    CategorySerializer,
-    TagSerializer,
+    ArticleCategorySerializer,
+    ArticleTagsSerializer,
 )
 from rest_framework.generics import (
     ListAPIView,
@@ -25,22 +25,28 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from .permissions import IsAdminOrOwner
 
 
-class CategoryAPIView(ListAPIView):
+class ArticleCategoryAPIView(ListAPIView):
     """
-    API view allowing to retrieve all blog categories.
+    API view allowing to retrieve all article categories.
     """
 
     queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    serializer_class = ArticleCategorySerializer
+
+    def get_view_name(self):
+        return "Global Estate Hub Article Categories"
 
 
-class TagsAPIView(ListAPIView):
+class ArticleTagsAPIView(ListAPIView):
     """
     API view allowing to retrieve all blog tags.
     """
 
     queryset = Tag.objects.all()
-    serializer_class = TagSerializer
+    serializer_class = ArticleTagsSerializer
+
+    def get_view_name(self):
+        return "Global Estate Hub Article Tags"
 
 
 class ArticlesAPIView(ListAPIView):
@@ -251,6 +257,11 @@ class CommentCreateAPIView(CreateAPIView):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
+        context.update(
+            {
+                "request": self.request,
+            },
+        )
         context.update(
             {
                 "article_id": self.request.data.get("article"),

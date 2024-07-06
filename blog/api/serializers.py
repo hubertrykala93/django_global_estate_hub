@@ -3,13 +3,13 @@ from accounts.models import User
 from rest_framework import serializers
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class ArticleCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
         fields = "__all__"
 
 
-class TagSerializer(serializers.ModelSerializer):
+class ArticleTagsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = "__all__"
@@ -45,27 +45,21 @@ class ArticleSerializer(serializers.ModelSerializer):
 class ArticleCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        help_text="Select the article author.",
-        required=True,
         allow_null=True,
     )
     title = serializers.CharField(
-        max_length=1000, help_text="Enter the article title.", allow_blank=True
+        max_length=1000, allow_blank=True
     )
     content = serializers.CharField(
-        max_length=100000, help_text="Enter the article content.", allow_blank=True
+        max_length=100000, allow_blank=True
     )
-    image = serializers.ImageField(
-        help_text="Upload the main article image.", allow_null=True
-    )
+    image = serializers.ImageField(allow_null=True)
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
-        help_text="Select the article category.",
         allow_null=True,
     )
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
-        help_text="Select at least one tag.",
         many=True,
         allow_null=True,
     )
@@ -87,10 +81,10 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance=instance)
 
-        category_serializer = CategorySerializer(instance=instance.category)
+        category_serializer = ArticleCategorySerializer(instance=instance.category)
         representation["category"] = category_serializer.data
 
-        tag_serializer = TagSerializer(instance=instance.tags, many=True)
+        tag_serializer = ArticleTagsSerializer(instance=instance.tags, many=True)
         representation["tags"] = tag_serializer.data
 
         representation["image"] = instance.image.name.split("/")[-1]
@@ -162,36 +156,28 @@ class ArticleCreateSerializer(serializers.ModelSerializer):
 class ArticleUpdateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
         queryset=User.objects.all(),
-        help_text="Select the article author.",
-        required=False,
         allow_null=True,
+        required=False,
     )
     title = serializers.CharField(
         max_length=1000,
-        help_text="Enter the article title.",
-        required=False,
         allow_blank=True,
+        required=False
     )
     content = serializers.CharField(
         max_length=100000,
-        help_text="Enter the article content.",
-        required=False,
         allow_blank=True,
+        required=False
     )
-    image = serializers.ImageField(
-        help_text="Upload the main article image.", required=False
-    )
+    image = serializers.ImageField(required=False)
     category = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
-        help_text="Select the article category.",
-        required=False,
         allow_null=True,
+        required=False
     )
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
-        help_text="Select at least one tag.",
         many=True,
-        required=False,
         allow_null=True,
     )
 
@@ -306,7 +292,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     user = serializers.PrimaryKeyRelatedField(
-        queryset=User.objects.all(),
+        queryset=User.objects.none(),
         help_text="Select the comment author. If the comment author is selected, skip the 'Full Name' field.",
         required=False,
         allow_null=True,
@@ -353,6 +339,20 @@ class CommentCreateSerializer(serializers.ModelSerializer):
                 "read_only": True,
             }
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        user = self.context.get("request").user
+
+        if user.is_staff:
+            self.fields["user"].queryset = User.objects.all()
+            self.fields["user"].allow_null = True
+
+        else:
+            self.fields["user"].queryset = User.objects.filter(username=user)
+            self.fields["user"].allow_null = False
+            self.fields.pop("full_name", None)
 
     def validate_user(self, user):
         if user is not None:
@@ -413,15 +413,33 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         return comment
 
     def create(self, validated_data):
-        validated_data["active"] = True
+        if self.context.get("request"):
+            if self.context.get("request").user.is_staff:
+                validated_data["active"] = True
+
+            else:
+                validated_data["active"] = False
 
         return super().create(validated_data=validated_data)
 
 
 class CommentUpdateSerializer(serializers.ModelSerializer):
+    comment = serializers.CharField(
+        max_length=10000,
+        help_text="Update the content of the comment.",
+        allow_blank=True,
+        required=False,
+    )
+
     class Meta:
         model = Comment
         fields = [
             "id",
             "comment",
         ]
+
+    def validate_comment(self, comment):
+        if comment == "":
+            raise serializers.ValidationError(detail="Comment is required.")
+
+        return comment

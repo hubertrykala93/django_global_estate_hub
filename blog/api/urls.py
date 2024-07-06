@@ -3,14 +3,14 @@ from . import views
 
 urlpatterns = [
     path(
-        route="api/v1/articles/article-categories",
-        view=views.CategoryAPIView.as_view(),
-        name="api-v1-articles-article-categories",
+        route="api/v1/article-categories",
+        view=views.ArticleCategoryAPIView.as_view(),
+        name="api-v1-article-categories",
     ),
     path(
-        route="api/v1/articles/article-tags",
-        view=views.TagsAPIView.as_view(),
-        name="api-v1-articles-article-tags",
+        route="api/v1/article-tags",
+        view=views.ArticleTagsAPIView.as_view(),
+        name="api-v1-article-tags",
     ),
     path(
         route="api/v1/articles",

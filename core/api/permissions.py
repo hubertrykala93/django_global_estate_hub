@@ -9,6 +9,6 @@ class IsAdminOnly(BasePermission):
 
         raise PermissionDenied(
             detail={
-                "message": "The page is accessible only to the administrator.",
+                "message": "To create, modify, or delete a newsletter, you must be an administrator.",
             }
         )

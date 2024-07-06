@@ -1,1 +1,0 @@
-1. Dodać create-comment, update-comment i delete-comment do API Refence.
