@@ -364,7 +364,6 @@ class CommentCreateSerializer(serializers.ModelSerializer):
                 )
 
         if user is None and self.context.get("full_name") is None:
-            print("Nony")
             raise serializers.ValidationError(
                 detail="You must provide one of the fields: 'User' or 'Full Name'. "
                        "If you want to create a comment for a logged-in user, select the 'User' field. "
@@ -417,3 +416,12 @@ class CommentCreateSerializer(serializers.ModelSerializer):
         validated_data["active"] = True
 
         return super().create(validated_data=validated_data)
+
+
+class CommentUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = [
+            "id",
+            "comment",
+        ]

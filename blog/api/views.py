@@ -4,6 +4,7 @@ from .serializers import (
     ArticleUpdateSerializer,
     CommentSerializer,
     CommentCreateSerializer,
+    CommentUpdateSerializer,
     CategorySerializer,
     TagSerializer,
 )
@@ -21,7 +22,7 @@ from rest_framework import status
 from django.utils.text import slugify
 from datetime import datetime
 from rest_framework.filters import OrderingFilter, SearchFilter
-from .permissions import IsAdminOnly
+from .permissions import IsAdminOrOwner
 
 
 class CategoryAPIView(ListAPIView):
@@ -80,7 +81,7 @@ class ArticleCreateApiView(CreateAPIView):
 
     queryset = Article.objects.all()
     serializer_class = ArticleCreateSerializer
-    permission_classes = [IsAdminOnly]
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Article Create"
@@ -130,7 +131,7 @@ class ArticleUpdateAPIView(RetrieveUpdateAPIView):
     serializer_class = ArticleUpdateSerializer
     queryset = Article.objects.all()
     lookup_field = "pk"
-    permission_classes = [IsAdminOnly]
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Article Update"
@@ -180,7 +181,7 @@ class ArticleDeleteAPIView(RetrieveDestroyAPIView):
 
     serializer_class = ArticleSerializer
     queryset = Article.objects.all()
-    permission_classes = [IsAdminOnly]
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Article Delete"
@@ -204,7 +205,7 @@ class ArticleDeleteAPIView(RetrieveDestroyAPIView):
 
         except Exception:
             return Response(
-                data={"error": "There was an error while deleting the user."},
+                data={"error": "There was an error while deleting the article."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -246,6 +247,7 @@ class CommentCreateAPIView(CreateAPIView):
     serializer_class = CommentCreateSerializer
     queryset = Comment.objects.all()
     lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -307,3 +309,73 @@ class CommentCreateAPIView(CreateAPIView):
             }
         except (TypeError, KeyError):
             return {}
+
+
+class CommentUpdateAPIView(RetrieveUpdateAPIView):
+    serializer_class = CommentUpdateSerializer
+    queryset = Comment.objects.all()
+    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(data=request.data, instance=instance)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "Comment has been successfully updated.",
+                    "comment": serializer.data,
+                    "headers": headers,
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (KeyError, TypeError):
+            return {}
+
+
+class CommentDeleteAPIView(RetrieveDestroyAPIView):
+    serializer_class = CommentSerializer
+    queryset = Comment.objects.all()
+    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        temp_id = instance.id
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": "Comment has been successfully deleted.",
+                    "id": temp_id,
+                    "deleted_by": self.request.user.username,
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+
+        except Exception:
+            return Response(
+                data={"error": "There was an error while deleting the comment."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )

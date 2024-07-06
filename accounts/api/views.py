@@ -337,10 +337,9 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
         return "Business Profile Update"
 
     def update(self, request, *args, **kwargs):
-        partial = kwargs.get("partial", False)
         instance = self.get_object()
         serializer = self.get_serializer(
-            data=request.data, instance=instance, partial=partial
+            data=request.data, instance=instance
         )
 
         if serializer.is_valid():
@@ -405,7 +404,7 @@ class UserBusinessProfileDeleteAPIView(RetrieveDestroyAPIView):
         except Exception:
             return Response(
                 data={
-                    "error": "There was an error while deleting the newsletter.",
+                    "error": "There was an error while deleting the user.",
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
