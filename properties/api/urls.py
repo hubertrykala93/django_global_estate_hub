@@ -3,6 +3,56 @@ from . import views
 
 urlpatterns = [
     path(
+        route="api/v1/listing-statuses",
+        view=views.ListingStatusAPIView.as_view(),
+        name="api-v1-listing-statuses",
+    ),
+    path(
+        route="api/v1/listing-statuses/<int:pk>",
+        view=views.ListingStatusDetailAPIView.as_view(),
+        name="api-v1-listing-statuses-details",
+    ),
+    path(
+        route="api/v1/listing-statuses/create-listing-status",
+        view=views.ListingStatusCreateAPIView.as_view(),
+        name="api-v1-listing-statuses-create-listing-status",
+    ),
+    path(
+        route="api/v1/listing-statuses/update-listing-status/<int:pk>",
+        view=views.ListingStatusUpdateAPIView.as_view(),
+        name="api-v1-listing-statuses-update-listing-status",
+    ),
+    path(
+        route="api/v1/listing-statuses/delete-listing-status/<int:pk>",
+        view=views.ListingStatusDeleteAPIView.as_view(),
+        name="api-v1-listing-statuses-delete-listing-status",
+    ),
+    path(
+        route="api/v1/categories",
+        view=views.CategoryAPIView.as_view(),
+        name="api-v1-categories",
+    ),
+    path(
+        route="api/v1/categories/<int:pk>",
+        view=views.CategoryDetailAPIView.as_view(),
+        name="api-v1-category-details",
+    ),
+    path(
+        route="api/v1/categories/create-category",
+        view=views.CategoryCreateAPIView.as_view(),
+        name="api-v1-categories-create-category",
+    ),
+    path(
+        route="api/v1/categories/update-category/<int:pk>",
+        view=views.CategoryUpdateAPIView.as_view(),
+        name="api-v1-categories-update-category",
+    ),
+    path(
+        route="api/v1/categories/delete-category/<int:pk>",
+        view=views.CategoryDeleteAPIView.as_view(),
+        name="api-v1-categories-delete-category",
+    ),
+    path(
         route="api/v1/properties",
         view=views.PropertyAPIView.as_view(),
         name="api-v1-properties",

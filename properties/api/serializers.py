@@ -14,103 +14,162 @@ from properties.models import (
     Img,
 )
 from accounts.models import User
+from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
+from datetime import datetime
+from datetime import timedelta
 
 
 class ListingStatusSerializer(serializers.ModelSerializer):
-    """
-    ListingStatus Model Serializer.
-    """
-
     class Meta:
         model = ListingStatus
         fields = "__all__"
 
 
+class ListingStatusCreateSerializer(serializers.ModelSerializer):
+    name = serializers.CharField(allow_blank=True, required=False)
+
+    class Meta:
+        model = ListingStatus
+        fields = "__all__"
+        extra_kwargs = {
+            "slug": {
+                "read_only": True
+            }
+        }
+
+    def validate_name(self, name):
+        if name == "":
+            raise serializers.ValidationError(detail="Name is required.")
+
+        if isinstance(self.context["view"], CreateAPIView):
+            if name and ListingStatus.objects.filter(name=name).exists():
+                raise serializers.ValidationError(detail="A listing status with this name already exists.")
+
+        else:
+            if self.instance.name != name and ListingStatus.objects.filter(name=name).exists():
+                raise serializers.ValidationError(detail="A listing status with this name already exists.")
+
+        return name
+
+
 class CategorySerializer(serializers.ModelSerializer):
-    """
-    Category Model Serializer.
-    """
+    image = serializers.SerializerMethodField(method_name="get_image_name")
 
     class Meta:
         model = Category
-        exclude = ["image"]
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "image",
+        ]
+
+    def get_image_name(self, obj):
+        return obj.image.name.split("/")[-1]
+
+
+class CategoryCreateSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(allow_null=True)
+    name = serializers.CharField(allow_blank=True)
+
+    class Meta:
+        model = Category
+        fields = [
+            "id",
+            "name",
+            "slug",
+            "image",
+        ]
+        extra_kwargs = {
+            "slug": {
+                "read_only": True,
+            }
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if isinstance(self.context["view"], RetrieveUpdateAPIView):
+            self.fields["image"].allow_null = False
+            self.fields["image"].required = False
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance=instance)
+
+        representation["image"] = instance.image.name.split("/")[-1]
+
+        return representation
+
+    def validate_image(self, image):
+        extension = image.name.split(".")[-1]
+        allowed_extensions = ["jpg", "jpeg", "png", "svg", "webp"]
+
+        if isinstance(self.context["view"], CreateAPIView):
+            if image is None:
+                raise serializers.ValidationError(detail="Image is required.")
+
+            if extension not in allowed_extensions:
+                raise serializers.ValidationError(
+                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+
+        if isinstance(self.context["view"], RetrieveUpdateAPIView):
+            if image is not None:
+                if extension not in allowed_extensions:
+                    raise serializers.ValidationError(
+                        detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+
+        return image
+
+    def validate_name(self, name):
+        if name == "":
+            raise serializers.ValidationError(detail="Name is required.")
+
+        return name
 
 
 class ImgSerializer(serializers.ModelSerializer):
-    """
-    Img Model Serializer.
-    """
-
     class Meta:
         model = Img
         fields = "__all__"
 
 
 class AmenitiesSerializer(serializers.ModelSerializer):
-    """
-    Amenities Model Serializer.
-    """
-
     class Meta:
         model = Amenities
         exclude = ["image"]
 
 
 class EducationSerializer(serializers.ModelSerializer):
-    """
-    Education Model Serializer.
-    """
-
     class Meta:
         model = Education
         fields = "__all__"
 
 
 class ShoppingSerializer(serializers.ModelSerializer):
-    """
-    Shopping Model Serializer.
-    """
-
     class Meta:
         model = Shopping
         fields = "__all__"
 
 
 class HealthAndMedicalSerializer(serializers.ModelSerializer):
-    """
-    HealthAndMedical Model Serializer.
-    """
-
     class Meta:
         model = HealthAndMedical
         fields = "__all__"
 
 
 class TransportationSerializer(serializers.ModelSerializer):
-    """
-    Transportation Model Serializer.
-    """
-
     class Meta:
         model = Transportation
         fields = "__all__"
 
 
 class CitySerializer(serializers.ModelSerializer):
-    """
-    City Model Serializer.
-    """
-
     class Meta:
         model = City
         exclude = ["image"]
 
 
 class PropertySerializer(serializers.ModelSerializer):
-    """
-    Property Model Serializer.
-    """
-
     date_posted = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
     thumbnail = serializers.SerializerMethodField(method_name="get_thumbnail_name")
     video = serializers.SerializerMethodField(method_name="get_video_name")
@@ -189,116 +248,118 @@ class PropertySerializer(serializers.ModelSerializer):
 
 
 class TourScheduleSerializer(serializers.ModelSerializer):
-    """
-    TourSchedule Model Serializer.
-    """
+    class Meta:
+        model = TourSchedule
+        fields = [
+            "id",
+            "date_sent",
+            "property",
+            "customer",
+            "name",
+            "date",
+            "time",
+            "phone_number",
+            "message",
+        ]
+        extra_kwargs = {
+            "date_sent": {
+                "format": "%Y-%m-%d %H:%M:%S",
+                "read_only": True,
+            }
+        }
 
-    customer = serializers.SlugRelatedField(
-        slug_field="username",
-        queryset=User.objects.all(),
-        help_text="Select the customer.",
-        required=False,
-    )
-    property = serializers.SlugRelatedField(
-        slug_field="title",
-        queryset=Property.objects.all(),
-        required=False,
-        help_text="Select the property title",
-    )
-    date_sent = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    date = serializers.CharField(
-        max_length=20,
-        help_text="Enter the meeting date. The meeting date must be in the format 'DD.MM.YYYY'.",
-        required=False,
-    )
-    time = serializers.CharField(
-        max_length=20,
-        help_text="Enter the meeting time or write 'Any' if any time works for you. The meeting time must be in the format 'HH:MM'.",
-        required=False,
-    )
-    name = serializers.CharField(
-        label="Full Name", required=False, help_text="Enter your full name."
-    )
-    phone_number = serializers.CharField(
-        required=False, help_text="Enter your phone number."
-    )
-    message = serializers.CharField(
-        max_length=10000, required=False, help_text="Write a message to the seller."
-    )
+
+class TourScheduleCreateSerializer(serializers.ModelSerializer):
+    property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())
 
     class Meta:
         model = TourSchedule
-        fields = "__all__"
-
-    def validate_date(self, d):
-        from datetime import date
-        import datetime
-
-        if d is None:
-            raise serializers.ValidationError(detail="The date field cannot be empty.")
-
-        day = d.split(".")[0]
-        month = d.split(".")[1]
-        year = d.split(".")[2]
-
-        if day[0] == "0":
-            day = day[1]
-
-        if month[0] == "0":
-            month = month[1]
-
-        converted_date = date(year=int(year), month=int(month), day=int(day))
-        now = datetime.datetime.now()
-        now_date = datetime.date(now.year, now.month, now.day)
-
-        if converted_date < now_date:
-            raise serializers.ValidationError(
-                detail="You cannot schedule an appointment in the past."
-            )
-
-        if converted_date == now_date:
-            raise serializers.ValidationError(
-                detail="You cannot schedule an appointment for the same day, please choose at least one day ahead."
-            )
-
-        return converted_date
-
-    def validate_time(self, time):
-        if time is None:
-            raise serializers.ValidationError(detail="The time field cannot be empty.")
-
-        return time
+        fields = [
+            "id",
+            "date_sent",
+            "property",
+            "customer",
+            "name",
+            "date",
+            "time",
+            "phone_number",
+            "message",
+        ]
+        extra_kwargs = {
+            "name": {
+                "allow_blank": True,
+            },
+            "date": {
+                "allow_blank": True,
+                "help_text": "The date must be in the format 'YYYY-MM-DD'.",
+            },
+            "time": {
+                "allow_blank": True,
+                "help_text": "The time must be in the format 'HH' or 'Any'.",
+            },
+            "phone_number": {
+                "allow_blank": True,
+            },
+            "message": {
+                "allow_blank": True,
+            },
+            "customer": {
+                "read_only": True,
+            }
+        }
 
     def validate_name(self, name):
-        if name is None:
-            raise serializers.ValidationError(
-                detail="The full name field cannot be empty."
-            )
+        if name == "":
+            raise serializers.ValidationError(detail="Name is required.")
 
         return name
 
+    def validate_date(self, date):
+        if date == "":
+            raise serializers.ValidationError(detail="Date is required.")
+
+        if len(date.split("-")) != 3:
+            raise serializers.ValidationError(detail="Invalid format. The correct date format is 'YYYY-MM-DD'.")
+
+        else:
+            splitted_date = date.split("-")
+            date_datetime = datetime(year=int(splitted_date[0]), month=int(splitted_date[1]),
+                                     day=int(splitted_date[2]))
+
+            if date_datetime.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
+                raise serializers.ValidationError(
+                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
+
+            if date_datetime.strftime("%Y-%m-%d") == datetime.now().strftime("%Y-%m-%d"):
+                raise serializers.ValidationError(
+                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
+
+            if date_datetime > datetime.now() + timedelta(days=5):
+                raise serializers.ValidationError(
+                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
+
+        return date
+
+    def validate_time(self, time):
+        if time == "":
+            raise serializers.ValidationError(detail="Time is required.")
+
+        return time
+
     def validate_phone_number(self, phone_number):
-        if phone_number is None:
-            raise serializers.ValidationError(
-                detail="The phone number field cannot be empty."
-            )
+        if phone_number == "":
+            raise serializers.ValidationError(detail="Phone number is required.")
 
         return phone_number
 
     def validate_message(self, message):
-        if message is None:
-            raise serializers.ValidationError(
-                detail="The message field cannot be empty."
-            )
+        if message == "":
+            raise serializers.ValidationError(detail="Message is required.")
 
         return message
 
 
 class ReviewSerializer(serializers.ModelSerializer):
-    """
-    Review Model Serializer.
-    """
-
     date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     user = serializers.SlugRelatedField(
         slug_field="username",

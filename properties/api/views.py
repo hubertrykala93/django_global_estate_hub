@@ -5,14 +5,335 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
     RetrieveDestroyAPIView,
 )
-from properties.models import Property, TourSchedule, Review
-from .serializers import PropertySerializer, TourScheduleSerializer, ReviewSerializer
+from properties.models import Property, TourSchedule, Review, ListingStatus, Category
+from .serializers import PropertySerializer, TourScheduleSerializer, ReviewSerializer, ListingStatusSerializer, \
+    ListingStatusCreateSerializer, CategorySerializer, CategoryCreateSerializer, TourScheduleCreateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import PropertyFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
+from django.utils.text import slugify
+from .permissions import IsAdminOnly
+
+
+class ListingStatusAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all listing statuses.
+    """
+    queryset = ListingStatus.objects.all()
+    serializer_class = ListingStatusSerializer
+
+    def get_view_name(self):
+        return "Global Estate Hub Listing Statuses"
+
+
+class ListingStatusDetailAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific listing status.
+    """
+    queryset = ListingStatus.objects.all()
+    serializer_class = ListingStatusSerializer
+    lookup_field = "pk"
+
+    def get_view_name(self):
+        return "Listing Status Details"
+
+
+class ListingStatusCreateAPIView(CreateAPIView):
+    """
+    API view allowing to create a new listing status.
+    """
+    queryset = ListingStatus.objects.all()
+    serializer_class = ListingStatusCreateSerializer
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Listing Status Create"
+
+    def perform_create(self, serializer):
+        name = serializer.validated_data.get("name")
+        slug = slugify(name)
+        serializer.save(slug=slug)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            self.perform_create(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "The listing status has been created successfully.",
+                    "listing_status": serializer.data,
+                    "headers": headers,
+                },
+                headers=headers,
+                status=status.HTTP_201_CREATED,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (KeyError, TypeError):
+            return {}
+
+
+class ListingStatusUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific ListingStatus object.
+    """
+    serializer_class = ListingStatusCreateSerializer
+    queryset = ListingStatus.objects.all()
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Listing Status update."
+
+    def perform_update(self, serializer):
+        name = serializer.validated_data.get("name")
+        slug = slugify(name)
+        serializer.save(slug=slug)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(data=request.data, instance=instance)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "The listing status has been updated successfully.",
+                    "listing_status": serializer.data,
+                    "headers": headers
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (KeyError, TypeError):
+            return {}
+
+
+class ListingStatusDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific listing status.
+    """
+    queryset = ListingStatus.objects.all()
+    serializer_class = ListingStatusSerializer
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Listing Status Delete"
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        temp_id = instance.id
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": "The listing status has been deleted successfully.",
+                    "id": temp_id,
+                    "deleted_by": self.request.user.username,
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+
+        except Exception:
+            return Response(
+                data={"error": "There was an error while deleting the user."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+
+class CategoryAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all categories.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get_view_name(self):
+        return "Global Estate Hub Categories"
+
+
+class CategoryDetailAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific category.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    lookup_field = "pk"
+
+    def get_view_name(self):
+        return "Category Details"
+
+
+class CategoryCreateAPIView(CreateAPIView):
+    """
+    API view allowing to create a new category.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreateSerializer
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Category Create"
+
+    def perform_create(self, serializer):
+        name = serializer.validated_data.get("name")
+        slug = slugify(name)
+        serializer.save(slug=slug)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            self.perform_create(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "The category has been created successfully.",
+                    "category": serializer.data,
+                    "headers": headers,
+                },
+                headers=headers,
+                status=status.HTTP_201_CREATED
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (TypeError, KeyError):
+            return {}
+
+
+class CategoryUpdateAPIView(RetrieveUpdateAPIView):
+    """
+    API view allowing partial or full update of a specific Category object.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategoryCreateSerializer
+    lookup_field = "pk"
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Category Update"
+
+    def perform_update(self, serializer):
+        name = serializer.validated_data.get("name")
+        slug = slugify(name)
+        serializer.save(slug=slug)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(data=request.data, instance=instance)
+
+        if serializer.is_valid():
+            self.perform_update(serializer=serializer)
+            headers = self.get_success_headers(data=serializer.data)
+
+            return Response(
+                data={
+                    "message": "The category has been updated successfully.",
+                    "category": serializer.data,
+                    "headers": headers
+                },
+                headers=headers,
+                status=status.HTTP_200_OK,
+            )
+
+        else:
+            return Response(
+                data=serializer.errors,
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (KeyError, TypeError):
+            return {}
+
+
+class CategoryDeleteAPIView(RetrieveDestroyAPIView):
+    """
+    API view allowing deletion of a specific category.
+    """
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    lookup_field = "pk"
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Category Delete"
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        temp_id = instance.id
+
+        try:
+            self.perform_destroy(instance=instance)
+
+            return Response(
+                data={
+                    "message": "The category has been deleted successfully.",
+                    "id": temp_id,
+                    "deleted_by": self.request.user.username,
+                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                },
+                status=status.HTTP_204_NO_CONTENT,
+            )
+
+        except Exception:
+            return Response(
+                data={
+                    "error": "There was an error while deleting the user."
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
 
 class PropertyAPIView(ListAPIView):
@@ -41,9 +362,6 @@ class PropertyDetailAPIView(RetrieveAPIView):
 
     def get_view_name(self):
         return "Property Details"
-
-
-from accounts.api.permissions import IsAdminOrOwner
 
 
 class PropertyCreateAPIView(CreateAPIView):
@@ -80,37 +398,6 @@ class PropertyDeleteAPIView(RetrieveDestroyAPIView):
 
     def get_view_name(self):
         return "Property Delete"
-
-
-class TourSchedulesAPIView(ListAPIView):
-    """
-    API view allowing to retrieve all tour schedules.
-    """
-
-    queryset = TourSchedule.objects.all()
-    serializer_class = TourScheduleSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        "property__id": ["exact"],
-        "property__title": ["exact"],
-        "customer__id": ["exact"],
-        "customer__username": ["exact"],
-    }
-
-    def get_view_name(self):
-        return "Global Estate Hub Tour Schedules"
-
-
-class TourScheduleDetailAPIView(RetrieveAPIView):
-    """
-    API view allowing to retrieve a specific tour schedule.
-    """
-
-    queryset = TourSchedule.objects.all()
-    serializer_class = TourScheduleSerializer
-
-    def get_view_name(self):
-        return "Tour Schedule Details"
 
 
 class ReviewsAPIView(ListAPIView):
@@ -183,7 +470,7 @@ class ReviewCreateAPIView(CreateAPIView):
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -200,6 +487,12 @@ class ReviewCreateAPIView(CreateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {"location": str(data["id"])}
+        except (TypeError, KeyError):
+            return {}
 
 
 class ReviewUpdateAPIView(RetrieveUpdateAPIView):
@@ -222,7 +515,7 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -239,6 +532,12 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
                 data=serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+    def get_success_headers(self, data):
+        try:
+            return {"location": str(data["id"])}
+        except (TypeError, KeyError):
+            return {}
 
 
 class ReviewDeleteAPIView(RetrieveDestroyAPIView):
@@ -276,70 +575,67 @@ class ReviewDeleteAPIView(RetrieveDestroyAPIView):
             )
 
 
+class TourSchedulesAPIView(ListAPIView):
+    """
+    API view allowing to retrieve all tour schedules.
+    """
+
+    queryset = TourSchedule.objects.all()
+    serializer_class = TourScheduleSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = {
+        "property__id": ["exact"],
+        "property__title": ["exact"],
+        "customer__id": ["exact"],
+        "customer__username": ["exact"],
+    }
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Global Estate Hub Tour Schedules"
+
+
+class TourScheduleDetailAPIView(RetrieveAPIView):
+    """
+    API view allowing to retrieve a specific tour schedule.
+    """
+
+    queryset = TourSchedule.objects.all()
+    serializer_class = TourScheduleSerializer
+    permission_classes = [IsAdminOnly]
+
+    def get_view_name(self):
+        return "Tour Schedule Details"
+
+
 class TourScheduleCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new tour schedule.
     """
 
-    serializer_class = TourScheduleSerializer
+    serializer_class = TourScheduleCreateSerializer
     queryset = TourSchedule.objects.all()
+    permission_classes = [IsAdminOnly]
 
     def get_view_name(self):
         return "Create Tour Schedule"
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context.update(
+            {
+                "property_id": self.request.data.get("property")
+            }
+        )
+
+        return context
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        errors = []
-
-        if len(request.data.get("date")) < 1:
-            errors.append(
-                {
-                    "field": "date",
-                    "error": "The date field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("time")) < 1:
-            errors.append(
-                {
-                    "field": "time",
-                    "error": "The time field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("name")) < 1:
-            errors.append(
-                {
-                    "field": "full_name",
-                    "error": "The name field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("phone_number")) < 1:
-            errors.append(
-                {
-                    "field": "phone_number",
-                    "error": "The phone number field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("message")) < 1:
-            errors.append(
-                {
-                    "field": "message",
-                    "error": "The message field cannot be empty.",
-                }
-            )
-
-        if errors:
-            return Response(
-                data=errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
+            headers = self.get_success_headers(data=serializer.data)
 
             return Response(
                 data={
@@ -357,6 +653,15 @@ class TourScheduleCreateAPIView(CreateAPIView):
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+    def get_success_headers(self, data):
+        try:
+            return {
+                "location": str(data["id"])
+            }
+
+        except (KeyError, TypeError):
+            return {}
+
 
 class TourScheduleUpdateAPIView(RetrieveUpdateAPIView):
     """
@@ -365,36 +670,7 @@ class TourScheduleUpdateAPIView(RetrieveUpdateAPIView):
 
     serializer_class = TourScheduleSerializer
     queryset = TourSchedule.objects.all()
-
-    def get_view_name(self):
-        return "Update Tour Schedule"
-
-    def update(self, request, *args, **kwargs):
-        partial = self.kwargs.get("partial")
-        instance = self.get_object()
-        serializer = self.get_serializer(
-            instance=instance, data=request.data, partial=partial
-        )
-
-        if serializer.is_valid():
-            self.perform_update(serializer=serializer)
-            headers = get_success_headers(data=serializer.data)
-
-            return Response(
-                data={
-                    "message": "The tour schedule has been updated successfully.",
-                    "tour_schedule": serializer.data,
-                    "headers": headers,
-                },
-                headers=headers,
-                status=status.HTTP_200_OK,
-            )
-
-        else:
-            return Response(
-                data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+    permission_classes = [IsAdminOnly]
 
 
 class TourScheduleDeleteAPIView(RetrieveDestroyAPIView):
@@ -407,33 +683,3 @@ class TourScheduleDeleteAPIView(RetrieveDestroyAPIView):
 
     def get_view_name(self):
         return "Delete Tour Schedule"
-
-    def delete(self, request, *args, **kwargs):
-        instance = self.get_object()
-        temp_id = instance.id
-
-        try:
-            self.perform_destroy(instance=instance)
-
-            return Response(
-                data={
-                    "message": "The tour schedule has been deleted successfully.",
-                    "id": temp_id,
-                    "deleted_by": self.request.user.username,
-                    "deleted_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                },
-                status=status.HTTP_204_NO_CONTENT,
-            )
-
-        except Exception:
-            return Response(
-                data={"error": "There was an error while deleting the user."},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-
-def get_success_headers(data):
-    try:
-        return {"location": str(data["id"])}
-    except (TypeError, KeyError):
-        return {}
