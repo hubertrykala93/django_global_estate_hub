@@ -14,7 +14,7 @@ class IsAdminOrOwner(BasePermission):
 
             raise PermissionDenied(
                 detail={
-                    "message": "To create a new comment, you must be an administrator.",
+                    "message": "To create a new object, you must be an administrator.",
                 }
             )
 

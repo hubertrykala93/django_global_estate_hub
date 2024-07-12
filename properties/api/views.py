@@ -5,9 +5,10 @@ from rest_framework.generics import (
     RetrieveUpdateAPIView,
     RetrieveDestroyAPIView,
 )
-from properties.models import Property, TourSchedule, Review, ListingStatus, Category
-from .serializers import PropertySerializer, TourScheduleSerializer, ReviewSerializer, ListingStatusSerializer, \
-    ListingStatusCreateSerializer, CategorySerializer, CategoryCreateSerializer, TourScheduleCreateSerializer
+from properties.models import Property, ListingStatus, Category, Review
+from .serializers import PropertySerializer, ListingStatusSerializer, \
+    ListingStatusCreateSerializer, CategorySerializer, CategoryCreateSerializer, ReviewSerializer, \
+    ReviewCreateSerializer
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import PropertyFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -15,7 +16,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from datetime import datetime
 from django.utils.text import slugify
-from .permissions import IsAdminOnly
+from .permissions import IsAdminOnly, IsAdminOrOwner
 
 
 class ListingStatusAPIView(ListAPIView):
@@ -404,26 +405,17 @@ class ReviewsAPIView(ListAPIView):
     """
     API view allowing to retrieve all reviews.
     """
-
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        "property__id": ["exact"],
-        "property__title": ["exact"],
-        "user__id": ["exact"],
-        "user__username": ["exact"],
-    }
 
     def get_view_name(self):
-        return "Global Estate Hub Reviews"
+        return "Global Estate Hub Review"
 
 
 class ReviewDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific review.
     """
-
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -435,38 +427,23 @@ class ReviewCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new review.
     """
-
-    serializer_class = ReviewSerializer
     queryset = Review.objects.all()
+    serializer_class = ReviewCreateSerializer
+    permission_classes = [IsAdminOrOwner]
 
-    def get_view_name(self):
-        return "Review Create"
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+
+        context.update(
+            {
+                "request": self.request,
+            }
+        )
+
+        return context
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-        errors = []
-
-        if len(request.data.get("rate")) < 1:
-            errors.append(
-                {
-                    "field": "rate",
-                    "error": "The rate field cannot be empty.",
-                }
-            )
-
-        if len(request.data.get("content")) < 1:
-            errors.append(
-                {
-                    "field": "content",
-                    "error": "The content field cannot be empty.",
-                }
-            )
-
-        if errors:
-            return Response(
-                data=errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
 
         if serializer.is_valid():
             self.perform_create(serializer=serializer)
@@ -490,7 +467,10 @@ class ReviewCreateAPIView(CreateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {"location": str(data["id"])}
+            return {
+                "location": str(data["id"])
+            }
+
         except (TypeError, KeyError):
             return {}
 
@@ -499,19 +479,17 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Review object.
     """
-
-    serializer_class = ReviewSerializer
     queryset = Review.objects.all()
+    serializer_class = ReviewCreateSerializer
+    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Review Update"
 
     def update(self, request, *args, **kwargs):
-        partial = self.kwargs.get("partial")
         instance = self.get_object()
-        serializer = self.get_serializer(
-            instance=instance, data=request.data, partial=partial
-        )
+        serializer = self.get_serializer(data=request.data, instance=instance)
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)
@@ -535,18 +513,22 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {"location": str(data["id"])}
+            return {
+                "location": str(data["id"])
+            }
+
         except (TypeError, KeyError):
             return {}
 
 
 class ReviewDeleteAPIView(RetrieveDestroyAPIView):
     """
-    API view allowing deletion of a specific review.
+    API view allowing deletion of a specific property.
     """
-
-    serializer_class = ReviewSerializer
     queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    lookup_field = "pk"
+    permission_classes = [IsAdminOrOwner]
 
     def get_view_name(self):
         return "Review Delete"
@@ -570,116 +552,6 @@ class ReviewDeleteAPIView(RetrieveDestroyAPIView):
 
         except Exception:
             return Response(
-                data={"error": "There was an error while deleting the user."},
+                data={"error": "There was an error while deleting the comment."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-
-class TourSchedulesAPIView(ListAPIView):
-    """
-    API view allowing to retrieve all tour schedules.
-    """
-
-    queryset = TourSchedule.objects.all()
-    serializer_class = TourScheduleSerializer
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = {
-        "property__id": ["exact"],
-        "property__title": ["exact"],
-        "customer__id": ["exact"],
-        "customer__username": ["exact"],
-    }
-    permission_classes = [IsAdminOnly]
-
-    def get_view_name(self):
-        return "Global Estate Hub Tour Schedules"
-
-
-class TourScheduleDetailAPIView(RetrieveAPIView):
-    """
-    API view allowing to retrieve a specific tour schedule.
-    """
-
-    queryset = TourSchedule.objects.all()
-    serializer_class = TourScheduleSerializer
-    permission_classes = [IsAdminOnly]
-
-    def get_view_name(self):
-        return "Tour Schedule Details"
-
-
-class TourScheduleCreateAPIView(CreateAPIView):
-    """
-    API view allowing to create a new tour schedule.
-    """
-
-    serializer_class = TourScheduleCreateSerializer
-    queryset = TourSchedule.objects.all()
-    permission_classes = [IsAdminOnly]
-
-    def get_view_name(self):
-        return "Create Tour Schedule"
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context.update(
-            {
-                "property_id": self.request.data.get("property")
-            }
-        )
-
-        return context
-
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-
-        if serializer.is_valid():
-            self.perform_create(serializer=serializer)
-            headers = self.get_success_headers(data=serializer.data)
-
-            return Response(
-                data={
-                    "message": "The tour schedule has been created successfully.",
-                    "tour_schedule": serializer.data,
-                    "headers": headers,
-                },
-                headers=headers,
-                status=status.HTTP_201_CREATED,
-            )
-
-        else:
-            return Response(
-                data=serializer.errors,
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-    def get_success_headers(self, data):
-        try:
-            return {
-                "location": str(data["id"])
-            }
-
-        except (KeyError, TypeError):
-            return {}
-
-
-class TourScheduleUpdateAPIView(RetrieveUpdateAPIView):
-    """
-    API view allowing partial or full update of a specific TourSchedule object.
-    """
-
-    serializer_class = TourScheduleSerializer
-    queryset = TourSchedule.objects.all()
-    permission_classes = [IsAdminOnly]
-
-
-class TourScheduleDeleteAPIView(RetrieveDestroyAPIView):
-    """
-    API view allowing deletion of a specific tour schedule.
-    """
-
-    serializer_class = TourScheduleSerializer
-    queryset = TourSchedule.objects.all()
-
-    def get_view_name(self):
-        return "Delete Tour Schedule"

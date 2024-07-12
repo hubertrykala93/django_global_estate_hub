@@ -9,14 +9,11 @@ from properties.models import (
     Transportation,
     City,
     Property,
-    TourSchedule,
     Review,
     Img,
 )
 from accounts.models import User
 from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
-from datetime import datetime
-from datetime import timedelta
 
 
 class ListingStatusSerializer(serializers.ModelSerializer):
@@ -247,174 +244,98 @@ class PropertySerializer(serializers.ModelSerializer):
         return obj.description.replace("<p>", "").replace("</p>", "")
 
 
-class TourScheduleSerializer(serializers.ModelSerializer):
+class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = TourSchedule
-        fields = [
-            "id",
-            "date_sent",
-            "property",
-            "customer",
-            "name",
-            "date",
-            "time",
-            "phone_number",
-            "message",
-        ]
+        model = Review
+        fields = "__all__"
         extra_kwargs = {
-            "date_sent": {
+            "date_posted": {
                 "format": "%Y-%m-%d %H:%M:%S",
                 "read_only": True,
             }
         }
 
 
-class TourScheduleCreateSerializer(serializers.ModelSerializer):
-    property = serializers.PrimaryKeyRelatedField(queryset=Property.objects.all())
+class ReviewCreateSerializer(serializers.ModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.none(),
+        allow_null=False,
+        required=False,
+    )
+    property = serializers.PrimaryKeyRelatedField(
+        queryset=Property.objects.all(),
+        allow_null=False,
+        required=False
+    )
+    content = serializers.CharField(
+        max_length=10000,
+        required=False,
+        allow_blank=True,
+    )
+    rate = serializers.IntegerField(
+        required=False,
+        allow_null=True
+    )
 
-    class Meta:
-        model = TourSchedule
-        fields = [
-            "id",
-            "date_sent",
-            "property",
-            "customer",
-            "name",
-            "date",
-            "time",
-            "phone_number",
-            "message",
-        ]
-        extra_kwargs = {
-            "name": {
-                "allow_blank": True,
-            },
-            "date": {
-                "allow_blank": True,
-                "help_text": "The date must be in the format 'YYYY-MM-DD'.",
-            },
-            "time": {
-                "allow_blank": True,
-                "help_text": "The time must be in the format 'HH' or 'Any'.",
-            },
-            "phone_number": {
-                "allow_blank": True,
-            },
-            "message": {
-                "allow_blank": True,
-            },
-            "customer": {
-                "read_only": True,
-            }
-        }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
-    def validate_name(self, name):
-        if name == "":
-            raise serializers.ValidationError(detail="Name is required.")
+        user = self.context.get("request").user
 
-        return name
-
-    def validate_date(self, date):
-        if date == "":
-            raise serializers.ValidationError(detail="Date is required.")
-
-        if len(date.split("-")) != 3:
-            raise serializers.ValidationError(detail="Invalid format. The correct date format is 'YYYY-MM-DD'.")
+        if self.context.get("request").user.is_staff:
+            self.fields["user"].queryset = User.objects.all()
 
         else:
-            splitted_date = date.split("-")
-            date_datetime = datetime(year=int(splitted_date[0]), month=int(splitted_date[1]),
-                                     day=int(splitted_date[2]))
-
-            if date_datetime.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-                raise serializers.ValidationError(
-                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
-
-            if date_datetime.strftime("%Y-%m-%d") == datetime.now().strftime("%Y-%m-%d"):
-                raise serializers.ValidationError(
-                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
-
-            if date_datetime > datetime.now() + timedelta(days=5):
-                raise serializers.ValidationError(
-                    detail="Schedule the meeting at least one day ahead, up to five days ahead.")
-
-        return date
-
-    def validate_time(self, time):
-        if time == "":
-            raise serializers.ValidationError(detail="Time is required.")
-
-        return time
-
-    def validate_phone_number(self, phone_number):
-        if phone_number == "":
-            raise serializers.ValidationError(detail="Phone number is required.")
-
-        return phone_number
-
-    def validate_message(self, message):
-        if message == "":
-            raise serializers.ValidationError(detail="Message is required.")
-
-        return message
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    date_posted = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-    user = serializers.SlugRelatedField(
-        slug_field="username",
-        queryset=User.objects.all(),
-        help_text="Select the review author.",
-        required=False,
-    )
-    property = serializers.SlugRelatedField(
-        slug_field="title",
-        queryset=Property.objects.all(),
-        help_text="Select the property.",
-        required=False,
-    )
-    rate = serializers.IntegerField(help_text="Rate the property.", required=False)
-    content = serializers.CharField(
-        help_text="Write your review.", required=False, max_length=10000
-    )
+            self.fields["user"].queryset = User.objects.filter(username=user)
 
     class Meta:
         model = Review
-        fields = "__all__"
-        read_only_fields = ["active"]
+        fields = [
+            "id",
+            "user",
+            "property",
+            "content",
+            "rate",
+            "active",
+        ]
+        extra_kwargs = {
+            "active": {
+                "read_only": True,
+            },
+        }
 
-    def create(self, validated_data):
-        review = Review(**validated_data)
-        review.active = True
-        review.save()
+    def validate_content(self, content):
+        if content == "":
+            raise serializers.ValidationError(
+                detail="Content is required.",
+            )
 
-        return review
+        if len(content) < 10:
+            raise serializers.ValidationError(
+                detail="The review should be at least 10 characters long.",
+            )
+
+        return content
 
     def validate_rate(self, rate):
         if rate is None:
-            raise serializers.ValidationError(detail="The rate field cannot be empty.")
-
-        if rate and rate < 1:
             raise serializers.ValidationError(
-                detail="The rating cannot be less than 1."
+                detail="Rate is required."
             )
 
-        if rate and rate > 5:
+        if rate < 1 or rate > 5:
             raise serializers.ValidationError(
-                detail="The rating cannot be more than 5."
+                detail="Rate should be between 1 and 5, inclusive.",
             )
 
         return rate
 
-    def validate_content(self, content):
-        if content is None:
-            raise serializers.ValidationError(
-                detail="The content field cannot be empty."
-            )
+    def create(self, validated_data):
+        if self.context.get("request"):
+            if self.context.get("request").user.is_staff:
+                validated_data["active"] = True
 
-        if content and len(content) < 5:
-            raise serializers.ValidationError(
-                detail="The content of the review must be at least 5 characters long."
-            )
+            else:
+                validated_data["active"] = False
 
-        return content
+        return super().create(validated_data=validated_data)
