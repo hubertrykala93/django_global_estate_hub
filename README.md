@@ -259,22 +259,31 @@ django_global_estate_hub
 | `GET` | `api/v1/articles?ordering=title` | Sorts articles by title at using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/articles?category__id={category.id}` | Retrieve all articles with a specific category ID. |
 | `GET` | `api/v1/articles?category__name={category.name}` | Retrieve all articles with a specific category name. |
+| `GET` | `api/v1/article-categories` | Retrieve all article categories. |
+| `GET` | `api/v1/article-tags` | Retrieve all article tags. |
 | `GET` | `api/v1/comments` | Retrieve all comments. |
 | `GET` | `api/v1/comments/<int:pk>` | Retrieve comment with a specific ID. |
 | `POST` | `api/v1/comments/create-comment` | Create a new comment. |
 | `PATCH/PUT` | `api/v1/comments/update-comment/<int:pk>` | Update comment with specific ID. |
-| `DELETE` | `api/v1/properties/delete-comment/<int:pk>` | Deleting comment with specific ID. |
-| `GET` | `api/v1/users/comments?user__id={user.id}` | Retrieve comments posted by a specific user ID. |
-| `GET` | `api/v1/users/comments?user__username={user.username}` | Retrieve comments posted by a specific user username. |
-| `GET` | `api/v1/users/comments?active={active}` | Retrieve all active comments. |
-| `GET` | `api/v1/users/comments?level={level}` | Retrieve comments by a specific level. |
-| `GET` | `api/v1/users/comments?article__id={article.id}` | Retrieve comments under an article with a specific ID. |
-| `GET` | `api/v1/users/comments?article__title={article.title}` | Retrieve comments under an article with a specific title. |
+| `DELETE` | `api/v1/comments/delete-comment/<int:pk>` | Deleting comment with specific ID. |
+| `GET` | `api/v1/comments?user__id={user.id}` | Retrieve comments posted by a specific user ID. |
+| `GET` | `api/v1/comments?user__username={user.username}` | Retrieve comments posted by a specific user username. |
+| `GET` | `api/v1/comments?active={active}` | Retrieve all active comments. |
+| `GET` | `api/v1/comments?level={level}` | Retrieve comments by a specific level. |
+| `GET` | `api/v1/comments?article__id={article.id}` | Retrieve comments under an article with a specific ID. |
+| `GET` | `api/v1/comments?article__title={article.title}` | Retrieve comments under an article with a specific title. |
+| `GET` | `api/v1/listing-statuses` | Retrieve all listing statuses. |
+| `GET` | `api/v1/listing-statuses/<int:pk>` | Retrieve listing status with a specific ID. |
+| `POST` | `api/v1/listing-statuses/create-listing-status` | Create a new listing status. |
+| `PATCH/PUT` | `api/v1/listing-statuses/update-listing-status/<int:pk>` | Update listing status with specific ID. |
+| `DELETE` | `api/v1/listing-statuses/delete-listing-status/<int:pk>` | Deleting listing status with specific ID. |
+| `GET` | `api/v1/categories` | Retrieve all categories. |
+| `GET` | `api/v1/categories/<int:pk>` | Retrieve category with a specific ID. |
+| `POST` | `api/v1/categories/create-category` | Create a new category. |
+| `PATCH/PUT` | `api/v1/categories/update-category/<int:pk>` | Update category with specific ID. |
+| `DELETE` | `api/v1/categories/delete-category/<int:pk>` | Deleting category with specific ID. |
 | `GET` | `api/v1/properties` | Retrieve all properties. |
 | `GET` | `api/v1/properties/<int:pk>` | Retrieve property with a specific ID. |
-| `POST` | `api/v1/properties/create-property` | Create a new property. |
-| `PATCH/PUT` | `api/v1/properties/update-property/<int:pk>` | Update property with specific ID. |
-| `DELETE` | `api/v1/properties/delete-property/<int:pk>` | Deleting property with specific ID. |
 | `GET` | `api/v1/properties?search={keyword}` | Search and retrieve properties by title using a keyword. |
 | `GET` | `api/v1/properties/ordering=title` | Sorts properties by title using the chosen method (ascending, descending) and retrieves them. |
 | `GET` | `api/v1/properties/ordering=price` | Sorts properties by price using the chosen method (ascending, descending) and retrieves them. |
@@ -323,15 +332,6 @@ django_global_estate_hub
 | `GET` | `api/v1/reviews/user__username={user.username}` | Retrieve reviews posted by a specific user username. |
 | `GET` | `api/v1/reviews/property__id={property.id}` | Retrieve reviews for a property with a specific ID. |
 | `GET` | `api/v1/reviews/property__title={property.title}` | Retrieve reviews for a property with a specific property title. |
-| `GET` | `api/v1/tour-schedules` | Retrieve all tour schedules. |
-| `GET` | `api/v1/tour-schedules/<int:pk>` | Retrieve tour schedule with a specific ID. |
-| `POST` | `api/v1/tour-schedules/create-tour-schedule` | Create a new tour schedule. |
-| `PATCH/PUT` | `api/v1/tour-schedules/update-tour-schedule/<int:pk>` | Update tour schedule with specific ID. |
-| `DELETE` | `api/v1/tour-schedule/delete-tour-schedule/<int:pk>` | Deleting tour schedule with specific ID. |
-| `GET` | `api/v1/tour-schedules/customer__id={customer.id}` | Retrieve tour schedules requested by a specific user ID. |
-| `GET` | `api/v1/tour-schedules/customer__username={customer.username}` | Retrieve tour schedules requested by a specific user username. |
-| `GET` | `api/v1/tour-schedules/property__id={property.id}` | Retrieve tour schedules related to the property ID. |
-| `GET` | `api/v1/tour-schedules/property__title={property.title}` | Retrieve tour schedules related to the property title. |
 
 <br/>
 
