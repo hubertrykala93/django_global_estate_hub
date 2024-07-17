@@ -293,7 +293,9 @@ django_global_estate_hub
 | `GET` | `api/v1/properties/listing_status__id={listing_status.id}` | Retrieve properties with a specific listing status ID. |
 | `GET` | `api/v1/properties/listing_status__name={listing_status.id}` | Retrieve properties with a specific listing status name. |
 | `GET` | `api/v1/properties/category__id={category.id}` | Retrieve properties with a specific category ID. |
+| `GET` | `api/v1/properties/category__id={category.id}&category__id={category.id}` | Retrieve properties with a specific category IDs. |
 | `GET` | `api/v1/properties/category__name={category.name}` | Retrieve properties with a specific category name. |
+| `GET` | `api/v1/properties/category__name={category.name}&category__name={category.name}` | Retrieve properties with a specific category names. |
 | `GET` | `api/v1/properties/year_of_built={year_of_built}` | Retrieve properties with a specific year of built. |
 | `GET` | `api/v1/properties/max_year={year_of_built}` | Retrieve all properties up to a specified maximum year of built. |
 | `GET` | `api/v1/properties/min_year={year_of_built}` | Retrieve all properties from a specified minimum year of built. |
