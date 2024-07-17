@@ -15,7 +15,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from datetime import datetime
 from .permissions import IsAdminOnly
 
-
 @api_view(http_method_names=["GET"])
 def api_endpoints(request):
     return Response(

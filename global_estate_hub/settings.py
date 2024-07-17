@@ -174,13 +174,11 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = None
 
 # Django Rest Framework Settings
 REST_FRAMEWORK = {
-    # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
-    # "PAGE_SIZE": 10,
-    "DEFAULT_PAGINATION_CLASS": "accounts.api.paginations.CustomLimitOffsetPagination",
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",
     "PAGE_SIZE": 10,
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     # "DEFAULT_RENDERER_CLASSES": [
-    #     "rest_framework.renderers.JSONOpenAPIRenderer"
+    #     "rest_framework.renderers.JSONOpenAPIRenderer",
     # ],
 }
 

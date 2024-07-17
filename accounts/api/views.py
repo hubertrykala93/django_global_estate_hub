@@ -19,7 +19,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 from datetime import datetime
 from .permissions import IsAdminOrOwner
-from .paginations import CustomLimitOffsetPagination
 
 
 class UsersAPIView(ListAPIView):

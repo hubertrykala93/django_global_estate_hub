@@ -352,6 +352,19 @@ class PropertyAPIView(ListAPIView):
     def get_view_name(self) -> str:
         return "Global Estate Hub Properties"
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        category_ids = self.request.query_params.getlist("category__id", None)
+        category_names = self.request.query_params.getlist("category__name", None)
+
+        if category_ids:
+            queryset = queryset.filter(category__id__in=category_ids).distinct()
+
+        if category_names:
+            queryset = queryset.filter(category__name__in=category_names).distinct()
+
+        return queryset
+
 
 class PropertyDetailAPIView(RetrieveAPIView):
     """
@@ -371,6 +384,8 @@ class ReviewsAPIView(ListAPIView):
     """
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["user__id", "user__username", "property__id", "property__title"]
 
     def get_view_name(self):
         return "Global Estate Hub Review"

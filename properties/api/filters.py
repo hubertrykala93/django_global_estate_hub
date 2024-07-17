@@ -3,6 +3,14 @@ from properties.models import Property
 
 
 class PropertyFilter(django_filters.FilterSet):
+    category_id = django_filters.MultipleChoiceFilter(
+        field_name="category__id",
+        label="Category ID",
+    )
+    category_name = django_filters.MultipleChoiceFilter(
+        field_name="category__name",
+        label="Category Name",
+    )
     min_year = django_filters.NumberFilter(
         field_name="year_of_built", lookup_expr="gte"
     )
@@ -54,6 +62,6 @@ class PropertyFilter(django_filters.FilterSet):
             "is_featured": ["exact"],
             "listing_status__id": ["exact"],
             "listing_status__name": ["exact"],
-            "category__id": ["exact"],
-            "category__name": ["exact"],
+            "category__id": ["in"],
+            "category__name": ["in"],
         }
