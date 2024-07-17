@@ -39,7 +39,7 @@ class NewsletterCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(detail="E-mail address is required.")
 
         if email and not re.match(
-                pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
+            pattern=r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", string=email
         ):
             raise serializers.ValidationError(
                 detail="The e-mail address format is invalid."

@@ -6,9 +6,15 @@ from rest_framework.generics import (
     RetrieveDestroyAPIView,
 )
 from properties.models import Property, ListingStatus, Category, Review
-from .serializers import PropertySerializer, ListingStatusSerializer, \
-    ListingStatusCreateSerializer, CategorySerializer, CategoryCreateSerializer, ReviewSerializer, \
-    ReviewCreateSerializer
+from .serializers import (
+    PropertySerializer,
+    ListingStatusSerializer,
+    ListingStatusCreateSerializer,
+    CategorySerializer,
+    CategoryCreateSerializer,
+    ReviewSerializer,
+    ReviewCreateSerializer,
+)
 from django_filters.rest_framework import DjangoFilterBackend
 from .filters import PropertyFilter
 from rest_framework.filters import OrderingFilter, SearchFilter
@@ -23,6 +29,7 @@ class ListingStatusAPIView(ListAPIView):
     """
     API view allowing to retrieve all listing statuses.
     """
+
     queryset = ListingStatus.objects.all()
     serializer_class = ListingStatusSerializer
 
@@ -34,6 +41,7 @@ class ListingStatusDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific listing status.
     """
+
     queryset = ListingStatus.objects.all()
     serializer_class = ListingStatusSerializer
     lookup_field = "pk"
@@ -46,6 +54,7 @@ class ListingStatusCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new listing status.
     """
+
     queryset = ListingStatus.objects.all()
     serializer_class = ListingStatusCreateSerializer
     permission_classes = [IsAdminOnly]
@@ -83,9 +92,7 @@ class ListingStatusCreateAPIView(CreateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (KeyError, TypeError):
             return {}
@@ -95,6 +102,7 @@ class ListingStatusUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific ListingStatus object.
     """
+
     serializer_class = ListingStatusCreateSerializer
     queryset = ListingStatus.objects.all()
     permission_classes = [IsAdminOnly]
@@ -119,7 +127,7 @@ class ListingStatusUpdateAPIView(RetrieveUpdateAPIView):
                 data={
                     "message": "The listing status has been updated successfully.",
                     "listing_status": serializer.data,
-                    "headers": headers
+                    "headers": headers,
                 },
                 headers=headers,
                 status=status.HTTP_200_OK,
@@ -133,9 +141,7 @@ class ListingStatusUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (KeyError, TypeError):
             return {}
@@ -145,6 +151,7 @@ class ListingStatusDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific listing status.
     """
+
     queryset = ListingStatus.objects.all()
     serializer_class = ListingStatusSerializer
     permission_classes = [IsAdminOnly]
@@ -180,6 +187,7 @@ class CategoryAPIView(ListAPIView):
     """
     API view allowing to retrieve all categories.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
@@ -191,6 +199,7 @@ class CategoryDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific category.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = "pk"
@@ -203,6 +212,7 @@ class CategoryCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new category.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
     permission_classes = [IsAdminOnly]
@@ -229,7 +239,7 @@ class CategoryCreateAPIView(CreateAPIView):
                     "headers": headers,
                 },
                 headers=headers,
-                status=status.HTTP_201_CREATED
+                status=status.HTTP_201_CREATED,
             )
 
         else:
@@ -240,9 +250,7 @@ class CategoryCreateAPIView(CreateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (TypeError, KeyError):
             return {}
@@ -252,6 +260,7 @@ class CategoryUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Category object.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategoryCreateSerializer
     lookup_field = "pk"
@@ -277,7 +286,7 @@ class CategoryUpdateAPIView(RetrieveUpdateAPIView):
                 data={
                     "message": "The category has been updated successfully.",
                     "category": serializer.data,
-                    "headers": headers
+                    "headers": headers,
                 },
                 headers=headers,
                 status=status.HTTP_200_OK,
@@ -291,9 +300,7 @@ class CategoryUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (KeyError, TypeError):
             return {}
@@ -303,6 +310,7 @@ class CategoryDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific category.
     """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     lookup_field = "pk"
@@ -330,9 +338,7 @@ class CategoryDeleteAPIView(RetrieveDestroyAPIView):
 
         except Exception:
             return Response(
-                data={
-                    "error": "There was an error while deleting the user."
-                },
+                data={"error": "There was an error while deleting the user."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -382,6 +388,7 @@ class ReviewsAPIView(ListAPIView):
     """
     API view allowing to retrieve all reviews.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     filter_backends = [DjangoFilterBackend]
@@ -395,6 +402,7 @@ class ReviewDetailAPIView(RetrieveAPIView):
     """
     API view allowing to retrieve a specific review.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
 
@@ -406,6 +414,7 @@ class ReviewCreateAPIView(CreateAPIView):
     """
     API view allowing to create a new review.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
     permission_classes = [IsAdminOrOwner]
@@ -446,9 +455,7 @@ class ReviewCreateAPIView(CreateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (TypeError, KeyError):
             return {}
@@ -458,6 +465,7 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
     """
     API view allowing partial or full update of a specific Review object.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewCreateSerializer
     lookup_field = "pk"
@@ -492,9 +500,7 @@ class ReviewUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (TypeError, KeyError):
             return {}
@@ -504,6 +510,7 @@ class ReviewDeleteAPIView(RetrieveDestroyAPIView):
     """
     API view allowing deletion of a specific property.
     """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     lookup_field = "pk"

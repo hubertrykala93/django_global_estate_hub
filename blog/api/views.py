@@ -276,18 +276,10 @@ class CommentCreateAPIView(CreateAPIView):
             )
 
         if self.request.data.get("user") != "":
-            context.update(
-                {
-                    "user": self.request.data.get("user")
-                }
-            )
+            context.update({"user": self.request.data.get("user")})
 
         if self.request.data.get("full_name") != "":
-            context.update(
-                {
-                    "full_name": self.request.data.get("full_name")
-                }
-            )
+            context.update({"full_name": self.request.data.get("full_name")})
 
         return context
 
@@ -354,9 +346,7 @@ class CommentUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_success_headers(self, data):
         try:
-            return {
-                "location": str(data["id"])
-            }
+            return {"location": str(data["id"])}
 
         except (KeyError, TypeError):
             return {}

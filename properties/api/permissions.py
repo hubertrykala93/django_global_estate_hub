@@ -8,9 +8,11 @@ class IsAdminOnly(BasePermission):
         if request.user and request.user.is_staff:
             return True
 
-        raise PermissionDenied(detail={
-            "message": "To create, modify, or delete an object, you must be an administrator.",
-        })
+        raise PermissionDenied(
+            detail={
+                "message": "To create, modify, or delete an object, you must be an administrator.",
+            }
+        )
 
 
 class IsAdminOrOwner(BasePermission):

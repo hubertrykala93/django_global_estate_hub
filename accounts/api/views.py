@@ -338,9 +338,7 @@ class UserBusinessProfileUpdateAPIView(RetrieveUpdateAPIView):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        serializer = self.get_serializer(
-            data=request.data, instance=instance
-        )
+        serializer = self.get_serializer(data=request.data, instance=instance)
 
         if serializer.is_valid():
             self.perform_update(serializer=serializer)

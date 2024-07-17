@@ -28,11 +28,7 @@ class ListingStatusCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListingStatus
         fields = "__all__"
-        extra_kwargs = {
-            "slug": {
-                "read_only": True
-            }
-        }
+        extra_kwargs = {"slug": {"read_only": True}}
 
     def validate_name(self, name):
         if name == "":
@@ -40,11 +36,18 @@ class ListingStatusCreateSerializer(serializers.ModelSerializer):
 
         if isinstance(self.context["view"], CreateAPIView):
             if name and ListingStatus.objects.filter(name=name).exists():
-                raise serializers.ValidationError(detail="A listing status with this name already exists.")
+                raise serializers.ValidationError(
+                    detail="A listing status with this name already exists."
+                )
 
         else:
-            if self.instance.name != name and ListingStatus.objects.filter(name=name).exists():
-                raise serializers.ValidationError(detail="A listing status with this name already exists.")
+            if (
+                self.instance.name != name
+                and ListingStatus.objects.filter(name=name).exists()
+            ):
+                raise serializers.ValidationError(
+                    detail="A listing status with this name already exists."
+                )
 
         return name
 
@@ -107,13 +110,15 @@ class CategoryCreateSerializer(serializers.ModelSerializer):
 
             if extension not in allowed_extensions:
                 raise serializers.ValidationError(
-                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+                    detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
+                )
 
         if isinstance(self.context["view"], RetrieveUpdateAPIView):
             if image is not None:
                 if extension not in allowed_extensions:
                     raise serializers.ValidationError(
-                        detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'.")
+                        detail="Invalid file format. Allowed formats are 'jpg', 'jpeg', 'png', 'svg', 'webp'."
+                    )
 
         return image
 
@@ -241,19 +246,14 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         required=False,
     )
     property = serializers.PrimaryKeyRelatedField(
-        queryset=Property.objects.all(),
-        allow_null=False,
-        required=False
+        queryset=Property.objects.all(), allow_null=False, required=False
     )
     content = serializers.CharField(
         max_length=10000,
         required=False,
         allow_blank=True,
     )
-    rate = serializers.IntegerField(
-        required=False,
-        allow_null=True
-    )
+    rate = serializers.IntegerField(required=False, allow_null=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -297,9 +297,7 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
 
     def validate_rate(self, rate):
         if rate is None:
-            raise serializers.ValidationError(
-                detail="Rate is required."
-            )
+            raise serializers.ValidationError(detail="Rate is required.")
 
         if rate < 1 or rate > 5:
             raise serializers.ValidationError(
