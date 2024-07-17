@@ -160,40 +160,15 @@ class TransportationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class CitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = City
-        exclude = ["image"]
-
-
 class PropertySerializer(serializers.ModelSerializer):
-    date_posted = serializers.DateTimeField(read_only=True, format="%Y-%m-%d %H:%M:%S")
     thumbnail = serializers.SerializerMethodField(method_name="get_thumbnail_name")
-    video = serializers.SerializerMethodField(method_name="get_video_name")
     images = serializers.SerializerMethodField(method_name="get_images_names")
-    user = serializers.SlugRelatedField(slug_field="id", queryset=User.objects.all())
-    description = serializers.SerializerMethodField(method_name="get_description")
-    city = serializers.SlugRelatedField(slug_field="name", queryset=City.objects.all())
-    listing_status = serializers.SlugRelatedField(
-        slug_field="name", queryset=ListingStatus.objects.all()
-    )
-    category = serializers.SlugRelatedField(
-        slug_field="name", queryset=Category.objects.all()
-    )
-    amenities = serializers.SlugRelatedField(
-        slug_field="name", queryset=Amenities.objects.all(), many=True
-    )
-    # amenities = AmenitiesSerializer(many=True)
+    video = serializers.SerializerMethodField(method_name="get_video_name")
+    amenities = AmenitiesSerializer(many=True)
     education = EducationSerializer(many=True)
     health_and_medical = HealthAndMedicalSerializer(many=True)
     transportation = TransportationSerializer(many=True)
     shopping = ShoppingSerializer(many=True)
-    favourites = serializers.SlugRelatedField(
-        slug_field="username", many=True, queryset=User.objects.all()
-    )
-    purchasing_user = serializers.SlugRelatedField(
-        slug_field="username", queryset=User.objects.all()
-    )
 
     class Meta:
         model = Property
@@ -202,15 +177,15 @@ class PropertySerializer(serializers.ModelSerializer):
             "date_posted",
             "user",
             "title",
+            "description",
             "slug",
-            "thumbnail",
-            "video",
-            "images",
             "listing_status",
             "category",
+            "thumbnail",
+            "images",
+            "video",
             "year_of_built",
             "price",
-            "description",
             "number_of_bedrooms",
             "number_of_bathrooms",
             "square_meters",
@@ -219,6 +194,7 @@ class PropertySerializer(serializers.ModelSerializer):
             "country_code",
             "province",
             "city",
+            "postal_code",
             "latitude",
             "longitude",
             "amenities",
@@ -230,18 +206,20 @@ class PropertySerializer(serializers.ModelSerializer):
             "favourites",
             "purchasing_user",
         ]
+        extra_kwargs = {
+            "date_posted": {
+                "format": "%Y-%m-%d %H:%M:%S",
+            }
+        }
 
     def get_thumbnail_name(self, obj):
         return obj.thumbnail.name.split("/")[-1]
 
-    def get_video_name(self, obj):
-        return obj.video.name.split("/")[-1]
-
     def get_images_names(self, obj):
         return [img.image.name.split("/")[-1] for img in obj.images.all()]
 
-    def get_description(self, obj):
-        return obj.description.replace("<p>", "").replace("</p>", "")
+    def get_video_name(self, obj):
+        return obj.video.name.split("/")[-1]
 
 
 class ReviewSerializer(serializers.ModelSerializer):

@@ -63,21 +63,6 @@ urlpatterns = [
         name="api-v1-properties-property-details",
     ),
     path(
-        route="api/v1/properties/create-property",
-        view=views.PropertyCreateAPIView.as_view(),
-        name="api-v1-properties-create-property",
-    ),
-    path(
-        route="api/v1/properties/update-property/<int:pk>",
-        view=views.PropertyUpdateAPIView.as_view(),
-        name="api-v1-properties-update-property",
-    ),
-    path(
-        route="api/v1/properties/delete-property/<int:pk>",
-        view=views.PropertyDeleteAPIView.as_view(),
-        name="api-v1-properties-delete-property",
-    ),
-    path(
         route="api/v1/reviews",
         view=views.ReviewsAPIView.as_view(),
         name="api-v1-reviews",

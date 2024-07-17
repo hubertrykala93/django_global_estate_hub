@@ -365,42 +365,6 @@ class PropertyDetailAPIView(RetrieveAPIView):
         return "Property Details"
 
 
-class PropertyCreateAPIView(CreateAPIView):
-    """
-    API view allowing to create a new property.
-    """
-
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-
-    def get_view_name(self):
-        return "Property Create"
-
-
-class PropertyUpdateAPIView(RetrieveUpdateAPIView):
-    """
-    API view allowing partial or full update of a specific Property object.
-    """
-
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-
-    def get_view_name(self):
-        return "Property Update"
-
-
-class PropertyDeleteAPIView(RetrieveDestroyAPIView):
-    """
-    API view allowing deletion of a specific property.
-    """
-
-    queryset = Property.objects.all()
-    serializer_class = PropertySerializer
-
-    def get_view_name(self):
-        return "Property Delete"
-
-
 class ReviewsAPIView(ListAPIView):
     """
     API view allowing to retrieve all reviews.
